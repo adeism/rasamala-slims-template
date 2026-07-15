@@ -4,7 +4,7 @@
  * @Date                : 2020-01-03 08:49
  * @File name           : visitor_template.php
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-15T12:27:50+07:00
+ * @Last modified time  : 2026-07-15T12:40:56+07:00
  */
 
 $main_template_path = __DIR__ . '/login_template.inc.php';
@@ -160,6 +160,31 @@ if ($visitor_split_title === '') {
     $visitor_split_title = 'Petunjuk Penggunaan';
 }
 $visitor_split_steps = rasamalaVisitorSplitSteps(themeEffectiveTemplateValue('visitor_split_steps', '', $sysconf));
+
+$visitor_ticker_items = [];
+$visitor_ticker_speed = themeEffectiveTemplateValue('classic_ticker_speed', 'normal', $sysconf);
+$visitor_ticker_setting = strtolower(trim((string)themeEffectiveTemplateValue('classic_ticker_show', 0, $sysconf)));
+$visitor_ticker_enabled = !in_array($visitor_ticker_setting, ['', '0', 'hide', 'none'], true);
+
+if ($visitor_ticker_enabled && isset($dbs) && $dbs && function_exists('themeGetDisplayItems')) {
+    $visitor_ticker_limit = themeSafeLimit($sysconf['template']['classic_ticker_item_limit'] ?? 5, 5, 1, 12);
+    $raw_visitor_ticker_limit = (int)($sysconf['template']['classic_ticker_char_limit'] ?? 48);
+    $visitor_ticker_char_limit = ($raw_visitor_ticker_limit === 0) ? 0 : themeSafeInt($raw_visitor_ticker_limit, 48, 12, 160);
+    $visitor_ticker_source = $sysconf['template']['classic_ticker_source'] ?? 'content';
+    $visitor_ticker_content_filter = $sysconf['template']['classic_ticker_content_filter'] ?? 'all';
+    $visitor_ticker_content_detail = $sysconf['template']['classic_ticker_content_detail'] ?? 'title';
+    $visitor_ticker_biblio_filter = $sysconf['template']['classic_ticker_biblio_filter'] ?? 'all';
+
+    $visitor_ticker_items = themeGetDisplayItems(
+        $dbs,
+        $visitor_ticker_source,
+        $visitor_ticker_content_filter,
+        $visitor_ticker_content_detail,
+        $visitor_ticker_biblio_filter,
+        $visitor_ticker_limit,
+        $visitor_ticker_char_limit
+    );
+}
 
 ?>
 <style>
@@ -343,6 +368,15 @@ body.rasamala-dark .visitor-avatar-wrap {
   color: var(--rasamala-accent) !important;
 }
 
+.visitor-has-running-text {
+  padding-bottom: 54px !important;
+}
+
+.visitor-latest-content-ticker {
+  bottom: 0 !important;
+  z-index: 1050 !important;
+}
+
 /* Split Layout Custom Styles (Following Theme) */
 .main-split-container {
   display: flex;
@@ -518,7 +552,7 @@ body.rasamala-dark .inst-step:hover {
 <div class="visitor-bg-gradient"></div>
 
 <?php if ($visitor_layout_style === 'split') : ?>
-<div class="d-flex align-items-center justify-content-center min-vh-100 w-100 visitor-backdrop" id="visitor-counter">
+<div class="d-flex align-items-center justify-content-center min-vh-100 w-100 visitor-backdrop <?= !empty($visitor_ticker_items) ? 'visitor-has-running-text' : ''; ?>" id="visitor-counter">
     <main class="main-split-container">
         
         <section class="left-form-section">
@@ -629,7 +663,7 @@ body.rasamala-dark .inst-step:hover {
     </main>
 </div>
 <?php else : ?>
-<div class="d-flex align-items-center justify-content-center min-vh-100 w-100 visitor-backdrop" id="visitor-counter">
+<div class="d-flex align-items-center justify-content-center min-vh-100 w-100 visitor-backdrop <?= !empty($visitor_ticker_items) ? 'visitor-has-running-text' : ''; ?>" id="visitor-counter">
     <div class="visitor-kiosk-card p-4 p-md-5 text-center shadow-lg">
         <!-- Header -->
         <div class="mb-4">
@@ -676,6 +710,23 @@ body.rasamala-dark .inst-step:hover {
                 <i class="fas fa-moon"></i>
             </button>
             <?php endif; ?>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
+<?php if (!empty($visitor_ticker_items)) : ?>
+<div class="latest-content-ticker visitor-latest-content-ticker" data-speed="<?= themeEscape($visitor_ticker_speed); ?>" role="status">
+    <div class="latest-content-ticker-track">
+        <div class="latest-content-ticker-group">
+            <?php foreach ($visitor_ticker_items as $visitor_ticker_item) : ?>
+                <a class="latest-content-ticker-item"
+                   href="<?= themeEscape($visitor_ticker_item['url']); ?>"
+                   title="<?= themeEscape($visitor_ticker_item['title']); ?>">
+                    <i class="fas fa-volume-up latest-content-icon" aria-hidden="true"></i>
+                    <span class="latest-content-title"><?= themeEscape($visitor_ticker_item['display_title']); ?></span>
+                </a>
+            <?php endforeach; ?>
         </div>
     </div>
 </div>
