@@ -2,7 +2,7 @@
  * Rasamala Theme Stylesheet
  * SLiMS 9 Bulian OPAC Custom Theme
  * Last modified by: Ade Ismail Siregar (adeismailbox@gmail.com)
- * Last modified time: 2026-07-15T09:44:10+07:00
+ * Last modified time: 2026-07-15T09:59:15+07:00
  */
 
 @import url('../../../../css/core.css');
@@ -7826,6 +7826,55 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
 .irs-max,
 .irs-grid-text {
   color: var(--theme-muted) !important;
+}
+
+#search-filter .irs-from,
+#search-filter .irs-to,
+#search-filter .irs-single,
+#mobileFilterModal .irs-from,
+#mobileFilterModal .irs-to,
+#mobileFilterModal .irs-single {
+  background: color-mix(in srgb, var(--theme-primary) 58%, #111827 42%) !important;
+  background-color: color-mix(in srgb, var(--theme-primary) 58%, #111827 42%) !important;
+  color: #ffffff !important;
+  border: 1px solid color-mix(in srgb, #ffffff 18%, transparent) !important;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--theme-primary) 18%, transparent) !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.28) !important;
+}
+
+#search-filter .irs-from::after,
+#search-filter .irs-to::after,
+#search-filter .irs-single::after,
+#mobileFilterModal .irs-from::after,
+#mobileFilterModal .irs-to::after,
+#mobileFilterModal .irs-single::after {
+  border-top-color: color-mix(in srgb, var(--theme-primary) 58%, #111827 42%) !important;
+}
+
+#search-filter .irs-min,
+#search-filter .irs-max,
+#search-filter .irs-grid-text,
+#mobileFilterModal .irs-min,
+#mobileFilterModal .irs-max,
+#mobileFilterModal .irs-grid-text {
+  color: color-mix(in srgb, var(--theme-text) 76%, var(--theme-muted) 24%) !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+#search-filter .irs-line,
+#search-filter .irs-grid-pol,
+#mobileFilterModal .irs-line,
+#mobileFilterModal .irs-grid-pol {
+  background-color: color-mix(in srgb, var(--theme-muted) 28%, transparent) !important;
+}
+
+#search-filter .irs-handle,
+#mobileFilterModal .irs-handle {
+  background-color: var(--theme-surface) !important;
+  border-color: color-mix(in srgb, var(--theme-primary) 44%, var(--theme-muted) 20%) !important;
+  box-shadow: 0 3px 10px color-mix(in srgb, var(--theme-primary) 18%, transparent) !important;
 }
 
 body.rasamala-search-panels-transparent .result-search .filter-panel-card,

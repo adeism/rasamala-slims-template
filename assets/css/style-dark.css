@@ -2527,6 +2527,55 @@ body.rasamala-dark #search-filter select:focus {
   box-shadow: 0 0 0 3px rgba(var(--theme-accent-rgb), 0.24) !important;
 }
 
+body.rasamala-dark #search-filter .irs-from,
+body.rasamala-dark #search-filter .irs-to,
+body.rasamala-dark #search-filter .irs-single,
+body.rasamala-dark #mobileFilterModal .irs-from,
+body.rasamala-dark #mobileFilterModal .irs-to,
+body.rasamala-dark #mobileFilterModal .irs-single {
+  background: color-mix(in srgb, var(--rasamala-accent) 62%, #05070a 38%) !important;
+  background-color: color-mix(in srgb, var(--rasamala-accent) 62%, #05070a 38%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 4px 14px rgba(var(--theme-accent-rgb), 0.28) !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.42) !important;
+}
+
+body.rasamala-dark #search-filter .irs-from::after,
+body.rasamala-dark #search-filter .irs-to::after,
+body.rasamala-dark #search-filter .irs-single::after,
+body.rasamala-dark #mobileFilterModal .irs-from::after,
+body.rasamala-dark #mobileFilterModal .irs-to::after,
+body.rasamala-dark #mobileFilterModal .irs-single::after {
+  border-top-color: color-mix(in srgb, var(--rasamala-accent) 62%, #05070a 38%) !important;
+}
+
+body.rasamala-dark #search-filter .irs-min,
+body.rasamala-dark #search-filter .irs-max,
+body.rasamala-dark #search-filter .irs-grid-text,
+body.rasamala-dark #mobileFilterModal .irs-min,
+body.rasamala-dark #mobileFilterModal .irs-max,
+body.rasamala-dark #mobileFilterModal .irs-grid-text {
+  color: var(--rasamala-dark-muted, #c3cbd5) !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+body.rasamala-dark #search-filter .irs-line,
+body.rasamala-dark #search-filter .irs-grid-pol,
+body.rasamala-dark #mobileFilterModal .irs-line,
+body.rasamala-dark #mobileFilterModal .irs-grid-pol {
+  background-color: rgba(255, 255, 255, 0.22) !important;
+}
+
+body.rasamala-dark #search-filter .irs-handle,
+body.rasamala-dark #mobileFilterModal .irs-handle {
+  background-color: #f8fafc !important;
+  border-color: rgba(var(--theme-accent-rgb), 0.48) !important;
+  box-shadow: 0 3px 12px rgba(var(--theme-accent-rgb), 0.24) !important;
+}
+
 body.rasamala-dark.rasamala-search-panels-transparent .result-search .filter-panel-card,
 body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal .modal-content {
   background: rgba(22, 26, 34, 0.58) !important;
