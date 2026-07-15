@@ -186,6 +186,7 @@ Catatan: fitur waktu sholat mengambil data waktu dari layanan eksternal saat ter
 - Hover/klik angka ketersediaan menampilkan detail item.
 - Popover ketersediaan dibuat agar hanya satu muncul pada satu waktu.
 - Background panel pencarian bisa bergaya transparent atau solid, mencakup filter, sort, dan card hasil pencarian.
+- Pada mobile, modal Filter dan Sort selalu solid walaupun panel pencarian diset transparent agar pilihan tetap mudah dibaca.
 - Pagination distandarkan agar lebih sederhana dan mengikuti warna tema.
 - Dropdown filter/advanced search disesuaikan dark/light mode.
 

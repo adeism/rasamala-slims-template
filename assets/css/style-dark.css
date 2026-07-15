@@ -2839,3 +2839,57 @@ body.rasamala-dark.rasamala-search-panels-transparent .result-search .biblio-sim
 body.rasamala-dark.rasamala-search-panels-transparent .result-search .grid-item .list-group-item {
   border-bottom-color: rgba(255, 255, 255, 0.14) !important;
 }
+
+@media (max-width: 767.98px) {
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal .modal-content,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileSortModal .modal-content,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal .modal-header,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal .modal-body,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal .modal-footer,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileSortModal .modal-header,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileSortModal .modal-body,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileSortModal .modal-footer {
+    background: var(--rasamala-dark-surface) !important;
+    background-color: var(--rasamala-dark-surface) !important;
+    color: var(--rasamala-dark-text) !important;
+    border-color: var(--rasamala-dark-border) !important;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.42) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal #search-filter,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal #search-filter li,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal #search-filter li.list-group-item,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal #mobile-filter-container,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal #mobile-filter-container .list-group,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal #mobile-filter-container .list-group-item,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileSortModal #mobile-sort-options,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileSortModal #mobile-sort-options .list-group-item {
+    background: var(--rasamala-dark-surface) !important;
+    background-color: var(--rasamala-dark-surface) !important;
+    color: var(--rasamala-dark-text) !important;
+    border-color: var(--rasamala-dark-border) !important;
+    box-shadow: none !important;
+  }
+
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal #mobile-filter-container label,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal #search-filter .custom-control-label,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal #search-filter .form-check-label,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileSortModal #mobile-sort-options .list-group-item {
+    background: var(--rasamala-dark-surface-strong) !important;
+    background-color: var(--rasamala-dark-surface-strong) !important;
+    color: var(--rasamala-dark-text) !important;
+    border-color: var(--rasamala-dark-action-border) !important;
+  }
+
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal #search-filter input,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal #search-filter select,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal #search-filter .js-input-from,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal #search-filter .js-input-to {
+    background: rgba(255, 255, 255, 0.075) !important;
+    background-color: rgba(255, 255, 255, 0.075) !important;
+    color: var(--rasamala-dark-text) !important;
+    border-color: var(--rasamala-dark-action-border) !important;
+  }
+}

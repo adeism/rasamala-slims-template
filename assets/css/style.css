@@ -2,7 +2,7 @@
  * Rasamala Theme Stylesheet
  * SLiMS 9 Bulian OPAC Custom Theme
  * Last modified by: Ade Ismail Siregar (adeismailbox@gmail.com)
- * Last modified time: 2026-07-15T14:51:13+07:00
+ * Last modified time: 2026-07-15T15:05:43+07:00
  */
 
 @import url('../../../../css/core.css');
@@ -8323,4 +8323,58 @@ body.rasamala-search-panels-transparent .result-search .desktop-sort-bar {
 body.rasamala-search-panels-transparent .result-search .biblio-simple-item,
 body.rasamala-search-panels-transparent .result-search .grid-item .list-group-item {
   border-bottom-color: color-mix(in srgb, var(--theme-muted) 22%, transparent) !important;
+}
+
+@media (max-width: 767.98px) {
+  body.rasamala-search-panels-transparent #mobileFilterModal .modal-content,
+  body.rasamala-search-panels-transparent #mobileSortModal .modal-content,
+  body.rasamala-search-panels-transparent #mobileFilterModal .modal-header,
+  body.rasamala-search-panels-transparent #mobileFilterModal .modal-body,
+  body.rasamala-search-panels-transparent #mobileFilterModal .modal-footer,
+  body.rasamala-search-panels-transparent #mobileSortModal .modal-header,
+  body.rasamala-search-panels-transparent #mobileSortModal .modal-body,
+  body.rasamala-search-panels-transparent #mobileSortModal .modal-footer {
+    background: var(--theme-surface) !important;
+    background-color: var(--theme-surface) !important;
+    color: var(--theme-text) !important;
+    border-color: color-mix(in srgb, var(--theme-muted) 24%, transparent) !important;
+    box-shadow: 0 18px 44px color-mix(in srgb, var(--theme-primary) 16%, transparent) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  body.rasamala-search-panels-transparent #mobileFilterModal #search-filter,
+  body.rasamala-search-panels-transparent #mobileFilterModal #search-filter li,
+  body.rasamala-search-panels-transparent #mobileFilterModal #search-filter li.list-group-item,
+  body.rasamala-search-panels-transparent #mobileFilterModal #mobile-filter-container,
+  body.rasamala-search-panels-transparent #mobileFilterModal #mobile-filter-container .list-group,
+  body.rasamala-search-panels-transparent #mobileFilterModal #mobile-filter-container .list-group-item,
+  body.rasamala-search-panels-transparent #mobileSortModal #mobile-sort-options,
+  body.rasamala-search-panels-transparent #mobileSortModal #mobile-sort-options .list-group-item {
+    background: var(--theme-surface) !important;
+    background-color: var(--theme-surface) !important;
+    color: var(--theme-text) !important;
+    border-color: color-mix(in srgb, var(--theme-muted) 18%, transparent) !important;
+    box-shadow: none !important;
+  }
+
+  body.rasamala-search-panels-transparent #mobileFilterModal #mobile-filter-container label,
+  body.rasamala-search-panels-transparent #mobileFilterModal #search-filter .custom-control-label,
+  body.rasamala-search-panels-transparent #mobileFilterModal #search-filter .form-check-label,
+  body.rasamala-search-panels-transparent #mobileSortModal #mobile-sort-options .list-group-item {
+    background: color-mix(in srgb, var(--theme-surface) 90%, var(--theme-background) 10%) !important;
+    background-color: color-mix(in srgb, var(--theme-surface) 90%, var(--theme-background) 10%) !important;
+    color: var(--theme-text) !important;
+    border-color: color-mix(in srgb, var(--theme-muted) 24%, transparent) !important;
+  }
+
+  body.rasamala-search-panels-transparent #mobileFilterModal #search-filter input,
+  body.rasamala-search-panels-transparent #mobileFilterModal #search-filter select,
+  body.rasamala-search-panels-transparent #mobileFilterModal #search-filter .js-input-from,
+  body.rasamala-search-panels-transparent #mobileFilterModal #search-filter .js-input-to {
+    background: color-mix(in srgb, var(--theme-surface) 94%, var(--theme-background) 6%) !important;
+    background-color: color-mix(in srgb, var(--theme-surface) 94%, var(--theme-background) 6%) !important;
+    color: var(--theme-text) !important;
+    border-color: color-mix(in srgb, var(--theme-muted) 30%, transparent) !important;
+  }
 }
