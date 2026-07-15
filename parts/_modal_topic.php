@@ -13,76 +13,71 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel"><?=  __('Select the topic you are interested in'); ?></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <ul class="topic d-flex flex-wrap justify-content-center p-0">
                     <li class="d-flex justify-content-center align-items-center m-2">
                         <a href="index.php?callnumber=0&search=search" class="d-flex flex-column">
-                            <img src="<?=  assets('images/0-chemical.png'); ?>" width="80" class="mb-3 mx-auto"/>
-                            <?=  __('Computer Science, Information & General Works'); ?>
+                            <i class="fas fa-desktop topic-icon-fa mb-3 mx-auto" aria-hidden="true"></i>
+                            <span><?=  __('Computer Science, Information & General Works'); ?></span>
                         </a>
                     </li>
                     <li class="d-flex justify-content-center align-items-center m-2">
                         <a href="index.php?callnumber=1&search=search" class="d-flex flex-column">
-                            <img src="<?=  assets('images/1-memory.png'); ?>" width="80" class="mb-3 mx-auto"/>
-                            <?=  __('Philosophy & Psychology'); ?>
+                            <i class="fas fa-lightbulb topic-icon-fa mb-3 mx-auto" aria-hidden="true"></i>
+                            <span><?=  __('Philosophy & Psychology'); ?></span>
                         </a>
                     </li>
                     <li class="d-flex justify-content-center align-items-center m-2">
                         <a href="index.php?callnumber=2&search=search" class="d-flex flex-column">
-                            <img src="<?=  assets('images/2-mosque.png'); ?>" width="80" class="mb-3 mx-auto"/>
-                            <?=  __('Religion'); ?>
+                            <i class="fas fa-heart topic-icon-fa mb-3 mx-auto" aria-hidden="true"></i>
+                            <span><?=  __('Religion'); ?></span>
                         </a>
                     </li>
                     <li class="d-flex justify-content-center align-items-center m-2">
                         <a href="index.php?callnumber=3&search=search" class="d-flex flex-column">
-                            <img src="<?=  assets('images/3-diploma.png'); ?>" width="80" class="mb-3 mx-auto"/>
-                            <?=  __('Social Sciences'); ?>
+                            <i class="fas fa-users topic-icon-fa mb-3 mx-auto" aria-hidden="true"></i>
+                            <span><?=  __('Social Sciences'); ?></span>
                         </a>
                     </li>
                     <li class="d-flex justify-content-center align-items-center m-2">
                         <a href="index.php?callnumber=4&search=search" class="d-flex flex-column">
-                            <img src="<?=  assets('images/4-translation.png'); ?>" width="80" class="mb-3 mx-auto"/>
-                            <?=  __('Language'); ?>
+                            <i class="fas fa-language topic-icon-fa mb-3 mx-auto" aria-hidden="true"></i>
+                            <span><?=  __('Language'); ?></span>
                         </a>
                     </li>
                     <li class="d-flex justify-content-center align-items-center m-2">
                         <a href="index.php?callnumber=5&search=search" class="d-flex flex-column">
-                            <img src="<?=  assets('images/5-math.png'); ?>" width="80" class="mb-3 mx-auto"/>
-                            <?=  __('Pure Science'); ?>
+                            <i class="fas fa-calculator topic-icon-fa mb-3 mx-auto" aria-hidden="true"></i>
+                            <span><?=  __('Pure Science'); ?></span>
                         </a>
                     </li>
                     <li class="d-flex justify-content-center align-items-center m-2">
                         <a href="index.php?callnumber=6&search=search" class="d-flex flex-column">
-                            <img src="<?=  assets('images/6-blackboard.png'); ?>" width="80" class="mb-3 mx-auto"/>
-                            <?=  __('Applied Sciences'); ?>
+                            <i class="fas fa-flask topic-icon-fa mb-3 mx-auto" aria-hidden="true"></i>
+                            <span><?=  __('Applied Sciences'); ?></span>
                         </a>
                     </li>
                     <li class="d-flex justify-content-center align-items-center m-2">
                         <a href="index.php?callnumber=7&search=search" class="d-flex flex-column">
-                            <img src="<?=  assets('images/7-quill.png'); ?>" width="80" class="mb-3 mx-auto"/>
-                            <?=  __('Art & Recreation'); ?>
+                            <i class="fas fa-paint-brush topic-icon-fa mb-3 mx-auto" aria-hidden="true"></i>
+                            <span><?=  __('Art & Recreation'); ?></span>
                         </a>
                     </li>
                     <li class="d-flex justify-content-center align-items-center m-2">
                         <a href="index.php?callnumber=8&search=search" class="d-flex flex-column">
-                            <img src="<?=  assets('images/8-books.png'); ?>" width="80" class="mb-3 mx-auto"/>
-                            <?=  __('Literature'); ?>
+                            <i class="fas fa-book topic-icon-fa mb-3 mx-auto" aria-hidden="true"></i>
+                            <span><?=  __('Literature'); ?></span>
                         </a>
                     </li>
                     <li class="d-flex justify-content-center align-items-center m-2">
                         <a href="index.php?callnumber=9&search=search" class="d-flex flex-column">
-                            <img src="<?=  assets('images/9-return-to-the-past.png'); ?>" width="80" class="mb-3 mx-auto"/>
-                            <?=  __('History & Geography'); ?>
+                            <i class="fas fa-history topic-icon-fa mb-3 mx-auto" aria-hidden="true"></i>
+                            <span><?=  __('History & Geography'); ?></span>
                         </a>
                     </li>
                 </ul>
-            </div>
-            <div class="modal-footer text-sm">
-                <div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
             </div>
         </div>
     </div>

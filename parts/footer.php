@@ -4,33 +4,41 @@
 # @Email:  ido.alit@gmail.com
 # @Filename: footer.php
 # @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-09T14:04:51+07:00
+# @Last modified time: 2026-07-15T08:25:01+07:00
 ?>
 
 
 <?php
 $is_homepage = !isset($_GET['p']) && !isset($_GET['search']);
-$is_hero_only = ($sysconf['template']['classic_homepage_only_hero'] ?? 0) == 1;
-$show_footer = ($sysconf['template']['classic_footer_show'] ?? 1) && !($is_homepage && $is_hero_only);
-?>
-<?php if ($show_footer): ?>
+$show_footer = themeFooterEnabled($sysconf, $is_homepage);
+if ($show_footer): ?>
 <footer class="py-5 border-top">
     <div class="container">
+        <?php
+        $footer_search_show = ($sysconf['template']['classic_footer_search_show'] ?? 0) == 1;
+        include_once __DIR__ . '/waktu_sholat.php';
+        $waktu_sholat_data = rasamalaWaktuSholatData($sysconf);
+        $col_logo = 'col-md-3';
+        $col_about = 'col-md-5';
+        $col_search = 'col-md-4';
+        ?>
         <div class="row py-4">
-            <div class="col-md-3">
+            <div class="<?= $col_logo ?>">
               <?php
               if(isset($sysconf['logo_image']) && $sysconf['logo_image'] != '' && $imagesDisk->isExists($path = 'default/'.$sysconf['logo_image'])){
-                echo '<img class="footer-brand-img" src="'.SWB . 'lib/minigalnano/createthumb.php?filename=images/' . $path.'&width=350">';
+                // K-02: escape src and add alt attribute
+                echo '<img class="footer-brand-img" src="'.themeEscape(SWB . 'lib/minigalnano/createthumb.php?filename=images/' . $path.'&width=350').'" alt="'.themeEscape($sysconf['library_name']).'">';
               }
               elseif (file_exists(__DIR__ . '/../assets/images/logo.png')) {
-                echo '<img class="footer-brand-img" src="' . assets(v('images/logo.png')) . '">';
+                // S-04: add alt attribute
+                echo '<img class="footer-brand-img" src="' . assets(v('images/logo.png')) . '" alt="'.themeEscape($sysconf['library_name']).'">';
               } else {
                 ?>
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-book mb-2 footer-book-icon" viewBox="0 0 16 16">
                     <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.933-.575-2.202-.954-3.41-1.11-1.226-.157-2.484-.013-3.388.337zm11-.14c.654-.689 1.782-.886 3.11-.752 1.234.124 2.503.523 3.388.893v9.923c-.904-.35-2.162-.494-3.388-.337-1.208.156-2.477.535-3.409 1.11V2.688zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>
                 </svg>
               <?php } ?>
-                <div class="mb-3 font-weight-bold footer-section-title footer-library-name"><?php echo themeEscape($sysconf['library_name']); ?></div>
+                <div class="mb-3 fw-bold footer-section-title footer-library-name"><?php echo themeEscape($sysconf['library_name']); ?></div>
                 <ul class="list-unstyled">
                     <li class="mb-2"><a class="footer-link" href="index.php?p=libinfo"><?= __('Information'); ?></a></li>
                     <li class="mb-2"><a class="footer-link" href="index.php?p=services"><?= __('Services'); ?></a></li>
@@ -38,51 +46,50 @@ $show_footer = ($sysconf['template']['classic_footer_show'] ?? 1) && !($is_homep
                     <li class="mb-2"><a class="footer-link" href="index.php?p=member"><?= __('Member Area'); ?></a></li>
                 </ul>
             </div>
-            <div class="col-md-5 pt-4 pt-md-0">
-                <h6 class="mb-3 font-weight-bold text-uppercase tracking-wider footer-section-title"><?= __('About Us'); ?></h6>
+            <div class="<?= $col_about ?> pt-4 pt-md-0">
+                <h6 class="mb-3 fw-bold text-uppercase tracking-wider footer-section-title"><?= __('About Us'); ?></h6>
                 <div class="footer-about-text">
                     <?= themeSanitizeHtml($sysconf['template']['classic_footer_about_us'] ?? ''); ?>
                 </div>
             </div>
-            <div class="col-md-4 pt-4 pt-md-0">
-                <h6 class="mb-3 font-weight-bold text-uppercase tracking-wider footer-section-title"><?= __('Search'); ?></h6>
-                <div class="mb-3 detail-link-btn"><?= __('start it by typing one or more keywords for title, author or subject'); ?></div>
-                <form action="index.php">
-                    <input type="hidden" ref="csrf_token" value="<?= themeEscape($_SESSION['csrf_token']??'') ?>">
-                    <input type="hidden" name="csrf_token" value="<?= themeEscape($_SESSION['csrf_token']??'') ?>">
-                    <div class="input-group mb-3">
-                        <input name="keywords" type="text" class="form-control footer-search-input"
-                               placeholder="<?= __('Enter keywords'); ?>"
-                               aria-label="Enter keywords"
-                               aria-describedby="button-addon2">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary footer-search-btn" type="submit" value="search" name="search"
-                                    id="button-addon2"><?= __('Find'); ?>
-                            </button>
+            <div class="<?= $col_search ?> pt-4 pt-md-0">
+                <?php if ($footer_search_show) : ?>
+                    <form action="index.php" class="footer-search-form">
+                        <input type="hidden" ref="csrf_token" value="<?= themeEscape($_SESSION['csrf_token']??'') ?>">
+                        <input type="hidden" name="csrf_token" value="<?= themeEscape($_SESSION['csrf_token']??'') ?>">
+                        <div class="input-group mb-3">
+                            <input name="keywords" type="text" class="form-control footer-search-input"
+                                   placeholder="<?= __('start it by typing one or more keywords for title, author or subject'); ?>"
+                                   aria-label="<?= themeEscape(__('start it by typing one or more keywords for title, author or subject')); ?>"
+                                   aria-describedby="button-addon2">
+                            <button class="btn btn-outline-secondary footer-search-btn" type="submit" value="search" name="search" id="button-addon2"><?= __('Find'); ?>
+                                </button>
                         </div>
-                    </div>
-                </form>
-                <hr class="apple-divider">
-                <a target="_blank" rel="noopener noreferrer" title="Support Us" class="btn btn-outline-secondary btn-sm mr-2 mb-2 px-3 footer-action-btn"
+                    </form>
+                <?php endif; ?>
+                <?= rasamalaWaktuSholatFooterHtml($waktu_sholat_data, $footer_search_show); ?>
+                <hr class="rasamala-divider">
+                <a target="_blank" rel="noopener noreferrer" title="Support Us" class="btn btn-outline-secondary btn-sm me-2 mb-2 px-3 footer-action-btn"
                    href="https://slims.web.id/web/pages/support-us/"><i
-                            class="fas fa-heart mr-2 text-danger"></i><?= __('Keep SLiMS Alive'); ?></a>
+                            class="fas fa-heart me-2 text-danger"></i><?= __('Keep SLiMS Alive'); ?></a>
                 <a target="_blank" rel="noopener noreferrer" title="Contribute" class="btn btn-outline-secondary btn-sm mb-2 px-3 footer-action-btn"
                    href="https://github.com/slims/"><i
-                            class="fab fa-github mr-2"></i><?= __('Contribute'); ?></a>
+                            class="fab fa-github me-2"></i><?= __('Contribute'); ?></a>
             </div>
         </div>
-        <hr class="apple-divider my-4">
-        <div class="d-flex flex-wrap font-weight-light small justify-content-between align-items-center">
+        <hr class="rasamala-divider my-4">
+        <div class="d-flex flex-wrap fw-light small justify-content-between align-items-center">
             <p class="m-0">&copy; <?php echo date('Y'); ?> &mdash; <?= themeEscape($sysconf['template']['classic_footer_copyright'] ?? 'Senayan Developer Community'); ?></p>
-            <div class="text-right"><?= __('Powered by '); ?><code>SLiMS</code></div>
+            <div class="text-end"><?= __('Powered by '); ?><a class="footer-powered-link" target="_blank" rel="noopener noreferrer" href="https://slims.web.id/"><code>SLiMS</code></a></div>
         </div>
-    </div>
-</footer>
-<?php endif; ?>
+	    </div>
+	</footer>
+    <?= rasamalaWaktuSholatReminderHtml($waktu_sholat_data); ?>
+	<?php endif; ?>
 
 <?php if ($sysconf['chat_system']['enabled'] && $sysconf['chat_system']['opac']) : ?>
     <div id="show-pchat2" class="shadow rounded floating-chat-trigger">
-        <button title="Chat" class="btn btn-primary"><i class="fas fa-comments mr-2"></i><?= __('Chat'); ?></button>
+        <button title="Chat" class="btn btn-primary"><i class="fas fa-comments me-2"></i><?= __('Chat'); ?></button>
     </div>
 <?php endif; ?>
 
@@ -99,13 +106,16 @@ include LIB . "contents/chat.php"; ?>
 <script src="<?= themeEscape(JWB); ?>highlight.js"></script>
 <?php if(isset($engine) && $searchableInJsArray = $this->generateKeywords($engine->searchable_fields)) : ?>
 <script>
-  $('.card-body > *').highlight(<?= $searchableInJsArray ?>);
+  // T-03: re-encode to ensure safe JS output with HEX_TAG
+  $('.card-body > *').highlight(<?= json_encode(json_decode($searchableInJsArray), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
 </script>
 <?php endif; ?>
 
 <!-- // load our vue app.js -->
 <script src="<?php echo assets(v('js/app.js')); ?>"></script>
 <script src="<?php echo assets(v('js/app_jquery.js')); ?>"></script>
+<script src="<?php echo assetsVersioned('js/cursor-icons.js'); ?>"></script>
+<script src="<?php echo assetsVersioned('js/cursor-particles.js'); ?>"></script>
 
 <?php
 // Bottom Navigation Bar for Mobile
@@ -119,7 +129,7 @@ $icon_map = [
     'news' => 'fas fa-newspaper',
     'help' => 'fas fa-question-circle',
     'librarian' => 'fas fa-users',
-    'login' => 'fas fa-user-shield',
+    'login' => 'fas fa-university',
     'member' => 'fas fa-user',
     'basket' => 'fas fa-shopping-basket',
     'language' => 'fas fa-language',
@@ -130,15 +140,25 @@ $current_mobile_language = [
     'code' => '',
     'name' => __('Language'),
 ];
-if (($sysconf['template']['classic_language_select'] ?? 1) == 1 && !empty($available_languages)) {
+if (!empty($available_languages)) {
     $select_lang = $_COOKIE['select_lang'] ?? $sysconf['default_lang'];
     foreach ($available_languages as $lang_index) {
         $lang_code = $lang_index[0] ?? '';
+        if (function_exists('themeLanguageIsVisible') && !themeLanguageIsVisible($lang_code, $sysconf)) {
+            continue;
+        }
         $lang_name = $lang_index[1] ?? $lang_code;
         $code_arr = explode('_', (string)$lang_code);
         $code_flag = strtolower($code_arr[1] ?? $code_arr[0] ?? '');
         $code_flag = preg_replace('/[^a-z]/', '', $code_flag);
         $is_active_lang = $lang_code === $select_lang;
+
+        if ($current_mobile_language['code'] === '') {
+            $current_mobile_language = [
+                'code' => $code_flag,
+                'name' => $lang_name,
+            ];
+        }
 
         if ($is_active_lang) {
             $current_mobile_language = [
@@ -264,7 +284,7 @@ if ($basket_count > 0) {
                 <i class="<?= $icon ?>"></i>
                 <?php endif; ?>
                 <?php if ($badge > 0): ?>
-                    <span class="badge badge-danger position-absolute basket-badge-mobile"><?= themeEscape($badge) ?></span>
+                    <span class="badge text-bg-danger position-absolute basket-badge-mobile"><?= themeEscape($badge) ?></span>
                 <?php endif; ?>
             </div>
             <span><?= $text ?></span>
@@ -335,8 +355,8 @@ if ($basket_count > 0) {
 <?php endif; ?>
 
 <?php
-$show_home_display_footer = ($sysconf['template']['classic_home_display_show'] ?? 'below') === 'bottom';
-$show_ticker_footer = ($sysconf['template']['classic_ticker_show'] ?? 0) === 'bottom';
+$show_home_display_footer = themeEffectiveTemplateValue('classic_home_display_show', 'below', $sysconf) === 'bottom';
+$show_ticker_footer = themeEffectiveTemplateValue('classic_ticker_show', 0, $sysconf) === 'bottom';
 
 $latest_content_ticker_items = [];
 $home_display_footer_items = [];
@@ -346,12 +366,14 @@ include_once __DIR__ . '/../theme_helpers.php';
 if ($dbs && function_exists('themeGetDisplayItems')) {
     if ($show_ticker_footer) {
         $ticker_limit = themeSafeLimit($sysconf['template']['classic_ticker_item_limit'] ?? 5, 5, 1, 12);
-        $ticker_char_limit = themeSafeInt($sysconf['template']['classic_ticker_char_limit'] ?? 48, 48, 12, 160);
+        $raw_ticker_limit = (int)($sysconf['template']['classic_ticker_char_limit'] ?? 48);
+        $ticker_char_limit = ($raw_ticker_limit === 0) ? 0 : themeSafeInt($raw_ticker_limit, 48, 12, 160);
         $source = $sysconf['template']['classic_ticker_source'] ?? 'content';
         $content_filter = $sysconf['template']['classic_ticker_content_filter'] ?? 'all';
         $content_detail = $sysconf['template']['classic_ticker_content_detail'] ?? 'title';
         $biblio_filter = $sysconf['template']['classic_ticker_biblio_filter'] ?? 'all';
 
+        $ticker_speed = themeEffectiveTemplateValue('classic_ticker_speed', 'normal', $sysconf);
         $latest_content_ticker_items = themeGetDisplayItems(
             $dbs,
             $source,
@@ -365,7 +387,8 @@ if ($dbs && function_exists('themeGetDisplayItems')) {
 
     if ($show_home_display_footer) {
         $home_limit = themeSafeLimit($sysconf['template']['classic_home_item_limit'] ?? 5, 5, 1, 12);
-        $home_char_limit = themeSafeInt($sysconf['template']['classic_home_char_limit'] ?? 48, 48, 12, 160);
+        $raw_home_limit = (int)($sysconf['template']['classic_home_char_limit'] ?? 48);
+        $home_char_limit = ($raw_home_limit === 0) ? 0 : themeSafeInt($raw_home_limit, 48, 12, 160);
         $source = $sysconf['template']['classic_home_display_source'] ?? 'content';
         $content_filter = $sysconf['template']['classic_home_display_content_filter'] ?? 'all';
         $content_detail = $sysconf['template']['classic_home_display_content_detail'] ?? 'title';
@@ -385,7 +408,7 @@ if ($dbs && function_exists('themeGetDisplayItems')) {
 ?>
 
 <?php if (!empty($latest_content_ticker_items)) : ?>
-    <div class="latest-content-ticker" role="status">
+    <div class="latest-content-ticker" data-speed="<?= themeEscape($ticker_speed ?? 'normal'); ?>" role="status">
         <div class="latest-content-ticker-track">
             <?php for ($ticker_repeat = 0; $ticker_repeat < 2; $ticker_repeat++) : ?>
                 <div class="latest-content-ticker-group" <?= $ticker_repeat === 1 ? 'aria-hidden="true"' : '' ?>>
@@ -421,13 +444,22 @@ if ($dbs && function_exists('themeGetDisplayItems')) {
 <?php endif; ?>
 
 <?php
-$show_back_to_top = $sysconf['template']['classic_back_to_top'] ?? 1;
-$show_floating_info = $sysconf['template']['classic_floating_info'] ?? 1;
-$show_color_toggle = (int)($sysconf['template']['classic_color_toggle'] ?? 1) === 1;
+$show_back_to_top = themeEffectiveTemplateValue('classic_back_to_top', 1, $sysconf);
+$floating_info_mode = themeEffectiveTemplateValue('classic_floating_info', 'libinfo', $sysconf);
+// Fallback for legacy values
+if ($floating_info_mode == '1') {
+    $floating_info_mode = 'libinfo';
+} elseif ($floating_info_mode == '0') {
+    $floating_info_mode = 'hide';
+}
+
+$show_floating_libinfo = ($floating_info_mode === 'libinfo');
+$show_floating_whatsapp = ($floating_info_mode === 'whatsapp');
+$show_color_toggle = (int)themeEffectiveTemplateValue('classic_color_toggle', 1, $sysconf) === 1;
 
 $libinfo_title = __('Library Information');
 $libinfo_desc = '';
-if ($show_floating_info && isset($dbs) && $dbs) {
+if ($show_floating_libinfo && isset($dbs) && $dbs) {
     $libinfo_query = $dbs->query("SELECT content_title, content_desc FROM content WHERE content_path='libinfo' AND is_draft=0 LIMIT 1");
     if ($libinfo_query && $libinfo_query->num_rows > 0) {
         $libinfo_data = $libinfo_query->fetch_assoc();
@@ -449,8 +481,8 @@ if ($show_floating_info && isset($dbs) && $dbs) {
     </button>
 <?php endif; ?>
 
-<?php if ($show_floating_info): ?>
-    <button id="floating-info-btn" class="btn-floating-info shadow-lg <?= !empty($latest_content_ticker_items) ? 'has-latest-content-ticker' : '' ?>" data-toggle="modal" data-target="#libinfoModal" title="Library Info" aria-label="<?= themeEscape(__('Library Information')) ?>">
+<?php if ($show_floating_libinfo): ?>
+    <button id="floating-info-btn" class="btn-floating-info shadow-lg <?= !empty($latest_content_ticker_items) ? 'has-latest-content-ticker' : '' ?>" data-bs-toggle="modal" data-bs-target="#libinfoModal" title="Library Info" aria-label="<?= themeEscape(__('Library Information')) ?>">
         <i class="fas fa-info-circle"></i>
     </button>
 
@@ -458,12 +490,10 @@ if ($show_floating_info && isset($dbs) && $dbs) {
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content libinfo-modal-content">
                 <div class="modal-header libinfo-modal-header">
-                    <h5 class="modal-title font-weight-bold text-uppercase tracking-wider libinfo-modal-title" id="libinfoModalLabel">
+                    <h5 class="modal-title fw-bold text-uppercase tracking-wider libinfo-modal-title" id="libinfoModalLabel">
                         <?= htmlspecialchars($libinfo_title, ENT_QUOTES, 'UTF-8') ?>
                     </h5>
-                    <button type="button" class="close libinfo-modal-close" data-dismiss="modal" aria-label="<?= themeEscape(__('Close')) ?>">
-                        <span aria-hidden="true" class="libinfo-modal-close-icon">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?= themeEscape(__('Close')) ?>"></button>
                 </div>
                 <div class="modal-body libinfo-modal-body">
                     <div class="libinfo-content libinfo-modal-desc">
@@ -471,9 +501,113 @@ if ($show_floating_info && isset($dbs) && $dbs) {
                     </div>
                 </div>
                 <div class="modal-footer libinfo-modal-footer">
-                    <button type="button" class="btn btn-outline-cyan libinfo-modal-btn" data-dismiss="modal">
+                    <button type="button" class="btn btn-outline-cyan libinfo-modal-btn" data-bs-dismiss="modal">
                         <?= __('Close') ?>
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php elseif ($show_floating_whatsapp): ?>
+    <?php
+    $wa_title = themeEffectiveTemplateValue('classic_whatsapp_title', 'Layanan Chat WhatsApp', $sysconf);
+    $wa_hours = themeEffectiveTemplateValue('classic_service_hours', 'Senin - Jumat (08:00 - 16:00)', $sysconf);
+    $wa_desc = themeEffectiveTemplateValue('classic_whatsapp_desc', 'Pilih salah satu kategori pertanyaan di bawah ini untuk memulai chat dengan pustakawan kami via WhatsApp.', $sysconf);
+    ?>
+    <button id="floating-whatsapp-btn" class="btn-floating-whatsapp shadow-lg <?= !empty($latest_content_ticker_items) ? 'has-latest-content-ticker' : '' ?>" data-bs-toggle="modal" data-bs-target="#whatsappModal" title="WhatsApp Chat" aria-label="WhatsApp Chat">
+        <i class="fab fa-whatsapp"></i>
+    </button>
+
+    <div class="modal fade" id="whatsappModal" tabindex="-1" role="dialog" aria-labelledby="whatsappModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+            <div class="modal-content whatsapp-modal-content">
+                <div class="modal-header whatsapp-modal-header d-flex align-items-center justify-content-between">
+                    <div class="d-flex flex-column text-start">
+                        <span class="whatsapp-modal-name"><?= htmlspecialchars($wa_title, ENT_QUOTES, 'UTF-8') ?></span>
+                        <?php if (!empty($wa_hours)) : ?>
+                        <span class="whatsapp-modal-status"><i class="far fa-clock me-1" style="font-size: 11px;"></i> Jam Layanan: <?= htmlspecialchars($wa_hours, ENT_QUOTES, 'UTF-8') ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white m-0" data-bs-dismiss="modal" aria-label="<?= themeEscape(__('Close')) ?>"></button>
+                </div>
+                <div class="modal-body whatsapp-modal-body">
+                    <div class="whatsapp-chat-container d-flex flex-column">
+                        
+                        <!-- Incoming Bubble: Librarian Greeting -->
+                        <div class="chat-bubble-incoming d-flex flex-column">
+                            <div class="chat-bubble-author">Pustakawan</div>
+                            <div class="chat-bubble-text"><?= htmlspecialchars($wa_desc, ENT_QUOTES, 'UTF-8') ?></div>
+                        </div>
+
+                        <!-- Instruction Label -->
+                        <div class="whatsapp-quick-reply-label mb-2 text-center text-xs text-muted">Pilih Kategori Pertanyaan (Mulai Chat):</div>
+
+                        <!-- Outgoing Bubbles: User Choice Buttons -->
+                        <div class="whatsapp-categories-list d-flex flex-column gap-2">
+                            <?php
+                            $wa_num = preg_replace('/[^0-9]/', '', themeEffectiveTemplateValue('classic_whatsapp_number', '628123456789', $sysconf));
+                            $categories_raw = themeEffectiveTemplateValue('classic_whatsapp_categories', '', $sysconf);
+                            if (empty($categories_raw)) {
+                                $categories_raw = "Tugas Akhir | Halo, saya ingin bertanya tentang layanan tugas akhir.\nDenda | Halo, saya ingin bertanya tentang informasi denda.\nLogin | Halo, saya mengalami kendala login OPAC/akun.";
+                            }
+                            
+                            $parsed_categories = [];
+                            $parts = explode('|', $categories_raw);
+                            $num_parts = count($parts);
+
+                            if ($num_parts >= 2) {
+                                $current_title = trim($parts[0]);
+                                for ($i = 1; $i < $num_parts; $i++) {
+                                    $content = $parts[$i];
+                                    if ($i < $num_parts - 1) {
+                                        $boundary_pos = false;
+                                        $punctuations = ['.', '?', '!', "\n"];
+                                        foreach ($punctuations as $punc) {
+                                            $pos = strrpos($content, $punc);
+                                            if ($pos !== false && ($boundary_pos === false || $pos > $boundary_pos)) {
+                                                $boundary_pos = $pos;
+                                            }
+                                        }
+                                        if ($boundary_pos !== false) {
+                                            $message = trim(substr($content, 0, $boundary_pos + 1));
+                                            $next_title = trim(substr($content, $boundary_pos + 1));
+                                        } else {
+                                            $content_trimmed = trim($content);
+                                            $last_space = strrpos($content_trimmed, ' ');
+                                            if ($last_space !== false) {
+                                                $message = trim(substr($content_trimmed, 0, $last_space));
+                                                $next_title = trim(substr($content_trimmed, $last_space));
+                                            } else {
+                                                $message = '';
+                                                $next_title = $content_trimmed;
+                                            }
+                                        }
+                                        $parsed_categories[] = [
+                                            'title' => $current_title,
+                                            'message' => $message
+                                        ];
+                                        $current_title = $next_title;
+                                    } else {
+                                        $parsed_categories[] = [
+                                            'title' => $current_title,
+                                            'message' => trim($content)
+                                        ];
+                                    }
+                                }
+                            }
+
+                            foreach ($parsed_categories as $cat) {
+                                $wa_url = 'https://wa.me/' . $wa_num . '?text=' . urlencode($cat['message']);
+                                ?>
+                                <a href="<?= themeEscape($wa_url); ?>" target="_blank" rel="noopener noreferrer" class="chat-bubble-outgoing whatsapp-quick-reply">
+                                    <span><?= themeEscape($cat['title']); ?></span>
+                                    <i class="fab fa-whatsapp"></i>
+                                </a>
+                                <?php
+                            }
+                            ?>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -481,7 +615,7 @@ if ($show_floating_info && isset($dbs) && $dbs) {
 <?php endif; ?>
 
 <?php if ($show_back_to_top): ?>
-    <button id="back-to-top" title="Go to top" class="btn-back-to-top shadow-lg <?= $show_floating_info ? 'has-floating-info' : '' ?> <?= !empty($latest_content_ticker_items) ? 'has-latest-content-ticker' : '' ?>" aria-label="<?= themeEscape(__('Go to top')) ?>">
+    <button id="back-to-top" title="Go to top" class="btn-back-to-top shadow-lg <?= ($show_floating_libinfo || $show_floating_whatsapp) ? 'has-floating-info' : '' ?> <?= !empty($latest_content_ticker_items) ? 'has-latest-content-ticker' : '' ?>" aria-label="<?= themeEscape(__('Go to top')) ?>">
         <i class="fas fa-chevron-up"></i>
     </button>
 <?php endif; ?>

@@ -1,3 +1,9 @@
+/*!
+ * Rasamala theme interactions.
+ *
+ * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
+ * @Last modified time  : 2026-07-11T09:21:42+07:00
+ */
 'use strict';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -5,27 +11,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const queryAll = (selector, root = document) => Array.prototype.slice.call(root.querySelectorAll(selector));
 
     const colorModeStorageKey = 'rasamala-color-mode';
-    const colorModeToggle = query('#color-mode-toggle');
     const applyColorMode = (mode) => {
         const isDarkMode = mode === 'dark';
 
+        document.documentElement.classList.toggle('rasamala-dark', isDarkMode);
         document.body.classList.toggle('rasamala-dark', isDarkMode);
 
-        if (!colorModeToggle) return;
-
-        colorModeToggle.setAttribute('aria-pressed', isDarkMode ? 'true' : 'false');
-        colorModeToggle.setAttribute(
-            'title',
-            isDarkMode
-                ? (colorModeToggle.getAttribute('data-light-title') || 'Light mode')
-                : (colorModeToggle.getAttribute('data-dark-title') || 'Dark mode')
-        );
-
-        const icon = query('i', colorModeToggle);
-        if (icon) {
-            icon.classList.toggle('fa-moon', !isDarkMode);
-            icon.classList.toggle('fa-sun', isDarkMode);
+        // Dynamically load or remove dark mode CSS link
+        let darkLink = document.getElementById('rasamala-dark-css');
+        if (isDarkMode) {
+            if (!darkLink && window.rasamalaDarkCssUrl) {
+                darkLink = document.createElement('link');
+                darkLink.id = 'rasamala-dark-css';
+                darkLink.rel = 'stylesheet';
+                darkLink.href = window.rasamalaDarkCssUrl;
+                document.head.appendChild(darkLink);
+            }
+        } else {
+            if (darkLink) {
+                darkLink.remove();
+            }
         }
+
+        const activeToggles = queryAll('#color-mode-toggle, #color-mode-toggle-nav, #color-mode-toggle-desktop');
+        activeToggles.forEach(toggle => {
+            toggle.setAttribute('aria-pressed', isDarkMode ? 'true' : 'false');
+            toggle.setAttribute(
+                'title',
+                isDarkMode
+                    ? (toggle.getAttribute('data-light-title') || 'Light mode')
+                    : (toggle.getAttribute('data-dark-title') || 'Dark mode')
+            );
+
+            const icon = query('i', toggle);
+            if (icon) {
+                icon.classList.toggle('fa-moon', !isDarkMode);
+                icon.classList.toggle('fa-sun', isDarkMode);
+            }
+        });
     };
     const getStoredColorMode = () => {
         try {
@@ -37,19 +60,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     applyColorMode(getStoredColorMode());
 
-    if (colorModeToggle) {
-        colorModeToggle.addEventListener('click', (event) => {
-            event.preventDefault();
+    document.addEventListener('click', (event) => {
+        const toggle = event.target.closest('#color-mode-toggle, #color-mode-toggle-nav, #color-mode-toggle-desktop');
+        if (!toggle) return;
 
-            const nextMode = document.body.classList.contains('rasamala-dark') ? 'light' : 'dark';
+        event.preventDefault();
 
-            try {
-                window.localStorage.setItem(colorModeStorageKey, nextMode);
-            } catch (error) {}
+        const nextMode = document.body.classList.contains('rasamala-dark') ? 'light' : 'dark';
 
-            applyColorMode(nextMode);
-        });
-    }
+        try {
+            window.localStorage.setItem(colorModeStorageKey, nextMode);
+        } catch (error) {}
+
+        applyColorMode(nextMode);
+    });
 
     const csrfToken = () => {
         const metaToken = query('meta[name="csrf-token"]');
@@ -216,8 +240,8 @@ document.addEventListener('DOMContentLoaded', () => {
             })
                 .then((res) => {
                     const successClasses = button.hasAttribute('data-detail')
-                        ? ['bg-success', 'text-white', 'rounded-lg', 'px-2', 'py-1']
-                        : ['bg-success', 'text-white', 'rounded-lg'];
+                        ? ['bg-success', 'text-white', 'rounded-3', 'px-2', 'py-1']
+                        : ['bg-success', 'text-white', 'rounded-3'];
                     const label = document.getElementById(`label-${id}`);
 
                     button.classList.remove('text-muted');
@@ -238,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    queryAll('a[data-target="#mediaSocialModal"]').forEach((link) => {
+    queryAll('a[data-bs-target="#mediaSocialModal"]').forEach((link) => {
         link.addEventListener('click', () => {
             const modalBody = query('#mediaSocialModalBody');
             const id = encodeURIComponent(link.getAttribute('data-id') || '');
@@ -375,6 +399,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const animation = layer.getAttribute('data-animation') || 'particles';
         const isGlobalBackground = layer.classList.contains('background-animation-layer');
         const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const cpuCores = Number(window.navigator.hardwareConcurrency || 4);
+        const deviceMemory = Number(window.navigator.deviceMemory || 4);
+        const smallViewport = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
+        const liteMode = smallViewport || cpuCores <= 4 || deviceMemory <= 4;
 
         if (reducedMotion) {
             layer.classList.add('is-static');
@@ -387,7 +415,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const accentColor = rootStyle.getPropertyValue('--theme-accent-color').trim() || '#6f5b43';
         const accentRgb = rootStyle.getPropertyValue('--theme-accent-rgb').trim() || '111, 91, 67';
         const accentAlpha = (alpha) => `rgba(${accentRgb}, ${alpha})`;
-        const darkHeroAnimation = ['particles', 'constellation', 'rain'].includes(animation);
+        const darkHeroAnimation = ['particles', 'constellation', 'rain', 'bubbles', 'twinkle', 'glow'].includes(animation);
         const colors = isGlobalBackground
             ? [accentColor, accentAlpha(1), accentAlpha(0.92), accentAlpha(0.78), accentAlpha(0.62)]
             : (darkHeroAnimation
@@ -401,10 +429,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const randomGlyph = () => glyphs.charAt(randomInt(0, glyphs.length - 1));
 
         if (animation === 'particles') {
-            const particleCount = isGlobalBackground ? 118 : 76;
+            const particleCount = liteMode ? (isGlobalBackground ? 26 : 18) : (isGlobalBackground ? 42 : 28);
             for (let i = 0; i < particleCount; i += 1) {
                 const token = document.createElement('span');
-                const size = isGlobalBackground ? random(16, 54) : random(13, 44);
+                const size = isGlobalBackground ? random(14, 38) : random(12, 32);
 
                 token.className = 'hero-token';
                 token.textContent = randomGlyph();
@@ -412,46 +440,46 @@ document.addEventListener('DOMContentLoaded', () => {
                 token.style.top = `${random(0, 100)}%`;
                 token.style.fontSize = `${size}px`;
                 token.style.color = randomColor();
-                token.style.textShadow = `0 0 ${size / 2}px currentColor`;
-                token.style.setProperty('--tx', `${random(-42, 42)}vw`);
-                token.style.setProperty('--ty', `${random(-34, 34)}vh`);
-                token.style.setProperty('--rot', `${random(-360, 360)}deg`);
-                token.style.animationDuration = `${random(9, 22) * speedMult}s`;
+                token.style.textShadow = 'none';
+                token.style.setProperty('--tx', `${random(-28, 28)}vw`);
+                token.style.setProperty('--ty', `${random(-22, 22)}vh`);
+                token.style.setProperty('--rot', `${random(-120, 120)}deg`);
+                token.style.animationDuration = `${random(16, 30) * speedMult}s`;
                 token.style.animationDelay = `-${random(0, 20)}s`;
                 fragment.appendChild(token);
             }
         }
 
         if (animation === 'rain') {
-            const rainCount = isGlobalBackground ? 52 : 34;
+            const rainCount = liteMode ? (isGlobalBackground ? 12 : 8) : (isGlobalBackground ? 18 : 12);
             for (let i = 0; i < rainCount; i += 1) {
                 const column = document.createElement('span');
-                const length = randomInt(9, 18);
+                const length = randomInt(6, 11);
                 const text = Array.from({length}, randomGlyph).join('\n');
 
                 column.className = 'hero-rain-column';
                 column.textContent = text;
                 column.style.left = `${random(0, 100)}%`;
                 column.style.color = randomColor();
-                column.style.fontSize = `${isGlobalBackground ? random(14, 22) : random(12, 19)}px`;
-                column.style.animationDuration = `${random(8, 18) * speedMult}s`;
+                column.style.fontSize = `${isGlobalBackground ? random(12, 18) : random(11, 16)}px`;
+                column.style.animationDuration = `${random(14, 26) * speedMult}s`;
                 column.style.animationDelay = `-${random(0, 18)}s`;
                 fragment.appendChild(column);
             }
         }
 
         if (animation === 'constellation') {
-            const lineCount = isGlobalBackground ? 54 : 34;
-            const nodeCount = isGlobalBackground ? 68 : 42;
+            const lineCount = liteMode ? (isGlobalBackground ? 12 : 8) : (isGlobalBackground ? 20 : 14);
+            const nodeCount = liteMode ? (isGlobalBackground ? 16 : 10) : (isGlobalBackground ? 28 : 18);
             for (let i = 0; i < lineCount; i += 1) {
                 const line = document.createElement('span');
                 line.className = 'hero-line';
                 line.style.left = `${random(0, 100)}%`;
                 line.style.top = `${random(0, 100)}%`;
-                line.style.width = `${random(80, 260)}px`;
+                line.style.width = `${random(70, 190)}px`;
                 line.style.color = randomColor();
                 line.style.setProperty('--angle', `${random(-68, 68)}deg`);
-                line.style.animationDuration = `${random(4, 11) * speedMult}s`;
+                line.style.animationDuration = `${random(10, 18) * speedMult}s`;
                 line.style.animationDelay = `-${random(0, 9)}s`;
                 fragment.appendChild(line);
             }
@@ -464,9 +492,62 @@ document.addEventListener('DOMContentLoaded', () => {
                 node.style.color = randomColor();
                 node.style.setProperty('--tx', `${random(-18, 18)}px`);
                 node.style.setProperty('--ty', `${random(-18, 18)}px`);
-                node.style.animationDuration = `${random(5, 12) * speedMult}s`;
+                node.style.animationDuration = `${random(12, 22) * speedMult}s`;
                 node.style.animationDelay = `-${random(0, 10)}s`;
                 fragment.appendChild(node);
+            }
+        }
+
+        if (animation === 'bubbles') {
+            const bubbleCount = liteMode ? (isGlobalBackground ? 12 : 8) : (isGlobalBackground ? 22 : 14);
+            for (let i = 0; i < bubbleCount; i += 1) {
+                const bubble = document.createElement('span');
+                const size = random(12, 48);
+                const opacity = random(0.12, 0.36);
+
+                bubble.className = 'hero-bubble';
+                bubble.style.left = `${random(0, 100)}%`;
+                bubble.style.bottom = `-${size}px`;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.background = `radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.22) 0%, rgba(${accentRgb}, 0.08) 50%, rgba(${accentRgb}, 0.25) 100%)`;
+                bubble.style.border = `1px solid rgba(${accentRgb}, 0.18)`;
+                bubble.style.setProperty('--op', opacity);
+                bubble.style.setProperty('--tx', `${random(-12, 12)}vw`);
+                bubble.style.animationDuration = `${random(14, 28) * speedMult}s`;
+                bubble.style.animationDelay = `-${random(0, 16)}s`;
+                fragment.appendChild(bubble);
+            }
+        }
+
+        if (animation === 'twinkle') {
+            const starCount = liteMode ? (isGlobalBackground ? 25 : 18) : (isGlobalBackground ? 50 : 35);
+            for (let i = 0; i < starCount; i += 1) {
+                const star = document.createElement('span');
+                const size = random(2, 5);
+
+                star.className = 'hero-star';
+                star.style.left = `${random(0, 100)}%`;
+                star.style.top = `${random(0, 100)}%`;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.background = `radial-gradient(circle, #ffffff 0%, rgba(${accentRgb}, 0.6) 40%, rgba(${accentRgb}, 0) 100%)`;
+                star.style.boxShadow = `0 0 ${size * 2}px rgba(${accentRgb}, 0.4)`;
+                star.style.animationDuration = `${random(3, 8) * speedMult}s`;
+                star.style.animationDelay = `-${random(0, 8)}s`;
+                fragment.appendChild(star);
+            }
+        }
+
+        if (animation === 'glow') {
+            const orbCount = 3;
+            for (let i = 0; i < orbCount; i += 1) {
+                const orb = document.createElement('span');
+
+                orb.className = `hero-orb hero-orb-${i + 1}`;
+                orb.style.background = `radial-gradient(circle, rgba(${accentRgb}, 0.26) 0%, rgba(${accentRgb}, 0.08) 48%, rgba(${accentRgb}, 0) 70%)`;
+                orb.style.animationDuration = `${(25 + i * 8) * speedMult}s`;
+                fragment.appendChild(orb);
             }
         }
 
@@ -487,4 +568,38 @@ document.addEventListener('DOMContentLoaded', () => {
             node.nodeValue = node.nodeValue.replace(/\u00a0/g, '');
         });
     });
+
+    // Dynamic Running Text/Marquee Speed Adjustments (Constant speed in px/s)
+    const adjustTickerMarqueeSpeeds = () => {
+        const tickers = document.querySelectorAll('.latest-content-ticker');
+        tickers.forEach(ticker => {
+            const track = ticker.querySelector('.latest-content-ticker-track');
+            if (!track) return;
+            
+            const speedKey = ticker.getAttribute('data-speed') || 'normal';
+            let speedPxS = 65; // default normal
+            if (speedKey === 'fast') {
+                speedPxS = 110;
+            } else if (speedKey === 'normal') {
+                speedPxS = 65;
+            } else if (speedKey === 'slow') {
+                speedPxS = 36;
+            } else if (speedKey === 'very_slow') {
+                speedPxS = 20;
+            }
+
+            const distance = track.scrollWidth / 2;
+            if (distance > 0) {
+                const duration = distance / speedPxS;
+                track.style.animationDuration = `${duration}s`;
+            }
+        });
+    };
+
+    adjustTickerMarqueeSpeeds();
+    window.addEventListener('resize', adjustTickerMarqueeSpeeds);
+    if (document.fonts) {
+        document.fonts.ready.then(adjustTickerMarqueeSpeeds);
+    }
+
 });

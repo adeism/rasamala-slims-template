@@ -7,7 +7,7 @@
  * Copyright (C) 2015 Arie Nugraha (dicarve@gmail.com)
  * Create by Eddy Subratha (eddy.subratha@slims.web.id)
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-09T09:16:12+07:00
+ * @Last modified time  : 2026-07-15T08:25:01+07:00
  *
  * Slims 8 (Akasia)
  *
@@ -59,8 +59,6 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
     if (!in_array($current_view, ['simple', 'list', 'grid'], true)) {
         $current_view = 'simple';
     }
-    // $title_link = '<a href="'.$detail_url.'" class="titleField" itemprop="name" property="name" title="'.__('View record detail description for this title').'">'.$title.'</a>';
-
     // image thumbnail
     $thumb_url = '';
     if ($current_view !== 'simple') {
@@ -70,6 +68,9 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
         }
         $thumb_url = './lib/minigalnano/createthumb.php?filename='.urlencode($images_loc).'&width=240';
     }
+
+    $cover_html_list = '';
+    $cover_html_grid = '';
 
     // notes
     $notes = '';
@@ -86,7 +87,7 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
             if ($field_opts[0] == 1) {
                 $field_value = (trim($biblio_detail[$field]??'') !== '' ? $biblio_detail[$field] : '-');
                 $custom_field .= '<dt class="col-sm-3">'.themeEscape($field_opts[1]).'</dt><dd class="col-sm-9">'.themeEscape($field_value).'</dd>';
-                $grid_item_content .= '<li class="list-group-item"><label>'.themeEscape($field_opts[1]).'</label><span class="text-right">'.themeEscape($field_value).'</span></li>';
+                $grid_item_content .= '<li class="list-group-item"><label>'.themeEscape($field_opts[1]).'</label><span class="text-end">'.themeEscape($field_value).'</span></li>';
                 $i++;
             }
         }
@@ -98,14 +99,31 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
     }
 
     // availability
-    $simple_item_data = ['items' => [], 'total' => 0, 'available' => 0];
-    if ($current_view === 'simple') {
-        $simple_item_data = rasamalaGetItemsAndAvailability($dbs, $biblio_id);
-        $availability = $simple_item_data['available'];
+    $item_availability_data = ['items' => [], 'total' => 0, 'available' => 0];
+    if (in_array($current_view, ['simple', 'list'], true)) {
+        $item_availability_data = rasamalaGetItemsAndAvailability($dbs, $biblio_id);
+        $availability = $item_availability_data['available'];
     } else {
         $availability = getAvailability($dbs, $biblio_id, $sysconf);
     }
     $class_avail = ($availability > 0) ? '' : 'text-danger';
+    $availability_total = themeSafeInt($item_availability_data['total'] ?? 0);
+    $availability_summary = $availability_total > 0
+        ? themeSafeInt($availability) . '/' . $availability_total
+        : themeSafeInt($availability);
+    $availability_state_class = $availability > 0 ? 'is-available' : 'is-unavailable';
+    $availability_side_icon = $availability > 0 ? 'fas fa-check-circle' : 'fas fa-times-circle';
+
+    if ($current_view !== 'simple') {
+        if (themeShouldGenerateBookCover($biblio_detail['image'] ?? '', $sysconf)) {
+            $generated_cover = themeGenerateBookCoverHtml($biblio_detail['title'] ?? '');
+            $cover_html_list = $generated_cover;
+            $cover_html_grid = $generated_cover;
+        } else {
+            $cover_html_list = '<img loading="lazy" src="'.themeEscape($thumb_url).'" alt="cover" class="img-fluid rounded '.($availability > 0 ?: 'not-available').'" title="' . themeEscape($availability > 0 ? '' :  __('Items is not available')) . '"/>';
+            $cover_html_grid = '<img loading="lazy" src="'.themeEscape($thumb_url).'" class="img-fluid img-thumbnail shadow '.($availability > 0 ?: 'not-available').'" title="' . themeEscape($availability > 0 ? '' :  __('Items is not available')) . '"/>';
+        }
+    }
 
     // authors
     $_authors = isset($biblio_detail['author'])?$biblio_detail['author']:biblio_list_model::getAuthors($dbs, $biblio_id, true);
@@ -135,7 +153,7 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
         $availability_title = $availability > 0 ? __('Available') : __('Not Available');
         $item_rows = '';
 
-        foreach ($simple_item_data['items'] as $item) {
+        foreach ($item_availability_data['items'] as $item) {
             $item_code = themeEscape($item['item_code'] ?? '-');
             $call_number = themeEscape($item['call_number'] ?? '-');
             $location = themeEscape($item['location_name'] ?? '-');
@@ -157,7 +175,7 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
         $output .= '</button>';
         if ($item_rows !== '') {
             $output .= '<div class="biblio-avail-popover" role="dialog" aria-label="'.themeEscape(__('Item Detail')).'">';
-            $output .= '<div class="biblio-avail-popover-title">'.themeEscape(__('Item Detail')).' ('.themeSafeInt($simple_item_data['total']).')</div>';
+            $output .= '<div class="biblio-avail-popover-title">'.themeEscape(__('Item Detail')).' ('.$availability_total.')</div>';
             $output .= '<table class="biblio-avail-popover-table">';
             $output .= '<thead><tr><th>'.themeEscape(__('Code')).'</th><th>'.themeEscape(__('Call Number')).'</th><th>'.themeEscape(__('Location')).'</th><th class="text-center">'.themeEscape(__('Status')).'</th></tr></thead>';
             $output .= '<tbody>'.$item_rows.'</tbody>';
@@ -169,41 +187,33 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
 
     elseif ($current_view === 'list'):
 
-        $output .= '<div id="card-' . $biblio_id . '" class="card item border-0 elevation-1 mb-6">';
+        $output .= '<div id="card-' . $biblio_id . '" class="card item border-0 elevation-1 mb-4 biblio-list-card">';
         $output .= '<div class="card-body">';
-        $output .= '<div class="row">';
-        $output .= '<div class="col-12 col-md-2">';
-        $output .= '<img loading="lazy" src="'.themeEscape($thumb_url).'" alt="cover" class="img-fluid rounded '.($availability > 0 ?: 'not-available').'" title="' . themeEscape($availability > 0 ? '' :  __('Items is not available')) . '"/>';
-        $output .= '</div>'; // -- close col-2
-        $output .= '<div class="col-12 col-md-8">';
-        $output .= '<h5><a title="'.themeEscape(__('View record detail description for this title')).'" class="card-link" href="'.$detail_url.'">'.$title_search_html.'</a></h5>';
+        $output .= '<div class="biblio-list-layout">';
+        $output .= '<a class="biblio-list-cover" href="'.$detail_url.'" title="'.themeEscape(__('View record detail description for this title')).'">';
+        $output .= $cover_html_list;
+        $output .= '</a>';
+        $output .= '<div class="biblio-list-content">';
+        $output .= '<h5 class="biblio-list-title"><a title="'.themeEscape(__('View record detail description for this title')).'" class="card-link" href="'.$detail_url.'">'.$title_search_html.'</a></h5>';
         $output .= createButton($biblio_id, $biblio_detail['title']);
         $output .= '<div class="d-flex authors flex-wrap py-2">';
         $output .= $_authors_string;
         $output .= '</div>'; // -- close d-flex authors flex-wrap
-        $output .= '<p>'.$notes.'</p>';
+        $output .= '<p class="biblio-list-notes">'.$notes.'</p>';
         $output .= '<div id="expand-'.$biblio_id.'" class="collapse py-2 collapse-detail">'.$custom_field.'</div>';
-        $output .= '</div>'; // -- close col-8
-        $output .= '<div class="col-md-2 d-none d-md-block">';
-        $output .= '<div class="card availability cursor-pointer">';
-        $output .= '<div class="card-body pt-3 pb-2 px-1">';
-        $output .= '<div class="d-flex availability-content flex-column">';
-        $output .= '<span class="label">'.__('Availability').'</span>';
-        $output .= '<span class="value '.$class_avail.'">'.themeSafeInt($availability).'</span>';
-        $output .= '</div>'; // -- close d-flex flex-column
-        $output .= '<div class="add-to-chart add-to-chart-button align-items-center justify-content-center flex-column" data-biblio="'.$biblio_id.'">';
-        $output .= '<span class="label">'. __('Add to basket') .'</span>';
-        $output .= '<span class="value"><i class="fas fa-plus"></i></span>';
-        $output .= '</div>'; // -- close d-flex flex-column
-        $output .= '</div>'; // -- close card-body pt-3 pb-2 px-1
-        $output .= '</div>'; // -- close card availability
-        //  $output .= '<a class="btn btn-outline-primary btn-block mt-2 btn-sm" href="'.$detail_url.'">'.__('View Detail').'</a>';
-        $output .= '<a class="btn btn-outline-secondary btn-block mt-2 btn-sm" href="'.themeEscape($detail_url_raw.'&MARC=true').'" title="'.themeEscape(__('Download detail data in MARC')).'" target="_blank" rel="noopener noreferrer">'.themeEscape(__('MARC Download')).'</a>';
-        $output .= '<a class="btn btn-outline-secondary btn-block mt-2 btn-sm openPopUp citationLink" href="'.$cite_url.'" title="'.$title_attr.'" target="_blank" rel="noopener noreferrer">'.themeEscape(__('Cite')).'</a>';
-        $output .= '</div>'; // -- close col-2
-        $output .= '</div>'; // -- close row
+        $output .= '</div>'; // -- close biblio-list-content
+        $output .= '<aside class="biblio-list-side">';
+        $output .= '<div class="biblio-list-availability '.$availability_state_class.'">';
+        $output .= '<span class="biblio-list-availability-label"><i class="'.$availability_side_icon.'" aria-hidden="true"></i>'.themeEscape(__('Available')).'</span>';
+        $output .= '<strong class="'.$class_avail.'">'.$availability_summary.'</strong>';
+        $output .= '</div>';
+        $output .= '<button type="button" class="biblio-list-basket add-to-chart-button" data-biblio="'.$biblio_id.'"><i class="fas fa-plus" aria-hidden="true"></i><span>'.themeEscape(__('Add to basket')).'</span></button>';
+        $output .= '<a class="biblio-list-action-link" href="'.themeEscape($detail_url_raw.'&MARC=true').'" title="'.themeEscape(__('Download detail data in MARC')).'" target="_blank" rel="noopener noreferrer"><i class="fas fa-file-download" aria-hidden="true"></i><span>'.themeEscape(__('MARC')).'</span></a>';
+        $output .= '<a class="biblio-list-action-link openPopUp citationLink" href="'.$cite_url.'" title="'.$title_attr.'" target="_blank" rel="noopener noreferrer"><i class="fas fa-quote-right" aria-hidden="true"></i><span>'.themeEscape(__('Cite')).'</span></a>';
+        $output .= '</aside>';
+        $output .= '</div>'; // -- close biblio-list-layout
         if ($i > 0 && $expand) {
-            $output .= '<div class="expand"><a id="btn-expand-'.$biblio_id.'" class="d-flex justify-content-center text-decoration-none py-2" data-toggle="collapse" href="#expand-'.$biblio_id.'" role="button" aria-expanded="false" aria-controls="expand-'.$biblio_id.'"><i class="fas fa-angle-double-down"></i></a></div>';
+            $output .= '<div class="expand"><a id="btn-expand-'.$biblio_id.'" class="d-flex justify-content-center text-decoration-none py-2" data-bs-toggle="collapse" href="#expand-'.$biblio_id.'" role="button" aria-expanded="false" aria-controls="expand-'.$biblio_id.'"><i class="fas fa-angle-double-down"></i></a></div>';
         }
         $output .= '</div>';
         $output .= '</div>';
@@ -220,21 +230,21 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
         $cite_text = themeEscape(__('Cite'));
         $output .= <<<HTML
 <div class="grid-item--menu dropdown">
-    <a class="dropdown-toggle" role="button" data-toggle="dropdown" aria-expanded="false" data-display="static">
+    <a class="dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-display="static">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
             <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
         </svg>
     </a>
-    <div class="dropdown-menu dropdown-menu-right text-sm">
-        <a class="dropdown-item text-left px-3" href="{$marc_url}">{$marc_text}</a>
-        <a class="dropdown-item text-left px-3 openPopUp citationLink" href="{$cite_url}" title="{$title_cite}">{$cite_text}</a>
+    <div class="dropdown-menu dropdown-menu-end text-sm">
+        <a class="dropdown-item text-start px-3" href="{$marc_url}">{$marc_text}</a>
+        <a class="dropdown-item text-start px-3 openPopUp citationLink" href="{$cite_url}" title="{$title_cite}">{$cite_text}</a>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item text-left px-3 add-to-chart-button" data-biblio="{$biblio_id}" href="#">{$add_to_basket_text}</a>
+        <a class="dropdown-item text-start px-3 add-to-chart-button" data-biblio="{$biblio_id}" href="#">{$add_to_basket_text}</a>
     </div>
 </div>
 HTML;
-        $output .= '<div class="p-4 d-flex justify-content-center align-items-center bg-apple-light">';
-        $output .= '<img loading="lazy" src="'.themeEscape($thumb_url).'" class="img-fluid img-thumbnail shadow '.($availability > 0 ?: 'not-available').'" title="' . themeEscape($availability > 0 ? '' :  __('Items is not available')) . '"/>';
+        $output .= '<div class="p-4 d-flex justify-content-center align-items-center bg-rasamala-light">';
+        $output .= $cover_html_grid;
         $output .= '</div>';
         $output .= '<div class="card-body p-2">';
         $output .= '<a href="'.$detail_url.'" class="text-sm text-decoration-none grid-item--title m-0">'.$title_grid_html.'</a>';
@@ -343,33 +353,25 @@ function createButton(int $biblio_id, string $title)
 
     list($comment,$bookmark,$share) = [__('Comment'), (in_array($biblio_id, $_SESSION['bookmark']??[]) ? __('Bookmarked') : __('Bookmark')),__('Share')];
 
-    $setBookmarked = trim(isset($_SESSION['bookmark'][$biblio_id]) ? 'bg-success text-white rounded-lg' : 'text-muted');
+    $setBookmarked = isset($_SESSION['bookmark'][$biblio_id]) ? 'bg-success text-white rounded-3 is-bookmarked' : 'text-muted';
     $commentUrlCondition = themeEscape((string)$commentUrlCondition);
     $comment = themeEscape($comment);
     $bookmark = themeEscape($bookmark);
     $share = themeEscape($share);
     $title_attr = themeEscape($title);
     return <<<HTML
-    <div class="d-flex flex-row text-xs my-1">
-        <a href="{$commentUrlCondition}" class="text-decoration-none font-weight-bolder mr-1 px-2 py-1">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-left-dots" viewBox="0 0 16 16">
-                <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
-                <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
-            </svg>
-            {$comment}
+    <div class="biblio-list-quick-actions">
+        <a href="{$commentUrlCondition}" class="biblio-list-quick-action">
+            <i class="far fa-comment-dots" aria-hidden="true"></i>
+            <span>{$comment}</span>
         </a>
-        <a href="javascript:void(0)" data-id="{$biblio_id}" class="bookMarkBook text-decoration-none font-weight-bolder mr-1 px-2 py-1 {$setBookmarked}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-postcard-heart" viewBox="0 0 16 16">
-                <path d="M8 4.5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7Zm3.5.878c1.482-1.42 4.795 1.392 0 4.622-4.795-3.23-1.482-6.043 0-4.622ZM2.5 5a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3Zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3Zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3Z"/>
-                <path fill-rule="evenodd" d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2Z"/>
-            </svg>
-            <label id="label-{$biblio_id}" class="m-0 cursor-pointer">{$bookmark}</label>
+        <a href="javascript:void(0)" data-id="{$biblio_id}" class="bookMarkBook biblio-list-quick-action {$setBookmarked}">
+            <i class="far fa-bookmark" aria-hidden="true"></i>
+            <span id="label-{$biblio_id}">{$bookmark}</span>
         </a>
-        <a href="javascript:void(0)" data-id="{$biblio_id}" data-title="{$title_attr}" data-toggle="modal" data-target="#mediaSocialModal" class="text-decoration-none font-weight-bolder mr-1 px-2 py-1">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share" viewBox="0 0 16 16">
-                <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l-6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
-            </svg>
-            {$share}
+        <a href="javascript:void(0)" data-id="{$biblio_id}" data-title="{$title_attr}" data-bs-toggle="modal" data-bs-target="#mediaSocialModal" class="biblio-list-quick-action">
+            <i class="fas fa-share-alt" aria-hidden="true"></i>
+            <span>{$share}</span>
         </a>
     </div>
     HTML;

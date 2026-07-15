@@ -8,12 +8,6 @@
 
 $imagesDisk = \SLiMS\Filesystems\Storage::images();
 
-//$a = get_defined_vars();
-//$a['sysconf'] = null;
-//$a['main_content'] = null;
-//echo '<pre>'; print_r($a); echo '</pre>'; die();
-//echo '<pre>'; print_r($_SESSION); echo '</pre>'; die();
-
 // setup list view
 $available_list_views = ['simple', 'list', 'grid'];
 $list_view_default_marker = 'rasamala-simple-default-20260708';

@@ -4,10 +4,10 @@
  * @Date                : 2020-01-02 15:12
  * @File name           : tinfo.inc.php
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-09T14:59:58+07:00
+ * @Last modified time  : 2026-07-13T09:28:31+07:00
  */
 
-$rasamala_default_topic_items = "Literature | index.php?callnumber=8&search=search | fas fa-book ; Social Sciences | index.php?callnumber=3&search=search | fas fa-users ; Applied Sciences | index.php?callnumber=6&search=search | fas fa-flask ; Art & Recreation | index.php?callnumber=7&search=search | fas fa-paint-brush ; see more.. | #exampleModal | fas fa-th-large";
+$rasamala_default_topic_items = "Literature | index.php?callnumber=8&search=search | fas fa-book ; Social Sciences | index.php?callnumber=3&search=search | fas fa-users ; Applied Sciences | index.php?callnumber=6&search=search | fas fa-flask ; Art & Recreation | index.php?callnumber=7&search=search | fas fa-paint-brush ; Language | index.php?callnumber=4&search=search | fas fa-language ; see more.. | #exampleModal | fas fa-th-large";
 $rasamala_default_announcement_text = <<<HTML
 <strong>Info layanan:</strong> Perpustakaan buka Senin-Jumat, pukul 08.00-16.00 WIB.
 <a href="index.php?p=libinfo">Lihat informasi lengkap</a>.
@@ -34,17 +34,26 @@ $rasamala_default_custom_css = <<<CSS
 CSS;
 
 $sysconf['template']['base'] = 'php';
-$sysconf['template']['responsive'] = false;
+$sysconf['template']['responsive'] = true;
 
 $sysconf['template']['classic_library_subname'] = 0;
 $sysconf['template']['classic_popular_collection'] = 1;
+$sysconf['template']['classic_popular_collection_heading_display'] = 'all';
+$sysconf['template']['classic_popular_collection_title_show'] = 1;
+$sysconf['template']['classic_popular_collection_subtitle_show'] = 1;
 $sysconf['template']['classic_popular_collection_item'] = 6;
 $sysconf['template']['classic_new_collection'] = 1;
+$sysconf['template']['classic_new_collection_heading_display'] = 'all';
+$sysconf['template']['classic_new_collection_title_show'] = 1;
+$sysconf['template']['classic_new_collection_subtitle_show'] = 1;
 $sysconf['template']['classic_new_collection_item'] = 6;
 $sysconf['template']['classic_top_reader'] = 1;
+$sysconf['template']['classic_top_reader_heading_display'] = 'both';
+$sysconf['template']['classic_top_reader_title_show'] = 1;
+$sysconf['template']['classic_top_reader_subtitle_show'] = 1;
 $sysconf['template']['classic_top_reader_item'] = 5;
-$sysconf['template']['classic_homepage_section_order'] = 'topic;popular;new-collection;top-reader;map';
-$sysconf['template']['classic_map'] = 1;
+$sysconf['template']['classic_homepage_section_order'] = 'topic;news;popular;new-collection;top-reader;map';
+$sysconf['template']['classic_map'] = 'all';
 $sysconf['template']['classic_map_link'] = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.288723306273!2d106.80038831428296!3d-6.225610995493402!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f14efd9abf05%3A0x1659580cc6981749!2sPerpustakaan+Kemendikbud!5e0!3m2!1sid!2sid!4v1516601731218';
 $sysconf['template']['classic_map_height'] = '420';
 $sysconf['template']['classic_map_desc'] = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque et nunc mi. Donec vehicula turpis a quam venenatis posuere. Aliquam nibh lectus, gravida et leo sit amet, dignissim dapibus mauris.<br>Telp. (021) 9172638<br>Fax. (021) 9172638<br>';
@@ -58,56 +67,89 @@ $sysconf['template']['classic_telegram_link'] = '';
 $sysconf['template']['classic_linkedin_link'] = '';
 $sysconf['template']['visitor_log_voice'] = 1;
 $sysconf['template']['visitor_quote'] = 1;
+$sysconf['template']['visitor_title'] = '';
+$sysconf['template']['visitor_subtitle'] = 'Visitor Check-In Portal';
+$sysconf['template']['visitor_theme_toggle'] = 1;
+$sysconf['template']['visitor_layout_style'] = 'kiosk';
 $sysconf['template']['classic_footer_about_us'] = <<<HTML
 <p>As a complete Library Management System, SLiMS (Senayan Library Management System) has many features that will help libraries and librarians to do their job easily 
 and quickly. Follow <a target="_blank" rel="noopener noreferrer" href="https://slims.web.id/web/pages/about/">this link</a> to show some features provided by SLiMS.</p>
 HTML;
 $sysconf['template']['classic_footer_show'] = 1;
+$sysconf['template']['classic_footer_search_show'] = 0;
 $sysconf['template']['classic_footer_copyright'] = 'Senayan Developer Community';
+$sysconf['template']['classic_prayer_times_show'] = 'both';
+$sysconf['template']['classic_prayer_times_city'] = 'Jakarta';
+$sysconf['template']['classic_theme_preset'] = 'simple_homepage';
 $sysconf['template']['classic_topic_show'] = 1;
+$sysconf['template']['classic_topic_heading_display'] = 'title';
+$sysconf['template']['classic_topic_title_show'] = 1;
+$sysconf['template']['classic_topic_subtitle_show'] = 0;
 $sysconf['template']['classic_topic_items'] = $rasamala_default_topic_items;
 $sysconf['template']['classic_search_size'] = 'medium';
 $sysconf['template']['classic_homepage_only_hero'] = 0;
 $sysconf['template']['classic_hero_text'] = 'Search Library Collection';
 $sysconf['template']['classic_hero_text_size'] = 'small';
 $sysconf['template']['classic_search_placeholder'] = 'Enter keyword to search collection...';
-$sysconf['template']['classic_hero_background_animation'] = 'particles';
+$sysconf['template']['classic_hero_background_animation'] = 'twinkle';
 $sysconf['template']['classic_background_animation_speed'] = 'normal';
+$sysconf['template']['classic_cursor_particles'] = 'auto';
+$sysconf['template']['classic_cursor_custom_icon'] = 'default';
 $sysconf['template']['classic_announcement_show'] = 0;
 $sysconf['template']['classic_announcement_text'] = $rasamala_default_announcement_text;
-$sysconf['template']['classic_announcement_style'] = 'info';
+$sysconf['template']['classic_announcement_style'] = 'theme';
 $sysconf['template']['classic_home_display_show'] = 'below';
+$sysconf['template']['classic_home_display_style'] = 'badges';
 $sysconf['template']['classic_home_display_source'] = 'content';
 $sysconf['template']['classic_home_display_content_filter'] = 'all';
 $sysconf['template']['classic_home_display_content_detail'] = 'title';
 $sysconf['template']['classic_home_display_biblio_filter'] = 'all';
-$sysconf['template']['classic_ticker_show'] = 0;
+$sysconf['template']['classic_home_display_custom_text'] = 'Selamat datang di perpustakaan kami!';
+$sysconf['template']['classic_ticker_show'] = 'bottom';
 $sysconf['template']['classic_ticker_source'] = 'content';
 $sysconf['template']['classic_ticker_content_filter'] = 'all';
 $sysconf['template']['classic_ticker_content_detail'] = 'title';
 $sysconf['template']['classic_ticker_biblio_filter'] = 'all';
 $sysconf['template']['classic_ticker_speed'] = 'normal';
+$sysconf['template']['classic_ticker_custom_text'] = 'Selamat datang di perpustakaan kami!';
 $sysconf['template']['classic_latest_content_show'] = 'below';
 $sysconf['template']['classic_latest_content_item'] = 5;
 $sysconf['template']['classic_latest_content_title_chars'] = 48;
 $sysconf['template']['classic_ticker_item_limit'] = 5;
 $sysconf['template']['classic_ticker_char_limit'] = 48;
-$sysconf['template']['classic_home_item_limit'] = 5;
+$sysconf['template']['classic_home_item_limit'] = 1;
 $sysconf['template']['classic_home_char_limit'] = 48;
+$sysconf['template']['classic_home_content_cards_show'] = 1;
+$sysconf['template']['classic_home_content_cards_source'] = 'news';
+$sysconf['template']['classic_home_content_path_1'] = '';
+$sysconf['template']['classic_home_content_path_2'] = '';
+$sysconf['template']['classic_home_content_path_3'] = '';
 $sysconf['template']['classic_parallel_title_separator'] = '=';
 $sysconf['template']['classic_title_chars'] = 100;
+$sysconf['template']['classic_show_author_role'] = 0;
+$sysconf['template']['classic_detail_label_type'] = 'gmd';
 $sysconf['template']['classic_breadcrumbs_show'] = 1;
 $sysconf['template']['classic_back_to_top'] = 1;
-$sysconf['template']['classic_floating_info'] = 1;
+$sysconf['template']['classic_floating_info'] = 'whatsapp';
+$sysconf['template']['classic_whatsapp_number'] = '628123456789';
+$sysconf['template']['classic_whatsapp_title'] = 'Layanan Chat WhatsApp';
+$sysconf['template']['classic_service_hours'] = 'Senin - Jumat (08:00 - 16:00)';
+$sysconf['template']['classic_whatsapp_desc'] = 'Pilih salah satu kategori pertanyaan di bawah ini untuk memulai chat dengan pustakawan kami via WhatsApp.';
+$sysconf['template']['classic_whatsapp_categories'] = "Tugas Akhir | Halo, saya ingin bertanya tentang layanan tugas akhir.\nDenda | Halo, saya ingin bertanya tentang informasi denda.\nLogin | Halo, saya mengalami kendala login OPAC/akun.";
 $sysconf['template']['classic_member_area'] = 1;
 $sysconf['template']['classic_theme_color'] = 'warmgray';
 $sysconf['template']['classic_color_toggle'] = 1;
 $sysconf['template']['classic_font_family'] = 'system';
 $sysconf['template']['classic_search_result_layout'] = 'simple';
+$sysconf['template']['classic_search_panel_style'] = 'transparent';
+$sysconf['template']['classic_news_list_layout'] = 'title_excerpt';
 $sysconf['template']['classic_custom_css'] = $rasamala_default_custom_css;
 $sysconf['template']['classic_mobile_bottom_nav_show'] = 1;
-$sysconf['template']['classic_language_select'] = 1;
-$sysconf['template']['classic_navbar_menu'] = "Home | index.php | fas fa-home ; Information | index.php?p=libinfo | fas fa-info-circle ; News | index.php?p=news | fas fa-newspaper ; Help | index.php?p=help | fas fa-question-circle ; Librarian | index.php?p=librarian | fas fa-users ; Staff Area | index.php?p=login | fas fa-user-shield";
+$sysconf['template']['classic_auto_cover_generator'] = 'empty_missing';
+$sysconf['template']['classic_language_visible_codes'] = 'id_ID, en_US';
+$sysconf['template']['classic_librarian_display_mode'] = 'all';
+$sysconf['template']['classic_librarian_custom_usernames'] = '';
+$sysconf['template']['classic_navbar_menu'] = "Home | index.php | fas fa-home ; Information | index.php?p=libinfo | fas fa-info-circle ; News | index.php?p=news | fas fa-newspaper ; Help | index.php?p=help | fas fa-question-circle ; Librarian | index.php?p=librarian | fas fa-users ; Staff Area | index.php?p=login | fas fa-university";
 $coll_type_data = [['all', __('All Collection Types')]];
 if (isset($dbs) && $dbs) {
     $coll_q = $dbs->query("SELECT coll_type_id, coll_type_name FROM mst_coll_type ORDER BY coll_type_name ASC");
@@ -117,24 +159,40 @@ if (isset($dbs) && $dbs) {
         }
     }
 }
+$rasamala_section_heading_display_data = [
+    ['all', __('Title + Subtitle + Subject')],
+    ['both', __('Title + Subtitle')],
+    ['title_subject', __('Title + Subject')],
+    ['title', __('Title Only')],
+    ['hide', __('Hide All')]
+];
 
 $sysconf['template']['option'][$sysconf['template']['theme']] = [
     // -------------------------------------------------------------
     // Section 1: General & Layout Settings
     // -------------------------------------------------------------
-    'responsive' => [
-        'dbfield' => 'responsive',
-        'label' => __('Enable this theme for mobile?'),
+
+    'theme-preset' => [
+        'dbfield' => 'classic_theme_preset',
+        'label' => __('Pilihan Keseluruhan Tema'),
         'type' => 'dropdown',
-        'default' => 0,
+        'default' => 'simple_homepage',
         'data' => [
-            [1, __('Yes, please!')],
-            [0, __('No, I want use lighweight theme')]
+            ['simple_homepage', __('Minimal Search Only')],
+            ['all_show', __('Full Library Portal')],
+            ['simple_topics', __('Topic-Focused Directory')],
+            ['simple_topics_footer', __('Classic Directory with Footer')],
+            ['fun', __('Modern Interactive Portal')],
+            ['office', __('Corporate / Formal Portal')],
+            ['academic', __('Academic & Research Portal')],
+            ['minimalist', __('Minimalist Modern Portal')],
+            ['futuristic', __('Futuristic Digital Portal')],
+            ['custom', __('Custom (Fully Unlocked)')]
         ]
     ],
     'theme-color' => [
         'dbfield' => 'classic_theme_color',
-        'label' => __('Theme Accent Color'),
+        'label' => __('Warna Aksen Tema'),
         'type' => 'dropdown',
         'default' => 'warmgray',
         'data' => [
@@ -148,7 +206,7 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
     ],
     'color-toggle' => [
         'dbfield' => 'classic_color_toggle',
-        'label' => __('Dark/Light Mode Toggle'),
+        'label' => __('Tombol Dark/Light Mode'),
         'type' => 'dropdown',
         'default' => 1,
         'data' => [
@@ -158,7 +216,7 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
     ],
     'font-family' => [
         'dbfield' => 'classic_font_family',
-        'label' => __('Theme Font Family'),
+        'label' => __('Font Tema'),
         'type' => 'dropdown',
         'default' => 'system',
         'data' => [
@@ -169,19 +227,9 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
             ['playfair', __('Playfair Display (Serif)')]
         ]
     ],
-    'breadcrumbs-show' => [
-        'dbfield' => 'classic_breadcrumbs_show',
-        'label' => __('Breadcrumbs'),
-        'type' => 'dropdown',
-        'default' => 1,
-        'data' => [
-            [1, __('Show')],
-            [0, __('Hide')]
-        ]
-    ],
     'back-to-top' => [
         'dbfield' => 'classic_back_to_top',
-        'label' => __('Back to Top Button'),
+        'label' => __('Tombol Kembali ke Atas'),
         'type' => 'dropdown',
         'default' => 1,
         'data' => [
@@ -191,17 +239,48 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
     ],
     'floating-info' => [
         'dbfield' => 'classic_floating_info',
-        'label' => __('Floating Info Button'),
+        'label' => __('Tombol Info Melayang'),
         'type' => 'dropdown',
-        'default' => 1,
+        'default' => 'whatsapp',
         'data' => [
-            [1, __('Show')],
-            [0, __('Hide')]
+            ['libinfo', __('Show Library Info (Libinfo)')],
+            ['whatsapp', __('WhatsApp Mode')],
+            ['hide', __('Hide')]
         ]
+    ],
+    'whatsapp-number' => [
+        'dbfield' => 'classic_whatsapp_number',
+        'label' => __('Nomor WhatsApp (dengan Kode Negara)'),
+        'type' => 'text',
+        'default' => '628123456789'
+    ],
+    'whatsapp-title' => [
+        'dbfield' => 'classic_whatsapp_title',
+        'label' => __('Judul Layanan WhatsApp'),
+        'type' => 'text',
+        'default' => 'Layanan Chat WhatsApp'
+    ],
+    'service-hours' => [
+        'dbfield' => 'classic_service_hours',
+        'label' => __('Jam Layanan'),
+        'type' => 'text',
+        'default' => 'Senin - Jumat (08:00 - 16:00)'
+    ],
+    'whatsapp-desc' => [
+        'dbfield' => 'classic_whatsapp_desc',
+        'label' => __('Deskripsi Singkat WhatsApp'),
+        'type' => 'text',
+        'default' => 'Pilih salah satu kategori pertanyaan di bawah ini untuk memulai chat dengan pustakawan kami via WhatsApp.'
+    ],
+    'whatsapp-categories' => [
+        'dbfield' => 'classic_whatsapp_categories',
+        'label' => __('Kategori Pertanyaan WhatsApp (Format: Kategori | Template Pesan)'),
+        'type' => 'longtext',
+        'default' => "Tugas Akhir | Halo, saya ingin bertanya tentang layanan tugas akhir.\nDenda | Halo, saya ingin bertanya tentang informasi denda.\nLogin | Halo, saya mengalami kendala login OPAC/akun."
     ],
     'custom-css' => [
         'dbfield' => 'classic_custom_css',
-        'label' => __('Custom CSS'),
+        'label' => __('Custom CSS Tambahan'),
         'type' => 'longtext',
         'default' => $rasamala_default_custom_css,
         'width' => '100',
@@ -209,19 +288,19 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
     ],
 
     // -------------------------------------------------------------
-    // Section 2: Navbar Options
+    // Section 2: Navigation Bar Options
     // -------------------------------------------------------------
     'navbar-menu' => [
         'dbfield' => 'classic_navbar_menu',
-        'label' => __('Navbar Menus'),
+        'label' => __('Menu Navbar'),
         'type' => 'longtext',
-        'default' => "Home | index.php | fas fa-home ; Information | index.php?p=libinfo | fas fa-info-circle ; News | index.php?p=news | fas fa-newspaper ; Help | index.php?p=help | fas fa-question-circle ; Librarian | index.php?p=librarian | fas fa-users ; Staff Area | index.php?p=login | fas fa-user-shield",
+        'default' => "Home | index.php | fas fa-home ; Information | index.php?p=libinfo | fas fa-info-circle ; News | index.php?p=news | fas fa-newspaper ; Help | index.php?p=help | fas fa-question-circle ; Librarian | index.php?p=librarian | fas fa-users ; Staff Area | index.php?p=login | fas fa-university",
         'width' => '100',
         'max' => 2000
     ],
     'member-area' => [
         'dbfield' => 'classic_member_area',
-        'label' => __('Member Area in Navbar'),
+        'label' => __('Area Anggota di Navbar'),
         'type' => 'dropdown',
         'default' => 1,
         'data' => [
@@ -229,19 +308,27 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
             [0, __('Hide')]
         ]
     ],
-    'language-select' => [
-        'dbfield' => 'classic_language_select',
-        'label' => __('Language Selection in Navbar'),
+    'subtitle' => [
+        'dbfield' => 'classic_library_subname',
+        'label' => __('Subnama Perpustakaan di Navbar'),
         'type' => 'dropdown',
-        'default' => 1,
+        'default' => 0,
         'data' => [
             [1, __('Show')],
             [0, __('Hide')]
         ]
+    ],
+    'language-visible-codes' => [
+        'dbfield' => 'classic_language_visible_codes',
+        'label' => __('Bahasa yang Ditampilkan'),
+        'type' => 'longtext',
+        'default' => 'id_ID, en_US',
+        'width' => '100',
+        'max' => 1000
     ],
     'mobile-bottom-nav-show' => [
         'dbfield' => 'classic_mobile_bottom_nav_show',
-        'label' => __('Mobile Bottom Navigation Bar'),
+        'label' => __('Navbar Mobile Bawah'),
         'type' => 'dropdown',
         'default' => 1,
         'data' => [
@@ -251,27 +338,17 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
     ],
 
     // -------------------------------------------------------------
-    // Section 3: Hero & Search Settings
+    // Section 3: Hero & Search Bar Settings
     // -------------------------------------------------------------
-    'homepage-only-hero' => [
-        'dbfield' => 'classic_homepage_only_hero',
-        'label' => __('Simple Homepage'),
-        'type' => 'dropdown',
-        'default' => 0,
-        'data' => [
-            [1, __('Yes')],
-            [0, __('No')]
-        ]
-    ],
     'hero-text' => [
         'dbfield' => 'classic_hero_text',
-        'label' => __('Text on top search'),
+        'label' => __('Teks Judul Search'),
         'type' => 'text',
         'default' => 'Search Library Collection'
     ],
     'hero-text-size' => [
         'dbfield' => 'classic_hero_text_size',
-        'label' => __('Text on top search size'),
+        'label' => __('Ukuran Teks Judul Search'),
         'type' => 'dropdown',
         'default' => 'small',
         'data' => [
@@ -282,7 +359,7 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
     ],
     'search-size' => [
         'dbfield' => 'classic_search_size',
-        'label' => __('Search Box Size'),
+        'label' => __('Ukuran Search Box'),
         'type' => 'dropdown',
         'default' => 'medium',
         'data' => [
@@ -293,38 +370,30 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
     ],
     'search-placeholder' => [
         'dbfield' => 'classic_search_placeholder',
-        'label' => __('Search Placeholder Text'),
+        'label' => __('Placeholder Search'),
         'type' => 'text',
         'default' => 'Enter keyword to search collection...'
     ],
-    'search-result-layout' => [
-        'dbfield' => 'classic_search_result_layout',
-        'label' => __('Default Search Result Layout'),
-        'type' => 'dropdown',
-        'default' => 'simple',
-        'data' => [
-            ['simple', __('Simple')],
-            ['list', __('List')],
-            ['grid', __('Grid')]
-        ]
-    ],
     'hero-background-animation' => [
         'dbfield' => 'classic_hero_background_animation',
-        'label' => __('Background Animation'),
+        'label' => __('Animasi Background'),
         'type' => 'dropdown',
-        'default' => 'particles',
+        'default' => 'twinkle',
         'data' => [
             ['none', __('None')],
             ['particles', __('Floating Glyphs')],
             ['constellation', __('Constellation Lines')],
             ['rain', __('Code Rain')],
             ['waves', __('Ambient Waves')],
-            ['grid', __('Moving Grid')]
+            ['grid', __('Moving Grid')],
+            ['bubbles', __('Floating Bubbles')],
+            ['twinkle', __('Twinkling Stars')],
+            ['glow', __('Gradient Orbs')]
         ]
     ],
     'background-animation-speed' => [
         'dbfield' => 'classic_background_animation_speed',
-        'label' => __('Background Animation Speed'),
+        'label' => __('Kecepatan Animasi Background'),
         'type' => 'dropdown',
         'default' => 'normal',
         'data' => [
@@ -333,9 +402,41 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
             ['fast', __('Fast')]
         ]
     ],
+    'cursor-particles' => [
+        'dbfield' => 'classic_cursor_particles',
+        'label' => __('Efek Partikel Cursor'),
+        'type' => 'dropdown',
+        'default' => 'auto',
+        'data' => [
+            ['auto', __('Auto (Deteksi Perangkat)')],
+            ['low', __('Ringan')],
+            ['medium', __('Sedang')],
+            ['high', __('Optimal')],
+            ['none', __('Nonaktif')]
+        ]
+    ],
+    'cursor-custom-icon' => [
+        'dbfield' => 'classic_cursor_custom_icon',
+        'label' => __('Ikon Cursor'),
+        'type' => 'dropdown',
+        'default' => 'default',
+        'data' => [
+            ['default', __('Default Browser')],
+            ['neon-comet', __('Neon Comet')],
+            ['fire-phoenix', __('Fire Phoenix')],
+            ['pixel-sword', __('Pixel Sword')],
+            ['galaxy-orb', __('Galaxy Orb')],
+            ['electric-bolt', __('Electric Bolt')],
+            ['ink-brush', __('Ink Brush')],
+            ['cyber-drone', __('Cyber Drone')],
+            ['rainbow-ribbon', __('Rainbow Ribbon')],
+            ['ghost-spirit', __('Ghost Spirit')],
+            ['crystal-shard', __('Crystal Shard')]
+        ]
+    ],
     'announcement-show' => [
         'dbfield' => 'classic_announcement_show',
-        'label' => __('Show Announcement Banner'),
+        'label' => __('Banner Pengumuman'),
         'type' => 'dropdown',
         'default' => 0,
         'data' => [
@@ -345,16 +446,17 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
     ],
     'announcement-text' => [
         'dbfield' => 'classic_announcement_text',
-        'label' => __('Announcement Text / HTML'),
+        'label' => __('Isi Pengumuman / HTML'),
         'type' => 'longtext',
         'default' => $rasamala_default_announcement_text
     ],
     'announcement-style' => [
         'dbfield' => 'classic_announcement_style',
-        'label' => __('Announcement Banner Style'),
+        'label' => __('Gaya Banner Pengumuman'),
         'type' => 'dropdown',
-        'default' => 'info',
+        'default' => 'theme',
         'data' => [
+            ['theme', __('Theme Adaptive / Auto')],
             ['info', __('Info (Blue)')],
             ['warning', __('Warning (Yellow)')],
             ['danger', __('Danger (Red)')],
@@ -363,32 +465,38 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
     ],
 
     // -------------------------------------------------------------
-    // Section 4: Ticker / Running Text Settings
+    // Section 4: Running Text Settings
     // -------------------------------------------------------------
     'ticker-show' => [
         'dbfield' => 'classic_ticker_show',
-        'label' => __('Ticker Display Position'),
+        'label' => __('Posisi Running Text'),
         'type' => 'dropdown',
-        'default' => 0,
+        'default' => 'bottom',
         'data' => [
-            ['bottom', __('Bottom Screen')],
-            ['below', __('Below Search Box')],
+            ['bottom', __('Show')],
             [0, __('Hide')]
         ]
     ],
     'ticker-source' => [
         'dbfield' => 'classic_ticker_source',
-        'label' => __('Ticker Display Source'),
+        'label' => __('Sumber Running Text'),
         'type' => 'dropdown',
         'default' => 'content',
         'data' => [
             ['content', __('Latest Content (News/Info)')],
-            ['biblio', __('Latest Bibliography (Books/Items)')]
+            ['biblio', __('Latest Bibliography (Books/Items)')],
+            ['custom_ticker', __('Custom Text (Ketik Manual)')]
         ]
+    ],
+    'ticker-custom-text' => [
+        'dbfield' => 'classic_ticker_custom_text',
+        'label' => __('Teks Kustom Running Text (Jika memilih Custom Text)'),
+        'type' => 'text',
+        'default' => 'Selamat datang di perpustakaan kami!'
     ],
     'ticker-content-filter' => [
         'dbfield' => 'classic_ticker_content_filter',
-        'label' => __('Ticker Content Filter'),
+        'label' => __('Filter Konten Running Text'),
         'type' => 'dropdown',
         'default' => 'all',
         'data' => [
@@ -398,7 +506,7 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
     ],
     'ticker-content-detail' => [
         'dbfield' => 'classic_ticker_content_detail',
-        'label' => __('Ticker Content Detail'),
+        'label' => __('Detail Konten Running Text'),
         'type' => 'dropdown',
         'default' => 'title',
         'data' => [
@@ -408,62 +516,80 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
     ],
     'ticker-biblio-filter' => [
         'dbfield' => 'classic_ticker_biblio_filter',
-        'label' => __('Ticker Bibliography Filter'),
+        'label' => __('Filter Koleksi Running Text'),
         'type' => 'dropdown',
         'default' => 'all',
         'data' => $coll_type_data
     ],
     'ticker-speed' => [
         'dbfield' => 'classic_ticker_speed',
-        'label' => __('Ticker Animation Speed'),
+        'label' => __('Kecepatan Running Text'),
         'type' => 'dropdown',
         'default' => 'normal',
         'data' => [
-            ['slow', __('Slow (48s)')],
-            ['normal', __('Normal (32s)')],
-            ['fast', __('Fast (18s)')]
+            ['fast', __('Fast (12s)')],
+            ['normal', __('Normal (18s)')],
+            ['slow', __('Slow (32s)')],
+            ['very_slow', __('Very Slow (52s)')]
         ]
     ],
     'ticker-item-limit' => [
         'dbfield' => 'classic_ticker_item_limit',
-        'label' => __('Ticker Item Count'),
+        'label' => __('Jumlah Item Running Text'),
         'type' => 'text',
         'default' => 5
     ],
     'ticker-char-limit' => [
         'dbfield' => 'classic_ticker_char_limit',
-        'label' => __('Ticker Character Limit'),
+        'label' => __('Batas Karakter Running Text (0 untuk tampilkan semua / tidak terbatas)'),
         'type' => 'text',
         'default' => 48
     ],
 
     // -------------------------------------------------------------
-    // Section 5: Homepage Display (Below Search Box) Settings
+    // Section 5: Search Area Info Settings
     // -------------------------------------------------------------
     'home-display-show' => [
         'dbfield' => 'classic_home_display_show',
-        'label' => __('Homepage Display Position'),
+        'label' => __('Posisi Info Area Search (Hero Info)'),
         'type' => 'dropdown',
         'default' => 'below',
         'data' => [
-            ['below', __('Below Search Box')],
-            ['bottom', __('Bottom Screen')],
+            ['below', __('Show')],
             [0, __('Hide')]
+        ]
+    ],
+    'home-display-style' => [
+        'dbfield' => 'classic_home_display_style',
+        'label' => __('Gaya Tampilan Info Search'),
+        'type' => 'dropdown',
+        'default' => 'badges',
+        'data' => [
+            ['badges', __('Static Badges/Pills')],
+            ['fade', __('Fading Slideshow')],
+            ['ticker', __('Horizontal Ticker (Running Text)')]
         ]
     ],
     'home-display-source' => [
         'dbfield' => 'classic_home_display_source',
-        'label' => __('Homepage Display Source'),
+        'label' => __('Sumber Info Area Search'),
         'type' => 'dropdown',
         'default' => 'content',
         'data' => [
             ['content', __('Latest Content (News/Info)')],
-            ['biblio', __('Latest Bibliography (Books/Items)')]
+            ['biblio', __('Latest Bibliography (Books/Items)')],
+            ['custom_home', __('Custom Text (Ketik Manual)')]
         ]
+    ],
+    'home-display-custom-text' => [
+        'dbfield' => 'classic_home_display_custom_text',
+        'label' => __('Teks Kustom Info Search (Jika memilih Custom Text)'),
+        'type' => 'text',
+        'default' => 'Selamat datang di perpustakaan kami!'
     ],
     'home-display-content-filter' => [
         'dbfield' => 'classic_home_display_content_filter',
-        'label' => __('Homepage Display Content Filter'),
+        'label' => __('Filter Konten Info Search'),
         'type' => 'dropdown',
         'default' => 'all',
         'data' => [
@@ -473,7 +599,7 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
     ],
     'home-display-content-detail' => [
         'dbfield' => 'classic_home_display_content_detail',
-        'label' => __('Homepage Display Content Detail'),
+        'label' => __('Detail Konten Info Search'),
         'type' => 'dropdown',
         'default' => 'title',
         'data' => [
@@ -483,20 +609,20 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
     ],
     'home-display-biblio-filter' => [
         'dbfield' => 'classic_home_display_biblio_filter',
-        'label' => __('Homepage Display Bibliography Filter'),
+        'label' => __('Filter Koleksi Info Search'),
         'type' => 'dropdown',
         'default' => 'all',
         'data' => $coll_type_data
     ],
     'home-item-limit' => [
         'dbfield' => 'classic_home_item_limit',
-        'label' => __('Homepage Display Item Count'),
+        'label' => __('Jumlah Item Info Search'),
         'type' => 'text',
-        'default' => 5
+        'default' => 1
     ],
     'home-char-limit' => [
         'dbfield' => 'classic_home_char_limit',
-        'label' => __('Homepage Display Character Limit'),
+        'label' => __('Batas Karakter Info Search (0 untuk tampilkan semua / tidak terbatas)'),
         'type' => 'text',
         'default' => 48
     ],
@@ -504,19 +630,9 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
     // -------------------------------------------------------------
     // Section 6: Homepage Sections & Topics
     // -------------------------------------------------------------
-    'subtitle' => [
-        'dbfield' => 'classic_library_subname',
-        'label' => __('Library Sub Name'),
-        'type' => 'dropdown',
-        'default' => 0,
-        'data' => [
-            [1, __('Show')],
-            [0, __('Hide')]
-        ]
-    ],
-    'topic-show' => [
-        'dbfield' => 'classic_topic_show',
-        'label' => __('Homepage Topics Section'),
+    'home-content-cards-show' => [
+        'dbfield' => 'classic_home_content_cards_show',
+        'label' => __('News/Content in Homepage'),
         'type' => 'dropdown',
         'default' => 1,
         'data' => [
@@ -524,9 +640,55 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
             [0, __('Hide')]
         ]
     ],
+    'home-content-cards-source' => [
+        'dbfield' => 'classic_home_content_cards_source',
+        'label' => __('Source of News/Content'),
+        'type' => 'dropdown',
+        'default' => 'news',
+        'data' => [
+            ['news', __('News Saja')],
+            ['all', __('All Content')],
+            ['custom', __('Custom Path')]
+        ]
+    ],
+    'home-content-path-1' => [
+        'dbfield' => 'classic_home_content_path_1',
+        'label' => __('Custom Content Path 1 (contoh: news)'),
+        'type' => 'text',
+        'default' => ''
+    ],
+    'home-content-path-2' => [
+        'dbfield' => 'classic_home_content_path_2',
+        'label' => __('Custom Content Path 2'),
+        'type' => 'text',
+        'default' => ''
+    ],
+    'home-content-path-3' => [
+        'dbfield' => 'classic_home_content_path_3',
+        'label' => __('Custom Content Path 3'),
+        'type' => 'text',
+        'default' => ''
+    ],
+    'topic-show' => [
+        'dbfield' => 'classic_topic_show',
+        'label' => __('Section Topics Beranda'),
+        'type' => 'dropdown',
+        'default' => 1,
+        'data' => [
+            [1, __('Show')],
+            [0, __('Hide')]
+        ]
+    ],
+    'topic-heading-display' => [
+        'dbfield' => 'classic_topic_heading_display',
+        'label' => __('Teks Section Topics'),
+        'type' => 'dropdown',
+        'default' => 'title',
+        'data' => $rasamala_section_heading_display_data
+    ],
     'topic-items' => [
         'dbfield' => 'classic_topic_items',
-        'label' => __('Homepage Topics'),
+        'label' => __('Daftar Topics Beranda'),
         'type' => 'longtext',
         'default' => $rasamala_default_topic_items,
         'width' => '100',
@@ -534,7 +696,7 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
     ],
     'popular-collection' => [
         'dbfield' => 'classic_popular_collection',
-        'label' => __('Popular Collection Section'),
+        'label' => __('Section Koleksi Populer'),
         'type' => 'dropdown',
         'default' => 1,
         'data' => [
@@ -542,15 +704,22 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
             [0, __('Hide')]
         ]
     ],
+    'popular-collection-heading-display' => [
+        'dbfield' => 'classic_popular_collection_heading_display',
+        'label' => __('Teks Section Koleksi Populer'),
+        'type' => 'dropdown',
+        'default' => 'all',
+        'data' => $rasamala_section_heading_display_data
+    ],
     'popular-collection-item' => [
         'dbfield' => 'classic_popular_collection_item',
-        'label' => __('Popular Items Count'),
+        'label' => __('Jumlah Koleksi Populer'),
         'type' => 'text',
         'default' => 6
     ],
     'new-collection' => [
         'dbfield' => 'classic_new_collection',
-        'label' => __('New Collection Section'),
+        'label' => __('Section Koleksi Terbaru'),
         'type' => 'dropdown',
         'default' => 1,
         'data' => [
@@ -558,15 +727,22 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
             [0, __('Hide')]
         ]
     ],
+    'new-collection-heading-display' => [
+        'dbfield' => 'classic_new_collection_heading_display',
+        'label' => __('Teks Section Koleksi Terbaru'),
+        'type' => 'dropdown',
+        'default' => 'all',
+        'data' => $rasamala_section_heading_display_data
+    ],
     'new-collection-item' => [
         'dbfield' => 'classic_new_collection_item',
-        'label' => __('New Collection Items Count'),
+        'label' => __('Jumlah Koleksi Terbaru'),
         'type' => 'text',
         'default' => 6
     ],
     'top-reader' => [
         'dbfield' => 'classic_top_reader',
-        'label' => __('Top Reader Section'),
+        'label' => __('Section Top Reader'),
         'type' => 'dropdown',
         'default' => 1,
         'data' => [
@@ -574,17 +750,24 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
             [0, __('Hide')]
         ]
     ],
+    'top-reader-heading-display' => [
+        'dbfield' => 'classic_top_reader_heading_display',
+        'label' => __('Teks Section Top Reader'),
+        'type' => 'dropdown',
+        'default' => 'both',
+        'data' => $rasamala_section_heading_display_data
+    ],
     'top-reader-item' => [
         'dbfield' => 'classic_top_reader_item',
-        'label' => __('Top Reader Items Count'),
+        'label' => __('Jumlah Top Reader'),
         'type' => 'text',
         'default' => 5
     ],
     'homepage-section-order' => [
         'dbfield' => 'classic_homepage_section_order',
-        'label' => __('Homepage Section Order'),
+        'label' => __('Urutan Section Beranda'),
         'type' => 'text',
-        'default' => 'topic;popular;new-collection;top-reader;map'
+        'default' => 'topic;news;popular;new-collection;top-reader;map'
     ],
 
     // -------------------------------------------------------------
@@ -592,29 +775,31 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
     // -------------------------------------------------------------
     'map' => [
         'dbfield' => 'classic_map',
-        'label' => __('Maps Section'),
+        'label' => __('Section Peta & Sosial Media'),
         'type' => 'dropdown',
-        'default' => 1,
+        'default' => 'all',
         'data' => [
-            [1, __('Show')],
-            [0, __('Hide')]
+            ['all', __('Tampilkan Peta dan Sosial Media')],
+            ['hide_all', __('Sembunyikan Peta dan Sosial Media')],
+            ['hide_map', __('Sembunyikan Peta')],
+            ['hide_social', __('Sembunyikan Sosial Media')]
         ]
     ],
     'map-link' => [
         'dbfield' => 'classic_map_link',
-        'label' => __('Map Iframe Link'),
+        'label' => __('Link Iframe Peta'),
         'type' => 'text',
         'default' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.288723306273!2d106.80038831428296!3d-6.225610995493402!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f14efd9abf05%3A0x1659580cc6981749!2sPerpustakaan+Kemendikbud!5e0!3m2!1sid!2sid!4v1516601731218'
     ],
     'map-height' => [
         'dbfield' => 'classic_map_height',
-        'label' => __('Map Height (px)'),
+        'label' => __('Tinggi Peta (px)'),
         'type' => 'text',
         'default' => '420'
     ],
     'map-desc' => [
         'dbfield' => 'classic_map_desc',
-        'label' => __('Map Description / Contact Info'),
+        'label' => __('Deskripsi Peta / Kontak'),
         'type' => 'longtext',
         'default' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque et nunc mi. Donec vehicula turpis a quam venenatis posuere. Aliquam nibh lectus, gravida et leo sit amet, dignissim dapibus mauris.<br>Telp. (021) 9172638<br>Fax. (021) 9172638<br>'
     ],
@@ -676,7 +861,7 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
     // -------------------------------------------------------------
     'footer-show' => [
         'dbfield' => 'classic_footer_show',
-        'label' => __('Show Footer'),
+        'label' => __('Footer'),
         'type' => 'dropdown',
         'default' => 1,
         'data' => [
@@ -686,23 +871,173 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
     ],
     'footer-about-us' => [
         'dbfield' => 'classic_footer_about_us',
-        'label' => __('Footer About Us'),
+        'label' => __('Tentang Kami di Footer'),
         'type' => 'longtext',
         'default' => '<p>As a complete Library Management System, SLiMS (Senayan Library Management System) has many features that will help libraries and librarians to do their job easily and quickly. Follow <a target="_blank" rel="noopener noreferrer" href="https://slims.web.id/web/pages/about/">this link</a> to show some features provided by SLiMS.</p>'
     ],
+    'footer-search-show' => [
+        'dbfield' => 'classic_footer_search_show',
+        'label' => __('Search Form di Footer'),
+        'type' => 'dropdown',
+        'default' => 0,
+        'data' => [
+            [0, __('Hide')],
+            [1, __('Show')]
+        ]
+    ],
     'footer-copyright' => [
         'dbfield' => 'classic_footer_copyright',
-        'label' => __('Footer Copyright Text'),
+        'label' => __('Teks Copyright Footer'),
         'type' => 'text',
         'default' => 'Senayan Developer Community'
     ],
+    'prayer-times-show' => [
+        'dbfield' => 'classic_prayer_times_show',
+        'label' => __('Widget Waktu Sholat'),
+        'type' => 'dropdown',
+        'default' => 'both',
+        'data' => [
+            ['both', __('Footer + Floating Reminder')],
+            ['footer', __('Footer Only')],
+            ['floating', __('Floating Reminder Only (10 Minutes)')],
+            ['hide', __('Hide')]
+        ]
+    ],
+    'prayer-times-city' => [
+        'dbfield' => 'classic_prayer_times_city',
+        'label' => __('Kota Waktu Sholat'),
+        'type' => 'dropdown',
+        'default' => 'Jakarta',
+        'data' => [
+            ['Jakarta', 'Jakarta'],
+            ['Bandung', 'Bandung'],
+            ['Surabaya', 'Surabaya'],
+            ['Medan', 'Medan'],
+            ['Semarang', 'Semarang'],
+            ['Makassar', 'Makassar'],
+            ['Yogyakarta', 'Yogyakarta'],
+            ['Palembang', 'Palembang'],
+            ['Denpasar', 'Denpasar'],
+            ['Balikpapan', 'Balikpapan'],
+            ['Pekanbaru', 'Pekanbaru'],
+            ['Banjarmasin', 'Banjarmasin'],
+            ['Depok', 'Depok'],
+            ['Tangerang', 'Tangerang'],
+            ['Bekasi', 'Bekasi'],
+            ['Bogor', 'Bogor'],
+            ['Malang', 'Malang'],
+            ['Solo', 'Surakarta (Solo)'],
+            ['Padang', 'Padang'],
+            ['Banda Aceh', 'Banda Aceh'],
+            ['Pontianak', 'Pontianak'],
+            ['Samarinda', 'Samarinda'],
+            ['Manado', 'Manado'],
+            ['Ambon', 'Ambon'],
+            ['Jayapura', 'Jayapura']
+        ]
+    ],
 
     // -------------------------------------------------------------
-    // Section 10: Metadata & General Text Limits
+    // Section 10: Librarian Page Settings
     // -------------------------------------------------------------
+    'librarian-display-mode' => [
+        'dbfield' => 'classic_librarian_display_mode',
+        'label' => __('Pustakawan yang Ditampilkan'),
+        'type' => 'dropdown',
+        'default' => 'all',
+        'data' => [
+            ['all', __('Semua')],
+            ['librarian_senior', __('Pustakawan + Pustakawan Senior')],
+            ['senior', __('Pustakawan Senior Saja')],
+            ['custom', __('Custom Username')]
+        ]
+    ],
+    'librarian-custom-usernames' => [
+        'dbfield' => 'classic_librarian_custom_usernames',
+        'label' => __('Username Custom Pustakawan (contoh: user1(kepala perpustakaan);user2(bagian informasi))'),
+        'type' => 'text',
+        'default' => ''
+    ],
+
+    // -------------------------------------------------------------
+    // Section 11: Book Detail & Search Results Settings
+    // -------------------------------------------------------------
+    'search-result-layout' => [
+        'dbfield' => 'classic_search_result_layout',
+        'label' => __('Tampilan Default Hasil Pencarian'),
+        'type' => 'dropdown',
+        'default' => 'simple',
+        'data' => [
+            ['simple', __('Simple')],
+            ['list', __('List')],
+            ['grid', __('Grid')]
+        ]
+    ],
+    'search-panel-style' => [
+        'dbfield' => 'classic_search_panel_style',
+        'label' => __('Filter, Sort & Hasil Pencarian'),
+        'type' => 'dropdown',
+        'default' => 'transparent',
+        'data' => [
+            ['transparent', __('Transparent')],
+            ['solid', __('Solid')]
+        ]
+    ],
+    'news-list-layout' => [
+        'dbfield' => 'classic_news_list_layout',
+        'label' => __('Tampilan List Berita / Informasi'),
+        'type' => 'dropdown',
+        'default' => 'title_excerpt',
+        'data' => [
+            ['title_excerpt', __('Title and Excerpt')],
+            ['title_only', __('Title Only')],
+            ['title_excerpt_thumbnail', __('Title, Excerpt, and Thumbnail')]
+        ]
+    ],
+    'auto-cover-generator' => [
+        'dbfield' => 'classic_auto_cover_generator',
+        'label' => __('Auto Generate Cover Buku Kosong'),
+        'type' => 'dropdown',
+        'default' => 'empty_missing',
+        'data' => [
+            ['empty_missing', __('No cover and missing files')],
+            ['empty_only', __('No cover only')],
+            ['none', __('Disable')]
+        ]
+    ],
+    'breadcrumbs-show' => [
+        'dbfield' => 'classic_breadcrumbs_show',
+        'label' => __('Breadcrumbs Navigation'),
+        'type' => 'dropdown',
+        'default' => 1,
+        'data' => [
+            [1, __('Show')],
+            [0, __('Hide')]
+        ]
+    ],
+    'detail-label-type' => [
+        'dbfield' => 'classic_detail_label_type',
+        'label' => __('Label di Atas Judul Buku (Halaman Detail)'),
+        'type' => 'dropdown',
+        'default' => 'gmd',
+        'data' => [
+            ['gmd', 'GMD (General Material Designation)'],
+            ['coll_type', __('Collection Type')]
+        ]
+    ],
+    'show-author-role' => [
+        'dbfield' => 'classic_show_author_role',
+        'label' => __('Tampilkan Peran/Tipe Pengarang (misal: Personal Name)'),
+        'type' => 'dropdown',
+        'default' => 0,
+        'data' => [
+            [1, __('Show')],
+            [0, __('Hide')]
+        ]
+    ],
     'title-chars' => [
         'dbfield' => 'classic_title_chars',
-        'label' => __('Title Character Limit'),
+        'label' => __('Batas Karakter Judul Utama (Halaman Detail Buku & Hasil Pencarian)'),
         'type' => 'text',
         'default' => 100,
         'width' => '10',
@@ -710,7 +1045,7 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
     ],
     'parallel-title-separator' => [
         'dbfield' => 'classic_parallel_title_separator',
-        'label' => __('Parallel Title Separator'),
+        'label' => __('Karakter Pemisah Judul Paralel (Halaman Detail Buku & Hasil Pencarian)'),
         'type' => 'text',
         'default' => '=',
         'width' => '10',
@@ -718,11 +1053,11 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
     ],
 
     // -------------------------------------------------------------
-    // Section 11: Visitor Page Settings
+    // Section 12: Visitor Log Page Settings
     // -------------------------------------------------------------
     'visitor-log-voice' => [
         'dbfield' => 'visitor_log_voice',
-        'label' => __('Visitor Log Voice'),
+        'label' => __('Suara Visitor Log'),
         'type' => 'dropdown',
         'default' => 1,
         'data' => [
@@ -732,12 +1067,44 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
     ],
     'visitor-quote' => [
         'dbfield' => 'visitor_quote',
-        'label' => __('Visitor Page Greeting Quote'),
+        'label' => __('Kutipan Salam Visitor Page'),
         'type' => 'dropdown',
         'default' => 1,
         'data' => [
             [1, __('Enable')],
             [0, __('Disable')]
+        ]
+    ],
+    'visitor-title' => [
+        'dbfield' => 'visitor_title',
+        'label' => __('Judul Utama Halaman Kiosk (Kosongkan untuk default nama perpustakaan)'),
+        'type' => 'text',
+        'default' => ''
+    ],
+    'visitor-subtitle' => [
+        'dbfield' => 'visitor_subtitle',
+        'label' => __('Sub-judul Halaman Kiosk Visitor'),
+        'type' => 'text',
+        'default' => 'Visitor Check-In Portal'
+    ],
+    'visitor-theme-toggle' => [
+        'dbfield' => 'visitor_theme_toggle',
+        'label' => __('Tombol Toggle Mode Gelap di Halaman Visitor'),
+        'type' => 'dropdown',
+        'default' => 1,
+        'data' => [
+            [1, __('Enable')],
+            [0, __('Disable')]
+        ]
+    ],
+    'visitor-layout-style' => [
+        'dbfield' => 'visitor_layout_style',
+        'label' => __('Desain Halaman Visitor (Buku Tamu)'),
+        'type' => 'dropdown',
+        'default' => 'kiosk',
+        'data' => [
+            ['kiosk', __('Kiosk Mode (Kartu Tengah dengan Jam Besar)')],
+            ['split', __('Split Layout (Form Kiri & Petunjuk Kanan)')]
         ]
     ],
 ];

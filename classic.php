@@ -207,7 +207,8 @@ function getTopic($dbs, $biblio_id)
 {
   $biblio_id = themeSafeInt($biblio_id);
 
-  $query = $dbs->query("SELECT topic FROM biblio_topic AS bt JOIN mst_topic AS mt ON bt.topic_id=mt.topic_id");
+  // S-01: add biblio_id filter that was missing
+  $query = $dbs->query("SELECT topic FROM biblio_topic AS bt JOIN mst_topic AS mt ON bt.topic_id=mt.topic_id WHERE bt.biblio_id=" . $biblio_id);
   $return = array();
   while ($data = $query->fetch_row()) {
     $return[] = $data[0];

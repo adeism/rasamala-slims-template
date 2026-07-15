@@ -4,25 +4,25 @@
  * @Email:  ido.alit@gmail.com
  * @Filename: app.js
  * @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time: 2026-07-09T09:16:12+07:00
+ * @Last modified time: 2026-07-13T15:09:00+07:00
  */
 
 'use strict';
 
-Vue.directive('click-outside', {
-    priority: 700,
-    bind: function (el, binding, vnode) {
-        window.event = function (event) {
+// Vue 3 click-outside directive definition
+const clickOutsideDirective = {
+    beforeMount(el, binding) {
+        el.clickOutsideEvent = function (event) {
             if (!(el === event.target || el.contains(event.target))) {
-                vnode.context[binding.expression](event);
+                binding.value(event);
             }
         };
-        document.body.addEventListener('click', window.event)
+        document.body.addEventListener('click', el.clickOutsideEvent);
     },
-    unbind: function (el) {
-        document.body.removeEventListener('click', window.event)
-    },
-});
+    unmounted(el) {
+        document.body.removeEventListener('click', el.clickOutsideEvent);
+    }
+};
 
 const allowedSearchFields = ['keywords', 'author', 'subject', 'isbn'];
 const makeSearchUrl = function (searchBy, text) {
@@ -42,43 +42,33 @@ const fetchJsonArray = function (url) {
         })
         .then(res => Array.isArray(res) ? res : []);
 };
-const renderAsyncMessage = function (createElement, type, message) {
-    return createElement('div', {
-        attrs: {
-            class: `theme-async-state theme-async-state-${type}`,
-            role: type === 'error' ? 'alert' : 'status',
-            'aria-live': 'polite'
-        }
+const renderAsyncMessage = function (h, type, message) {
+    return h('div', {
+        class: `theme-async-state theme-async-state-${type}`,
+        role: type === 'error' ? 'alert' : 'status',
+        'aria-live': 'polite'
     }, message);
 };
-const renderSkeleton = function (createElement, type, count) {
+const renderSkeleton = function (h, type, count) {
     const items = [];
     for (let i = 0; i < count; i++) {
-        items.push(createElement('div', {
+        items.push(h('div', {
             key: `skeleton-${type}-${i}`,
-            attrs: {
-                class: `theme-skeleton-item theme-skeleton-item-${type}`
-            }
+            class: `theme-skeleton-item theme-skeleton-item-${type}`
         }, [
-            createElement('span', {
-                attrs: {
-                    class: 'theme-skeleton-block'
-                }
+            h('span', {
+                class: 'theme-skeleton-block'
             })
         ]));
     }
 
-    return createElement('div', {
-        attrs: {
-            class: `theme-skeleton-list theme-skeleton-list-${type}`,
-            role: 'status',
-            'aria-live': 'polite'
-        }
+    return h('div', {
+        class: `theme-skeleton-list theme-skeleton-list-${type}`,
+        role: 'status',
+        'aria-live': 'polite'
     }, [
-        createElement('span', {
-            attrs: {
-                class: 'sr-only'
-            }
+        h('span', {
+            class: 'sr-only'
         }, 'Loading...'),
         ...items
     ]);
@@ -137,129 +127,66 @@ const limitTitleText = function (title, limit) {
 
     return chars.slice(0, Math.max(0, safeLimit - suffix.length)).join('').replace(/\s+$/, '') + suffix;
 };
-
-const show_advanced = new Vue({
-    el: '#search-wraper',
-    data: function () {
-        return {
-            show: false,
-            isFocus: false,
-            searchBy: 'keywords',
-            keywords: '',
-            tmpObj: {},
-            isProgrammaticFocus: false
-        }
-    },
-    computed: {
-        lastKeywords: function () {
-            let raw = localStorage.getItem('keywords')
-            if (raw) {
-                try {
-                    let keywords = JSON.parse(raw), arr = []
-                    for (let key in keywords) {
-                        if (keywords.hasOwnProperty(key)) {
-                            arr.push(keywords[key].time)
-                            keywords[key].text = key
-                            this.tmpObj[keywords[key].time] = keywords[key]
-                        }
-                    }
-                    arr.sort()
-                    arr.reverse()
-                    return arr.slice(0, 5)
-                } catch (e) {
-                    console.error(e.message)
-                    return []
-                }
-            }
-            return []
-        }
-    },
-    mounted: function () {
-        if (this.$refs.keywords) {
-            this.isProgrammaticFocus = true;
-            this.$refs.keywords.focus();
-        }
-    },
-    methods: {
-        searchOnFocus: function (e) {
-            if (this.isProgrammaticFocus) {
-                this.isProgrammaticFocus = false;
-                this.isFocus = true;
-                return;
-            }
-            this.show = true;
-            this.isFocus = true;
-            const urlParams = new URLSearchParams(window.location.search);
-            const search = urlParams.get('search');
-            const page = urlParams.get('p');
-            if (!search && !page) window.scrollTo(0, 250)
-        },
-        searchOnBlur: function (e) {
-            this.isFocus = false
-        },
-        hideSearch: function () {
-            if (!this.isFocus) {
-                this.show = false;
-                this.searchBy = 'keywords'
-            }
-        },
-        searchOnClick: function (searchBy) {
-            this.searchBy = searchBy
-            this.searchSubmit()
-        },
-        historySearchUrl: function (key) {
-            const item = this.tmpObj[key] || {}
-            return makeSearchUrl(item.searchBy, item.text)
-        },
-        searchSubmit: function () {
-            if (this.keywords !== '') this.saveKeyword()
-            window.location.href = makeSearchUrl(this.searchBy, this.keywords)
-        },
-        saveKeyword: function () {
-            let rawKeywords = localStorage.getItem('keywords')
-            let keywords = {};
-            if (rawKeywords) {
-                try {
-                    keywords = JSON.parse(rawKeywords)
-                } catch (e) {
-                    console.error(e.message)
-                }
-            }
-            if (keywords.hasOwnProperty(this.keywords)) {
-                keywords[this.keywords] = {
-                    count: keywords[this.keywords].count + 1,
-                    searchBy: this.searchBy,
-                    time: Date.now()
-                }
-            } else {
-                keywords[this.keywords] = {
-                    count: 1,
-                    searchBy: this.searchBy,
-                    time: Date.now()
-                }
-            }
-            let strKeyword = JSON.stringify(keywords)
-            localStorage.setItem('keywords', strKeyword)
-        }
+const getAutoCoverMode = function () {
+    const mode = String(window.rasamalaAutoCoverMode || '').trim();
+    if (['empty_missing', 'empty_only', 'none'].indexOf(mode) !== -1) {
+        return mode;
     }
-});
 
-Vue.component('slims-subject', {
+    return window.rasamalaAutoCoverGenerator === false ? 'none' : 'empty_missing';
+};
+const getCoverState = function (imageUrl, imageLoadError) {
+    if (imageLoadError) {
+        return 'missing';
+    }
+
+    const value = String(imageUrl || '').trim();
+    const lowerValue = value.toLowerCase();
+    if (!value ||
+        lowerValue.indexOf('default/image.png') !== -1 ||
+        lowerValue.indexOf('no-image') !== -1 ||
+        lowerValue.indexOf('no-cover') !== -1) {
+        return 'empty';
+    }
+
+    if (lowerValue.indexOf('notfound') !== -1 ||
+        lowerValue.indexOf('not-found') !== -1 ||
+        lowerValue.indexOf('file-not-found') !== -1) {
+        return 'missing';
+    }
+
+    return 'valid';
+};
+const shouldGenerateAutoCover = function (imageUrl, imageLoadError) {
+    const mode = getAutoCoverMode();
+    const state = getCoverState(imageUrl, imageLoadError);
+    if (mode === 'none') {
+        return false;
+    }
+    if (mode === 'empty_only') {
+        return state === 'empty';
+    }
+
+    return state === 'empty' || state === 'missing';
+};
+
+// Component Definitions
+const SlimsSubject = {
     props: {
         topic: {
             type: String,
             default: ''
         }
     },
-    render: function(createElement) {
-        return createElement('a', {
-            attrs: {
-                href: `index.php?subject="${encodeURIComponent(this.topic).replace(/%20/g, "+")}"&search=search`,
-                class: 'btn btn-outline-secondary btn-rounded btn-sm mr-2 mb-2'
-            }
-        }, this.topic)
+    render() {
+        return Vue.h('a', {
+            href: `index.php?subject="${encodeURIComponent(this.topic).replace(/%20/g, "+")}"&search=search`,
+            class: 'btn btn-outline-secondary btn-rounded btn-sm mr-2 mb-2'
+        }, this.topic);
     }
-});Vue.component('slims-book', {
+};
+
+const SlimsBook = {
     props: {
         biblioId: {
             type: String,
@@ -272,42 +199,43 @@ Vue.component('slims-subject', {
         image: {
             type: String,
             default: ''
+        },
+        isPopular: {
+            type: Boolean,
+            default: false
         }
     },
-    render: function (createElement) {
+    data() {
+        return {
+            imageLoadError: false
+        };
+    },
+    render() {
         const titleParts = splitParallelTitle(this.title);
         const titleLimit = getTitleCharacterLimit();
         const titleChildren = [
-            createElement('span', {
-                attrs: {
-                    class: 'parallel-title-main'
-                }
+            Vue.h('span', {
+                class: 'parallel-title-main'
             }, limitTitleText(titleParts.main, titleLimit))
         ];
 
         if (titleParts.parallel) {
-            titleChildren.push(createElement('span', {
-                attrs: {
-                    class: 'parallel-title-alt'
-                }
+            titleChildren.push(Vue.h('span', {
+                class: 'parallel-title-alt'
             }, [
-                createElement('i', {
-                    attrs: {
-                        class: 'fas fa-language',
-                        'aria-hidden': 'true'
-                    }
+                Vue.h('i', {
+                    class: 'fas fa-language',
+                    'aria-hidden': 'true'
                 }),
                 limitTitleText(titleParts.parallel, titleLimit)
             ]));
         }
 
         const imageUrl = String(this.image || '').trim();
-        const isPlaceholder = !imageUrl || 
-                              imageUrl.indexOf('default/image.png') !== -1 || 
-                              imageUrl.indexOf('notfound.png') !== -1;
+        const fallbackImageUrl = 'lib/minigallery/file-not-found.png';
 
         let imageElement;
-        if (isPlaceholder) {
+        if (!this.isPopular && shouldGenerateAutoCover(imageUrl, this.imageLoadError)) {
             let titleHash = 0;
             const cleanText = String(titleParts.main || '').trim();
             for (let i = 0; i < cleanText.length; i++) {
@@ -315,79 +243,62 @@ Vue.component('slims-subject', {
             }
             const gradientIndex = Math.abs(titleHash) % 6;
 
-            imageElement = createElement('div', {
-                attrs: {
-                    class: `book-cover-placeholder book-cover-gradient-${gradientIndex}`
-                }
+            imageElement = Vue.h('div', {
+                class: `book-cover-placeholder book-cover-gradient-${gradientIndex}`
             }, [
-                createElement('div', {
-                    attrs: {
-                        class: 'book-cover-spine'
-                    }
-                }),
-                createElement('div', {
-                    attrs: {
-                        class: 'book-cover-content'
-                    }
+                Vue.h('div', {
+                    class: 'book-cover-content'
                 }, [
-                    createElement('i', {
-                        attrs: {
-                            class: 'fas fa-book book-cover-icon'
-                        }
-                    }),
-                    createElement('div', {
-                        attrs: {
-                            class: 'book-cover-title-text'
-                        }
-                    }, limitTitleText(titleParts.main, 40))
+                    Vue.h('div', {
+                        class: 'book-cover-header-text'
+                    }, 'COLLECTION'),
+                    Vue.h('div', {
+                        class: 'book-cover-title-text'
+                    }, limitTitleText(titleParts.main, 40)),
+                    Vue.h('div', {
+                        class: 'book-cover-footer-text'
+                    }, 'FEB UI')
                 ])
             ]);
         } else {
-            imageElement = createElement('img', {
-                attrs: {
-                    src: this.image,
-                    class: 'img-fluid',
-                    loading: 'lazy',
-                    alt: this.title
+            imageElement = Vue.h('img', {
+                src: this.imageLoadError ? fallbackImageUrl : (this.image || fallbackImageUrl),
+                class: 'img-fluid',
+                loading: 'lazy',
+                alt: this.title,
+                onError: () => {
+                    if (!this.imageLoadError) {
+                        this.imageLoadError = true;
+                    }
                 }
             });
         }
 
-        return createElement('div', {
-            attrs: {
-                class: 'col-6 col-sm-4 col-md-3 col-lg-2 pb-4'
-            }
+        return Vue.h('div', {
+            class: 'col-6 col-sm-4 col-md-3 col-lg-2 pb-4'
         }, [
-            createElement('a', {
-                attrs: {
-                    href: `index.php?p=show_detail&id=${this.biblioId}`,
-                    class: 'card border-0 shadow-sm cursor-pointer text-decoration-none h-full slims-book-card'
-                },
+            Vue.h('a', {
+                href: `index.php?p=show_detail&id=${this.biblioId}`,
+                class: 'card border-0 shadow-sm cursor-pointer text-decoration-none h-full slims-book-card'
             }, [
-                createElement('div', {
-                    attrs: {
-                        class: 'card-body'
-                    }
+                Vue.h('div', {
+                    class: 'card-body'
                 }, [
-                    createElement('div', {
-                        attrs: {
-                            class: 'card-image fit-height'
-                        }
+                    Vue.h('div', {
+                        class: 'card-image fit-height'
                     }, [
                         imageElement
                     ]),
-                    createElement('div', {
-                        attrs: {
-                            class: 'card-text mt-2 parallel-title parallel-title-home'
-                        }
+                    Vue.h('div', {
+                        class: 'card-text mt-2 parallel-title parallel-title-home'
                     }, titleChildren)
                 ])
             ])
-        ])
+        ]);
     }
-});
+};
 
-Vue.component('slims-member', {
+const SlimsMember = {
     props: {
         image: {
             type: String,
@@ -410,11 +321,15 @@ Vue.component('slims-member', {
             default: '0'
         }
     },
-    render: function (createElement) {
+    render() {
         const imageUrl = String(this.image || '').trim();
         const isPlaceholder = !imageUrl || 
                               imageUrl.indexOf('default/image.png') !== -1 || 
-                              imageUrl.indexOf('notfound.png') !== -1;
+                              imageUrl.indexOf('notfound') !== -1 ||
+                              imageUrl.indexOf('not-found') !== -1 ||
+                              imageUrl.indexOf('file-not-found') !== -1 ||
+                              imageUrl.indexOf('no-image') !== -1 ||
+                              imageUrl.indexOf('no-avatar') !== -1;
 
         let avatarElement;
         if (isPlaceholder) {
@@ -435,87 +350,63 @@ Vue.component('slims-member', {
             }
             const avatarGradientIndex = Math.abs(nameHash) % 5;
 
-            avatarElement = createElement('div', {
-                attrs: {
-                    class: `member-avatar-placeholder member-avatar-gradient-${avatarGradientIndex}`
-                }
+            avatarElement = Vue.h('div', {
+                class: `member-avatar-placeholder member-avatar-gradient-${avatarGradientIndex}`
             }, initials);
         } else {
-            avatarElement = createElement('img', {
-                attrs: {
-                    class: 'img-fluid h-auto',
-                    src: this.image,
-                    loading: 'lazy'
-                }
+            avatarElement = Vue.h('img', {
+                class: 'img-fluid h-auto',
+                src: this.image,
+                loading: 'lazy'
             });
         }
 
-        return createElement('div', {
-            attrs: {
-                class: 'col-12 col-md-4 mb-4'
-            }
+        return Vue.h('div', {
+            class: 'col-12 col-md-4 mb-4'
         }, [
-            createElement('div', {
-                attrs: {
-                    class: 'card hover:shadow-md member-card'
-                }
+            Vue.h('div', {
+                class: 'card hover:shadow-md member-card'
             }, [
-                createElement('div', {
-                    attrs: {
-                        class: 'card-body'
-                    }
+                Vue.h('div', {
+                    class: 'card-body'
                 }, [
-                    createElement('div', {
-                        attrs: {
-                            class: 'card-image-rounded mx-auto'
-                        }
+                    Vue.h('div', {
+                        class: 'card-image-rounded mx-auto'
                     }, [
                         avatarElement
                     ]),
-                    createElement('h5', {
-                        attrs: {
-                            class: 'card-title text-center mt-3'
-                        }
+                    Vue.h('h5', {
+                        class: 'card-title text-center mt-3'
                     }, [
-                        createElement('span', this.memberName),
-                        createElement('br'),
-                        createElement('small', {
-                            attrs: {
-                                class: 'text-secondary'
-                            }
+                        Vue.h('span', this.memberName),
+                        Vue.h('br'),
+                        Vue.h('small', {
+                            class: 'text-secondary'
                         }, this.memberType)
                     ]),
-                    createElement('p', {
-                        attrs: {
-                            class: 'card-text text-center'
-                        }
+                    Vue.h('p', {
+                        class: 'card-text text-center'
                     }, [
-                        createElement('b', this.totalLoan),
-                        createElement('span', {
-                            attrs: {
-                                class: 'text-secondary ml-1'
-                            }
+                        Vue.h('b', this.totalLoan),
+                        Vue.h('span', {
+                            class: 'text-secondary ml-1'
                         }, 'Loans'),
-                        createElement('span', {
-                            attrs: {
-                                class: 'd-inline-block mx-3 align-middle bg-secondary',
-                                style: 'width: 1px; height: 16px;'
-                            }
+                        Vue.h('span', {
+                            class: 'd-inline-block mx-3 align-middle bg-secondary',
+                            style: 'width: 1px; height: 16px;'
                         }),
-                        createElement('b', this.totalBiblio),
-                        createElement('span', {
-                            attrs: {
-                                class: 'text-secondary ml-1'
-                            }
+                        Vue.h('b', this.totalBiblio),
+                        Vue.h('span', {
+                            class: 'text-secondary ml-1'
                         }, 'Title'),
                     ])
                 ])
             ])
         ]);
     }
-});
+};
 
-Vue.component('slims-collection', {
+const SlimsCollection = {
     props: {
         url: {
             type: String,
@@ -531,60 +422,58 @@ Vue.component('slims-collection', {
             biblios: [],
             loading: false,
             error: ''
-        }
+        };
     },
     mounted() {
-        this.getData()
+        this.getData();
     },
     methods: {
         getData() {
-            this.loading = true
-            this.error = ''
+            this.loading = true;
+            this.error = '';
             fetchJsonArray(this.url)
                 .then(res => {
-                    this.biblios = res
+                    this.biblios = res;
                 })
                 .catch(err => {
-                    console.error(err.message)
-                    this.error = 'Unable to load collections.'
-                    this.biblios = []
+                    console.error(err.message);
+                    this.error = 'Unable to load collections.';
+                    this.biblios = [];
                 })
                 .finally(() => {
-                    this.loading = false
-                })
+                    this.loading = false;
+                });
         }
     },
-    render: function (createElement) {
+    render() {
         var limitVal = parseInt(this.limit) || 6;
         if (this.loading && this.biblios.length < 1) {
-            return renderSkeleton(createElement, 'collection', limitVal)
+            return renderSkeleton(Vue.h, 'collection', limitVal);
         }
         if (this.error) {
-            return renderAsyncMessage(createElement, 'error', this.error)
+            return renderAsyncMessage(Vue.h, 'error', this.error);
         }
         if (this.biblios.length < 1) {
-            return renderAsyncMessage(createElement, 'empty', 'No collections available yet.')
+            return renderAsyncMessage(Vue.h, 'empty', 'No collections available yet.');
         }
 
+        var isPopular = String(this.url || '').indexOf('/popular') !== -1;
         var items = this.biblios.slice(0, limitVal);
-        return createElement('div', {
-            attrs: {
-                class: 'row mt-4 collection'
-            }
-        }, items.map(function (item) {
-            return createElement('slims-book', {
+        return Vue.h('div', {
+            class: 'row mt-4 collection justify-content-center'
+        }, items.map(item => {
+            return Vue.h(SlimsBook, {
                 key: item.biblio_id,
-                attrs: {
-                    biblioId: item.biblio_id,
-                    image: item.image,
-                    title: item.title,
-                }
-            })
-        }))
+                biblioId: item.biblio_id,
+                image: item.image,
+                title: item.title,
+                isPopular: isPopular
+            });
+        }));
     }
-});
+};
 
-Vue.component('slims-group-subject', {
+const SlimsGroupSubject = {
     props: {
         url: {
             type: String,
@@ -596,56 +485,52 @@ Vue.component('slims-group-subject', {
             subjects: [],
             loading: false,
             error: ''
-        }
+        };
     },
     mounted() {
-        this.getData()
+        this.getData();
     },
     methods: {
         getData() {
-            this.loading = true
-            this.error = ''
+            this.loading = true;
+            this.error = '';
             fetchJsonArray(this.url)
                 .then(res => {
-                    this.subjects = res
+                    this.subjects = res;
                 })
                 .catch(err => {
-                    console.error(err.message)
-                    this.error = 'Unable to load topics.'
-                    this.subjects = []
+                    console.error(err.message);
+                    this.error = 'Unable to load topics.';
+                    this.subjects = [];
                 })
                 .finally(() => {
-                    this.loading = false
-                })
+                    this.loading = false;
+                });
         }
     },
-    render: function (createElement) {
+    render() {
         if (this.loading && this.subjects.length < 1) {
-            return renderSkeleton(createElement, 'subject', 8)
+            return renderSkeleton(Vue.h, 'subject', 8);
         }
         if (this.error) {
-            return renderAsyncMessage(createElement, 'error', this.error)
+            return renderAsyncMessage(Vue.h, 'error', this.error);
         }
         if (this.subjects.length < 1) {
-            return renderAsyncMessage(createElement, 'empty', 'No topics available yet.')
+            return renderAsyncMessage(Vue.h, 'empty', 'No topics available yet.');
         }
 
-        return createElement('div', {
-            attrs: {
-                class: 'd-flex flex-row flex-wrap mb-3'
-            }
-        }, this.subjects.map(function (topic) {
-            return createElement('slims-subject', {
+        return Vue.h('div', {
+            class: 'd-flex flex-row flex-wrap justify-content-center mb-3 rasamala-group-subject'
+        }, this.subjects.map(topic => {
+            return Vue.h(SlimsSubject, {
                 key: topic,
-                attrs: {
-                    topic
-                }
-            })
-        }))
+                topic: topic
+            });
+        }));
     }
-});
+};
 
-Vue.component('slims-group-member', {
+const SlimsGroupMember = {
     props: {
         url: {
             type: String,
@@ -661,63 +546,173 @@ Vue.component('slims-group-member', {
             members: [],
             loading: false,
             error: ''
-        }
+        };
     },
     mounted() {
-        this.getData()
+        this.getData();
     },
     methods: {
         getData() {
-            this.loading = true
-            this.error = ''
+            this.loading = true;
+            this.error = '';
             fetchJsonArray(this.url)
                 .then(res => {
-                    this.members = res
+                    this.members = res;
                 })
                 .catch(err => {
-                    console.error(err.message)
-                    this.error = 'Unable to load top readers.'
-                    this.members = []
+                    console.error(err.message);
+                    this.error = 'Unable to load top readers.';
+                    this.members = [];
                 })
                 .finally(() => {
-                    this.loading = false
-                })
+                    this.loading = false;
+                });
         }
     },
-    render: function (createElement) {
+    render() {
         var limitVal = parseInt(this.limit) || 3;
         if (this.loading && this.members.length < 1) {
-            return renderSkeleton(createElement, 'member', limitVal)
+            return renderSkeleton(Vue.h, 'member', limitVal);
         }
         if (this.error) {
-            return renderAsyncMessage(createElement, 'error', this.error)
+            return renderAsyncMessage(Vue.h, 'error', this.error);
         }
         if (this.members.length < 1) {
-            return renderAsyncMessage(createElement, 'empty', 'No top readers available yet.')
+            return renderAsyncMessage(Vue.h, 'empty', 'No top readers available yet.');
         }
 
         var items = this.members.slice(0, limitVal);
-        return createElement('div', {
-            attrs: {
-                class: 'row'
-            }
-        }, items.map(function (member) {
-            return createElement('slims-member', {
+        return Vue.h('div', {
+            class: 'row justify-content-center'
+        }, items.map(member => {
+            return Vue.h(SlimsMember, {
                 key: member.member_id || member.name,
-                attrs: {
-                    memberName: member.name,
-                    memberType: member.type,
-                    image: member.image,
-                    totalLoan: member.total,
-                    totalBiblio: member.total_title
-                }
-            })
-        }))
+                memberName: member.name,
+                memberType: member.type,
+                image: member.image,
+                totalLoan: member.total,
+                totalBiblio: member.total_title
+            });
+        }));
     }
-});
+};
 
+// Initialize showAdvancedApp Vue instance if element exists
+if (document.getElementById('search-wraper')) {
+    const showAdvancedApp = Vue.createApp({
+        data() {
+            return {
+                show: false,
+                isFocus: false,
+                searchBy: 'keywords',
+                keywords: '',
+                tmpObj: {},
+                isProgrammaticFocus: false
+            };
+        },
+        computed: {
+            lastKeywords() {
+                let raw = localStorage.getItem('keywords');
+                if (raw) {
+                    try {
+                        let keywords = JSON.parse(raw), arr = [];
+                        for (let key in keywords) {
+                            if (keywords.hasOwnProperty(key)) {
+                                arr.push(keywords[key].time);
+                                keywords[key].text = key;
+                                this.tmpObj[keywords[key].time] = keywords[key];
+                            }
+                        }
+                        arr.sort();
+                        arr.reverse();
+                        return arr.slice(0, 5);
+                    } catch (e) {
+                        console.error(e.message);
+                        return [];
+                    }
+                }
+                return [];
+            }
+        },
+        mounted() {
+            if (this.$refs.keywords) {
+                this.isProgrammaticFocus = true;
+                this.$refs.keywords.focus();
+            }
+        },
+        methods: {
+            searchOnFocus(e) {
+                if (this.isProgrammaticFocus) {
+                    this.isProgrammaticFocus = false;
+                    this.isFocus = true;
+                    return;
+                }
+                this.show = true;
+                this.isFocus = true;
+            },
+            searchOnBlur(e) {
+                this.isFocus = false;
+            },
+            hideSearch() {
+                if (!this.isFocus) {
+                    this.show = false;
+                    this.searchBy = 'keywords';
+                }
+            },
+            searchOnClick(searchBy) {
+                this.searchBy = searchBy;
+                this.searchSubmit();
+            },
+            historySearchUrl(key) {
+                const item = this.tmpObj[key] || {};
+                return makeSearchUrl(item.searchBy, item.text);
+            },
+            searchSubmit() {
+                if (this.keywords !== '') this.saveKeyword();
+                window.location.href = makeSearchUrl(this.searchBy, this.keywords);
+            },
+            saveKeyword() {
+                let rawKeywords = localStorage.getItem('keywords');
+                let keywords = {};
+                if (rawKeywords) {
+                    try {
+                        keywords = JSON.parse(rawKeywords);
+                    } catch (e) {
+                        console.error(e.message);
+                    }
+                }
+                if (keywords.hasOwnProperty(this.keywords)) {
+                    keywords[this.keywords] = {
+                        count: keywords[this.keywords].count + 1,
+                        searchBy: this.searchBy,
+                        time: Date.now()
+                    };
+                } else {
+                    keywords[this.keywords] = {
+                        count: 1,
+                        searchBy: this.searchBy,
+                        time: Date.now()
+                    };
+                }
+                let strKeyword = JSON.stringify(keywords);
+                localStorage.setItem('keywords', strKeyword);
+            }
+        }
+    });
+
+    showAdvancedApp.directive('click-outside', clickOutsideDirective);
+    showAdvancedApp.mount('#search-wraper');
+}
+
+// Initialize slimsHomeApp Vue instance if element exists
 if (document.getElementById('slims-home')) {
-    const slimsHome = new Vue({
-        el: '#slims-home',
-    })
+    const slimsHomeApp = Vue.createApp({});
+    slimsHomeApp.directive('click-outside', clickOutsideDirective);
+    slimsHomeApp.component('slims-subject', SlimsSubject);
+    slimsHomeApp.component('slims-book', SlimsBook);
+    slimsHomeApp.component('slims-member', SlimsMember);
+    slimsHomeApp.component('slims-collection', SlimsCollection);
+    slimsHomeApp.component('slims-group-subject', SlimsGroupSubject);
+    slimsHomeApp.component('slims-group-member', SlimsGroupMember);
+    slimsHomeApp.mount('#slims-home');
 }
