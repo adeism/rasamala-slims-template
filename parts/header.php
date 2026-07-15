@@ -6,7 +6,7 @@
 # @Email:  ido.alit@gmail.com
 # @Date:   2018-01-23T11:25:57+07:00
 # @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-15T14:18:54+07:00
+# @Last modified time: 2026-07-15T14:51:13+07:00
 -->
 <?php
 // clean request uri from xss (S-05: use parse_url for safer extraction)
@@ -100,7 +100,8 @@ if (isset($_GET['p']) && $_GET['p'] === 'show_detail') {
     </script>
 
     <?php
-    $selected_color = themeSelectedAccentColor(themeEffectiveAccentColorKey($sysconf), $sysconf);
+    $effective_palette_key = strtolower((string) themeEffectiveAccentColorKey($sysconf));
+    $selected_color = themeSelectedAccentColor($effective_palette_key, $sysconf);
     $ticker_speed_val = '18s';
     $ticker_speed = themeEffectiveTemplateValue('classic_ticker_speed', 'normal', $sysconf);
     if ($ticker_speed === 'fast') {
@@ -284,6 +285,10 @@ if (!in_array($search_panel_style, ['transparent', 'solid'], true)) {
 }
 $body_classes = 'bg-light rasamala-theme';
 $body_classes .= ' rasamala-preset-' . preg_replace('/[^a-z0-9_-]+/i', '-', themePresetKey($sysconf));
+$body_classes .= ' rasamala-palette-' . preg_replace('/[^a-z0-9_-]+/i', '-', $effective_palette_key ?? 'warmgray');
+if (function_exists('themePaletteIsDark') && themePaletteIsDark($selected_color ?? [])) {
+    $body_classes .= ' rasamala-palette-dark';
+}
 $body_classes .= ' rasamala-search-panels-' . $search_panel_style;
 $current_page_class = isset($_GET['p']) ? (string)$_GET['p'] : ($is_homepage ? 'home' : 'search');
 $body_classes .= ' rasamala-page-' . preg_replace('/[^a-z0-9_-]+/i', '-', strtolower($current_page_class));

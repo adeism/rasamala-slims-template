@@ -33,6 +33,7 @@ Rasamala menyediakan pilihan keseluruhan tema lewat Tinfo:
 
 - Theme Color Palette menyediakan preset: Warm Gray, Neon Cyan, Neon Emerald, Sunset Orange, Royal Gold, Electric Pink, Minimal White, Dark Gray, Forest Academic, Clean Blue, Warm Library, Mono Minimal, dan Custom Palette.
 - Custom Palette memungkinkan pengisian kode warna sendiri untuk Primary, Secondary, Accent Highlight, Page Background, Surface/Card, Main Text, dan Muted Text/Border.
+- Palette gelap seperti Dark Gray dan custom palette gelap otomatis mendapat guard kontras agar panel putih legacy, form, dropdown, tabel, filter, search result, member/librarian page, dan elemen plugin tetap terbaca.
 - Komponen utama tetap kompatibel dengan `--theme-accent-color`, tetapi sekarang juga memakai token `--theme-primary`, `--theme-secondary`, `--theme-accent`, `--theme-background`, `--theme-surface`, `--theme-text`, dan `--theme-muted` agar tampilan tidak monoton.
 - Pilihan font: System Default, Inter, Roboto, Poppins, dan Playfair Display.
 - Font eksternal sudah disimpan lokal di folder tema.

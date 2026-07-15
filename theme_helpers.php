@@ -3,7 +3,7 @@
  * Shared helpers for templates that can be loaded before classic.php.
  *
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-15T14:44:49+07:00
+ * @Last modified time  : 2026-07-15T14:51:13+07:00
  */
 if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
@@ -1154,6 +1154,34 @@ if (!function_exists('themeHexToRgbString')) {
   {
     $hex = ltrim(themeNormalizeHexColor($hex, '#6f5b43'), '#');
     return hexdec(substr($hex, 0, 2)) . ', ' . hexdec(substr($hex, 2, 2)) . ', ' . hexdec(substr($hex, 4, 2));
+  }
+}
+
+if (!function_exists('themeHexColorLuminance')) {
+  function themeHexColorLuminance($hex)
+  {
+    $hex = ltrim(themeNormalizeHexColor($hex, '#ffffff'), '#');
+    $channels = [];
+    for ($i = 0; $i < 3; $i++) {
+      $value = hexdec(substr($hex, $i * 2, 2)) / 255;
+      $channels[] = ($value <= 0.03928) ? ($value / 12.92) : pow(($value + 0.055) / 1.055, 2.4);
+    }
+
+    return (0.2126 * $channels[0]) + (0.7152 * $channels[1]) + (0.0722 * $channels[2]);
+  }
+}
+
+if (!function_exists('themePaletteIsDark')) {
+  function themePaletteIsDark($palette)
+  {
+    if (!is_array($palette)) {
+      return false;
+    }
+
+    $background_luminance = themeHexColorLuminance($palette['background'] ?? '#ffffff');
+    $surface_luminance = themeHexColorLuminance($palette['surface'] ?? '#ffffff');
+
+    return $background_luminance < 0.28 || $surface_luminance < 0.28;
   }
 }
 

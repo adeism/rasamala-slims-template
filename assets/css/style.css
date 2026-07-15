@@ -2,7 +2,7 @@
  * Rasamala Theme Stylesheet
  * SLiMS 9 Bulian OPAC Custom Theme
  * Last modified by: Ade Ismail Siregar (adeismailbox@gmail.com)
- * Last modified time: 2026-07-15T14:18:54+07:00
+ * Last modified time: 2026-07-15T14:51:13+07:00
  */
 
 @import url('../../../../css/core.css');
@@ -221,6 +221,162 @@ button:focus-visible,
 }
 .bg-light {
   background-color: var(--rasamala-light-bg) !important;
+}
+
+/* Contrast guard for dark palettes used in regular/light color mode.
+   Legacy SLiMS/plugin markup often ships .bg-white or fixed light panels. */
+body.rasamala-palette-dark:not(.rasamala-dark) {
+  --rasamala-light-bg: var(--theme-background);
+  --rasamala-text-primary: var(--theme-text);
+  --rasamala-text-secondary: color-mix(in srgb, var(--theme-accent) 48%, #ffffff 52%);
+  --rasamala-text-muted: color-mix(in srgb, var(--theme-muted) 78%, #ffffff 22%);
+  --rasamala-border: rgba(255, 255, 255, 0.15);
+  --rasamala-card-shadow: 0 18px 46px rgba(0, 0, 0, 0.32);
+  background-color: var(--theme-background) !important;
+  color: var(--theme-text) !important;
+}
+
+body.rasamala-palette-dark:not(.rasamala-dark) .bg-white,
+body.rasamala-palette-dark:not(.rasamala-dark) .bg-light,
+body.rasamala-palette-dark:not(.rasamala-dark) .bg-rasamala-light,
+body.rasamala-palette-dark:not(.rasamala-dark) .card,
+body.rasamala-palette-dark:not(.rasamala-dark) .dropdown-menu,
+body.rasamala-palette-dark:not(.rasamala-dark) .modal-content,
+body.rasamala-palette-dark:not(.rasamala-dark) .list-group,
+body.rasamala-palette-dark:not(.rasamala-dark) .list-group-item,
+body.rasamala-palette-dark:not(.rasamala-dark) .table,
+body.rasamala-palette-dark:not(.rasamala-dark) .table td,
+body.rasamala-palette-dark:not(.rasamala-dark) .table th,
+body.rasamala-palette-dark:not(.rasamala-dark) .section-card,
+body.rasamala-palette-dark:not(.rasamala-dark) .desktop-sort-bar,
+body.rasamala-palette-dark:not(.rasamala-dark) .filter-panel-card,
+body.rasamala-palette-dark:not(.rasamala-dark) #search-filter,
+body.rasamala-palette-dark:not(.rasamala-dark) .biblio-list-card,
+body.rasamala-palette-dark:not(.rasamala-dark) .biblio-simple-item,
+body.rasamala-palette-dark:not(.rasamala-dark) .grid-item > .card,
+body.rasamala-palette-dark:not(.rasamala-dark) .topic li,
+body.rasamala-palette-dark:not(.rasamala-dark) .home-content-card,
+body.rasamala-palette-dark:not(.rasamala-dark) .news-list-card,
+body.rasamala-palette-dark:not(.rasamala-dark) .detail-record,
+body.rasamala-palette-dark:not(.rasamala-dark) .detail-cover-panel,
+body.rasamala-palette-dark:not(.rasamala-dark) .availability-panel,
+body.rasamala-palette-dark:not(.rasamala-dark) .librarian-card,
+body.rasamala-palette-dark:not(.rasamala-dark) .member-area,
+body.rasamala-palette-dark:not(.rasamala-dark) .rasamala-subpage-wrapper,
+body.rasamala-palette-dark:not(.rasamala-dark) #member_content .bg-white.border-right.border-bottom.border-left.p-4 {
+  background-color: var(--theme-surface) !important;
+  color: var(--theme-text) !important;
+  border-color: var(--rasamala-border) !important;
+}
+
+body.rasamala-palette-dark:not(.rasamala-dark) .text-dark,
+body.rasamala-palette-dark:not(.rasamala-dark) h1,
+body.rasamala-palette-dark:not(.rasamala-dark) h2,
+body.rasamala-palette-dark:not(.rasamala-dark) h3,
+body.rasamala-palette-dark:not(.rasamala-dark) h4,
+body.rasamala-palette-dark:not(.rasamala-dark) h5,
+body.rasamala-palette-dark:not(.rasamala-dark) h6,
+body.rasamala-palette-dark:not(.rasamala-dark) label,
+body.rasamala-palette-dark:not(.rasamala-dark) .form-label,
+body.rasamala-palette-dark:not(.rasamala-dark) .card-title,
+body.rasamala-palette-dark:not(.rasamala-dark) .topic li a,
+body.rasamala-palette-dark:not(.rasamala-dark) .biblio-title a,
+body.rasamala-palette-dark:not(.rasamala-dark) .news-list-title,
+body.rasamala-palette-dark:not(.rasamala-dark) .detail-title,
+body.rasamala-palette-dark:not(.rasamala-dark) .table,
+body.rasamala-palette-dark:not(.rasamala-dark) .table td,
+body.rasamala-palette-dark:not(.rasamala-dark) .table th,
+body.rasamala-palette-dark:not(.rasamala-dark) .dropdown-item {
+  color: var(--theme-text) !important;
+}
+
+body.rasamala-palette-dark:not(.rasamala-dark) .text-muted,
+body.rasamala-palette-dark:not(.rasamala-dark) .small,
+body.rasamala-palette-dark:not(.rasamala-dark) .section-subtitle,
+body.rasamala-palette-dark:not(.rasamala-dark) .subtitle-section,
+body.rasamala-palette-dark:not(.rasamala-dark) .footer-about-text,
+body.rasamala-palette-dark:not(.rasamala-dark) .latest-content-text,
+body.rasamala-palette-dark:not(.rasamala-dark) .help-block,
+body.rasamala-palette-dark:not(.rasamala-dark) .form-text,
+body.rasamala-palette-dark:not(.rasamala-dark) .news-list-summary,
+body.rasamala-palette-dark:not(.rasamala-dark) .news-list-date,
+body.rasamala-palette-dark:not(.rasamala-dark) .biblio-simple-author,
+body.rasamala-palette-dark:not(.rasamala-dark) .biblio-list-author,
+body.rasamala-palette-dark:not(.rasamala-dark) .detail-subtitle {
+  color: var(--rasamala-text-muted) !important;
+}
+
+body.rasamala-palette-dark:not(.rasamala-dark) a:not(.btn):not(.nav-link):not(.dropdown-item),
+body.rasamala-palette-dark:not(.rasamala-dark) .text-primary,
+body.rasamala-palette-dark:not(.rasamala-dark) .text-info,
+body.rasamala-palette-dark:not(.rasamala-dark) .section-icon,
+body.rasamala-palette-dark:not(.rasamala-dark) .topic-icon,
+body.rasamala-palette-dark:not(.rasamala-dark) .topic-icon-fa,
+body.rasamala-palette-dark:not(.rasamala-dark) .navbar-menu-icon,
+body.rasamala-palette-dark:not(.rasamala-dark) .latest-content-icon {
+  color: var(--rasamala-text-secondary) !important;
+}
+
+body.rasamala-palette-dark:not(.rasamala-dark) .form-control,
+body.rasamala-palette-dark:not(.rasamala-dark) .custom-select,
+body.rasamala-palette-dark:not(.rasamala-dark) .form-select,
+body.rasamala-palette-dark:not(.rasamala-dark) select,
+body.rasamala-palette-dark:not(.rasamala-dark) input,
+body.rasamala-palette-dark:not(.rasamala-dark) textarea,
+body.rasamala-palette-dark:not(.rasamala-dark) .input-group-text {
+  background-color: color-mix(in srgb, var(--theme-surface) 84%, #ffffff 16%) !important;
+  color: var(--theme-text) !important;
+  border-color: var(--rasamala-border) !important;
+}
+
+body.rasamala-palette-dark:not(.rasamala-dark) .form-control::placeholder,
+body.rasamala-palette-dark:not(.rasamala-dark) input::placeholder,
+body.rasamala-palette-dark:not(.rasamala-dark) textarea::placeholder {
+  color: var(--rasamala-text-muted) !important;
+  opacity: 1 !important;
+}
+
+body.rasamala-palette-dark:not(.rasamala-dark) option {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+}
+
+body.rasamala-palette-dark:not(.rasamala-dark) .dropdown-item:hover,
+body.rasamala-palette-dark:not(.rasamala-dark) .dropdown-item:focus {
+  background-color: color-mix(in srgb, var(--theme-primary) 42%, transparent) !important;
+  color: #ffffff !important;
+}
+
+body.rasamala-palette-dark:not(.rasamala-dark) .btn-outline-primary,
+body.rasamala-palette-dark:not(.rasamala-dark) .btn-outline-secondary,
+body.rasamala-palette-dark:not(.rasamala-dark) .sort-chip,
+body.rasamala-palette-dark:not(.rasamala-dark) .btn-rounded,
+body.rasamala-palette-dark:not(.rasamala-dark) .pagination .page-link,
+body.rasamala-palette-dark:not(.rasamala-dark) .pagingList a {
+  background-color: transparent !important;
+  border-color: var(--rasamala-border) !important;
+  color: var(--theme-text) !important;
+}
+
+body.rasamala-palette-dark:not(.rasamala-dark) .btn-outline-primary:hover,
+body.rasamala-palette-dark:not(.rasamala-dark) .btn-outline-primary:focus,
+body.rasamala-palette-dark:not(.rasamala-dark) .btn-outline-secondary:hover,
+body.rasamala-palette-dark:not(.rasamala-dark) .btn-outline-secondary:focus,
+body.rasamala-palette-dark:not(.rasamala-dark) .sort-chip:hover,
+body.rasamala-palette-dark:not(.rasamala-dark) .sort-chip:focus,
+body.rasamala-palette-dark:not(.rasamala-dark) .sort-chip.active,
+body.rasamala-palette-dark:not(.rasamala-dark) .pagination .page-item.active .page-link,
+body.rasamala-palette-dark:not(.rasamala-dark) .pagingList b {
+  background-color: var(--theme-primary) !important;
+  border-color: color-mix(in srgb, var(--theme-accent) 45%, var(--theme-primary) 55%) !important;
+  color: #ffffff !important;
+}
+
+body.rasamala-palette-dark:not(.rasamala-dark) .irs-min,
+body.rasamala-palette-dark:not(.rasamala-dark) .irs-max,
+body.rasamala-palette-dark:not(.rasamala-dark) .irs-grid-text {
+  color: var(--rasamala-text-muted) !important;
+  opacity: 1 !important;
 }
 .bg-primary {
   background-color: var(--rasamala-accent) !important;
