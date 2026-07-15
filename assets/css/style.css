@@ -2,7 +2,7 @@
  * Rasamala Theme Stylesheet
  * SLiMS 9 Bulian OPAC Custom Theme
  * Last modified by: Ade Ismail Siregar (adeismailbox@gmail.com)
- * Last modified time: 2026-07-15T12:27:50+07:00
+ * Last modified time: 2026-07-15T12:52:06+07:00
  */
 
 @import url('../../../../css/core.css');
@@ -8060,4 +8060,43 @@ body.rasamala-search-panels-transparent #mobileFilterModal .modal-content {
   border-color: color-mix(in srgb, var(--theme-muted) 26%, transparent) !important;
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
+}
+
+/* Final transparent panel override for search result surfaces.
+   Placed after general card/filter normalization so the Tinfo setting wins. */
+body.rasamala-search-panels-transparent .result-search .filter-panel-card,
+body.rasamala-search-panels-transparent .result-search .desktop-sort-bar,
+body.rasamala-search-panels-transparent .result-search .biblio-simple-item,
+body.rasamala-search-panels-transparent .result-search .biblio-list-card,
+body.rasamala-search-panels-transparent .result-search .biblio-list-card > .card-body,
+body.rasamala-search-panels-transparent .result-search .card.item.border-0,
+body.rasamala-search-panels-transparent .result-search .card.item.border-0 > .card-body,
+body.rasamala-search-panels-transparent .result-search .grid-item > .card,
+body.rasamala-search-panels-transparent .result-search .grid-item > .card > .card-body,
+body.rasamala-search-panels-transparent .result-search .grid-item .bg-rasamala-light,
+body.rasamala-search-panels-transparent .result-search .grid-item .list-group,
+body.rasamala-search-panels-transparent .result-search .grid-item .list-group-item,
+body.rasamala-search-panels-transparent #mobileFilterModal .modal-content,
+body.rasamala-search-panels-transparent #mobileSortModal .modal-content {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+body.rasamala-search-panels-transparent .result-search .filter-panel-card,
+body.rasamala-search-panels-transparent .result-search .biblio-list-card,
+body.rasamala-search-panels-transparent .result-search .card.item.border-0,
+body.rasamala-search-panels-transparent .result-search .grid-item > .card {
+  border-color: color-mix(in srgb, var(--theme-muted) 22%, transparent) !important;
+}
+
+body.rasamala-search-panels-transparent .result-search .desktop-sort-bar {
+  border-color: transparent !important;
+}
+
+body.rasamala-search-panels-transparent .result-search .biblio-simple-item,
+body.rasamala-search-panels-transparent .result-search .grid-item .list-group-item {
+  border-bottom-color: color-mix(in srgb, var(--theme-muted) 22%, transparent) !important;
 }

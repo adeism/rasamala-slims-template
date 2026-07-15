@@ -2794,3 +2794,41 @@ body.rasamala-dark #mobileFilterModal .irs-to::after,
 body.rasamala-dark #mobileFilterModal .irs-single::after {
   border-top-color: var(--rasamala-dark-action-bg) !important;
 }
+
+/* Final dark transparent panel override for search result surfaces. */
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .filter-panel-card,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .desktop-sort-bar,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .biblio-simple-item,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .biblio-list-card,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .biblio-list-card > .card-body,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .card.item.border-0,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .card.item.border-0 > .card-body,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .grid-item > .card,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .grid-item > .card > .card-body,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .grid-item .bg-rasamala-light,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .grid-item .list-group,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .grid-item .list-group-item,
+body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal .modal-content,
+body.rasamala-dark.rasamala-search-panels-transparent #mobileSortModal .modal-content {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .filter-panel-card,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .biblio-list-card,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .card.item.border-0,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .grid-item > .card {
+  border-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .desktop-sort-bar {
+  border-color: transparent !important;
+}
+
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .biblio-simple-item,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .grid-item .list-group-item {
+  border-bottom-color: rgba(255, 255, 255, 0.14) !important;
+}

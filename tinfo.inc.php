@@ -4,7 +4,7 @@
  * @Date                : 2020-01-02 15:12
  * @File name           : tinfo.inc.php
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-15T12:27:50+07:00
+ * @Last modified time  : 2026-07-15T12:52:06+07:00
  */
 
 $rasamala_default_topic_items = "Literature | index.php?callnumber=8&search=search | fas fa-book ; Social Sciences | index.php?callnumber=3&search=search | fas fa-users ; Applied Sciences | index.php?callnumber=6&search=search | fas fa-flask ; Art & Recreation | index.php?callnumber=7&search=search | fas fa-paint-brush ; Language | index.php?callnumber=4&search=search | fas fa-language ; see more.. | #exampleModal | fas fa-th-large";
@@ -1046,7 +1046,7 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
     ],
     'search-panel-style' => [
         'dbfield' => 'classic_search_panel_style',
-        'label' => __('Filter, Sort & Hasil Pencarian'),
+        'label' => __('Gaya Background Panel'),
         'type' => 'dropdown',
         'default' => 'transparent',
         'data' => [

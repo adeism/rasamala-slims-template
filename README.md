@@ -181,7 +181,7 @@ Catatan: fitur waktu sholat mengambil data waktu dari layanan eksternal saat ter
 - Warna ketersediaan: hijau jika tersedia, merah jika 0.
 - Hover/klik angka ketersediaan menampilkan detail item.
 - Popover ketersediaan dibuat agar hanya satu muncul pada satu waktu.
-- Filter, sort, dan hasil pencarian bisa bergaya transparent atau solid.
+- Background panel pencarian bisa bergaya transparent atau solid, mencakup filter, sort, dan card hasil pencarian.
 - Pagination distandarkan agar lebih sederhana dan mengikuti warna tema.
 - Dropdown filter/advanced search disesuaikan dark/light mode.
 
