@@ -185,17 +185,9 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
         'type' => 'dropdown',
         'default' => 'simple_homepage',
         'data' => [
-            ['simple_homepage', __('Minimal Search Only')],
-            ['all_show', __('Full Library Portal')],
-            ['simple_topics', __('Topic-Focused Directory')],
-            ['simple_topics_footer', __('Classic Directory with Footer')],
-            ['fun', __('Modern Interactive Portal')],
-            ['office', __('Corporate / Formal Portal')],
-            ['academic', __('Academic & Research Portal')],
-            ['minimalist', __('Minimalist Modern Portal')],
-            ['minimal_white', __('Minimal White Portal')],
-            ['dark_gray', __('Dark Gray Portal')],
-            ['futuristic', __('Futuristic Digital Portal')],
+            ['simple_homepage', __('Simple - Dark Gray')],
+            ['office', __('Sedang - Clean Portal')],
+            ['all_show', __('Full Feature Portal')],
             ['custom', __('Custom (Fully Unlocked)')]
         ]
     ],
@@ -224,43 +216,57 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
         'dbfield' => 'classic_palette_primary',
         'label' => __('Palette Primary Color'),
         'type' => 'text',
-        'default' => '#111827'
+        'default' => '#111827',
+        'width' => '20',
+        'max' => 7
     ],
     'palette-secondary' => [
         'dbfield' => 'classic_palette_secondary',
         'label' => __('Palette Secondary Color'),
         'type' => 'text',
-        'default' => '#475569'
+        'default' => '#475569',
+        'width' => '20',
+        'max' => 7
     ],
     'palette-accent' => [
         'dbfield' => 'classic_palette_accent',
         'label' => __('Palette Accent Highlight'),
         'type' => 'text',
-        'default' => '#2563eb'
+        'default' => '#2563eb',
+        'width' => '20',
+        'max' => 7
     ],
     'palette-background' => [
         'dbfield' => 'classic_palette_background',
         'label' => __('Palette Page Background'),
         'type' => 'text',
-        'default' => '#f8fafc'
+        'default' => '#f8fafc',
+        'width' => '20',
+        'max' => 7
     ],
     'palette-surface' => [
         'dbfield' => 'classic_palette_surface',
         'label' => __('Palette Surface/Card Color'),
         'type' => 'text',
-        'default' => '#ffffff'
+        'default' => '#ffffff',
+        'width' => '20',
+        'max' => 7
     ],
     'palette-text' => [
         'dbfield' => 'classic_palette_text',
         'label' => __('Palette Main Text Color'),
         'type' => 'text',
-        'default' => '#111827'
+        'default' => '#111827',
+        'width' => '20',
+        'max' => 7
     ],
     'palette-muted' => [
         'dbfield' => 'classic_palette_muted',
         'label' => __('Palette Muted Text/Border Color'),
         'type' => 'text',
-        'default' => '#64748b'
+        'default' => '#64748b',
+        'width' => '20',
+        'max' => 7
     ],
     'color-toggle' => [
         'dbfield' => 'classic_color_toggle',

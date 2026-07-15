@@ -18,17 +18,9 @@ Tema ini awalnya berevolusi dari `apple-theme`, lalu dirapikan dan diganti menja
 
 Rasamala menyediakan pilihan keseluruhan tema lewat Tinfo:
 
-- Minimal Search Only: beranda sangat sederhana, fokus ke kotak pencarian.
-- Full Library Portal: semua section utama tampil.
-- Topic-Focused Directory: beranda fokus ke topic/kategori.
-- Classic Directory with Footer: topic/kategori plus footer.
-- Modern Interactive Portal: tampilan lebih dinamis dengan efek visual.
-- Corporate / Formal Portal: tampilan rapi untuk instansi formal.
-- Academic & Research Portal: menonjolkan koleksi akademik dan top reader.
-- Minimalist Modern Portal: tampilan bersih dan ringan.
-- Minimal White Portal: tampilan putih minimalis dengan aksen kecil dan surface bersih.
-- Dark Gray Portal: tampilan dark gray netral yang modern dan nyaman dibaca.
-- Futuristic Digital Portal: dark/neon style dengan animasi digital.
+- Simple - Dark Gray: beranda sangat sederhana, fokus ke kotak pencarian, warna dark gray, dan efek visual minimal.
+- Sedang - Clean Portal: tampilan sedang dengan topic, latest content/news, koleksi utama, footer, dan warna clean blue.
+- Full Feature Portal: semua section utama tampil, termasuk running text, map/contact, popular/new collection, top reader, dan animasi.
 - Custom (Fully Unlocked): semua pengaturan detail dibuka.
 
 ### Dark/Light Mode

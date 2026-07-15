@@ -588,6 +588,29 @@ $(document).ready(function() {
         return quickSettingNames.indexOf(name) !== -1;
     }
 
+    function enhanceCustomPaletteFields() {
+        var paletteFields = [
+            ['classic_palette_primary', '#111827'],
+            ['classic_palette_secondary', '#475569'],
+            ['classic_palette_accent', '#2563eb'],
+            ['classic_palette_background', '#f8fafc'],
+            ['classic_palette_surface', '#ffffff'],
+            ['classic_palette_text', '#111827'],
+            ['classic_palette_muted', '#64748b']
+        ];
+
+        paletteFields.forEach(function(item) {
+            var field = settingField(item[0]);
+            if (!field.length || field.data('rasamalaPaletteReady')) return;
+            field
+                .attr('placeholder', item[1])
+                .attr('maxlength', 7)
+                .attr('pattern', '^#?[0-9a-fA-F]{6}$')
+                .addClass('rasamala-palette-input')
+                .data('rasamalaPaletteReady', true);
+        });
+    }
+
     function ensureThemePresetSummary() {
         var row = settingRow('classic_theme_preset');
         if (!row.length || $('#theme-preset-summary').length) return;
@@ -750,9 +773,11 @@ $(document).ready(function() {
     }
 
     insertTinfoSections();
+    enhanceCustomPaletteFields();
     syncConditionalSettings();
     $(document).on('change input', [
         'select[name="classic_theme_preset"]',
+        'select[name="classic_theme_color"]',
         'select[name="classic_hero_background_animation"]',
         'select[name="classic_announcement_show"]',
         'select[name="classic_home_display_show"]',
