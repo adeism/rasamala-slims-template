@@ -2,7 +2,7 @@
  * Rasamala Theme Stylesheet
  * SLiMS 9 Bulian OPAC Custom Theme
  * Last modified by: Ade Ismail Siregar (adeismailbox@gmail.com)
- * Last modified time: 2026-07-15T15:16:37+07:00
+ * Last modified time: 2026-07-15T15:45:21+07:00
  */
 
 @import url('../../../../css/core.css');
@@ -8402,5 +8402,93 @@ body.rasamala-search-panels-transparent .result-search .grid-item .list-group-it
     background-color: color-mix(in srgb, var(--theme-surface) 94%, var(--theme-background) 6%) !important;
     color: var(--theme-text) !important;
     border-color: color-mix(in srgb, var(--theme-muted) 30%, transparent) !important;
+  }
+}
+
+/* Mobile modal safe viewport: keep filter/sort/advanced search clear of navbar and bottom nav. */
+@media (max-width: 767.98px) {
+  #mobileFilterModal,
+  #mobileSortModal,
+  #adv-modal {
+    --rasamala-mobile-modal-top: calc(68px + env(safe-area-inset-top, 0px));
+    --rasamala-mobile-modal-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    padding-top: var(--rasamala-mobile-modal-top) !important;
+    padding-bottom: var(--rasamala-mobile-modal-bottom) !important;
+    z-index: 12050 !important;
+  }
+
+  .modal-backdrop {
+    z-index: 12040 !important;
+  }
+
+  body.mobile-bottom-nav-hidden #mobileFilterModal,
+  body.mobile-bottom-nav-hidden #mobileSortModal,
+  body.mobile-bottom-nav-hidden #adv-modal {
+    --rasamala-mobile-modal-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  }
+
+  #mobileFilterModal .modal-dialog,
+  #mobileSortModal .modal-dialog,
+  #adv-modal .modal-dialog {
+    width: calc(100% - 24px) !important;
+    max-width: calc(100% - 24px) !important;
+    height: calc(100dvh - var(--rasamala-mobile-modal-top) - var(--rasamala-mobile-modal-bottom)) !important;
+    max-height: calc(100dvh - var(--rasamala-mobile-modal-top) - var(--rasamala-mobile-modal-bottom)) !important;
+    margin: 0 auto !important;
+    display: flex !important;
+    align-items: stretch !important;
+  }
+
+  @supports not (height: 100dvh) {
+    #mobileFilterModal .modal-dialog,
+    #mobileSortModal .modal-dialog,
+    #adv-modal .modal-dialog {
+      height: calc(100vh - var(--rasamala-mobile-modal-top) - var(--rasamala-mobile-modal-bottom)) !important;
+      max-height: calc(100vh - var(--rasamala-mobile-modal-top) - var(--rasamala-mobile-modal-bottom)) !important;
+    }
+  }
+
+  #mobileFilterModal .modal-content,
+  #mobileSortModal .modal-content,
+  #adv-modal .modal-content {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    border-radius: 14px !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  #mobileFilterModal .modal-body,
+  #mobileSortModal .modal-body,
+  #adv-modal .modal-body {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding-bottom: 20px !important;
+  }
+
+  #mobileFilterModal .modal-header,
+  #mobileFilterModal .modal-footer,
+  #mobileSortModal .modal-header,
+  #mobileSortModal .modal-footer,
+  #adv-modal .modal-header,
+  #adv-modal .modal-footer {
+    flex: 0 0 auto !important;
+  }
+
+  #adv-modal .modal-header {
+    padding: 14px 18px !important;
+  }
+
+  #adv-modal .modal-body {
+    padding: 18px !important;
+  }
+
+  #adv-modal .modal-footer {
+    padding: 12px 18px calc(12px + env(safe-area-inset-bottom, 0px)) !important;
   }
 }
