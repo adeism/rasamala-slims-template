@@ -4,7 +4,7 @@
 # @Email:  ido.alit@gmail.com
 # @Filename: _search-form.php
 # @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-15T08:25:01+07:00
+# @Last modified time: 2026-07-15T15:16:37+07:00
 
 if ($opac->invalid_token) {
     //die($opac->error('invalid CSRF token'));
@@ -124,15 +124,16 @@ if ($search_size === 'small') {
                                 <input ref="keywords" value="<?= themeEscape(getQuery('keywords')) ?>" v-model.trim="keywords"
                                        type="text" id="search-input"
                                        name="keywords" class="input-transparent flex-grow-1" autocomplete="off"
+                                       aria-label="<?= themeEscape(__('Search keyword')); ?>"
                                        placeholder="<?= themeEscape(__($sysconf['template']['classic_search_placeholder'] ?? 'Enter keyword to search collection...'));?>"/>
                                 <div class="d-flex align-items-center ms-2">
                                     <!-- Advanced Search Icon -->
                                     <a href="javascript:void(0)" class="me-3" data-bs-toggle="modal" data-bs-target="#adv-modal" title="<?= themeEscape(__('Advanced Search')) ?>" aria-label="<?= themeEscape(__('Advanced Search')) ?>">
-                                        <i class="fas fa-sliders-h"></i>
+                                        <i class="fas fa-sliders-h" aria-hidden="true"></i>
                                     </a>
                                     <!-- Search Button -->
                                     <button type="submit" class="btn p-0 border-0 bg-transparent" aria-label="<?= themeEscape(__('Search')) ?>">
-                                        <i class="fas fa-search"></i>
+                                        <i class="fas fa-search" aria-hidden="true"></i>
                                     </button>
                                 </div>
                             </form>
@@ -143,7 +144,7 @@ if ($search_size === 'small') {
                 <div class="latest-content-ticker mt-3 mb-2" data-speed="<?= themeEscape($ticker_speed); ?>" role="status">
                     <div class="latest-content-ticker-track">
                         <?php for ($ticker_repeat = 0; $ticker_repeat < 2; $ticker_repeat++) : ?>
-                            <div class="latest-content-ticker-group" <?= $ticker_repeat === 1 ? 'aria-hidden="true"' : '' ?>>
+                            <div class="latest-content-ticker-group" <?= $ticker_repeat === 1 ? 'inert' : '' ?>>
                                 <?php foreach ($ticker_items_below as $ticker_item) : ?>
                                     <a class="latest-content-ticker-item"
                                        href="<?= themeEscape($ticker_item['url']); ?>"
@@ -193,7 +194,7 @@ if ($search_size === 'small') {
                         <div class="latest-content-ticker mt-1 mb-1" data-speed="normal" role="status">
                             <div class="latest-content-ticker-track">
                                 <?php for ($ticker_repeat = 0; $ticker_repeat < 2; $ticker_repeat++) : ?>
-                                    <div class="latest-content-ticker-group" <?= $ticker_repeat === 1 ? 'aria-hidden="true"' : '' ?>>
+                                    <div class="latest-content-ticker-group" <?= $ticker_repeat === 1 ? 'inert' : '' ?>>
                                         <?php foreach ($latest_content_items as $ticker_item) : ?>
                                             <a class="latest-content-ticker-item"
                                                href="<?= themeEscape($ticker_item['url']); ?>"

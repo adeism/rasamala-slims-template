@@ -3,7 +3,7 @@
  * Shared helpers for templates that can be loaded before classic.php.
  *
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-15T14:59:12+07:00
+ * @Last modified time  : 2026-07-15T15:16:37+07:00
  */
 if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
@@ -816,10 +816,12 @@ if (!function_exists('themeTopicItemHtml')) {
       $modal_attrs = ' data-bs-toggle="modal" data-bs-target="' . themeEscape($url) . '"';
     }
 
+    $label = themeEscape(__($item['label'] ?? ''));
+
     return '<li class="d-flex justify-content-center align-items-center m-2">'
-      . '<a href="' . themeEscape(themeSafeHref($url)) . '" class="d-flex flex-column"' . $modal_attrs . '>'
+      . '<a href="' . themeEscape(themeSafeHref($url)) . '" class="d-flex flex-column" aria-label="' . $label . '"' . $modal_attrs . '>'
       . themeTopicIconHtml($item['icon'] ?? [])
-      . '<span>' . themeEscape(__($item['label'] ?? '')) . '</span>'
+      . '<span>' . $label . '</span>'
       . '</a>'
       . '</li>';
   }

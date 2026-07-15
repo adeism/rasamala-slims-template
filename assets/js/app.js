@@ -4,7 +4,7 @@
  * @Email:  ido.alit@gmail.com
  * @Filename: app.js
  * @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time: 2026-07-13T15:09:00+07:00
+ * @Last modified time: 2026-07-15T15:16:37+07:00
  */
 
 'use strict';
@@ -244,7 +244,8 @@ const SlimsBook = {
             const gradientIndex = Math.abs(titleHash) % 6;
 
             imageElement = Vue.h('div', {
-                class: `book-cover-placeholder book-cover-gradient-${gradientIndex}`
+                class: `book-cover-placeholder book-cover-gradient-${gradientIndex}`,
+                'aria-hidden': 'true'
             }, [
                 Vue.h('div', {
                     class: 'book-cover-content'
@@ -265,7 +266,7 @@ const SlimsBook = {
                 src: this.imageLoadError ? fallbackImageUrl : (this.image || fallbackImageUrl),
                 class: 'img-fluid',
                 loading: 'lazy',
-                alt: this.title,
+                alt: this.title ? `Cover of ${this.title}` : 'Collection cover',
                 onError: () => {
                     if (!this.imageLoadError) {
                         this.imageLoadError = true;
@@ -351,13 +352,16 @@ const SlimsMember = {
             const avatarGradientIndex = Math.abs(nameHash) % 5;
 
             avatarElement = Vue.h('div', {
-                class: `member-avatar-placeholder member-avatar-gradient-${avatarGradientIndex}`
+                class: `member-avatar-placeholder member-avatar-gradient-${avatarGradientIndex}`,
+                'aria-label': this.memberName ? `Initials for ${this.memberName}` : 'Member initials',
+                role: 'img'
             }, initials);
         } else {
             avatarElement = Vue.h('img', {
                 class: 'img-fluid h-auto',
                 src: this.image,
-                loading: 'lazy'
+                loading: 'lazy',
+                alt: this.memberName ? `Avatar of ${this.memberName}` : 'Member avatar'
             });
         }
 

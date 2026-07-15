@@ -4,7 +4,7 @@
 # @Email:  ido.alit@gmail.com
 # @Filename: index_template.inc.php
 # @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-08T15:48:00+07:00
+# @Last modified time: 2026-07-15T15:16:37+07:00
 
 $imagesDisk = \SLiMS\Filesystems\Storage::images();
 
@@ -40,6 +40,9 @@ include 'parts/header.php';
 // ----------------------------------------------------------------------------
 // load content by URI
 // ----------------------------------------------------------------------------
+?>
+<main id="main-content" class="rasamala-main" role="main">
+<?php
 if (isset($_GET['p']) || isset($_GET['search'])) {
   // --------------------------------------------------------------------------
   // handle result search
@@ -61,6 +64,9 @@ if (isset($_GET['p']) || isset($_GET['search'])) {
   // not found query string: load home page
   include 'parts/_home.php';
 }
+?>
+</main>
+<?php
 
 // ----------------------------------------------------------------------------
 // load footer

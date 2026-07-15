@@ -4,7 +4,7 @@
 # @Email:  ido.alit@gmail.com
 # @Filename: _home.php
 # @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-13T08:52:53+07:00
+# @Last modified time: 2026-07-15T15:16:37+07:00
 
 $is_homepage_only_hero = themeHomepageOnlyHero($sysconf);
 $background_animation = themeBackgroundAnimation();
@@ -74,7 +74,7 @@ $home_section_heading = function ($section_key, $title, $subtitle = '', $extra_c
         return;
     }
     ?>
-    <h4 class="mb-4 text-center rasamala-home-section-title <?= themeEscape($extra_class); ?>">
+    <h2 class="mb-4 text-center rasamala-home-section-title <?= themeEscape($extra_class); ?>">
         <?php if ($show_title) : ?>
             <?= themeEscape($title); ?>
         <?php endif; ?>
@@ -82,7 +82,7 @@ $home_section_heading = function ($section_key, $title, $subtitle = '', $extra_c
             <?php if ($show_title) : ?><br><?php endif; ?>
             <small class="subtitle-section"><?= themeEscape($subtitle); ?></small>
         <?php endif; ?>
-    </h4>
+    </h2>
     <?php
 };
 
@@ -112,10 +112,10 @@ foreach ($sections as $section) {
                 <a class="rasamala-home-content-card" href="<?= themeEscape($card_url); ?>" title="<?= themeEscape($card_title); ?>">
                     <span class="rasamala-home-content-thumb" aria-hidden="<?= $card_image ? 'false' : 'true'; ?>">
                         <?php if ($card_image) : ?>
-                        <img loading="lazy" src="<?= themeEscape($card_image); ?>" alt="<?= themeEscape($card_title); ?>">
+                        <img loading="lazy" src="<?= themeEscape($card_image); ?>" alt="" aria-hidden="true">
                         <?php else : ?>
                         <span class="rasamala-home-content-thumb-placeholder">
-                            <i class="fas fa-newspaper"></i>
+                            <i class="fas fa-newspaper" aria-hidden="true"></i>
                         </span>
                         <?php endif; ?>
                     </span>
@@ -177,19 +177,37 @@ foreach ($sections as $section) {
                 <div class="col-md-6">
                     <iframe class="embed-responsive border-0"
                             src="<?= themeEscape($map_url); ?>"
-                            height="<?= themeEscape(themeSafeInt($sysconf['template']['classic_map_height'] ?? 420, 420, 100, 2000)) ?>" frameborder="0" allowfullscreen></iframe>
+                            title="<?= themeEscape(sprintf(__('Map location for %s'), $sysconf['library_name'] ?? __('Library'))); ?>"
+                            height="<?= themeEscape(themeSafeInt($sysconf['template']['classic_map_height'] ?? 420, 420, 100, 2000)) ?>"
+                            frameborder="0" loading="lazy" allowfullscreen></iframe>
                 </div>
                 <?php endif; ?>
                 <div class="<?= $home_map_visible ? 'col-md-6' : 'col-md-12' ?> pt-8 md:pt-0 home-map-contact">
-                    <h4 class="home-library-name"><?= themeEscape($sysconf['library_name']); ?></h4>
+                    <h2 class="home-library-name"><?= themeEscape($sysconf['library_name']); ?></h2>
                     <div class="home-map-description"><?= themeSanitizeHtml($sysconf['template']['classic_map_desc'] ?? ''); ?></div>
                     <?php if ($home_social_visible) : ?>
                     <p class="d-flex flex-row flex-wrap pt-2 home-map-social-links">
-                        <?php foreach ($social_links as $setting_key => $icon_class) :
+                        <?php
+                        $social_labels = [
+                            'classic_fb_link' => 'Facebook',
+                            'classic_twitter_link' => 'Twitter',
+                            'classic_youtube_link' => 'YouTube',
+                            'classic_instagram_link' => 'Instagram',
+                            'classic_tiktok_link' => 'TikTok',
+                            'classic_whatsapp_link' => 'WhatsApp',
+                            'classic_telegram_link' => 'Telegram',
+                            'classic_linkedin_link' => 'LinkedIn',
+                        ];
+                        foreach ($social_links as $setting_key => $icon_class) :
                             $social_url = themeSafeHttpsUrl($sysconf['template'][$setting_key] ?? '');
                             if (!$social_url) continue;
+                            $social_label = $social_labels[$setting_key] ?? __('Social media');
                         ?>
-                        <a target="_blank" rel="noopener noreferrer" href="<?= themeEscape($social_url) ?>" class="btn btn-primary me-2" name="button"><i class="<?= themeEscape($icon_class) ?> text-white"></i></a>
+                        <a target="_blank" rel="noopener noreferrer" href="<?= themeEscape($social_url) ?>" class="btn btn-primary me-2" name="button"
+                           aria-label="<?= themeEscape(sprintf(__('Open %s social media'), $social_label)); ?>"
+                           title="<?= themeEscape($social_label); ?>">
+                            <i class="<?= themeEscape($icon_class) ?> text-white" aria-hidden="true"></i>
+                        </a>
                         <?php endforeach; ?>
                     </p>
                     <?php endif; ?>

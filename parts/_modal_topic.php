@@ -3,16 +3,18 @@
  * @Created by          : Waris Agung Widodo (ido.alit@gmail.com)
  * @Date                : 2020-01-02 16:27
  * @File name           : _modal_topic.php
+ * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
+ * @Last modified time  : 2026-07-15T15:16:37+07:00
  */
 
 ?>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="topicModalLabel"
+     aria-hidden="true" inert>
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel"><?=  __('Select the topic you are interested in'); ?></h5>
+                <h2 class="modal-title" id="topicModalLabel"><?=  __('Select the topic you are interested in'); ?></h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

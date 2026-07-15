@@ -4,7 +4,7 @@
  * @Date                : 2019-01-31 17:30
  * @File name           : news_template.php
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-15T08:25:01+07:00
+ * @Last modified time  : 2026-07-15T15:16:37+07:00
  */
 
 if (!function_exists('rasamalaNewsFirstImageSrc')) {
@@ -107,7 +107,7 @@ function news_list_tpl($title, $path, $date, $summary) {
       <div class="card-body p-4 news-list-body">
           <?php if ($show_thumbnail) : ?>
           <a class="news-list-thumbnail" href="<?= $escape($news_url) ?>" aria-label="<?= $escape($title) ?>">
-              <img loading="lazy" src="<?= $escape($thumbnail_src) ?>" alt="<?= $escape($title) ?>">
+              <img loading="lazy" src="<?= $escape($thumbnail_src) ?>" alt="" aria-hidden="true">
           </a>
           <?php endif; ?>
           <div class="news-list-content">

@@ -4,18 +4,18 @@
  * @Date                : 2020-01-02 20:33
  * @File name           : _modal_advanced.php
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-15T08:25:01+07:00
+ * @Last modified time  : 2026-07-15T15:16:37+07:00
  */
 
 
 ?>
 
-<div class="modal fade" id="adv-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
+<div class="modal fade" id="adv-modal" tabindex="-1" aria-labelledby="advancedSearchModalLabel"
+     aria-hidden="true" inert>
     <div class="modal-dialog modal-lg">
         <form class="modal-content" action="index.php" method="get">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel"><?=__('Advanced Search'); ?></h5>
+                <h2 class="modal-title" id="advancedSearchModalLabel"><?=__('Advanced Search'); ?></h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

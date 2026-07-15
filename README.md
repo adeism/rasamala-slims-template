@@ -29,6 +29,17 @@ Rasamala menyediakan pilihan keseluruhan tema lewat Tinfo:
 - Tinfo hanya mengatur apakah tombol toggle ditampilkan atau disembunyikan.
 - Warna navbar, footer, search result, filter, sort, detail biblio, login/member page, topics, floating button, dropdown, dan modal sudah diarahkan agar mengikuti mode aktif.
 
+### Aksesibilitas dan Semantik
+
+- Dokumen mengisi atribut `lang` berdasarkan bahasa aktif/default SLiMS.
+- Konten utama dibungkus dengan landmark `<main>`.
+- Heading beranda disusun lebih berurutan dari hero ke section.
+- Logo dekoratif, icon, ticker duplikat, dan thumbnail yang sudah punya judul teks dibuat lebih ramah screen reader.
+- Iframe peta memiliki `title`.
+- Link icon-only seperti social media, basket, search, dan expand detail diberi nama yang dapat dikenali.
+- Modal tertutup dan ticker duplikat memakai `inert` untuk mencegah fokus tersembunyi saat audit aksesibilitas.
+- Link tekstual di konten/footer diberi underline halus agar tidak bergantung hanya pada warna.
+
 ### Palette Warna dan Font Tema
 
 - Theme Color Palette menyediakan preset: Warm Gray, Neon Cyan, Neon Emerald, Sunset Orange, Royal Gold, Electric Pink, Minimal White, Dark Gray, Forest Academic, Clean Blue, Warm Library, Mono Minimal, dan Custom Palette.

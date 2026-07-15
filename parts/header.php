@@ -6,7 +6,7 @@
 # @Email:  ido.alit@gmail.com
 # @Date:   2018-01-23T11:25:57+07:00
 # @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-15T14:51:13+07:00
+# @Last modified time: 2026-07-15T15:16:37+07:00
 -->
 <?php
 // clean request uri from xss (S-05: use parse_url for safer extraction)
@@ -22,9 +22,12 @@ if (isset($_GET['p']) && $_GET['p'] === 'show_detail') {
         $meta_image_src = (string)$opac->image_src;
     }
 }
+$document_lang = (string)($_COOKIE['select_lang'] ?? $sysconf['default_lang'] ?? 'en_US');
+$document_lang = preg_replace('/[^A-Za-z0-9_-]/', '', $document_lang);
+$document_lang = str_replace('_', '-', $document_lang ?: 'en-US');
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="<?php echo themeEscape($document_lang); ?>">
 <head>
     <meta charset="utf-8">
     <title><?php echo themeEscape($page_title); ?></title>

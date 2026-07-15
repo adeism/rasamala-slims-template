@@ -4,7 +4,7 @@
 # @Email:  ido.alit@gmail.com
 # @Filename: _result-search.php
 # @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-15T09:44:10+07:00
+# @Last modified time: 2026-07-15T15:16:37+07:00
 
 ?>
 
@@ -137,7 +137,7 @@
                                 <input type="hidden" name="csrf_token" value="<?= themeEscape($view_csrf) ?>"/>
                                 <?php foreach ($view_options as $view_key => $view_option) : ?>
                                 <button type="submit" name="view" value="<?= themeEscape($view_key) ?>" class="dropdown-item d-flex align-items-center py-2 <?= $current_view === $view_key ? 'active fw-bold' : '' ?>">
-                                    <i class="<?= themeEscape($view_option['icon']) ?> me-2"></i>
+                                    <i class="<?= themeEscape($view_option['icon']) ?> me-2" aria-hidden="true"></i>
                                     <span><?= themeEscape($view_option['label']) ?></span>
                                 </button>
                                 <?php endforeach; ?>
@@ -151,7 +151,7 @@
                     // catch empty list
                     if (trim(strip_tags($main_content)) === '') {
                         echo '<div class="d-flex justify-content-center border-top pt-4">
-                                <img src="'.assets('images/empty.svg').'" />
+                                <img src="'.assets('images/empty.svg').'" alt="'.themeEscape(__('No result illustration')).'" />
                               </div>
                               <div class="text-center text-danger"><strong>'.__('No Result').'.</strong> '.__('Please try again').'</div>';
                     } else {
@@ -283,11 +283,11 @@
 <?php endif; ?>
 
 <!-- Mobile Filter Modal (Tokopedia/Shopee style slideout) -->
-<div class="modal fade" id="mobileFilterModal" tabindex="-1" role="dialog" aria-labelledby="mobileFilterModalLabel" aria-hidden="true">
+<div class="modal fade" id="mobileFilterModal" tabindex="-1" role="dialog" aria-labelledby="mobileFilterModalLabel" aria-hidden="true" inert>
     <div class="modal-dialog modal-dialog-slideout" role="document">
         <div class="modal-content border-0 h-100">
             <div class="modal-header border-bottom py-3">
-                <h5 class="modal-title fw-bold" id="mobileFilterModalLabel"><i class="fas fa-filter me-2 text-primary"></i><?= __('Filter') ?></h5>
+                <h5 class="modal-title fw-bold" id="mobileFilterModalLabel"><i class="fas fa-filter me-2 text-primary" aria-hidden="true"></i><?= __('Filter') ?></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body overflow-auto p-3 mobile-filter-modal-body">
@@ -309,11 +309,11 @@
 </div>
 
 <!-- Mobile Sort Modal (Tokopedia/Shopee style sheet modal) -->
-<div class="modal fade" id="mobileSortModal" tabindex="-1" role="dialog" aria-labelledby="mobileSortModalLabel" aria-hidden="true">
+<div class="modal fade" id="mobileSortModal" tabindex="-1" role="dialog" aria-labelledby="mobileSortModalLabel" aria-hidden="true" inert>
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content border-0 rounded-3">
             <div class="modal-header border-bottom py-3">
-                <h5 class="modal-title fw-bold" id="mobileSortModalLabel"><i class="fas fa-sort me-2 text-primary"></i><?= __('Sort by') ?></h5>
+                <h5 class="modal-title fw-bold" id="mobileSortModalLabel"><i class="fas fa-sort me-2 text-primary" aria-hidden="true"></i><?= __('Sort by') ?></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-0">

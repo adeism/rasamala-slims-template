@@ -7,7 +7,7 @@
  * Copyright (C) 2015 Arie Nugraha (dicarve@gmail.com)
  * Create by Eddy Subratha (eddy.subratha@slims.web.id)
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-15T08:25:01+07:00
+ * @Last modified time  : 2026-07-15T15:16:37+07:00
  *
  * Slims 8 (Akasia)
  *
@@ -120,8 +120,9 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
             $cover_html_list = $generated_cover;
             $cover_html_grid = $generated_cover;
         } else {
-            $cover_html_list = '<img loading="lazy" src="'.themeEscape($thumb_url).'" alt="cover" class="img-fluid rounded '.($availability > 0 ?: 'not-available').'" title="' . themeEscape($availability > 0 ? '' :  __('Items is not available')) . '"/>';
-            $cover_html_grid = '<img loading="lazy" src="'.themeEscape($thumb_url).'" class="img-fluid img-thumbnail shadow '.($availability > 0 ?: 'not-available').'" title="' . themeEscape($availability > 0 ? '' :  __('Items is not available')) . '"/>';
+            $cover_alt = themeEscape(sprintf(__('Cover of %s'), trim(strip_tags((string)($biblio_detail['title'] ?? __('collection'))))));
+            $cover_html_list = '<img loading="lazy" src="'.themeEscape($thumb_url).'" alt="'.$cover_alt.'" class="img-fluid rounded '.($availability > 0 ?: 'not-available').'" title="' . themeEscape($availability > 0 ? '' :  __('Items is not available')) . '"/>';
+            $cover_html_grid = '<img loading="lazy" src="'.themeEscape($thumb_url).'" alt="'.$cover_alt.'" class="img-fluid img-thumbnail shadow '.($availability > 0 ?: 'not-available').'" title="' . themeEscape($availability > 0 ? '' :  __('Items is not available')) . '"/>';
         }
     }
 
@@ -213,7 +214,7 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
         $output .= '</aside>';
         $output .= '</div>'; // -- close biblio-list-layout
         if ($i > 0 && $expand) {
-            $output .= '<div class="expand"><a id="btn-expand-'.$biblio_id.'" class="d-flex justify-content-center text-decoration-none py-2" data-bs-toggle="collapse" href="#expand-'.$biblio_id.'" role="button" aria-expanded="false" aria-controls="expand-'.$biblio_id.'"><i class="fas fa-angle-double-down"></i></a></div>';
+            $output .= '<div class="expand"><a id="btn-expand-'.$biblio_id.'" class="d-flex justify-content-center text-decoration-none py-2" data-bs-toggle="collapse" href="#expand-'.$biblio_id.'" role="button" aria-expanded="false" aria-controls="expand-'.$biblio_id.'" aria-label="'.themeEscape(__('Show item details')).'"><i class="fas fa-angle-double-down" aria-hidden="true"></i></a></div>';
         }
         $output .= '</div>';
         $output .= '</div>';

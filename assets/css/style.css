@@ -2,7 +2,7 @@
  * Rasamala Theme Stylesheet
  * SLiMS 9 Bulian OPAC Custom Theme
  * Last modified by: Ade Ismail Siregar (adeismailbox@gmail.com)
- * Last modified time: 2026-07-15T15:05:43+07:00
+ * Last modified time: 2026-07-15T15:16:37+07:00
  */
 
 @import url('../../../../css/core.css');
@@ -7283,6 +7283,32 @@ footer .footer-powered-link:hover code,
 footer .footer-powered-link:focus code {
   color: #ffffff !important;
   text-decoration: none !important;
+}
+
+.footer-about-text a,
+.footer-powered-link,
+.footer-powered-link code,
+.home-map-description a,
+.libinfo-content a,
+.rasamala-main-content-card a:not(.btn):not(.dropdown-item):not(.nav-link),
+.detail-description a:not(.btn),
+.content-summary a:not(.btn) {
+  text-decoration: underline !important;
+  text-decoration-thickness: 1px !important;
+  text-underline-offset: 0.18em !important;
+}
+
+.footer-about-text a:hover,
+.footer-about-text a:focus,
+.footer-powered-link:hover,
+.footer-powered-link:focus,
+.home-map-description a:hover,
+.home-map-description a:focus,
+.libinfo-content a:hover,
+.libinfo-content a:focus,
+.rasamala-main-content-card a:not(.btn):not(.dropdown-item):not(.nav-link):hover,
+.rasamala-main-content-card a:not(.btn):not(.dropdown-item):not(.nav-link):focus {
+  text-decoration-thickness: 2px !important;
 }
 
 
