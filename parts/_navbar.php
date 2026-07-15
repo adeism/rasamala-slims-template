@@ -4,7 +4,7 @@
 # @Email:  ido.alit@gmail.com
 # @Filename: _navbar.php
 # @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-15T11:28:30+07:00
+# @Last modified time: 2026-07-15T11:34:28+07:00
 
 $is_homepage = !isset($_GET['p']) && !isset($_GET['search']);
 $is_hero_only = $is_homepage && themeHomepageOnlyHero($sysconf);
@@ -35,21 +35,23 @@ $main_menus = themeParseNavbarMenus($menu_raw);
             <?php endif; ?>
         </div>
     </a>
-    <?php if ((int)themeEffectiveTemplateValue('classic_color_toggle', 1, $sysconf) === 1): ?>
-    <button id="color-mode-toggle-nav"
-            class="btn-color-mode-toggle-nav d-lg-none"
-            title="<?= themeEscape(__('Dark mode')) ?>"
-            data-dark-title="<?= themeEscape(__('Dark mode')) ?>"
-            data-light-title="<?= themeEscape(__('Light mode')) ?>"
-            aria-label="<?= themeEscape(__('Toggle dark/light mode')) ?>"
-            aria-pressed="false">
-        <i class="fas fa-moon" aria-hidden="true"></i>
-    </button>
-    <?php endif; ?>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+    <div class="navbar-mobile-controls d-lg-none">
+        <?php if ((int)themeEffectiveTemplateValue('classic_color_toggle', 1, $sysconf) === 1): ?>
+        <button id="color-mode-toggle-nav"
+                class="btn-color-mode-toggle-nav"
+                title="<?= themeEscape(__('Dark mode')) ?>"
+                data-dark-title="<?= themeEscape(__('Dark mode')) ?>"
+                data-light-title="<?= themeEscape(__('Light mode')) ?>"
+                aria-label="<?= themeEscape(__('Toggle dark/light mode')) ?>"
+                aria-pressed="false">
+            <i class="fas fa-moon" aria-hidden="true"></i>
+        </button>
+        <?php endif; ?>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto flex-lg-nowrap align-items-lg-center rasamala-navbar-menu">

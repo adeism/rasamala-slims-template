@@ -2,7 +2,7 @@
  * Rasamala Theme Stylesheet
  * SLiMS 9 Bulian OPAC Custom Theme
  * Last modified by: Ade Ismail Siregar (adeismailbox@gmail.com)
- * Last modified time: 2026-07-15T11:28:30+07:00
+ * Last modified time: 2026-07-15T11:34:28+07:00
  */
 
 @import url('../../../../css/core.css');
@@ -3197,7 +3197,72 @@ nav.navbar {
 }
 
 @media (max-width: 991.98px) {
+  nav.navbar {
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 0 !important;
+    min-height: 52px !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .c-header .navbar-brand {
+    flex: 1 1 0 !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin-right: 8px !important;
+  }
+
+  .c-header .navbar-brand img,
+  .navbar-brand-img,
+  .navbar-brand-img-small {
+    flex: 0 0 auto !important;
+    max-width: 52px !important;
+    object-fit: contain !important;
+  }
+
+  .navbar-brand-text {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .navbar-lib-name {
+    font-size: 13px !important;
+    line-height: 1.15 !important;
+  }
+
+  .navbar-lib-subname {
+    font-size: 9px !important;
+    line-height: 1.15 !important;
+  }
+
+  .navbar-mobile-controls {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    flex: 0 0 auto !important;
+    gap: 4px !important;
+    margin-left: auto !important;
+    order: 2 !important;
+  }
+
+  .btn-color-mode-toggle-nav,
+  .c-header .navbar-toggler {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
   .c-header .navbar-collapse {
+    order: 3 !important;
+    flex-basis: 100% !important;
+    width: 100% !important;
     margin-top: 10px !important;
     padding: 10px 0 12px !important;
     border-top: 1px solid rgba(255, 255, 255, 0.16) !important;
@@ -7709,10 +7774,10 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
   border: none !important;
   color: rgba(255, 255, 255, 0.78) !important;
   font-size: 18px !important;
-  padding: 8px 12px !important;
+  padding: 0 !important;
   cursor: pointer !important;
-  margin-left: auto !important;
-  margin-right: 12px !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
   outline: none !important;
   transition: color 0.2s ease, transform 0.2s ease !important;
   border-radius: 50% !important;
