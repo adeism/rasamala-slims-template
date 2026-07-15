@@ -2,7 +2,7 @@
  * Rasamala Theme Stylesheet
  * SLiMS 9 Bulian OPAC Custom Theme
  * Last modified by: Ade Ismail Siregar (adeismailbox@gmail.com)
- * Last modified time: 2026-07-15T09:59:15+07:00
+ * Last modified time: 2026-07-15T11:28:30+07:00
  */
 
 @import url('../../../../css/core.css');
@@ -3009,12 +3009,13 @@ a.btn {
 
 /* Navbar links on solid accent header */
 nav.navbar {
-  max-width: 1024px !important;
+  max-width: 1280px !important;
   margin: 0 auto !important;
   width: 100% !important;
-  padding: 0 22px !important;
+  padding: 0 clamp(12px, 2vw, 22px) !important;
   min-height: 48px !important;
   background: transparent !important;
+  gap: clamp(8px, 1.2vw, 18px) !important;
 }
 
 .c-header .navbar-nav .nav-link {
@@ -3027,6 +3028,9 @@ nav.navbar {
   letter-spacing: -0.01em !important;
   padding: 0 10px !important;
   transition: color 0.2s ease !important;
+  white-space: nowrap !important;
+  flex-wrap: nowrap !important;
+  line-height: 1.1 !important;
 }
 
 .navbar-menu-icon {
@@ -3043,6 +3047,10 @@ nav.navbar {
   opacity: 1 !important;
 }
 
+.c-header .navbar-collapse {
+  min-width: 0 !important;
+}
+
 /* Library brand name text and toggler colors */
 .c-header .navbar-brand {
   font-size: 14px !important;
@@ -3051,6 +3059,8 @@ nav.navbar {
   color: #ffffff !important;
   transition: color 0.3s ease !important;
   opacity: 1 !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
 }
 .c-header .navbar-brand:hover {
   color: #ffffff !important;
@@ -3067,6 +3077,105 @@ nav.navbar {
 }
 .c-header .navbar-lib-subname {
   color: rgba(255, 255, 255, 0.74) !important;
+}
+
+.navbar-brand-text {
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+.navbar-menu-label,
+.navbar-lib-name,
+.navbar-lib-subname {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.navbar-menu-label {
+  display: inline-block !important;
+}
+
+.navbar-lib-name,
+.navbar-lib-subname {
+  display: block !important;
+  max-width: 100% !important;
+}
+
+@media (min-width: 992px) {
+  nav.navbar {
+    flex-wrap: nowrap !important;
+  }
+
+  .c-header .navbar-brand {
+    flex: 1 1 auto !important;
+    max-width: clamp(180px, 34vw, 430px) !important;
+    margin-right: 0 !important;
+  }
+
+  .c-header .navbar-collapse {
+    flex: 0 1 auto !important;
+    flex-basis: auto !important;
+    flex-grow: 0 !important;
+  }
+
+  .c-header .navbar-nav {
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    min-width: 0 !important;
+  }
+
+  .c-header .navbar-nav .nav-item {
+    flex: 0 0 auto !important;
+    min-width: 0 !important;
+  }
+
+  .c-header .navbar-nav .nav-link {
+    min-height: 48px !important;
+  }
+
+  .c-header .nav-color-toggle-wrapper-desktop .nav-link,
+  .c-header #languageMenuButton {
+    min-width: 30px !important;
+    justify-content: center !important;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  nav.navbar {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    gap: 8px !important;
+  }
+
+  .c-header .navbar-brand {
+    max-width: clamp(150px, 28vw, 310px) !important;
+  }
+
+  .navbar-brand-img {
+    height: 24px !important;
+  }
+
+  .navbar-brand-img-small {
+    height: 21px !important;
+  }
+
+  .navbar-lib-name {
+    font-size: 13px !important;
+  }
+
+  .c-header .navbar-nav .nav-link {
+    gap: 4px !important;
+    font-size: 11px !important;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+  }
+
+  .navbar-menu-icon {
+    flex-basis: 12px !important;
+    width: 12px !important;
+    font-size: 11px !important;
+  }
 }
 
 .c-header .navbar-toggler {

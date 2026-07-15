@@ -4,7 +4,7 @@
 # @Email:  ido.alit@gmail.com
 # @Filename: _navbar.php
 # @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-15T08:25:01+07:00
+# @Last modified time: 2026-07-15T11:28:30+07:00
 
 $is_homepage = !isset($_GET['p']) && !isset($_GET['search']);
 $is_hero_only = $is_homepage && themeHomepageOnlyHero($sysconf);
@@ -14,8 +14,8 @@ $main_menus = themeParseNavbarMenus($menu_raw);
 
 ?>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-transparent">
-    <a class="navbar-brand d-inline-flex align-items-center" href="index.php">
+<nav class="navbar navbar-expand-lg navbar-light bg-transparent rasamala-navbar-main">
+    <a class="navbar-brand d-inline-flex align-items-center flex-nowrap" href="index.php">
         <?php
         if(isset($sysconf['logo_image']) && $sysconf['logo_image'] != '' && $imagesDisk->isExists($path = 'default/'.$sysconf['logo_image'])){
             echo '<img class="navbar-brand-img" src="'.themeEscape(SWB . 'lib/minigalnano/createthumb.php?filename=images/' . $path.'&width=350').'" alt="'.themeEscape($sysconf['library_name']).'">';
@@ -52,7 +52,7 @@ $main_menus = themeParseNavbarMenus($menu_raw);
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ms-auto">
+        <ul class="navbar-nav ms-auto flex-lg-nowrap align-items-lg-center rasamala-navbar-menu">
           <?php
           foreach ($main_menus as $main_menu) {
             $active = '';
@@ -70,7 +70,7 @@ $main_menus = themeParseNavbarMenus($menu_raw);
 
             $menu_str = <<<HTML
 <li class="nav-item {$safe_active}">
-    <a class="nav-link" href="{$safe_url}"><i class="{$safe_icon} navbar-menu-icon" aria-hidden="true"></i><span>{$safe_text}</span></a>
+    <a class="nav-link" href="{$safe_url}"><i class="{$safe_icon} navbar-menu-icon" aria-hidden="true"></i><span class="navbar-menu-label">{$safe_text}</span></a>
 </li>
 HTML;
             echo $menu_str;
