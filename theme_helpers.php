@@ -3,7 +3,7 @@
  * Shared helpers for templates that can be loaded before classic.php.
  *
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-15T14:32:37+07:00
+ * @Last modified time  : 2026-07-15T14:44:49+07:00
  */
 if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
@@ -42,8 +42,8 @@ if (!function_exists('themePresetDefinitions')) {
   {
     return [
       'simple_homepage' => [
-        'label' => 'Simple Dark Gray',
-        'description' => 'Preset paling sederhana: beranda fokus pencarian, warna dark gray netral, tanpa section tambahan yang berat.',
+        'label' => 'Simple - Search + Running Text',
+        'description' => 'Preset paling sederhana: beranda fokus pencarian dengan running text bawah sebagai info singkat. Fitur lain tetap ringan.',
         'footer_home' => false,
         'settings' => [
           'classic_homepage_only_hero' => 1,
@@ -63,7 +63,7 @@ if (!function_exists('themePresetDefinitions')) {
         ],
       ],
       'all_show' => [
-        'label' => 'Full Feature Portal',
+        'label' => 'Full - Topics + News + Collections + Top Reader + Map + Running Text',
         'description' => 'Preset paling lengkap: semua section utama, latest content, topic, koleksi populer/terbaru, top reader, map, ticker, footer, dan animasi.',
         'footer_home' => true,
         'settings' => [
@@ -145,17 +145,18 @@ if (!function_exists('themePresetDefinitions')) {
         ],
       ],
       'office' => [
-        'label' => 'Balanced Clean Portal',
-        'description' => 'Preset sedang: topic, berita/latest content, koleksi populer dan terbaru, footer, warna clean blue, serta efek visual ringan.',
-        'footer_home' => true,
+        'label' => 'Simple + Topics',
+        'description' => 'Preset ringkas: search utama ditambah daftar topic saja. Teks section Topics disembunyikan agar tampil seperti direktori sederhana.',
+        'footer_home' => false,
         'settings' => [
           'classic_homepage_only_hero' => 0,
           'classic_topic_show' => 1,
-          'classic_popular_collection' => 1,
-          'classic_new_collection' => 1,
+          'classic_topic_heading_display' => 'hide',
+          'classic_popular_collection' => 0,
+          'classic_new_collection' => 0,
           'classic_top_reader' => 0,
-          'classic_homepage_section_order' => 'topic;news;popular;new-collection;map',
-          'classic_map' => 'hide_social',
+          'classic_homepage_section_order' => 'topic',
+          'classic_map' => 'hide_all',
           'classic_home_display_show' => 'below',
           'classic_ticker_show' => 0,
           'classic_footer_show' => 1,

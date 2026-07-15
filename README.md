@@ -18,9 +18,9 @@ Tema ini awalnya berevolusi dari `apple-theme`, lalu dirapikan dan diganti menja
 
 Rasamala menyediakan pilihan keseluruhan tema lewat Tinfo:
 
-- Simple - Dark Gray: beranda sangat sederhana, fokus ke kotak pencarian, warna dark gray, dan efek visual minimal.
-- Sedang - Clean Portal: tampilan sedang dengan topic, latest content/news, koleksi utama, footer, dan warna clean blue.
-- Full Feature Portal: semua section utama tampil, termasuk running text, map/contact, popular/new collection, top reader, dan animasi.
+- Simple - Search + Running Text: beranda sangat sederhana, fokus ke kotak pencarian dan running text bawah.
+- Simple + Topics: beranda ringkas dengan search dan daftar topic. Teks section Topics disembunyikan agar tampil minimal.
+- Full - Topics + News + Collections + Top Reader + Map + Running Text: semua section utama tampil, termasuk running text, map/contact, popular/new collection, top reader, dan animasi.
 - Custom (Fully Unlocked): semua pengaturan detail dibuka.
 
 ### Dark/Light Mode
