@@ -127,6 +127,7 @@ Section beranda dapat dikontrol dan diurutkan:
 - Map/contact.
 
 Setiap section utama mendukung pengaturan tampilan teks section sesuai opsi Tinfo: title + subtitle + subject, title + subtitle, title + subject, title only, atau hide all.
+Jika hanya sedikit section yang tampil, misalnya topic saja, beranda otomatis diseimbangkan ke tengah viewport agar mode minimal tidak terlihat menggantung di atas. Pada desktop, area topic-only dapat memuat hingga 6 topic dalam satu baris bila ruang layar cukup.
 
 ### Peta dan Sosial Media
 

@@ -2,7 +2,7 @@
  * Rasamala Theme Stylesheet
  * SLiMS 9 Bulian OPAC Custom Theme
  * Last modified by: Ade Ismail Siregar (adeismailbox@gmail.com)
- * Last modified time: 2026-07-15T12:52:06+07:00
+ * Last modified time: 2026-07-15T14:18:54+07:00
  */
 
 @import url('../../../../css/core.css');
@@ -3413,6 +3413,57 @@ body.rasamala-home-hero-only .rasamala-search-banner-section.rasamala-search-ban
   min-height: calc(100vh - 48px) !important;
 }
 
+body.rasamala-home-few-sections:not(.rasamala-home-hero-only) .rasamala-hero-section {
+  border-bottom: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+body.rasamala-home-few-sections:not(.rasamala-home-hero-only) .rasamala-search-banner-section {
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: center !important;
+  min-height: clamp(300px, 40vh, 430px) !important;
+  padding-top: clamp(70px, 12vh, 132px) !important;
+  padding-bottom: clamp(18px, 4vh, 42px) !important;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+body.rasamala-home-few-sections:not(.rasamala-home-hero-only) .rasamala-search-hero-content {
+  width: 100% !important;
+}
+
+body.rasamala-home-few-sections:not(.rasamala-home-hero-only) #slims-home {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  min-height: clamp(250px, 34vh, 380px) !important;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+body.rasamala-home-topic-only #slims-home .rasamala-home-section-topic {
+  width: 100% !important;
+  max-width: min(1120px, calc(100vw - 64px)) !important;
+  margin-top: clamp(10px, 2vh, 24px) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+body.rasamala-home-topic-only #slims-home .topic {
+  justify-content: center !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+@media (min-width: 992px) {
+  body.rasamala-home-topic-only #slims-home .topic li {
+    flex: 0 0 150px !important;
+  }
+}
+
 .rasamala-search-banner-bg-particles,
 .rasamala-search-banner-bg-constellation,
 .rasamala-search-banner-bg-rain {
@@ -6557,6 +6608,23 @@ body.rasamala-home-hero-only .rasamala-search-banner-section.rasamala-search-ban
 
 
 @media (max-width: 767.98px) {
+  body.rasamala-home-few-sections:not(.rasamala-home-hero-only) .rasamala-search-banner-section {
+    min-height: 0 !important;
+    align-items: center !important;
+    padding-top: 28px !important;
+    padding-bottom: 18px !important;
+  }
+
+  body.rasamala-home-few-sections:not(.rasamala-home-hero-only) #slims-home {
+    min-height: 0 !important;
+    padding-bottom: 28px !important;
+  }
+
+  body.rasamala-home-topic-only #slims-home .rasamala-home-section-topic {
+    max-width: 100% !important;
+    margin-top: 12px !important;
+  }
+
   #slims-home .rasamala-home-section {
     margin-top: 24px !important;
   }

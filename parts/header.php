@@ -6,7 +6,7 @@
 # @Email:  ido.alit@gmail.com
 # @Date:   2018-01-23T11:25:57+07:00
 # @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-15T08:58:11+07:00
+# @Last modified time: 2026-07-15T14:18:54+07:00
 -->
 <?php
 // clean request uri from xss (S-05: use parse_url for safer extraction)
@@ -292,6 +292,21 @@ if ($background_animation_enabled) {
 }
 if ($is_homepage_only_hero) {
     $body_classes .= ' rasamala-home-hero-only';
+}
+if ($is_homepage && !$is_homepage_only_hero && function_exists('themeHomepageSectionOrder') && function_exists('themeHomepageSectionEnabled')) {
+    $home_visible_sections = [];
+    foreach (themeHomepageSectionOrder($sysconf) as $home_section_key) {
+        if (themeHomepageSectionEnabled($home_section_key, $sysconf)) {
+            $home_visible_sections[] = $home_section_key;
+        }
+    }
+
+    if (count($home_visible_sections) > 0 && count($home_visible_sections) <= 1) {
+        $body_classes .= ' rasamala-home-few-sections';
+    }
+    if (count($home_visible_sections) === 1 && $home_visible_sections[0] === 'topic') {
+        $body_classes .= ' rasamala-home-topic-only';
+    }
 }
 $mobile_bottom_nav_enabled = (($sysconf['template']['classic_mobile_bottom_nav_show'] ?? 1) == 1);
 $body_classes .= $mobile_bottom_nav_enabled ? ' mobile-bottom-nav-enabled' : ' mobile-bottom-nav-hidden';

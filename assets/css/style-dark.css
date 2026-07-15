@@ -159,6 +159,13 @@ body.rasamala-dark.rasamala-home-hero-only.rasamala-background-animation-active 
   background-color: transparent !important;
 }
 
+body.rasamala-dark.rasamala-home-few-sections .rasamala-hero-section,
+body.rasamala-dark.rasamala-home-few-sections .rasamala-search-banner-section,
+body.rasamala-dark.rasamala-home-few-sections #slims-home {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
 
 body.rasamala-dark .background-animation-layer.hero-animation-layer {
   opacity: 0.86 !important;
