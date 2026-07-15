@@ -3,7 +3,7 @@
  * Shared helpers for templates that can be loaded before classic.php.
  *
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-15T14:51:13+07:00
+ * @Last modified time  : 2026-07-15T14:59:12+07:00
  */
 if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
@@ -1078,11 +1078,11 @@ if (!function_exists('themeAccentPalettes')) {
         'primary' => '#374151',
         'hover' => '#1f2937',
         'secondary' => '#6b7280',
-        'accent' => '#38bdf8',
-        'background' => '#111318',
-        'surface' => '#1b1f27',
-        'text' => '#f8fafc',
-        'muted' => '#a7b0bf',
+        'accent' => '#0ea5e9',
+        'background' => '#f3f4f6',
+        'surface' => '#ffffff',
+        'text' => '#111827',
+        'muted' => '#5f6875',
         'rgb' => '55, 65, 81',
       ],
       'forest' => [
