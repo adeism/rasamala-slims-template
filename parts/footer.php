@@ -4,7 +4,7 @@
 # @Email:  ido.alit@gmail.com
 # @Filename: footer.php
 # @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-15T08:25:01+07:00
+# @Last modified time: 2026-07-15T10:53:51+07:00
 ?>
 
 
@@ -16,8 +16,9 @@ if ($show_footer): ?>
     <div class="container">
         <?php
         $footer_search_show = ($sysconf['template']['classic_footer_search_show'] ?? 0) == 1;
+        $rasamala_waktu_sholat_footer_html = '';
+        $rasamala_waktu_sholat_reminder_html = '';
         include_once __DIR__ . '/waktu_sholat.php';
-        $waktu_sholat_data = rasamalaWaktuSholatData($sysconf);
         $col_logo = 'col-md-3';
         $col_about = 'col-md-5';
         $col_search = 'col-md-4';
@@ -67,7 +68,7 @@ if ($show_footer): ?>
                         </div>
                     </form>
                 <?php endif; ?>
-                <?= rasamalaWaktuSholatFooterHtml($waktu_sholat_data, $footer_search_show); ?>
+                <?= $rasamala_waktu_sholat_footer_html; ?>
                 <hr class="rasamala-divider">
                 <a target="_blank" rel="noopener noreferrer" title="Support Us" class="btn btn-outline-secondary btn-sm me-2 mb-2 px-3 footer-action-btn"
                    href="https://slims.web.id/web/pages/support-us/"><i
@@ -84,7 +85,7 @@ if ($show_footer): ?>
         </div>
 	    </div>
 	</footer>
-    <?= rasamalaWaktuSholatReminderHtml($waktu_sholat_data); ?>
+    <?= $rasamala_waktu_sholat_reminder_html; ?>
 	<?php endif; ?>
 
 <?php if ($sysconf['chat_system']['enabled'] && $sysconf['chat_system']['opac']) : ?>

@@ -4,7 +4,7 @@
 # @Email:  ido.alit@gmail.com
 # @Filename: waktu_sholat.php
 # @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-11T10:26:50+07:00
+# @Last modified time: 2026-07-15T10:53:51+07:00
 
 if (!function_exists('rasamalaWaktuSholatFetchTimings')) {
     function rasamalaWaktuSholatFetchTimings($city)
@@ -212,4 +212,16 @@ if (!function_exists('rasamalaWaktuSholatReminderHtml')) {
         <?php
         return ob_get_clean();
     }
+}
+
+$rasamala_waktu_sholat_footer_html = '';
+$rasamala_waktu_sholat_reminder_html = '';
+
+if (isset($sysconf) && is_array($sysconf)) {
+    $waktu_sholat_data = rasamalaWaktuSholatData($sysconf);
+    $rasamala_waktu_sholat_footer_html = rasamalaWaktuSholatFooterHtml(
+        $waktu_sholat_data,
+        !empty($footer_search_show)
+    );
+    $rasamala_waktu_sholat_reminder_html = rasamalaWaktuSholatReminderHtml($waktu_sholat_data);
 }
