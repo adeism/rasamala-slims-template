@@ -90,6 +90,7 @@ Kecepatan animasi bisa diatur. Efek dibuat ringan dan mengikuti warna aksen tema
 - Running text bisa mengambil data dari latest content, latest bibliography, atau teks kustom.
 - Running text mendukung filter news/all content, filter collection type, jumlah item, batas karakter, dan kecepatan.
 - Running text bisa tampil sebagai ticker bawah dan tetap ada saat pindah halaman.
+- Running text pendek otomatis dibuat bergerak dari sisi kanan ke kiri agar loop tetap rapi pada layar desktop maupun mobile.
 
 ### Info di Bawah Search Box
 
@@ -239,7 +240,7 @@ Fitur ini diterapkan pada halaman beranda, hasil pencarian, dan detail bibliogra
 - Judul dan subtitle visitor bisa diatur.
 - Toggle dark mode visitor bisa enable/disable.
 - Layout visitor: Kiosk Mode atau Split Layout.
-- Konten panel kanan Split Layout bisa diatur dari Tinfo: judul, deskripsi, dan daftar langkah.
+- Konten panel kanan Split Layout bisa diatur dari Tinfo: judul dan daftar langkah.
 - Format langkah Split Layout: `ikon | judul | deskripsi`, satu langkah per baris. Ikon mendukung Font Awesome, misalnya `fas fa-lock`, atau keyword khusus `scan` untuk animasi pemindai.
 
 ### Floating Buttons

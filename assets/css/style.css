@@ -2,7 +2,7 @@
  * Rasamala Theme Stylesheet
  * SLiMS 9 Bulian OPAC Custom Theme
  * Last modified by: Ade Ismail Siregar (adeismailbox@gmail.com)
- * Last modified time: 2026-07-15T11:34:28+07:00
+ * Last modified time: 2026-07-15T12:27:50+07:00
  */
 
 @import url('../../../../css/core.css');
@@ -3644,6 +3644,7 @@ body.rasamala-home-hero-only .rasamala-search-banner-section.rasamala-search-ban
   display: flex;
   width: max-content;
   animation: latestContentTicker var(--ticker-speed, 32s) linear infinite;
+  will-change: transform;
 }
 
 .latest-content-ticker:hover .latest-content-ticker-track,
@@ -3657,6 +3658,7 @@ body.rasamala-home-hero-only .rasamala-search-banner-section.rasamala-search-ban
   align-items: center;
   gap: 18px;
   min-height: 34px;
+  padding-left: var(--ticker-start-gap, 0px);
   padding-right: 18px;
 }
 
@@ -3689,7 +3691,7 @@ body.rasamala-home-hero-only .rasamala-search-banner-section.rasamala-search-ban
     transform: translate3d(0, 0, 0);
   }
   to {
-    transform: translate3d(-50%, 0, 0);
+    transform: translate3d(var(--ticker-distance, -50%), 0, 0);
   }
 }
 

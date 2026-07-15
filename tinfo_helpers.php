@@ -3,7 +3,7 @@
  * Helper output for Rasamala theme customization fields.
  *
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-15T11:59:23+07:00
+ * @Last modified time  : 2026-07-15T12:27:50+07:00
  */
 if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
@@ -184,6 +184,7 @@ if (!function_exists('rasamalaTinfoCustomizeAssets')) {
     $preset_descriptions_json = json_encode($preset_descriptions, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
     $default_announcement_json = json_encode("<strong>Info layanan:</strong> Perpustakaan buka Senin-Jumat, pukul 08.00-16.00 WIB.\n<a href=\"index.php?p=libinfo\">Lihat informasi lengkap</a>.", JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
     $default_custom_css_json = json_encode("/* Custom CSS Rasamala\n   Edit contoh di bawah ini sesuai kebutuhan. */\n\n/* Contoh: ubah ukuran nama perpustakaan di navbar */\n/* .navbar-lib-name {\n  font-size: 14px !important;\n} */\n\n/* Contoh: beri jarak tambahan pada judul hero */\n/* .hero-search-heading h1 {\n  margin-bottom: 16px !important;\n} */\n\n/* Contoh: custom warna tombol utama */\n/* .btn-primary {\n  background-color: var(--theme-accent-color) !important;\n  border-color: var(--theme-accent-color) !important;\n} */", JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
+    $default_visitor_split_steps_json = json_encode("fas fa-id-card | Isi Identitas | Scan kartu anggota atau ketik identitas pengunjung pada kolom yang tersedia.\nscan | Proses Kunjungan | Sistem akan memeriksa data dan menampilkan status kunjungan secara otomatis.\nfas fa-check | Selesai | Setelah berhasil, pengunjung dapat melanjutkan aktivitas sesuai layanan yang tersedia.", JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
 
     return <<<HTML
 <link rel="stylesheet" href="{$fontawesome_css}">
@@ -475,6 +476,7 @@ $(document).ready(function() {
     var themePresetDescriptions = {$preset_descriptions_json};
     var defaultAnnouncementText = {$default_announcement_json};
     var defaultCustomCss = {$default_custom_css_json};
+    var defaultVisitorSplitSteps = {$default_visitor_split_steps_json};
     var quickSettingNames = [
         'classic_theme_color',
         'classic_palette_primary',
@@ -524,6 +526,14 @@ $(document).ready(function() {
 
     fillEmptyTextarea('classic_announcement_text', defaultAnnouncementText);
     fillEmptyTextarea('classic_custom_css', defaultCustomCss);
+
+    var visitorSplitStepsField = $('textarea[name="visitor_split_steps"]');
+    if (visitorSplitStepsField.length) {
+        var visitorSplitStepsValue = visitorSplitStepsField.val().trim();
+        if (visitorSplitStepsValue === '' || /psb\.feb\.ui\.ac\.id|Login Web PSB/i.test(visitorSplitStepsValue)) {
+            visitorSplitStepsField.val(defaultVisitorSplitSteps);
+        }
+    }
 
     function settingField(name) {
         return $('[name="' + name + '"]');
@@ -707,7 +717,6 @@ $(document).ready(function() {
         var visitorSplitOn = settingValue('visitor_layout_style') === 'split';
         setRowsVisible([
             'visitor_split_title',
-            'visitor_split_description',
             'visitor_split_steps'
         ], visitorSplitOn);
 

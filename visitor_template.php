@@ -4,7 +4,7 @@
  * @Date                : 2020-01-03 08:49
  * @File name           : visitor_template.php
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-15T11:59:23+07:00
+ * @Last modified time  : 2026-07-15T12:27:50+07:00
  */
 
 $main_template_path = __DIR__ . '/login_template.inc.php';
@@ -64,19 +64,19 @@ if (!function_exists('rasamalaVisitorSplitDefaultSteps')) {
     {
         return [
             [
-                'icon' => 'fas fa-lock',
-                'title' => 'Login Web PSB',
-                'description' => 'Buka <span class="highlight">psb.feb.ui.ac.id</span> dan login di area anggota untuk memunculkan Kode QR.'
+                'icon' => 'fas fa-id-card',
+                'title' => 'Isi Identitas',
+                'description' => 'Scan kartu anggota atau ketik identitas pengunjung pada kolom yang tersedia.'
             ],
             [
                 'icon' => 'scan',
-                'title' => 'Scan atau Ketik',
-                'description' => 'Arahkan Kode QR di HP Anda ke alat pemindai, <span class="highlight">ATAU</span> ketik NPM/ID Anda secara manual di kolom sebelah kiri.'
+                'title' => 'Proses Kunjungan',
+                'description' => 'Sistem akan memeriksa data dan menampilkan status kunjungan secara otomatis.'
             ],
             [
                 'icon' => 'fas fa-check',
-                'title' => 'Konfirmasi Sukses',
-                'description' => 'Setelah scan berhasil, layar akan menampilkan data check-in sukses dan portal siap kembali untuk antrean berikutnya.'
+                'title' => 'Selesai',
+                'description' => 'Setelah berhasil, pengunjung dapat melanjutkan aktivitas sesuai layanan yang tersedia.'
             ]
         ];
     }
@@ -86,6 +86,10 @@ if (!function_exists('rasamalaVisitorSplitSteps')) {
     function rasamalaVisitorSplitSteps($raw_steps)
     {
         $raw_steps = trim((string)($raw_steps ?? ''));
+        if (stripos($raw_steps, 'psb.feb.ui.ac.id') !== false || stripos($raw_steps, 'Login Web PSB') !== false) {
+            $raw_steps = '';
+        }
+
         if ($raw_steps === '') {
             return rasamalaVisitorSplitDefaultSteps();
         }
@@ -155,7 +159,6 @@ $visitor_split_title = trim((string)themeEffectiveTemplateValue('visitor_split_t
 if ($visitor_split_title === '') {
     $visitor_split_title = 'Petunjuk Penggunaan';
 }
-$visitor_split_description = trim((string)themeEffectiveTemplateValue('visitor_split_description', '', $sysconf));
 $visitor_split_steps = rasamalaVisitorSplitSteps(themeEffectiveTemplateValue('visitor_split_steps', '', $sysconf));
 
 ?>
@@ -406,17 +409,9 @@ body.rasamala-dark .tabs {
 .inst-title {
   font-size: 22px;
   font-weight: 700;
-  margin-bottom: 10px;
+  margin-bottom: 25px;
   color: var(--rasamala-text-primary);
   text-align: center;
-}
-.inst-description {
-  color: var(--rasamala-text-secondary);
-  font-size: 13px;
-  line-height: 1.6;
-  text-align: center;
-  margin: 0 auto 24px;
-  max-width: 430px;
 }
 .inst-steps {
   display: flex;
@@ -616,9 +611,6 @@ body.rasamala-dark .inst-step:hover {
 
         <section class="right-instruction-section">
             <h2 class="inst-title"><?= themeEscape($visitor_split_title); ?></h2>
-            <?php if ($visitor_split_description !== '') : ?>
-            <div class="inst-description"><?= themeSanitizeHtml($visitor_split_description); ?></div>
-            <?php endif; ?>
             <div class="inst-steps">
                 <?php foreach ($visitor_split_steps as $visitor_step_index => $visitor_step) : ?>
                 <?php $visitor_step_icon = rasamalaVisitorSplitIcon($visitor_step['icon'] ?? ''); ?>

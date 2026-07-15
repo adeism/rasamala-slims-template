@@ -2,7 +2,7 @@
  * Rasamala theme interactions.
  *
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-11T09:21:42+07:00
+ * @Last modified time  : 2026-07-15T12:27:50+07:00
  */
 'use strict';
 
@@ -575,7 +575,16 @@ document.addEventListener('DOMContentLoaded', () => {
         tickers.forEach(ticker => {
             const track = ticker.querySelector('.latest-content-ticker-track');
             if (!track) return;
-            
+
+            const groups = Array.prototype.slice.call(track.querySelectorAll('.latest-content-ticker-group'));
+            const baseGroup = groups[0];
+            if (!baseGroup) return;
+
+            groups.slice(1).forEach(group => group.remove());
+            ticker.classList.remove('is-edge-marquee');
+            ticker.style.setProperty('--ticker-start-gap', '0px');
+            ticker.style.setProperty('--ticker-distance', '-50%');
+
             const speedKey = ticker.getAttribute('data-speed') || 'normal';
             let speedPxS = 65; // default normal
             if (speedKey === 'fast') {
@@ -588,9 +597,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 speedPxS = 20;
             }
 
-            const distance = track.scrollWidth / 2;
+            const tickerWidth = Math.max(ticker.clientWidth, 1);
+            const baseContentWidth = Math.max(baseGroup.scrollWidth, 1);
+            const shouldStartFromEdge = baseContentWidth < tickerWidth * 1.25;
+
+            if (shouldStartFromEdge) {
+                ticker.classList.add('is-edge-marquee');
+                ticker.style.setProperty('--ticker-start-gap', `${tickerWidth}px`);
+            }
+
+            const baseGroupWidth = Math.max(baseGroup.scrollWidth, 1);
+            const minimumTrackWidth = tickerWidth + (baseGroupWidth * 2);
+            let cloneCount = 0;
+            while (track.scrollWidth < minimumTrackWidth && cloneCount < 12) {
+                const clone = baseGroup.cloneNode(true);
+                clone.setAttribute('aria-hidden', 'true');
+                clone.setAttribute('data-ticker-clone', 'true');
+                track.appendChild(clone);
+                cloneCount += 1;
+            }
+
+            const distance = baseGroupWidth;
             if (distance > 0) {
-                const duration = distance / speedPxS;
+                const duration = Math.max(distance / speedPxS, shouldStartFromEdge ? 14 : 8);
+                ticker.style.setProperty('--ticker-distance', `-${distance}px`);
                 track.style.animationDuration = `${duration}s`;
             }
         });
