@@ -2,7 +2,7 @@
  * Rasamala Theme Stylesheet
  * SLiMS 9 Bulian OPAC Custom Theme
  * Last modified by: Ade Ismail Siregar (adeismailbox@gmail.com)
- * Last modified time: 2026-07-15T08:58:11+07:00
+ * Last modified time: 2026-07-15T09:44:10+07:00
  */
 
 @import url('../../../../css/core.css');
@@ -7704,4 +7704,135 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
+}
+
+/* Search filter panel contrast normalization.
+   Uses palette tokens so dark palettes remain readable even in light mode. */
+.result-search .filter-panel-card,
+#mobileFilterModal .modal-content {
+  background: color-mix(in srgb, var(--theme-surface) 96%, transparent) !important;
+  background-color: var(--theme-surface) !important;
+  color: var(--theme-text) !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted) 22%, transparent) !important;
+  box-shadow: 0 18px 40px color-mix(in srgb, var(--theme-primary) 10%, transparent) !important;
+}
+
+.result-search .filter-panel-title,
+#mobileFilterModal .modal-title {
+  color: var(--theme-text) !important;
+  border-bottom-color: color-mix(in srgb, var(--theme-muted) 24%, transparent) !important;
+}
+
+.result-search .filter-panel-title i,
+#mobileFilterModal .modal-title i {
+  color: var(--theme-accent) !important;
+}
+
+#desktop-filter-container,
+#mobile-filter-container,
+#search-filter,
+#search-filter li,
+#search-filter li.list-group-item,
+#desktop-filter-container .list-group-item,
+#mobile-filter-container .list-group-item {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: var(--theme-text) !important;
+  border-color: color-mix(in srgb, var(--theme-muted) 18%, transparent) !important;
+}
+
+#search-filter .cursor-pointer,
+#search-filter .cursor-pointer strong,
+#search-filter .row .px-3,
+#search-filter a,
+#search-filter span,
+#search-filter small,
+#search-filter .text-dark,
+#search-filter .text-muted,
+#desktop-filter-container .text-dark,
+#desktop-filter-container .text-muted,
+#mobile-filter-container .text-dark,
+#mobile-filter-container .text-muted {
+  color: var(--theme-text) !important;
+}
+
+#search-filter .text-muted,
+#desktop-filter-container .text-muted,
+#mobile-filter-container .text-muted,
+#search-filter small {
+  opacity: 0.78 !important;
+}
+
+#desktop-filter-container label,
+#mobile-filter-container label,
+.filter-item label,
+.SearchFilter label,
+#search-filter .custom-control-label,
+#search-filter .form-check-label {
+  background: color-mix(in srgb, var(--theme-surface) 88%, var(--theme-background) 12%) !important;
+  color: var(--theme-text) !important;
+  border-color: color-mix(in srgb, var(--theme-muted) 28%, transparent) !important;
+  box-shadow: none !important;
+}
+
+#desktop-filter-container label:hover,
+#mobile-filter-container label:hover,
+.filter-item label:hover,
+.SearchFilter label:hover,
+#search-filter .custom-control-label:hover,
+#search-filter .form-check-label:hover {
+  background: color-mix(in srgb, var(--theme-accent) 14%, var(--theme-surface)) !important;
+  color: var(--theme-text) !important;
+  border-color: color-mix(in srgb, var(--theme-accent) 48%, transparent) !important;
+}
+
+#desktop-filter-container input[type="checkbox"]:checked + label,
+#desktop-filter-container input[type="radio"]:checked + label,
+#mobile-filter-container input[type="checkbox"]:checked + label,
+#mobile-filter-container input[type="radio"]:checked + label {
+  background: var(--theme-primary) !important;
+  background-color: var(--theme-primary) !important;
+  border-color: var(--theme-primary) !important;
+  color: #ffffff !important;
+}
+
+#search-filter .js-input-from,
+#search-filter .js-input-to,
+#search-filter input[type="text"],
+#search-filter input[type="number"],
+#search-filter select,
+#desktop-filter-container select,
+#mobile-filter-container select {
+  background-color: color-mix(in srgb, var(--theme-surface) 92%, var(--theme-background) 8%) !important;
+  color: var(--theme-text) !important;
+  border-color: color-mix(in srgb, var(--theme-muted) 34%, transparent) !important;
+}
+
+#search-filter .js-input-from:focus,
+#search-filter .js-input-to:focus,
+#search-filter input[type="text"]:focus,
+#search-filter input[type="number"]:focus,
+#search-filter select:focus {
+  border-color: var(--theme-accent) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--theme-accent) 22%, transparent) !important;
+}
+
+.irs-line,
+.irs-grid-pol {
+  background-color: color-mix(in srgb, var(--theme-muted) 20%, transparent) !important;
+}
+
+.irs-min,
+.irs-max,
+.irs-grid-text {
+  color: var(--theme-muted) !important;
+}
+
+body.rasamala-search-panels-transparent .result-search .filter-panel-card,
+body.rasamala-search-panels-transparent #mobileFilterModal .modal-content {
+  background: color-mix(in srgb, var(--theme-surface) 68%, transparent) !important;
+  background-color: color-mix(in srgb, var(--theme-surface) 68%, transparent) !important;
+  border-color: color-mix(in srgb, var(--theme-muted) 26%, transparent) !important;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
 }

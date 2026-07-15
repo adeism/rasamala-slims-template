@@ -4,7 +4,7 @@
 # @Email:  ido.alit@gmail.com
 # @Filename: _result-search.php
 # @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-15T08:25:01+07:00
+# @Last modified time: 2026-07-15T09:44:10+07:00
 
 ?>
 
@@ -29,8 +29,8 @@
         <div class="row">
             <!-- Filter Sidebar (Desktop Only) -->
             <div class="col-md-3 d-none d-md-block">
-                <div class="card border-0 shadow-sm p-3 rounded">
-                    <h5 class="fw-bold mb-3 border-bottom pb-2"><i class="fas fa-filter me-2 text-primary"></i><?= __('Filter by') ?></h5>
+                <div class="card filter-panel-card border-0 shadow-sm p-3 rounded">
+                    <h5 class="filter-panel-title fw-bold mb-3 border-bottom pb-2"><i class="fas fa-filter me-2" aria-hidden="true"></i><?= __('Filter by') ?></h5>
                     <div id="desktop-filter-container">
                         <?= $engine->getFilter($opac, true) ?>
                     </div>

@@ -2414,3 +2414,122 @@ body.rasamala-dark .grid-item .list-group-item {
 body.rasamala-dark .grid-item .list-group-item:last-child {
   border-bottom: none !important;
 }
+
+/* Search filter panel contrast normalization for active dark mode. */
+body.rasamala-dark .result-search .filter-panel-card,
+body.rasamala-dark #mobileFilterModal .modal-content {
+  background: rgba(22, 26, 34, 0.98) !important;
+  background-color: rgba(22, 26, 34, 0.98) !important;
+  color: var(--rasamala-dark-text, #f4f6f8) !important;
+  border: 1px solid var(--rasamala-dark-border, rgba(255, 255, 255, 0.12)) !important;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28) !important;
+}
+
+body.rasamala-dark .result-search .filter-panel-title,
+body.rasamala-dark #mobileFilterModal .modal-title {
+  color: var(--rasamala-dark-text, #f4f6f8) !important;
+  border-bottom-color: var(--rasamala-dark-border, rgba(255, 255, 255, 0.12)) !important;
+}
+
+body.rasamala-dark .result-search .filter-panel-title i,
+body.rasamala-dark #mobileFilterModal .modal-title i {
+  color: var(--rasamala-dark-accent-text-strong, var(--rasamala-accent)) !important;
+}
+
+body.rasamala-dark #desktop-filter-container,
+body.rasamala-dark #mobile-filter-container,
+body.rasamala-dark #search-filter,
+body.rasamala-dark #search-filter li,
+body.rasamala-dark #search-filter li.list-group-item,
+body.rasamala-dark #desktop-filter-container .list-group-item,
+body.rasamala-dark #mobile-filter-container .list-group-item {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: var(--rasamala-dark-text, #f4f6f8) !important;
+  border-color: var(--rasamala-dark-border, rgba(255, 255, 255, 0.12)) !important;
+}
+
+body.rasamala-dark #search-filter .cursor-pointer,
+body.rasamala-dark #search-filter .cursor-pointer strong,
+body.rasamala-dark #search-filter .row .px-3,
+body.rasamala-dark #search-filter a,
+body.rasamala-dark #search-filter span,
+body.rasamala-dark #search-filter small,
+body.rasamala-dark #search-filter .text-dark,
+body.rasamala-dark #search-filter .text-muted,
+body.rasamala-dark #desktop-filter-container .text-dark,
+body.rasamala-dark #desktop-filter-container .text-muted,
+body.rasamala-dark #mobile-filter-container .text-dark,
+body.rasamala-dark #mobile-filter-container .text-muted {
+  color: var(--rasamala-dark-text, #f4f6f8) !important;
+}
+
+body.rasamala-dark #search-filter .text-muted,
+body.rasamala-dark #desktop-filter-container .text-muted,
+body.rasamala-dark #mobile-filter-container .text-muted,
+body.rasamala-dark #search-filter small {
+  color: var(--rasamala-dark-muted, #b6bec8) !important;
+  opacity: 0.9 !important;
+}
+
+body.rasamala-dark #desktop-filter-container label,
+body.rasamala-dark #mobile-filter-container label,
+body.rasamala-dark .filter-item label,
+body.rasamala-dark .SearchFilter label,
+body.rasamala-dark #search-filter .custom-control-label,
+body.rasamala-dark #search-filter .form-check-label {
+  background: rgba(255, 255, 255, 0.075) !important;
+  background-color: rgba(255, 255, 255, 0.075) !important;
+  color: var(--rasamala-dark-text, #f4f6f8) !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+body.rasamala-dark #desktop-filter-container label:hover,
+body.rasamala-dark #mobile-filter-container label:hover,
+body.rasamala-dark .filter-item label:hover,
+body.rasamala-dark .SearchFilter label:hover,
+body.rasamala-dark #search-filter .custom-control-label:hover,
+body.rasamala-dark #search-filter .form-check-label:hover {
+  background: rgba(var(--theme-accent-rgb), 0.26) !important;
+  background-color: rgba(var(--theme-accent-rgb), 0.26) !important;
+  color: #ffffff !important;
+  border-color: rgba(var(--theme-accent-rgb), 0.48) !important;
+}
+
+body.rasamala-dark #desktop-filter-container input[type="checkbox"]:checked + label,
+body.rasamala-dark #desktop-filter-container input[type="radio"]:checked + label,
+body.rasamala-dark #mobile-filter-container input[type="checkbox"]:checked + label,
+body.rasamala-dark #mobile-filter-container input[type="radio"]:checked + label {
+  background: var(--rasamala-accent) !important;
+  background-color: var(--rasamala-accent) !important;
+  border-color: var(--rasamala-accent) !important;
+  color: #ffffff !important;
+}
+
+body.rasamala-dark #search-filter .js-input-from,
+body.rasamala-dark #search-filter .js-input-to,
+body.rasamala-dark #search-filter input[type="text"],
+body.rasamala-dark #search-filter input[type="number"],
+body.rasamala-dark #search-filter select,
+body.rasamala-dark #desktop-filter-container select,
+body.rasamala-dark #mobile-filter-container select {
+  background-color: rgba(255, 255, 255, 0.075) !important;
+  color: var(--rasamala-dark-text, #f4f6f8) !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+body.rasamala-dark #search-filter .js-input-from:focus,
+body.rasamala-dark #search-filter .js-input-to:focus,
+body.rasamala-dark #search-filter input[type="text"]:focus,
+body.rasamala-dark #search-filter input[type="number"]:focus,
+body.rasamala-dark #search-filter select:focus {
+  border-color: var(--rasamala-accent) !important;
+  box-shadow: 0 0 0 3px rgba(var(--theme-accent-rgb), 0.24) !important;
+}
+
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .filter-panel-card,
+body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal .modal-content {
+  background: rgba(22, 26, 34, 0.58) !important;
+  background-color: rgba(22, 26, 34, 0.58) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+}
