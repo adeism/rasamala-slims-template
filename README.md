@@ -26,6 +26,8 @@ Rasamala menyediakan pilihan keseluruhan tema lewat Tinfo:
 - Corporate / Formal Portal: tampilan rapi untuk instansi formal.
 - Academic & Research Portal: menonjolkan koleksi akademik dan top reader.
 - Minimalist Modern Portal: tampilan bersih dan ringan.
+- Minimal White Portal: tampilan putih minimalis dengan aksen kecil dan surface bersih.
+- Dark Gray Portal: tampilan dark gray netral yang modern dan nyaman dibaca.
 - Futuristic Digital Portal: dark/neon style dengan animasi digital.
 - Custom (Fully Unlocked): semua pengaturan detail dibuka.
 
@@ -35,10 +37,11 @@ Rasamala menyediakan pilihan keseluruhan tema lewat Tinfo:
 - Tinfo hanya mengatur apakah tombol toggle ditampilkan atau disembunyikan.
 - Warna navbar, footer, search result, filter, sort, detail biblio, login/member page, topics, floating button, dropdown, dan modal sudah diarahkan agar mengikuti mode aktif.
 
-### Warna dan Font Tema
+### Palette Warna dan Font Tema
 
-- Warna aksen tema bisa dipilih: Warm Gray, Neon Cyan, Neon Emerald, Sunset Orange, Royal Gold, dan Electric Pink.
-- Komponen utama mengikuti `--theme-accent-color`.
+- Theme Color Palette menyediakan preset: Warm Gray, Neon Cyan, Neon Emerald, Sunset Orange, Royal Gold, Electric Pink, Minimal White, Dark Gray, Forest Academic, Clean Blue, Warm Library, Mono Minimal, dan Custom Palette.
+- Custom Palette memungkinkan pengisian kode warna sendiri untuk Primary, Secondary, Accent Highlight, Page Background, Surface/Card, Main Text, dan Muted Text/Border.
+- Komponen utama tetap kompatibel dengan `--theme-accent-color`, tetapi sekarang juga memakai token `--theme-primary`, `--theme-secondary`, `--theme-accent`, `--theme-background`, `--theme-surface`, `--theme-text`, dan `--theme-muted` agar tampilan tidak monoton.
 - Pilihan font: System Default, Inter, Roboto, Poppins, dan Playfair Display.
 - Font eksternal sudah disimpan lokal di folder tema.
 

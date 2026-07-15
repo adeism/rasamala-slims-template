@@ -138,6 +138,13 @@ $sysconf['template']['classic_whatsapp_desc'] = 'Pilih salah satu kategori perta
 $sysconf['template']['classic_whatsapp_categories'] = "Tugas Akhir | Halo, saya ingin bertanya tentang layanan tugas akhir.\nDenda | Halo, saya ingin bertanya tentang informasi denda.\nLogin | Halo, saya mengalami kendala login OPAC/akun.";
 $sysconf['template']['classic_member_area'] = 1;
 $sysconf['template']['classic_theme_color'] = 'warmgray';
+$sysconf['template']['classic_palette_primary'] = '#111827';
+$sysconf['template']['classic_palette_secondary'] = '#475569';
+$sysconf['template']['classic_palette_accent'] = '#2563eb';
+$sysconf['template']['classic_palette_background'] = '#f8fafc';
+$sysconf['template']['classic_palette_surface'] = '#ffffff';
+$sysconf['template']['classic_palette_text'] = '#111827';
+$sysconf['template']['classic_palette_muted'] = '#64748b';
 $sysconf['template']['classic_color_toggle'] = 1;
 $sysconf['template']['classic_font_family'] = 'system';
 $sysconf['template']['classic_search_result_layout'] = 'simple';
@@ -186,13 +193,15 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
             ['office', __('Corporate / Formal Portal')],
             ['academic', __('Academic & Research Portal')],
             ['minimalist', __('Minimalist Modern Portal')],
+            ['minimal_white', __('Minimal White Portal')],
+            ['dark_gray', __('Dark Gray Portal')],
             ['futuristic', __('Futuristic Digital Portal')],
             ['custom', __('Custom (Fully Unlocked)')]
         ]
     ],
     'theme-color' => [
         'dbfield' => 'classic_theme_color',
-        'label' => __('Warna Aksen Tema'),
+        'label' => __('Theme Color Palette'),
         'type' => 'dropdown',
         'default' => 'warmgray',
         'data' => [
@@ -201,8 +210,57 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
             ['emerald', __('Neon Emerald')],
             ['orange', __('Sunset Orange')],
             ['gold', __('Royal Gold')],
-            ['pink', __('Electric Pink')]
+            ['pink', __('Electric Pink')],
+            ['minimalwhite', __('Minimal White')],
+            ['darkgray', __('Dark Gray')],
+            ['forest', __('Forest Academic')],
+            ['cleanblue', __('Clean Blue')],
+            ['warmlibrary', __('Warm Library')],
+            ['monominimal', __('Mono Minimal')],
+            ['custom', __('Custom Palette')]
         ]
+    ],
+    'palette-primary' => [
+        'dbfield' => 'classic_palette_primary',
+        'label' => __('Palette Primary Color'),
+        'type' => 'text',
+        'default' => '#111827'
+    ],
+    'palette-secondary' => [
+        'dbfield' => 'classic_palette_secondary',
+        'label' => __('Palette Secondary Color'),
+        'type' => 'text',
+        'default' => '#475569'
+    ],
+    'palette-accent' => [
+        'dbfield' => 'classic_palette_accent',
+        'label' => __('Palette Accent Highlight'),
+        'type' => 'text',
+        'default' => '#2563eb'
+    ],
+    'palette-background' => [
+        'dbfield' => 'classic_palette_background',
+        'label' => __('Palette Page Background'),
+        'type' => 'text',
+        'default' => '#f8fafc'
+    ],
+    'palette-surface' => [
+        'dbfield' => 'classic_palette_surface',
+        'label' => __('Palette Surface/Card Color'),
+        'type' => 'text',
+        'default' => '#ffffff'
+    ],
+    'palette-text' => [
+        'dbfield' => 'classic_palette_text',
+        'label' => __('Palette Main Text Color'),
+        'type' => 'text',
+        'default' => '#111827'
+    ],
+    'palette-muted' => [
+        'dbfield' => 'classic_palette_muted',
+        'label' => __('Palette Muted Text/Border Color'),
+        'type' => 'text',
+        'default' => '#64748b'
     ],
     'color-toggle' => [
         'dbfield' => 'classic_color_toggle',

@@ -3,7 +3,7 @@
  * Shared helpers for templates that can be loaded before classic.php.
  *
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-13T09:28:31+07:00
+ * @Last modified time  : 2026-07-15T08:58:11+07:00
  */
 if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
@@ -56,7 +56,7 @@ if (!function_exists('themePresetDefinitions')) {
           'classic_home_display_show' => 0,
           'classic_ticker_show' => 0,
           'classic_footer_show' => 1,
-          'classic_theme_color' => 'warmgray',
+          'classic_theme_color' => 'minimalwhite',
           'classic_font_family' => 'system',
           'classic_hero_background_animation' => 'waves',
         ],
@@ -76,7 +76,7 @@ if (!function_exists('themePresetDefinitions')) {
           'classic_home_display_show' => 'below',
           'classic_ticker_show' => 'bottom',
           'classic_footer_show' => 1,
-          'classic_theme_color' => 'warmgray',
+          'classic_theme_color' => 'cleanblue',
           'classic_font_family' => 'system',
           'classic_hero_background_animation' => 'constellation',
         ],
@@ -178,7 +178,7 @@ if (!function_exists('themePresetDefinitions')) {
           'classic_home_display_show' => 'below',
           'classic_ticker_show' => 0,
           'classic_footer_show' => 1,
-          'classic_theme_color' => 'gold',
+          'classic_theme_color' => 'forest',
           'classic_font_family' => 'playfair',
           'classic_hero_background_animation' => 'constellation',
         ],
@@ -198,9 +198,52 @@ if (!function_exists('themePresetDefinitions')) {
           'classic_home_display_show' => 'below',
           'classic_ticker_show' => 0,
           'classic_footer_show' => 1,
-          'classic_theme_color' => 'orange',
+          'classic_theme_color' => 'monominimal',
           'classic_font_family' => 'roboto',
           'classic_hero_background_animation' => 'glow',
+          'classic_cursor_particles' => 'low',
+        ],
+      ],
+      'minimal_white' => [
+        'label' => 'Minimal White Portal',
+        'description' => 'Portal putih minimalis dengan kontras teks tegas, surface bersih, dan aksen biru kecil agar tampilan sangat ringan.',
+        'footer_home' => true,
+        'settings' => [
+          'classic_homepage_only_hero' => 0,
+          'classic_topic_show' => 1,
+          'classic_popular_collection' => 0,
+          'classic_new_collection' => 1,
+          'classic_top_reader' => 0,
+          'classic_homepage_section_order' => 'topic;news;new-collection',
+          'classic_map' => 'hide_all',
+          'classic_home_display_show' => 'below',
+          'classic_ticker_show' => 0,
+          'classic_footer_show' => 1,
+          'classic_theme_color' => 'minimalwhite',
+          'classic_font_family' => 'inter',
+          'classic_hero_background_animation' => 'none',
+          'classic_cursor_particles' => 'none',
+        ],
+      ],
+      'dark_gray' => [
+        'label' => 'Dark Gray Portal',
+        'description' => 'Portal dark gray netral yang tidak kebiruan, cocok untuk tampilan modern dan nyaman dibaca pada layar gelap.',
+        'footer_home' => true,
+        'settings' => [
+          'classic_homepage_only_hero' => 0,
+          'classic_topic_show' => 1,
+          'classic_popular_collection' => 1,
+          'classic_new_collection' => 1,
+          'classic_top_reader' => 0,
+          'classic_homepage_section_order' => 'topic;news;popular;new-collection',
+          'classic_map' => 'hide_all',
+          'classic_home_display_show' => 'below',
+          'classic_ticker_show' => 'bottom',
+          'classic_footer_show' => 1,
+          'classic_theme_color' => 'darkgray',
+          'classic_font_family' => 'inter',
+          'classic_hero_background_animation' => 'twinkle',
+          'classic_background_animation_speed' => 'slow',
           'classic_cursor_particles' => 'low',
         ],
       ],
@@ -219,7 +262,7 @@ if (!function_exists('themePresetDefinitions')) {
           'classic_home_display_show' => 'below',
           'classic_ticker_show' => 'bottom',
           'classic_footer_show' => 1,
-          'classic_theme_color' => 'cyan',
+          'classic_theme_color' => 'darkgray',
           'classic_font_family' => 'poppins',
           'classic_hero_background_animation' => 'rain',
           'classic_cursor_particles' => 'high',
@@ -262,6 +305,13 @@ if (!function_exists('themePresetQuickSettingKeys')) {
   {
     return [
       'classic_theme_color',
+      'classic_palette_primary',
+      'classic_palette_secondary',
+      'classic_palette_accent',
+      'classic_palette_background',
+      'classic_palette_surface',
+      'classic_palette_text',
+      'classic_palette_muted',
       'classic_color_toggle',
       'classic_font_family',
       'classic_search_result_layout',
@@ -908,44 +958,212 @@ if (!function_exists('themeAccentPalettes')) {
   {
     return [
       'warmgray' => [
+        'label' => 'Warm Gray',
         'primary' => '#6f5b43',
         'hover' => '#5d4b36',
+        'secondary' => '#a58a63',
+        'accent' => '#c8a24a',
+        'background' => '#f4f1ec',
+        'surface' => '#ffffff',
+        'text' => '#2f2a24',
+        'muted' => '#7a7167',
         'rgb' => '111, 91, 67',
       ],
       'cyan' => [
+        'label' => 'Neon Cyan',
         'primary' => '#0057b8',
         'hover' => '#004494',
+        'secondary' => '#0f766e',
+        'accent' => '#06b6d4',
+        'background' => '#f5fbff',
+        'surface' => '#ffffff',
+        'text' => '#152238',
+        'muted' => '#64748b',
         'rgb' => '0, 87, 184',
       ],
       'emerald' => [
+        'label' => 'Neon Emerald',
         'primary' => '#047857',
         'hover' => '#065f46',
+        'secondary' => '#0f766e',
+        'accent' => '#22c55e',
+        'background' => '#f3faf7',
+        'surface' => '#ffffff',
+        'text' => '#17251f',
+        'muted' => '#5f7169',
         'rgb' => '4, 120, 87',
       ],
       'orange' => [
+        'label' => 'Sunset Orange',
         'primary' => '#b45309',
         'hover' => '#92400e',
+        'secondary' => '#7c3aed',
+        'accent' => '#f97316',
+        'background' => '#fff8f1',
+        'surface' => '#ffffff',
+        'text' => '#30251d',
+        'muted' => '#7a6a5d',
         'rgb' => '180, 83, 9',
       ],
       'gold' => [
+        'label' => 'Royal Gold',
         'primary' => '#7a5d00',
         'hover' => '#604900',
+        'secondary' => '#14532d',
+        'accent' => '#c8a24a',
+        'background' => '#f8f6ee',
+        'surface' => '#ffffff',
+        'text' => '#2d2818',
+        'muted' => '#736b54',
         'rgb' => '122, 93, 0',
       ],
       'pink' => [
+        'label' => 'Electric Pink',
         'primary' => '#be185d',
         'hover' => '#9d174d',
+        'secondary' => '#7c3aed',
+        'accent' => '#ec4899',
+        'background' => '#fff5f9',
+        'surface' => '#ffffff',
+        'text' => '#331827',
+        'muted' => '#7b6470',
         'rgb' => '190, 24, 93',
+      ],
+      'minimalwhite' => [
+        'label' => 'Minimal White',
+        'primary' => '#111827',
+        'hover' => '#030712',
+        'secondary' => '#475569',
+        'accent' => '#2563eb',
+        'background' => '#f8fafc',
+        'surface' => '#ffffff',
+        'text' => '#111827',
+        'muted' => '#64748b',
+        'rgb' => '17, 24, 39',
+      ],
+      'darkgray' => [
+        'label' => 'Dark Gray',
+        'primary' => '#374151',
+        'hover' => '#1f2937',
+        'secondary' => '#6b7280',
+        'accent' => '#38bdf8',
+        'background' => '#111318',
+        'surface' => '#1b1f27',
+        'text' => '#f8fafc',
+        'muted' => '#a7b0bf',
+        'rgb' => '55, 65, 81',
+      ],
+      'forest' => [
+        'label' => 'Forest Academic',
+        'primary' => '#14532d',
+        'hover' => '#0f3f22',
+        'secondary' => '#64748b',
+        'accent' => '#c8a24a',
+        'background' => '#f7f8f3',
+        'surface' => '#ffffff',
+        'text' => '#1f2933',
+        'muted' => '#65705f',
+        'rgb' => '20, 83, 45',
+      ],
+      'cleanblue' => [
+        'label' => 'Clean Blue',
+        'primary' => '#1d4ed8',
+        'hover' => '#1e40af',
+        'secondary' => '#0f766e',
+        'accent' => '#38bdf8',
+        'background' => '#f8fafc',
+        'surface' => '#ffffff',
+        'text' => '#172033',
+        'muted' => '#64748b',
+        'rgb' => '29, 78, 216',
+      ],
+      'warmlibrary' => [
+        'label' => 'Warm Library',
+        'primary' => '#6f4e37',
+        'hover' => '#573c2a',
+        'secondary' => '#556b2f',
+        'accent' => '#b7791f',
+        'background' => '#fbf7ef',
+        'surface' => '#ffffff',
+        'text' => '#2f2a24',
+        'muted' => '#75695e',
+        'rgb' => '111, 78, 55',
+      ],
+      'monominimal' => [
+        'label' => 'Mono Minimal',
+        'primary' => '#27272a',
+        'hover' => '#18181b',
+        'secondary' => '#71717a',
+        'accent' => '#52525b',
+        'background' => '#fafafa',
+        'surface' => '#ffffff',
+        'text' => '#18181b',
+        'muted' => '#71717a',
+        'rgb' => '39, 39, 42',
       ],
     ];
   }
 }
 
-if (!function_exists('themeSelectedAccentColor')) {
-  function themeSelectedAccentColor($color)
+if (!function_exists('themeNormalizeHexColor')) {
+  function themeNormalizeHexColor($value, $fallback)
   {
+    $value = trim((string)$value);
+    if (preg_match('/^#?[0-9a-fA-F]{6}$/', $value)) {
+      return '#' . strtolower(ltrim($value, '#'));
+    }
+
+    return $fallback;
+  }
+}
+
+if (!function_exists('themeHexToRgbString')) {
+  function themeHexToRgbString($hex)
+  {
+    $hex = ltrim(themeNormalizeHexColor($hex, '#6f5b43'), '#');
+    return hexdec(substr($hex, 0, 2)) . ', ' . hexdec(substr($hex, 2, 2)) . ', ' . hexdec(substr($hex, 4, 2));
+  }
+}
+
+if (!function_exists('themeAdjustHexColor')) {
+  function themeAdjustHexColor($hex, $amount = -22)
+  {
+    $hex = ltrim(themeNormalizeHexColor($hex, '#6f5b43'), '#');
+    $result = '#';
+    for ($i = 0; $i < 3; $i++) {
+      $channel = hexdec(substr($hex, $i * 2, 2));
+      $channel = max(0, min(255, $channel + (int)$amount));
+      $result .= str_pad(dechex($channel), 2, '0', STR_PAD_LEFT);
+    }
+    return $result;
+  }
+}
+
+if (!function_exists('themeSelectedAccentColor')) {
+  function themeSelectedAccentColor($color, $sysconf_param = null)
+  {
+    global $sysconf;
+
     $palettes = themeAccentPalettes();
     $key = strtolower((string)($color ?? 'warmgray'));
+    if ($key === 'custom') {
+      $source = is_array($sysconf_param) ? $sysconf_param : $sysconf;
+      $base = $palettes['minimalwhite'];
+      $primary = themeNormalizeHexColor($source['template']['classic_palette_primary'] ?? '', $base['primary']);
+      $palette = [
+        'label' => 'Custom Palette',
+        'primary' => $primary,
+        'hover' => themeAdjustHexColor($primary, -28),
+        'secondary' => themeNormalizeHexColor($source['template']['classic_palette_secondary'] ?? '', $base['secondary']),
+        'accent' => themeNormalizeHexColor($source['template']['classic_palette_accent'] ?? '', $base['accent']),
+        'background' => themeNormalizeHexColor($source['template']['classic_palette_background'] ?? '', $base['background']),
+        'surface' => themeNormalizeHexColor($source['template']['classic_palette_surface'] ?? '', $base['surface']),
+        'text' => themeNormalizeHexColor($source['template']['classic_palette_text'] ?? '', $base['text']),
+        'muted' => themeNormalizeHexColor($source['template']['classic_palette_muted'] ?? '', $base['muted']),
+      ];
+      $palette['rgb'] = themeHexToRgbString($palette['primary']);
+      return $palette;
+    }
 
     return $palettes[$key] ?? $palettes['warmgray'];
   }

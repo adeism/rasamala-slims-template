@@ -477,6 +477,13 @@ $(document).ready(function() {
     var defaultCustomCss = {$default_custom_css_json};
     var quickSettingNames = [
         'classic_theme_color',
+        'classic_palette_primary',
+        'classic_palette_secondary',
+        'classic_palette_accent',
+        'classic_palette_background',
+        'classic_palette_surface',
+        'classic_palette_text',
+        'classic_palette_muted',
         'classic_color_toggle',
         'classic_font_family',
         'classic_search_result_layout',
@@ -550,7 +557,7 @@ $(document).ready(function() {
 
         [
             ['classic_theme_preset', 'Preset tema', 'Pilih tampilan keseluruhan. Mode Custom akan membuka semua pengaturan detail.'],
-            ['classic_theme_color', 'Tampilan dasar', 'Warna, font, tombol bantu, breadcrumbs, dan CSS tambahan.'],
+            ['classic_theme_color', 'Tampilan dasar', 'Palette warna, font, tombol bantu, breadcrumbs, dan CSS tambahan.'],
             ['classic_navbar_menu', 'Navbar dan bahasa', 'Menu utama, area anggota, bahasa yang ditampilkan, dan navigasi mobile.'],
             ['classic_hero_text', 'Search, hero, dan berita', 'Teks pencarian, layout hasil pencarian, tampilan news list, animasi, cursor, dan banner pengumuman.'],
             ['classic_home_display_show', 'Info Area Search (Hero Info)', 'Konten singkat pendukung pencarian di bawah kolom pencarian (dapat berupa static badge, fading, atau ticker).'],
@@ -638,6 +645,17 @@ $(document).ready(function() {
         syncThemePresetSummary();
         syncThemePresetVisibility();
         var isCustomPreset = settingValue('classic_theme_preset') === 'custom';
+        var customPaletteOn = settingValue('classic_theme_color') === 'custom';
+
+        setRowsVisible([
+            'classic_palette_primary',
+            'classic_palette_secondary',
+            'classic_palette_accent',
+            'classic_palette_background',
+            'classic_palette_surface',
+            'classic_palette_text',
+            'classic_palette_muted'
+        ], customPaletteOn);
 
         var animationOn = settingValue('classic_hero_background_animation') !== 'none';
         setRowsVisible(['classic_background_animation_speed'], animationOn);

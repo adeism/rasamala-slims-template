@@ -2,7 +2,7 @@
  * Rasamala Theme Stylesheet
  * SLiMS 9 Bulian OPAC Custom Theme
  * Last modified by: Ade Ismail Siregar (adeismailbox@gmail.com)
- * Last modified time: 2026-07-13T09:28:31+07:00
+ * Last modified time: 2026-07-15T08:58:11+07:00
  */
 
 @import url('../../../../css/core.css');
@@ -11,15 +11,26 @@
    1. Design System Variables & Global Overrides
    ---------------------------------------------------- */
 :root {
+  --theme-primary: #6f5b43;
+  --theme-primary-hover: #5d4b36;
+  --theme-secondary: #a58a63;
+  --theme-accent: #c8a24a;
+  --theme-background: #f4f1ec;
+  --theme-surface: #ffffff;
+  --theme-text: #2f2a24;
+  --theme-muted: #7a7167;
+  --theme-primary-rgb: 111, 91, 67;
   --rasamala-dark-bg: #424242;
   --rasamala-deep-bg: #424242;
-  --rasamala-light-bg: #F5F5F5;
-  --rasamala-text-primary: #424242;
+  --rasamala-light-bg: var(--theme-background);
+  --rasamala-text-primary: var(--theme-text);
   --rasamala-text-primary-dark: #FFFFFF;
-  --rasamala-text-secondary: #6f5b43;
+  --rasamala-text-secondary: var(--theme-primary);
   --rasamala-text-secondary-dark: #E0E0E0;
-  --rasamala-accent: #6f5b43;
-  --rasamala-accent-hover: #5d4b36;
+  --rasamala-text-muted: var(--theme-muted);
+  --rasamala-surface: var(--theme-surface);
+  --rasamala-accent: var(--theme-primary);
+  --rasamala-accent-hover: var(--theme-primary-hover);
   --rasamala-border: #E0E0E0;
   --rasamala-border-dark: #424242;
   --rasamala-card-shadow: 0 8px 30px rgba(66, 66, 66, 0.06);
@@ -31,7 +42,7 @@
   --rasamala-radius-search: 999px;
   --rasamala-radius-circle: 50%;
   --theme-accent-color: var(--rasamala-accent);
-  --theme-accent-rgb: 111, 91, 67;
+  --theme-accent-rgb: var(--theme-primary-rgb);
   --theme-accent-glow: rgba(var(--theme-accent-rgb), 0.8);
   --theme-accent-glow-half: rgba(var(--theme-accent-rgb), 0.4);
   --rasamala-chrome-bg: rgba(var(--theme-accent-rgb), 0.92);
@@ -43,6 +54,61 @@
   --bs-body-font-family: var(--rasamala-font-stack);
   --bs-border-radius: var(--rasamala-radius-card);
   --bs-border-radius-lg: var(--rasamala-radius-panel);
+}
+
+/* Palette depth: primary is identity, secondary/accent are small supporting notes. */
+:root {
+  --rasamala-border: color-mix(in srgb, var(--theme-muted) 28%, transparent);
+  --rasamala-soft-tint: color-mix(in srgb, var(--theme-primary) 8%, var(--theme-surface));
+  --rasamala-accent-tint: color-mix(in srgb, var(--theme-accent) 14%, var(--theme-surface));
+  --rasamala-secondary-tint: color-mix(in srgb, var(--theme-secondary) 12%, var(--theme-surface));
+}
+
+.card,
+.dropdown-menu,
+.modal-content,
+.list-group-item,
+.biblio-list-card,
+.topic-card,
+.home-content-card,
+.section-card,
+.desktop-sort-bar,
+#search-filter {
+  background-color: var(--theme-surface) !important;
+  color: var(--theme-text) !important;
+  border-color: var(--rasamala-border) !important;
+}
+
+.text-muted,
+.small,
+.section-subtitle,
+.subtitle-section,
+.footer-about-text,
+.latest-content-text {
+  color: var(--theme-muted) !important;
+}
+
+.section-icon,
+.topic-icon,
+.latest-content-icon,
+.navbar-menu-icon,
+.rasamala-breadcrumb-link i {
+  color: var(--theme-accent) !important;
+}
+
+.btn-outline-secondary,
+.badge-soft,
+.sort-chip,
+.btn-rounded {
+  color: var(--theme-secondary) !important;
+  border-color: color-mix(in srgb, var(--theme-secondary) 38%, transparent) !important;
+}
+
+.btn-outline-secondary:hover,
+.sort-chip:hover,
+.btn-rounded:hover {
+  background-color: var(--rasamala-secondary-tint) !important;
+  color: var(--theme-primary) !important;
 }
 
 body {

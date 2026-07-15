@@ -6,7 +6,7 @@
 # @Email:  ido.alit@gmail.com
 # @Date:   2018-01-23T11:25:57+07:00
 # @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-13T09:28:31+07:00
+# @Last modified time: 2026-07-15T08:58:11+07:00
 -->
 <?php
 // clean request uri from xss (S-05: use parse_url for safer extraction)
@@ -100,7 +100,7 @@ if (isset($_GET['p']) && $_GET['p'] === 'show_detail') {
     </script>
 
     <?php
-    $selected_color = themeSelectedAccentColor(themeEffectiveAccentColorKey($sysconf));
+    $selected_color = themeSelectedAccentColor(themeEffectiveAccentColorKey($sysconf), $sysconf);
     $ticker_speed_val = '18s';
     $ticker_speed = themeEffectiveTemplateValue('classic_ticker_speed', 'normal', $sysconf);
     if ($ticker_speed === 'fast') {
@@ -127,13 +127,31 @@ if (isset($_GET['p']) && $_GET['p'] === 'show_detail') {
     ?>
     <style>
       :root {
-        --rasamala-text-secondary: <?php echo themeEscape($selected_color['primary']); ?>;
+        --theme-primary: <?php echo themeEscape($selected_color['primary']); ?>;
+        --theme-primary-hover: <?php echo themeEscape($selected_color['hover']); ?>;
+        --theme-secondary: <?php echo themeEscape($selected_color['secondary']); ?>;
+        --theme-accent: <?php echo themeEscape($selected_color['accent']); ?>;
+        --theme-background: <?php echo themeEscape($selected_color['background']); ?>;
+        --theme-surface: <?php echo themeEscape($selected_color['surface']); ?>;
+        --theme-text: <?php echo themeEscape($selected_color['text']); ?>;
+        --theme-muted: <?php echo themeEscape($selected_color['muted']); ?>;
+        --theme-primary-rgb: <?php echo themeEscape($selected_color['rgb']); ?>;
+        --rasamala-light-bg: var(--theme-background);
+        --rasamala-text-primary: var(--theme-text);
+        --rasamala-text-secondary: var(--theme-primary);
+        --rasamala-text-muted: var(--theme-muted);
+        --rasamala-surface: var(--theme-surface);
         --rasamala-accent: <?php echo themeEscape($selected_color['primary']); ?>;
         --rasamala-accent-hover: <?php echo themeEscape($selected_color['hover']); ?>;
         --theme-accent-color: <?php echo themeEscape($selected_color['primary']); ?>;
         --theme-accent-rgb: <?php echo themeEscape($selected_color['rgb']); ?>;
         --theme-accent-glow: rgba(<?php echo themeEscape($selected_color['rgb']); ?>, 0.8);
         --theme-accent-glow-half: rgba(<?php echo themeEscape($selected_color['rgb']); ?>, 0.4);
+        --rasamala-chrome-bg: color-mix(in srgb, var(--theme-primary) 92%, #000 8%);
+        --rasamala-chrome-border: color-mix(in srgb, var(--theme-primary) 38%, transparent);
+        --bs-body-bg: var(--theme-background);
+        --bs-body-color: var(--theme-text);
+        --bs-secondary-color: var(--theme-muted);
         --rasamala-font-stack: <?php echo $font_stack; ?>;
         --ticker-speed: <?php echo themeEscape($ticker_speed_val); ?>;
       }
