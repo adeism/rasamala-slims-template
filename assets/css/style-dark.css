@@ -2582,3 +2582,215 @@ body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal .modal-
   background-color: rgba(22, 26, 34, 0.58) !important;
   border-color: rgba(255, 255, 255, 0.14) !important;
 }
+
+/* Dark mode contrast guard for every theme color palette.
+   Primary colors can be too dark for text, so text uses the lighter accent token
+   while filled controls keep a darker primary-based background. */
+body.rasamala-dark {
+  --rasamala-dark-link: color-mix(in srgb, var(--theme-accent) 58%, #ffffff 42%);
+  --rasamala-dark-link-strong: color-mix(in srgb, var(--theme-accent) 38%, #ffffff 62%);
+  --rasamala-dark-action-bg: color-mix(in srgb, var(--theme-primary) 82%, #05070a 18%);
+  --rasamala-dark-action-hover-bg: color-mix(in srgb, var(--theme-primary) 82%, #ffffff 18%);
+  --rasamala-dark-action-border: color-mix(in srgb, var(--theme-accent) 46%, rgba(255, 255, 255, 0.22) 54%);
+  --rasamala-dark-accent-text: var(--rasamala-dark-link);
+  --rasamala-dark-accent-text-strong: var(--rasamala-dark-link-strong);
+  --rasamala-dark-accent-bg: color-mix(in srgb, var(--theme-primary) 30%, transparent 70%);
+  --rasamala-dark-accent-border: var(--rasamala-dark-action-border);
+}
+
+body.rasamala-dark a:not(.btn):not(.nav-link):not(.dropdown-item),
+body.rasamala-dark .text-primary,
+body.rasamala-dark .text-info,
+body.rasamala-dark .footer-next-prayer strong,
+body.rasamala-dark .footer-powered-link code,
+body.rasamala-dark .prayer-reminder-icon,
+body.rasamala-dark .prayer-reminder-close,
+body.rasamala-dark .prayer-reminder-countdown,
+body.rasamala-dark #search-wraper .latest-content-link .latest-content-icon,
+body.rasamala-dark #search-wraper #search-form a[data-bs-target="#adv-modal"]:hover,
+body.rasamala-dark .biblio-list-availability-label,
+body.rasamala-dark .biblio-list-availability strong,
+body.rasamala-dark .biblio-list-quick-action,
+body.rasamala-dark .detail-gmd-label,
+body.rasamala-dark .detail-meta-row .detail-gmd-label,
+body.rasamala-dark .detail-side-heading::before,
+body.rasamala-dark .availability-summary-count strong,
+body.rasamala-dark .biblio-simple-availability-count,
+body.rasamala-dark .topic-icon-fa,
+body.rasamala-dark .topic li i,
+body.rasamala-dark .rasamala-subpage-wrapper .librarian.row-fluid .span8 .row-fluid .span3.key,
+body.rasamala-dark .latest-content-ticker-item .latest-content-icon,
+body.rasamala-dark #search-wraper .latest-content-ticker-item .latest-content-icon {
+  color: var(--rasamala-dark-link) !important;
+}
+
+body.rasamala-dark a:not(.btn):not(.nav-link):not(.dropdown-item):hover,
+body.rasamala-dark a:not(.btn):not(.nav-link):not(.dropdown-item):focus,
+body.rasamala-dark .detail-subject-inline a,
+body.rasamala-dark .detail-record [itemprop="associatedMedia"] a,
+body.rasamala-dark .file-attachment a,
+body.rasamala-dark .footer-link,
+body.rasamala-dark footer a:not(.btn),
+body.rasamala-dark footer .footer-link,
+body.rasamala-dark footer .footer-about-text a,
+body.rasamala-dark footer .footer-powered-link,
+body.rasamala-dark footer .footer-powered-link code,
+body.rasamala-dark .rasamala-breadcrumb-current,
+body.rasamala-dark .rasamala-breadcrumb-link:hover,
+body.rasamala-dark .rasamala-breadcrumb-link:focus,
+body.rasamala-dark .c-header .navbar-nav .nav-link:hover,
+body.rasamala-dark .c-header .navbar-nav .nav-item.active .nav-link,
+body.rasamala-dark .c-header .navbar-nav .nav-link.active,
+body.rasamala-dark #member_content .nav-tabs .nav-link:hover,
+body.rasamala-dark #member_content .nav-tabs .nav-link.active,
+body.rasamala-dark .close:hover,
+body.rasamala-dark .mobile-more-menu-close:hover,
+body.rasamala-dark .prayer-reminder-close:hover {
+  color: var(--rasamala-dark-link-strong) !important;
+}
+
+body.rasamala-dark .rasamala-breadcrumb-separator,
+body.rasamala-dark .parallel-title-alt i,
+body.rasamala-dark .latest-content-icon {
+  color: var(--rasamala-dark-link) !important;
+}
+
+body.rasamala-dark .btn-primary,
+body.rasamala-dark .btn-info,
+body.rasamala-dark .btn-success,
+body.rasamala-dark .btn-secondary,
+body.rasamala-dark .search-type-btn.btn-primary,
+body.rasamala-dark .btn-news-readmore,
+body.rasamala-dark .btn-modal-action,
+body.rasamala-dark .libinfo-modal-btn,
+body.rasamala-dark #search-wraper #search-form button[type="submit"],
+body.rasamala-dark .footer-social-btn:hover,
+body.rasamala-dark .pagingList b,
+body.rasamala-dark .pagination .page-item.active .page-link,
+body.rasamala-dark .sort-chip.active,
+body.rasamala-dark #desktop-sort-chips .sort-chip.active,
+body.rasamala-dark #mobile-sort-options .list-group-item.active,
+body.rasamala-dark #desktop-filter-container input[type="checkbox"]:checked + label,
+body.rasamala-dark #desktop-filter-container input[type="radio"]:checked + label,
+body.rasamala-dark #mobile-filter-container input[type="checkbox"]:checked + label,
+body.rasamala-dark #mobile-filter-container input[type="radio"]:checked + label,
+body.rasamala-dark .biblio-list-basket:hover,
+body.rasamala-dark .biblio-list-basket:focus,
+body.rasamala-dark .biblio-list-action-link:hover,
+body.rasamala-dark .biblio-list-action-link:focus,
+body.rasamala-dark #search-wraper .latest-content-link:hover,
+body.rasamala-dark #search-wraper .latest-content-link:focus {
+  background: var(--rasamala-dark-action-bg) !important;
+  background-color: var(--rasamala-dark-action-bg) !important;
+  border-color: var(--rasamala-dark-action-border) !important;
+  color: #ffffff !important;
+}
+
+body.rasamala-dark .btn-primary:hover,
+body.rasamala-dark .btn-primary:focus,
+body.rasamala-dark .btn-info:hover,
+body.rasamala-dark .btn-info:focus,
+body.rasamala-dark .btn-success:hover,
+body.rasamala-dark .btn-success:focus,
+body.rasamala-dark .btn-secondary:hover,
+body.rasamala-dark .btn-secondary:focus,
+body.rasamala-dark .search-type-btn.btn-primary:hover,
+body.rasamala-dark .search-type-btn.btn-primary:focus,
+body.rasamala-dark .btn-news-readmore:hover,
+body.rasamala-dark .btn-news-readmore:focus,
+body.rasamala-dark .btn-modal-action:hover,
+body.rasamala-dark .btn-modal-action:focus,
+body.rasamala-dark .libinfo-modal-btn:hover,
+body.rasamala-dark .libinfo-modal-btn:focus,
+body.rasamala-dark #search-wraper #search-form button[type="submit"]:hover {
+  background: var(--rasamala-dark-action-hover-bg) !important;
+  background-color: var(--rasamala-dark-action-hover-bg) !important;
+  border-color: var(--rasamala-dark-link) !important;
+  color: #ffffff !important;
+}
+
+body.rasamala-dark .btn-outline-primary,
+body.rasamala-dark .btn-outline-secondary,
+body.rasamala-dark .detail-link-btn,
+body.rasamala-dark .authors a.btn-outline-secondary,
+body.rasamala-dark .detail-author-footer a,
+body.rasamala-dark .search-type-btn.btn-outline-primary,
+body.rasamala-dark .search-type-btn.btn-outline-secondary,
+body.rasamala-dark .biblio-list-basket,
+body.rasamala-dark .biblio-list-action-link,
+body.rasamala-dark .biblio-list-availability,
+body.rasamala-dark .footer-action-btn,
+body.rasamala-dark .footer-social-btn,
+body.rasamala-dark .pagination .page-link,
+body.rasamala-dark .pagingList a,
+body.rasamala-dark .sort-chip,
+body.rasamala-dark #desktop-sort-chips .sort-chip,
+body.rasamala-dark #mobile-sort-options .list-group-item {
+  border-color: var(--rasamala-dark-action-border) !important;
+  color: var(--rasamala-dark-text) !important;
+}
+
+body.rasamala-dark .btn-outline-primary:hover,
+body.rasamala-dark .btn-outline-primary:focus,
+body.rasamala-dark .btn-outline-secondary:hover,
+body.rasamala-dark .btn-outline-secondary:focus,
+body.rasamala-dark .detail-link-btn:hover,
+body.rasamala-dark .detail-link-btn:focus,
+body.rasamala-dark .authors a.btn-outline-secondary:hover,
+body.rasamala-dark .authors a.btn-outline-secondary:focus,
+body.rasamala-dark .detail-author-footer a:hover,
+body.rasamala-dark .detail-author-footer a:focus,
+body.rasamala-dark .search-type-btn.btn-outline-primary:hover,
+body.rasamala-dark .search-type-btn.btn-outline-primary:focus,
+body.rasamala-dark .search-type-btn.btn-outline-secondary:hover,
+body.rasamala-dark .search-type-btn.btn-outline-secondary:focus,
+body.rasamala-dark .pagingList a:hover,
+body.rasamala-dark .pagingList a:focus,
+body.rasamala-dark .pagination .page-link:hover,
+body.rasamala-dark .pagination .page-link:focus,
+body.rasamala-dark .sort-chip:hover,
+body.rasamala-dark .sort-chip:focus,
+body.rasamala-dark #desktop-sort-chips .sort-chip:hover,
+body.rasamala-dark #desktop-sort-chips .sort-chip:focus,
+body.rasamala-dark #mobile-sort-options .list-group-item:hover,
+body.rasamala-dark #mobile-sort-options .list-group-item:focus {
+  background: var(--rasamala-dark-accent-bg) !important;
+  background-color: var(--rasamala-dark-accent-bg) !important;
+  border-color: var(--rasamala-dark-action-border) !important;
+  color: var(--rasamala-dark-link-strong) !important;
+}
+
+body.rasamala-dark .form-control:focus,
+body.rasamala-dark .custom-select:focus,
+body.rasamala-dark select:focus,
+body.rasamala-dark input:focus,
+body.rasamala-dark textarea:focus,
+body.rasamala-dark #search-filter .js-input-from:focus,
+body.rasamala-dark #search-filter .js-input-to:focus,
+body.rasamala-dark #search-filter input[type="text"]:focus,
+body.rasamala-dark #search-filter input[type="number"]:focus,
+body.rasamala-dark #search-filter select:focus {
+  border-color: var(--rasamala-dark-link) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--rasamala-dark-link) 28%, transparent 72%) !important;
+}
+
+body.rasamala-dark #search-filter .irs-from,
+body.rasamala-dark #search-filter .irs-to,
+body.rasamala-dark #search-filter .irs-single,
+body.rasamala-dark #mobileFilterModal .irs-from,
+body.rasamala-dark #mobileFilterModal .irs-to,
+body.rasamala-dark #mobileFilterModal .irs-single {
+  background: var(--rasamala-dark-action-bg) !important;
+  background-color: var(--rasamala-dark-action-bg) !important;
+  border-color: var(--rasamala-dark-action-border) !important;
+  color: #ffffff !important;
+}
+
+body.rasamala-dark #search-filter .irs-from::after,
+body.rasamala-dark #search-filter .irs-to::after,
+body.rasamala-dark #search-filter .irs-single::after,
+body.rasamala-dark #mobileFilterModal .irs-from::after,
+body.rasamala-dark #mobileFilterModal .irs-to::after,
+body.rasamala-dark #mobileFilterModal .irs-single::after {
+  border-top-color: var(--rasamala-dark-action-bg) !important;
+}
