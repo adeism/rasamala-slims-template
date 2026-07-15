@@ -3,7 +3,7 @@
  * Helper output for Rasamala theme customization fields.
  *
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-15T12:27:50+07:00
+ * @Last modified time  : 2026-07-15T14:32:37+07:00
  */
 if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
@@ -491,6 +491,24 @@ $(document).ready(function() {
         'classic_search_result_layout',
         'classic_search_panel_style',
         'classic_news_list_layout',
+        'classic_home_display_show',
+        'classic_home_display_style',
+        'classic_home_display_source',
+        'classic_home_display_custom_text',
+        'classic_home_display_content_filter',
+        'classic_home_display_content_detail',
+        'classic_home_display_biblio_filter',
+        'classic_home_item_limit',
+        'classic_home_char_limit',
+        'classic_ticker_show',
+        'classic_ticker_source',
+        'classic_ticker_custom_text',
+        'classic_ticker_content_filter',
+        'classic_ticker_content_detail',
+        'classic_ticker_biblio_filter',
+        'classic_ticker_speed',
+        'classic_ticker_item_limit',
+        'classic_ticker_char_limit',
         'classic_home_content_cards_show',
         'classic_home_content_cards_source',
         'classic_home_content_path_1',
@@ -512,6 +530,8 @@ $(document).ready(function() {
         'classic_theme_preset',
         'classic_theme_color',
         'classic_hero_text',
+        'classic_home_display_show',
+        'classic_ticker_show',
         'classic_home_content_cards_show',
         'classic_librarian_display_mode',
         'classic_footer_show'
@@ -720,6 +740,20 @@ $(document).ready(function() {
             'visitor_split_steps'
         ], visitorSplitOn);
 
+        var homeDisplayOn = isShown('classic_home_display_show');
+        var homeDisplaySource = settingValue('classic_home_display_source');
+        setRowsVisible(['classic_home_display_source', 'classic_home_display_style', 'classic_home_item_limit', 'classic_home_char_limit'], homeDisplayOn);
+        setRowsVisible(['classic_home_display_custom_text'], homeDisplayOn && homeDisplaySource === 'custom_home');
+        setRowsVisible(['classic_home_display_content_filter', 'classic_home_display_content_detail'], homeDisplayOn && homeDisplaySource === 'content');
+        setRowsVisible(['classic_home_display_biblio_filter'], homeDisplayOn && homeDisplaySource === 'biblio');
+
+        var tickerOn = isShown('classic_ticker_show');
+        var tickerSource = settingValue('classic_ticker_source');
+        setRowsVisible(['classic_ticker_source', 'classic_ticker_speed', 'classic_ticker_item_limit', 'classic_ticker_char_limit'], tickerOn);
+        setRowsVisible(['classic_ticker_custom_text'], tickerOn && tickerSource === 'custom_ticker');
+        setRowsVisible(['classic_ticker_content_filter', 'classic_ticker_content_detail'], tickerOn && tickerSource === 'content');
+        setRowsVisible(['classic_ticker_biblio_filter'], tickerOn && tickerSource === 'biblio');
+
         if (!isCustomPreset) {
             return;
         }
@@ -733,18 +767,6 @@ $(document).ready(function() {
 
         var announcementOn = settingValue('classic_announcement_show') === '1';
         setRowsVisible(['classic_announcement_text', 'classic_announcement_style'], announcementOn);
-
-        var homeDisplayOn = isShown('classic_home_display_show');
-        var homeDisplaySource = settingValue('classic_home_display_source');
-        setRowsVisible(['classic_home_display_source', 'classic_home_display_style', 'classic_home_item_limit', 'classic_home_char_limit'], homeDisplayOn);
-        setRowsVisible(['classic_home_display_content_filter', 'classic_home_display_content_detail'], homeDisplayOn && homeDisplaySource === 'content');
-        setRowsVisible(['classic_home_display_biblio_filter'], homeDisplayOn && homeDisplaySource === 'biblio');
-
-        var tickerOn = isShown('classic_ticker_show');
-        var tickerSource = settingValue('classic_ticker_source');
-        setRowsVisible(['classic_ticker_source', 'classic_ticker_speed', 'classic_ticker_item_limit', 'classic_ticker_char_limit'], tickerOn);
-        setRowsVisible(['classic_ticker_content_filter', 'classic_ticker_content_detail'], tickerOn && tickerSource === 'content');
-        setRowsVisible(['classic_ticker_biblio_filter'], tickerOn && tickerSource === 'biblio');
 
         var topicOn = settingValue('classic_topic_show') === '1';
         setRowsVisible(['classic_topic_heading_display', 'classic_topic_items'], topicOn);

@@ -89,6 +89,7 @@ Kecepatan animasi bisa diatur. Efek dibuat ringan dan mengikuti warna aksen tema
 - Gaya announcement: theme adaptive, info, warning, danger, success.
 - Running text bisa mengambil data dari latest content, latest bibliography, atau teks kustom.
 - Running text mendukung filter news/all content, filter collection type, jumlah item, batas karakter, dan kecepatan.
+- Running text bawah tetap menjadi quick setting Tinfo dan dapat diatur pada semua preset tanpa harus memilih Custom.
 - Running text bisa tampil sebagai ticker bawah dan tetap ada saat pindah halaman.
 - Running text pendek otomatis dibuat bergerak dari sisi kanan ke kiri agar loop tetap rapi pada layar desktop maupun mobile.
 - Running text juga tampil di halaman Visitor/Buku Tamu saat fitur Running Text diaktifkan.
@@ -96,6 +97,7 @@ Kecepatan animasi bisa diatur. Efek dibuat ringan dan mengikuti warna aksen tema
 ### Info di Bawah Search Box
 
 - Info area search dapat ditampilkan atau disembunyikan.
+- Info area search tetap menjadi quick setting Tinfo dan dapat diatur pada semua preset tanpa harus memilih Custom.
 - Sumber data: latest content, latest bibliography, atau teks kustom.
 - Gaya tampilan: badges/pills, fading slideshow, atau horizontal ticker.
 - Mendukung batas jumlah item dan batas karakter.

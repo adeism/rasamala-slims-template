@@ -3,7 +3,7 @@
  * Shared helpers for templates that can be loaded before classic.php.
  *
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-15T08:58:11+07:00
+ * @Last modified time  : 2026-07-15T14:32:37+07:00
  */
 if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
@@ -330,6 +330,24 @@ if (!function_exists('themePresetQuickSettingKeys')) {
       'classic_search_result_layout',
       'classic_search_panel_style',
       'classic_news_list_layout',
+      'classic_home_display_show',
+      'classic_home_display_style',
+      'classic_home_display_source',
+      'classic_home_display_custom_text',
+      'classic_home_display_content_filter',
+      'classic_home_display_content_detail',
+      'classic_home_display_biblio_filter',
+      'classic_home_item_limit',
+      'classic_home_char_limit',
+      'classic_ticker_show',
+      'classic_ticker_source',
+      'classic_ticker_custom_text',
+      'classic_ticker_content_filter',
+      'classic_ticker_content_detail',
+      'classic_ticker_biblio_filter',
+      'classic_ticker_speed',
+      'classic_ticker_item_limit',
+      'classic_ticker_char_limit',
       'classic_home_content_cards_show',
       'classic_home_content_cards_source',
       'classic_home_content_path_1',
