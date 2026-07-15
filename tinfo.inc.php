@@ -4,7 +4,7 @@
  * @Date                : 2020-01-02 15:12
  * @File name           : tinfo.inc.php
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-13T09:28:31+07:00
+ * @Last modified time  : 2026-07-15T11:59:23+07:00
  */
 
 $rasamala_default_topic_items = "Literature | index.php?callnumber=8&search=search | fas fa-book ; Social Sciences | index.php?callnumber=3&search=search | fas fa-users ; Applied Sciences | index.php?callnumber=6&search=search | fas fa-flask ; Art & Recreation | index.php?callnumber=7&search=search | fas fa-paint-brush ; Language | index.php?callnumber=4&search=search | fas fa-language ; see more.. | #exampleModal | fas fa-th-large";
@@ -32,6 +32,11 @@ $rasamala_default_custom_css = <<<CSS
   border-color: var(--theme-accent-color) !important;
 } */
 CSS;
+$rasamala_default_visitor_split_steps = <<<TEXT
+fas fa-lock | Login Web PSB | Buka <span class="highlight">psb.feb.ui.ac.id</span> dan login di area anggota untuk memunculkan Kode QR.
+scan | Scan atau Ketik | Arahkan Kode QR di HP Anda ke alat pemindai, <span class="highlight">ATAU</span> ketik NPM/ID Anda secara manual di kolom sebelah kiri.
+fas fa-check | Konfirmasi Sukses | Setelah scan berhasil, layar akan menampilkan data check-in sukses dan portal siap kembali untuk antrean berikutnya.
+TEXT;
 
 $sysconf['template']['base'] = 'php';
 $sysconf['template']['responsive'] = true;
@@ -71,6 +76,9 @@ $sysconf['template']['visitor_title'] = '';
 $sysconf['template']['visitor_subtitle'] = 'Visitor Check-In Portal';
 $sysconf['template']['visitor_theme_toggle'] = 1;
 $sysconf['template']['visitor_layout_style'] = 'kiosk';
+$sysconf['template']['visitor_split_title'] = 'Petunjuk Penggunaan';
+$sysconf['template']['visitor_split_description'] = 'Atur langkah kunjungan sesuai alur layanan perpustakaan Anda.';
+$sysconf['template']['visitor_split_steps'] = $rasamala_default_visitor_split_steps;
 $sysconf['template']['classic_footer_about_us'] = <<<HTML
 <p>As a complete Library Management System, SLiMS (Senayan Library Management System) has many features that will help libraries and librarians to do their job easily 
 and quickly. Follow <a target="_blank" rel="noopener noreferrer" href="https://slims.web.id/web/pages/about/">this link</a> to show some features provided by SLiMS.</p>
@@ -1170,6 +1178,28 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
             ['kiosk', __('Kiosk Mode (Kartu Tengah dengan Jam Besar)')],
             ['split', __('Split Layout (Form Kiri & Petunjuk Kanan)')]
         ]
+    ],
+    'visitor-split-title' => [
+        'dbfield' => 'visitor_split_title',
+        'label' => __('Judul Petunjuk Layout Split Visitor'),
+        'type' => 'text',
+        'default' => 'Petunjuk Penggunaan'
+    ],
+    'visitor-split-description' => [
+        'dbfield' => 'visitor_split_description',
+        'label' => __('Deskripsi Singkat Layout Split Visitor'),
+        'type' => 'longtext',
+        'default' => 'Atur langkah kunjungan sesuai alur layanan perpustakaan Anda.',
+        'width' => '100',
+        'max' => 1000
+    ],
+    'visitor-split-steps' => [
+        'dbfield' => 'visitor_split_steps',
+        'label' => __('Langkah Petunjuk Layout Split Visitor (format: ikon | judul | deskripsi, satu langkah per baris. Ikon bisa Font Awesome atau "scan".)'),
+        'type' => 'longtext',
+        'default' => $rasamala_default_visitor_split_steps,
+        'width' => '100',
+        'max' => 5000
     ],
 ];
 

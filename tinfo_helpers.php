@@ -3,7 +3,7 @@
  * Helper output for Rasamala theme customization fields.
  *
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-13T09:28:31+07:00
+ * @Last modified time  : 2026-07-15T11:59:23+07:00
  */
 if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
@@ -704,6 +704,13 @@ $(document).ready(function() {
             'classic_home_content_path_3'
         ], homeContentCardsOn && homeContentCardsSource === 'custom');
 
+        var visitorSplitOn = settingValue('visitor_layout_style') === 'split';
+        setRowsVisible([
+            'visitor_split_title',
+            'visitor_split_description',
+            'visitor_split_steps'
+        ], visitorSplitOn);
+
         if (!isCustomPreset) {
             return;
         }
@@ -794,7 +801,8 @@ $(document).ready(function() {
         'select[name="classic_footer_show"]',
         'select[name="classic_prayer_times_show"]',
         'select[name="classic_librarian_display_mode"]',
-        'select[name="classic_floating_info"]'
+        'select[name="classic_floating_info"]',
+        'select[name="visitor_layout_style"]'
     ].join(','), syncConditionalSettings);
 
     function parseLanguageCodes(value) {

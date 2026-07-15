@@ -4,7 +4,7 @@
  * @Date                : 2020-01-03 08:49
  * @File name           : visitor_template.php
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-15T08:25:01+07:00
+ * @Last modified time  : 2026-07-15T11:59:23+07:00
  */
 
 $main_template_path = __DIR__ . '/login_template.inc.php';
@@ -58,6 +58,105 @@ if (trim((string)$visitor_title) === '') {
 $visitor_subtitle = themeEffectiveTemplateValue('visitor_subtitle', 'Visitor Check-In Portal', $sysconf);
 $visitor_theme_toggle_enabled = (themeEffectiveTemplateValue('visitor_theme_toggle', 1, $sysconf) == 1);
 $visitor_layout_style = themeEffectiveTemplateValue('visitor_layout_style', 'kiosk', $sysconf);
+
+if (!function_exists('rasamalaVisitorSplitDefaultSteps')) {
+    function rasamalaVisitorSplitDefaultSteps()
+    {
+        return [
+            [
+                'icon' => 'fas fa-lock',
+                'title' => 'Login Web PSB',
+                'description' => 'Buka <span class="highlight">psb.feb.ui.ac.id</span> dan login di area anggota untuk memunculkan Kode QR.'
+            ],
+            [
+                'icon' => 'scan',
+                'title' => 'Scan atau Ketik',
+                'description' => 'Arahkan Kode QR di HP Anda ke alat pemindai, <span class="highlight">ATAU</span> ketik NPM/ID Anda secara manual di kolom sebelah kiri.'
+            ],
+            [
+                'icon' => 'fas fa-check',
+                'title' => 'Konfirmasi Sukses',
+                'description' => 'Setelah scan berhasil, layar akan menampilkan data check-in sukses dan portal siap kembali untuk antrean berikutnya.'
+            ]
+        ];
+    }
+}
+
+if (!function_exists('rasamalaVisitorSplitSteps')) {
+    function rasamalaVisitorSplitSteps($raw_steps)
+    {
+        $raw_steps = trim((string)($raw_steps ?? ''));
+        if ($raw_steps === '') {
+            return rasamalaVisitorSplitDefaultSteps();
+        }
+
+        $steps = [];
+        foreach (preg_split('/\r\n|\r|\n/', $raw_steps) as $line) {
+            $line = trim($line);
+            if ($line === '') {
+                continue;
+            }
+
+            $parts = array_map('trim', explode('|', $line, 3));
+            if (count($parts) === 1) {
+                $icon = 'fas fa-info-circle';
+                $title = $parts[0];
+                $description = '';
+            } elseif (count($parts) === 2) {
+                $icon = $parts[0] !== '' ? $parts[0] : 'fas fa-info-circle';
+                $title = $parts[1];
+                $description = '';
+            } else {
+                [$icon, $title, $description] = $parts;
+                $icon = $icon !== '' ? $icon : 'fas fa-info-circle';
+            }
+
+            if ($title === '' && $description === '') {
+                continue;
+            }
+
+            $steps[] = [
+                'icon' => $icon,
+                'title' => $title !== '' ? $title : 'Info',
+                'description' => $description
+            ];
+        }
+
+        return $steps ?: rasamalaVisitorSplitDefaultSteps();
+    }
+}
+
+if (!function_exists('rasamalaVisitorSplitIcon')) {
+    function rasamalaVisitorSplitIcon($icon)
+    {
+        $icon = preg_replace('/\s+/', ' ', trim((string)($icon ?? '')));
+        if (preg_match('/^(scan|barcode|qr|qrcode)$/i', $icon)) {
+            return [
+                'is_scan' => true,
+                'html' => '<div class="scan-anim-container" aria-hidden="true"><svg class="barcode-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M4 4h4v56H4zM12 4h2v56h-2zM20 4h4v56h-4zM28 4h2v56h-2zM36 4h4v56h-4zM44 4h2v56h-2zM52 4h8v56h-8z"/></svg><div class="scan-laser"></div></div>'
+            ];
+        }
+
+        if (preg_match('/^(fa[brs]?|fas|far|fab)\s+[a-z0-9 _-]+$/i', $icon)) {
+            return [
+                'is_scan' => false,
+                'html' => '<i class="' . themeEscape($icon) . '" aria-hidden="true"></i>'
+            ];
+        }
+
+        return [
+            'is_scan' => false,
+            'html' => themeEscape($icon !== '' ? $icon : 'i')
+        ];
+    }
+}
+
+$visitor_split_title = trim((string)themeEffectiveTemplateValue('visitor_split_title', 'Petunjuk Penggunaan', $sysconf));
+if ($visitor_split_title === '') {
+    $visitor_split_title = 'Petunjuk Penggunaan';
+}
+$visitor_split_description = trim((string)themeEffectiveTemplateValue('visitor_split_description', '', $sysconf));
+$visitor_split_steps = rasamalaVisitorSplitSteps(themeEffectiveTemplateValue('visitor_split_steps', '', $sysconf));
 
 ?>
 <style>
@@ -307,9 +406,17 @@ body.rasamala-dark .tabs {
 .inst-title {
   font-size: 22px;
   font-weight: 700;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
   color: var(--rasamala-text-primary);
   text-align: center;
+}
+.inst-description {
+  color: var(--rasamala-text-secondary);
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: center;
+  margin: 0 auto 24px;
+  max-width: 430px;
 }
 .inst-steps {
   display: flex;
@@ -330,6 +437,10 @@ body.rasamala-dark .tabs {
   border-color: rgba(0,0,0,0.08);
   background: rgba(255,255,255,0.5);
 }
+.inst-step-featured {
+  border-color: var(--rasamala-accent);
+  background: rgba(var(--theme-accent-rgb), 0.06);
+}
 body.rasamala-dark .inst-step:hover {
   border-color: rgba(255,255,255,0.08);
   background: rgba(255,255,255,0.02);
@@ -346,6 +457,16 @@ body.rasamala-dark .inst-step:hover {
   font-size: 20px;
   color: white;
   box-shadow: 0 4px 10px rgba(var(--theme-accent-rgb), 0.25);
+}
+.inst-icon-box i {
+  font-size: 18px;
+  line-height: 1;
+}
+.inst-icon-box-scan {
+  background: transparent;
+  box-shadow: none;
+  overflow: hidden;
+  color: var(--rasamala-accent);
 }
 .inst-content h3 {
   font-size: 16px;
@@ -494,34 +615,23 @@ body.rasamala-dark .inst-step:hover {
         </section>
 
         <section class="right-instruction-section">
-            <h2 class="inst-title"><?= __('Petunjuk Penggunaan') ?></h2>
+            <h2 class="inst-title"><?= themeEscape($visitor_split_title); ?></h2>
+            <?php if ($visitor_split_description !== '') : ?>
+            <div class="inst-description"><?= themeSanitizeHtml($visitor_split_description); ?></div>
+            <?php endif; ?>
             <div class="inst-steps">
-                <div class="inst-step">
-                    <div class="inst-icon-box">🔐</div>
+                <?php foreach ($visitor_split_steps as $visitor_step_index => $visitor_step) : ?>
+                <?php $visitor_step_icon = rasamalaVisitorSplitIcon($visitor_step['icon'] ?? ''); ?>
+                <div class="inst-step<?= $visitor_step_icon['is_scan'] ? ' inst-step-featured' : ''; ?>">
+                    <div class="inst-icon-box<?= $visitor_step_icon['is_scan'] ? ' inst-icon-box-scan' : ''; ?>"><?= $visitor_step_icon['html']; ?></div>
                     <div class="inst-content">
-                        <h3>1. <?= __('Login Web PSB') ?></h3>
-                        <p>Buka <span class="highlight">psb.feb.ui.ac.id</span> dan login di area anggota untuk memunculkan Kode QR.</p>
+                        <h3><?= themeEscape(($visitor_step_index + 1) . '. ' . ($visitor_step['title'] ?? 'Info')); ?></h3>
+                        <?php if (trim((string)($visitor_step['description'] ?? '')) !== '') : ?>
+                        <p><?= themeSanitizeHtml($visitor_step['description']); ?></p>
+                        <?php endif; ?>
                     </div>
                 </div>
-                <div class="inst-step" style="border-color: var(--rasamala-accent);">
-                    <div class="inst-icon-box" style="background: transparent; box-shadow: none; overflow: hidden;">
-                        <div class="scan-anim-container">
-                            <svg class="barcode-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M4 4h4v56H4zM12 4h2v56h-2zM20 4h4v56h-4zM28 4h2v56h-2zM36 4h4v56h-4zM44 4h2v56h-2zM52 4h8v56h-8z"/></svg>
-                            <div class="scan-laser"></div>
-                        </div>
-                    </div>
-                    <div class="inst-content">
-                        <h3>2. <?= __('Scan atau Ketik') ?></h3>
-                        <p>Arahkan Kode QR di HP Anda ke alat pemindai, <span class="highlight">ATAU</span> ketik NPM/ID Anda secara manual di kolom sebelah kiri.</p>
-                    </div>
-                </div>
-                <div class="inst-step">
-                    <div class="inst-icon-box">✓</div>
-                    <div class="inst-content">
-                        <h3>3. <?= __('Konfirmasi Sukses') ?></h3>
-                        <p>Setelah scan berhasil, layar akan menampilkan data check-in sukses dan portal akan siap kembali untuk antrean berikutnya.</p>
-                    </div>
-                </div>
+                <?php endforeach; ?>
             </div>
         </section>
     </main>

@@ -239,6 +239,8 @@ Fitur ini diterapkan pada halaman beranda, hasil pencarian, dan detail bibliogra
 - Judul dan subtitle visitor bisa diatur.
 - Toggle dark mode visitor bisa enable/disable.
 - Layout visitor: Kiosk Mode atau Split Layout.
+- Konten panel kanan Split Layout bisa diatur dari Tinfo: judul, deskripsi, dan daftar langkah.
+- Format langkah Split Layout: `ikon | judul | deskripsi`, satu langkah per baris. Ikon mendukung Font Awesome, misalnya `fas fa-lock`, atau keyword khusus `scan` untuk animasi pemindai.
 
 ### Floating Buttons
 
