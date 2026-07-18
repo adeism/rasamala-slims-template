@@ -185,7 +185,7 @@ if (isValuePresent($subjects)) {
             <?php if (countAttachment($this->db, $biblio_id) > 0): ?>
             <div class="detail-cover-area" style="padding: 0 8px;">
                 <a class="add-to-access btn btn-dark btn-block" style="font-size: 0.8125rem; border-radius: 6px;"
-                   data-biblio="<?= $biblio_id ?>" href="javascript:void(0)"
+                   data-biblio="<?= $biblio_id ?>" href="index.php?p=member"
                    title="Request Access for member only">
                     <i class="fas fa-lock mr-2"></i>Request Access
                 </a>

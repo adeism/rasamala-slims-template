@@ -379,7 +379,7 @@ const SlimsMember = {
                     }, [
                         avatarElement
                     ]),
-                    Vue.h('h5', {
+                    Vue.h('h3', {
                         class: 'card-title text-center mt-3'
                     }, [
                         Vue.h('span', this.memberName),

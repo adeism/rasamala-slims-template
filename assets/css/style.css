@@ -2,10 +2,17 @@
  * Rasamala Theme Stylesheet
  * SLiMS 9 Bulian OPAC Custom Theme
  * Last modified by: Ade Ismail Siregar (adeismailbox@gmail.com)
- * Last modified time: 2026-07-15T15:45:21+07:00
+ * Last modified time: 2026-07-16T15:30:11+07:00
  */
 
 @import url('../../../../css/core.css');
+
+[hidden],
+#search-wraper .latest-content-strip[hidden],
+#search-wraper [hidden],
+.latest-content-strip[hidden] {
+  display: none !important;
+}
 
 /* ----------------------------------------------------
    1. Design System Variables & Global Overrides
@@ -20,17 +27,35 @@
   --theme-text: #2f2a24;
   --theme-muted: #7a7167;
   --theme-primary-rgb: 111, 91, 67;
+  --theme-accent-rgb-value: 200, 162, 74;
+  --theme-on-primary: #ffffff;
+  --theme-on-primary-hover: #ffffff;
+  --theme-on-secondary: #111827;
+  --theme-on-accent: #111827;
+  --theme-on-background: var(--theme-text);
+  --theme-on-surface: var(--theme-text);
+  --color-primary: var(--theme-primary);
+  --color-secondary: var(--theme-secondary);
+  --color-accent: var(--theme-accent);
+  --color-background: var(--theme-background);
+  --color-surface: var(--theme-surface);
+  --color-text: var(--theme-text);
+  --color-muted: var(--theme-muted);
+  --color-on-primary: var(--theme-on-primary);
+  --color-on-secondary: var(--theme-on-secondary);
+  --color-on-accent: var(--theme-on-accent);
   --rasamala-dark-bg: #424242;
   --rasamala-deep-bg: #424242;
   --rasamala-light-bg: var(--theme-background);
   --rasamala-text-primary: var(--theme-text);
   --rasamala-text-primary-dark: #FFFFFF;
-  --rasamala-text-secondary: var(--theme-primary);
+  --rasamala-text-secondary: var(--theme-secondary);
   --rasamala-text-secondary-dark: #E0E0E0;
   --rasamala-text-muted: var(--theme-muted);
   --rasamala-surface: var(--theme-surface);
-  --rasamala-accent: var(--theme-primary);
-  --rasamala-accent-hover: var(--theme-primary-hover);
+  --rasamala-accent: var(--theme-accent);
+  --rasamala-accent-hover: color-mix(in srgb, var(--theme-accent) 84%, #000 16%);
+  --rasamala-readable-accent: color-mix(in srgb, var(--theme-accent) 72%, var(--theme-text) 28%);
   --rasamala-border: #E0E0E0;
   --rasamala-border-dark: #424242;
   --rasamala-card-shadow: 0 8px 30px rgba(66, 66, 66, 0.06);
@@ -42,11 +67,15 @@
   --rasamala-radius-search: 999px;
   --rasamala-radius-circle: 50%;
   --theme-accent-color: var(--rasamala-accent);
-  --theme-accent-rgb: var(--theme-primary-rgb);
+  --theme-accent-rgb: var(--theme-accent-rgb-value);
   --theme-accent-glow: rgba(var(--theme-accent-rgb), 0.8);
   --theme-accent-glow-half: rgba(var(--theme-accent-rgb), 0.4);
   --rasamala-chrome-bg: rgba(var(--theme-accent-rgb), 0.92);
   --rasamala-chrome-border: rgba(var(--theme-accent-rgb), 0.38);
+  --rasamala-chrome-text: var(--theme-on-primary);
+  --rasamala-chrome-text-muted: color-mix(in srgb, var(--theme-on-primary) 76%, transparent);
+  --theme-link: color-mix(in srgb, var(--theme-text) 72%, var(--theme-primary) 28%);
+  --theme-link-hover: color-mix(in srgb, var(--theme-text) 58%, var(--theme-primary-hover) 42%);
 
   /* Bootstrap 5 Variables Binding */
   --bs-primary: var(--rasamala-accent);
@@ -136,6 +165,7 @@ body.rasamala-background-animation-active {
     linear-gradient(180deg, #ffffff 0%, rgba(245, 245, 245, 0.92) 42%, rgba(var(--theme-accent-rgb), 0.14) 100%) !important;
 }
 
+.rasamala-theme .rasamala-main,
 .rasamala-theme > .rasamala-hero-section,
 .rasamala-theme > .rasamala-search-banner-section,
 .rasamala-theme > #slims-home,
@@ -143,7 +173,7 @@ body.rasamala-background-animation-active {
 .rasamala-theme > .member-area,
 .rasamala-theme footer {
   position: relative;
-  z-index: 1;
+  z-index: 2 !important;
 }
 
 body.rasamala-background-animation-active #slims-home,
@@ -168,13 +198,13 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 }
 
 a {
-  color: var(--rasamala-accent);
+  color: var(--theme-link);
   text-decoration: none !important;
   transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1) !important;
 }
 a:hover,
 a:focus {
-  color: var(--rasamala-accent-hover) !important;
+  color: var(--theme-link-hover) !important;
   text-decoration: none !important;
   opacity: 0.85;
 }
@@ -196,7 +226,7 @@ button:focus-visible,
   color: var(--rasamala-text-secondary) !important;
 }
 .text-muted {
-  color: var(--rasamala-text-secondary) !important;
+  color: var(--theme-muted) !important;
 }
 .text-dark {
   color: var(--rasamala-text-primary) !important;
@@ -317,6 +347,15 @@ body.rasamala-palette-dark:not(.rasamala-dark) .latest-content-icon {
   color: var(--rasamala-text-secondary) !important;
 }
 
+/* Palette-dark mode keeps the footer on chrome/primary, so footer links use
+   the computed on-primary color instead of guessing white. */
+body.rasamala-palette-dark:not(.rasamala-dark) footer a:not(.btn),
+body.rasamala-palette-dark:not(.rasamala-dark) footer .footer-about-text a,
+body.rasamala-palette-dark:not(.rasamala-dark) footer .footer-powered-link,
+body.rasamala-palette-dark:not(.rasamala-dark) footer .footer-powered-link code {
+  color: var(--rasamala-chrome-text) !important;
+}
+
 body.rasamala-palette-dark:not(.rasamala-dark) .form-control,
 body.rasamala-palette-dark:not(.rasamala-dark) .custom-select,
 body.rasamala-palette-dark:not(.rasamala-dark) .form-select,
@@ -344,7 +383,7 @@ body.rasamala-palette-dark:not(.rasamala-dark) option {
 body.rasamala-palette-dark:not(.rasamala-dark) .dropdown-item:hover,
 body.rasamala-palette-dark:not(.rasamala-dark) .dropdown-item:focus {
   background-color: color-mix(in srgb, var(--theme-primary) 42%, transparent) !important;
-  color: #ffffff !important;
+  color: var(--theme-text) !important;
 }
 
 body.rasamala-palette-dark:not(.rasamala-dark) .btn-outline-primary,
@@ -369,7 +408,7 @@ body.rasamala-palette-dark:not(.rasamala-dark) .pagination .page-item.active .pa
 body.rasamala-palette-dark:not(.rasamala-dark) .pagingList b {
   background-color: var(--theme-primary) !important;
   border-color: color-mix(in srgb, var(--theme-accent) 45%, var(--theme-primary) 55%) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
 }
 
 body.rasamala-palette-dark:not(.rasamala-dark) .irs-min,
@@ -380,12 +419,15 @@ body.rasamala-palette-dark:not(.rasamala-dark) .irs-grid-text {
 }
 .bg-primary {
   background-color: var(--rasamala-accent) !important;
+  color: var(--theme-on-primary) !important;
 }
 .bg-info {
   background-color: var(--rasamala-accent) !important;
+  color: var(--theme-on-primary) !important;
 }
 .bg-success {
   background-color: var(--rasamala-accent) !important;
+  color: var(--theme-on-primary) !important;
 }
 .bg-danger {
   background-color: var(--rasamala-text-secondary-dark) !important;
@@ -482,7 +524,7 @@ body.rasamala-palette-dark:not(.rasamala-dark) .irs-grid-text {
 #slims-home section h4 .subtitle-section {
   font-size: 14px;
   font-weight: 400;
-  color: var(--rasamala-text-secondary);
+  color: var(--theme-muted);
   letter-spacing: -0.005em;
   display: block;
   margin-top: 8px;
@@ -591,7 +633,7 @@ body.rasamala-palette-dark:not(.rasamala-dark) .irs-grid-text {
 }
 
 #search-wraper .card {
-  background: #ffffff !important;
+  background: var(--theme-surface) !important;
   border: 1px solid var(--rasamala-border) !important;
   border-radius: 9999px !important;
   box-shadow: var(--rasamala-card-shadow) !important;
@@ -619,7 +661,8 @@ body.rasamala-palette-dark:not(.rasamala-dark) .irs-grid-text {
   box-shadow: none !important;
 }
 #search-input::placeholder {
-  color: var(--rasamala-text-secondary) !important;
+  color: var(--theme-muted) !important;
+  opacity: 1 !important;
 }
 
 /* Light Search Bar style for homepage hero */
@@ -628,8 +671,8 @@ body.rasamala-palette-dark:not(.rasamala-dark) .irs-grid-text {
   margin-bottom: 0;
 }
 #section1 #search-wraper .card {
-  background: rgba(255, 255, 255, 0.9) !important;
-  border: 1px solid rgba(66, 66, 66, 0.15) !important;
+  background: color-mix(in srgb, var(--theme-surface) 92%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted) 24%, transparent) !important;
   border-radius: 9999px !important;
   box-shadow: none !important;
 }
@@ -642,10 +685,11 @@ body.rasamala-palette-dark:not(.rasamala-dark) .irs-grid-text {
   color: var(--rasamala-text-primary) !important;
 }
 #section1 #search-wraper #search-input::placeholder {
-  color: var(--rasamala-text-secondary) !important;
+  color: var(--theme-muted) !important;
+  opacity: 1 !important;
 }
 #section1 #search-wraper .text-muted {
-  color: var(--rasamala-text-secondary) !important;
+  color: var(--theme-muted) !important;
 }
 #section1 #search-wraper .text-muted:hover {
   color: var(--rasamala-accent) !important;
@@ -1111,7 +1155,7 @@ body.rasamala-palette-dark:not(.rasamala-dark) .irs-grid-text {
   background: var(--rasamala-accent) !important;
   border-color: var(--rasamala-accent) !important;
   box-shadow: 0 6px 16px rgba(var(--theme-accent-rgb), 0.22) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
 }
 .biblioPaging .pagingList a {
   color: var(--rasamala-text-secondary) !important;
@@ -1158,7 +1202,7 @@ body.rasamala-palette-dark:not(.rasamala-dark) .irs-grid-text {
 #mobile-filter-container input[type="radio"]:checked + label {
   background: var(--rasamala-accent) !important;
   border-color: var(--rasamala-accent) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
 }
 
 /* Hide original checkboxes/radios since labels are now interactive chips */
@@ -1192,7 +1236,7 @@ body.rasamala-palette-dark:not(.rasamala-dark) .irs-grid-text {
 .sort-chip.active {
   background: var(--rasamala-accent) !important;
   border-color: var(--rasamala-accent) !important;
-  color: #FFFFFF !important;
+  color: var(--theme-on-primary) !important;
   box-shadow: 0 4px 12px rgba(var(--theme-accent-rgb), 0.2) !important;
   text-decoration: none !important;
 }
@@ -1342,7 +1386,7 @@ hr {
     left: 0;
     right: 0;
     height: 56px;
-    background: rgba(var(--theme-accent-rgb), 0.92) !important;
+    background: var(--rasamala-chrome-bg) !important;
     backdrop-filter: blur(20px) !important;
     -webkit-backdrop-filter: blur(20px) !important;
     border-top: 1px solid rgba(var(--theme-accent-rgb), 0.38) !important;
@@ -1364,7 +1408,7 @@ hr {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 255, 255, 0.72) !important;
+  color: var(--rasamala-chrome-text-muted) !important;
   text-decoration: none;
   font-size: 10px;
   font-weight: 500;
@@ -1378,7 +1422,7 @@ hr {
 
 .mobile-bottom-nav .nav-item:hover,
 .mobile-bottom-nav .nav-item.active {
-  color: #ffffff !important;
+  color: var(--rasamala-chrome-text) !important;
 }
 
 .mobile-bottom-language-flag {
@@ -1392,7 +1436,8 @@ hr {
 /* Floating back to top, color mode & Info */
 .btn-floating-info,
 .btn-back-to-top,
-.btn-color-mode-toggle {
+.btn-color-mode-toggle,
+.btn-palette-switcher {
   position: fixed !important;
   right: 24px !important;
   width: 46px !important;
@@ -1402,7 +1447,7 @@ hr {
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
   border: 1px solid rgba(var(--theme-accent-rgb), 0.38) !important;
-  color: #FFFFFF !important;
+  color: var(--theme-on-primary) !important;
   box-shadow: 0 8px 30px rgba(var(--theme-accent-rgb), 0.32) !important;
   transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1) !important;
   cursor: pointer !important;
@@ -1414,7 +1459,8 @@ hr {
 
 .btn-floating-info:hover,
 .btn-back-to-top:hover,
-.btn-color-mode-toggle:hover {
+.btn-color-mode-toggle:hover,
+.btn-palette-switcher:hover {
   background: var(--rasamala-accent-hover) !important;
   border-color: var(--rasamala-accent-hover) !important;
   transform: scale(1.08) !important;
@@ -1433,6 +1479,37 @@ hr {
   bottom: 24px !important;
   z-index: 1046 !important;
   font-size: 18px !important;
+}
+
+.btn-palette-switcher {
+  right: 82px !important;
+  bottom: 24px !important;
+  z-index: 1047 !important;
+  font-size: 18px !important;
+}
+
+body.rasamala-has-palette-switcher:not(.rasamala-floating-info-hide) .btn-color-mode-toggle {
+  right: 140px !important;
+}
+
+body.rasamala-floating-info-hide .btn-palette-switcher {
+  right: 24px !important;
+}
+
+.btn-palette-switcher .palette-switcher-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: currentColor !important;
+  font-family: "Font Awesome 5 Free" !important;
+  font-size: 18px !important;
+  font-style: normal !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+.btn-palette-switcher .palette-switcher-icon::before {
+  content: "\f1fc" !important;
 }
 
 .btn-back-to-top {
@@ -1461,9 +1538,298 @@ hr {
 
 .btn-floating-info.has-latest-content-ticker,
 .btn-color-mode-toggle.has-latest-content-ticker,
+.btn-palette-switcher.has-latest-content-ticker,
 .btn-back-to-top.has-latest-content-ticker,
 .btn-floating-whatsapp.has-latest-content-ticker {
   bottom: 58px !important;
+}
+
+.palette-switcher-panel {
+  position: fixed !important;
+  right: 24px !important;
+  bottom: 84px !important;
+  z-index: 1056 !important;
+  width: min(420px, calc(100vw - 32px)) !important;
+  padding: 16px !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted) 28%, transparent) !important;
+  border-radius: 12px !important;
+  background: color-mix(in srgb, var(--theme-surface) 94%, transparent) !important;
+  color: var(--theme-text) !important;
+  box-shadow: 0 24px 72px rgba(0, 0, 0, 0.2) !important;
+  backdrop-filter: blur(22px) !important;
+  -webkit-backdrop-filter: blur(22px) !important;
+}
+
+.btn-palette-switcher.has-latest-content-ticker + .palette-switcher-panel {
+  bottom: 118px !important;
+}
+
+.palette-switcher-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  margin-bottom: 12px !important;
+  color: var(--theme-text) !important;
+}
+
+.palette-switcher-header-actions {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.palette-switcher-close {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  height: 28px !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted) 20%, transparent) !important;
+  border-radius: 50% !important;
+  background: color-mix(in srgb, var(--theme-surface) 82%, var(--theme-background) 18%) !important;
+  color: var(--theme-text) !important;
+  cursor: pointer !important;
+  line-height: 1 !important;
+}
+
+.palette-switcher-mode-toggle {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  min-height: 31px !important;
+  padding: 6px 10px !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted) 24%, transparent) !important;
+  border-radius: 8px !important;
+  background: color-mix(in srgb, var(--theme-surface) 86%, var(--theme-background) 14%) !important;
+  color: var(--theme-on-surface) !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  cursor: pointer !important;
+  transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease, transform 0.18s ease !important;
+}
+
+.palette-switcher-mode-toggle i {
+  color: var(--rasamala-readable-accent) !important;
+  font-size: 13px !important;
+  line-height: 1 !important;
+}
+
+.palette-switcher-mode-toggle:hover,
+.palette-switcher-mode-toggle:focus {
+  transform: translateY(-1px) !important;
+  border-color: color-mix(in srgb, var(--theme-accent) 42%, transparent) !important;
+  background: color-mix(in srgb, var(--theme-accent) 12%, var(--theme-surface) 88%) !important;
+  color: var(--theme-on-surface) !important;
+}
+
+.palette-switcher-tools {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  margin-bottom: 12px !important;
+}
+
+.palette-switcher-tool-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  min-height: 34px !important;
+  padding: 7px 10px !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted) 24%, transparent) !important;
+  border-radius: 8px !important;
+  background: color-mix(in srgb, var(--theme-surface) 86%, var(--theme-background) 14%) !important;
+  color: var(--theme-on-surface) !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  cursor: pointer !important;
+  transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease, transform 0.18s ease !important;
+}
+
+.palette-switcher-tool-btn i {
+  flex: 0 0 auto !important;
+  color: var(--rasamala-readable-accent) !important;
+  font-size: 13px !important;
+  line-height: 1 !important;
+}
+
+.palette-switcher-tool-btn:hover,
+.palette-switcher-tool-btn:focus {
+  transform: translateY(-1px) !important;
+  border-color: color-mix(in srgb, var(--theme-accent) 42%, transparent) !important;
+  background: color-mix(in srgb, var(--theme-accent) 12%, var(--theme-surface) 88%) !important;
+  color: var(--theme-on-surface) !important;
+}
+
+/* Compact actions button styling in Theme Viewer */
+.palette-switcher-actions-compact .palette-switcher-tool-btn {
+  width: 38px !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  padding: 0 !important;
+  border-radius: 10px !important;
+  background: color-mix(in srgb, var(--theme-accent) 8%, var(--theme-surface)) !important;
+  border: 1px solid color-mix(in srgb, var(--theme-accent) 18%, transparent) !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.palette-switcher-actions-compact .palette-switcher-tool-btn i {
+  color: var(--theme-accent) !important;
+  font-size: 15px !important;
+  transition: color 0.2s ease !important;
+}
+
+.palette-switcher-actions-compact .palette-switcher-tool-btn:hover,
+.palette-switcher-actions-compact .palette-switcher-tool-btn:focus {
+  transform: translateY(-2px) !important;
+  background: var(--theme-accent) !important;
+  border-color: var(--theme-accent) !important;
+  box-shadow: 0 6px 14px rgba(var(--theme-accent-rgb-value, 111, 91, 67), 0.24) !important;
+}
+
+.palette-switcher-actions-compact .palette-switcher-tool-btn:hover i,
+.palette-switcher-actions-compact .palette-switcher-tool-btn:focus i {
+  color: var(--theme-on-accent) !important;
+}
+
+
+.palette-switcher-label {
+  display: block !important;
+  margin: 10px 0 6px !important;
+  color: var(--theme-muted) !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+
+.palette-switcher-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 8px 10px !important;
+  margin-top: 12px !important;
+}
+
+.palette-switcher-field {
+  min-width: 0 !important;
+}
+
+.palette-switcher-field .palette-switcher-label {
+  margin-top: 0 !important;
+}
+
+.palette-switcher-section-tools {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  margin-top: 12px !important;
+}
+
+.palette-switcher-section-label {
+  grid-column: 1 / -1 !important;
+  margin: 0 0 -2px !important;
+}
+
+.palette-switcher-section-help {
+  grid-column: 1 / -1 !important;
+  color: var(--theme-muted) !important;
+  font-size: 11px !important;
+  line-height: 1.4 !important;
+}
+
+.palette-switcher-section-list {
+  grid-column: 1 / -1 !important;
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 6px !important;
+}
+
+.palette-switcher-section-option {
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 7px 8px !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted) 24%, transparent) !important;
+  border-radius: 8px !important;
+  background: color-mix(in srgb, var(--theme-surface) 92%, transparent) !important;
+  color: var(--theme-text) !important;
+  font-size: 12px !important;
+  line-height: 1.25 !important;
+}
+
+.palette-switcher-section-option input {
+  flex: 0 0 auto !important;
+  accent-color: var(--theme-primary) !important;
+}
+
+.palette-switcher-section-option span {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.palette-switcher-select,
+.palette-switcher-custom-input {
+  width: 100% !important;
+  border-radius: 8px !important;
+  border-color: color-mix(in srgb, var(--theme-muted) 30%, transparent) !important;
+  background: var(--theme-surface) !important;
+  color: var(--theme-text) !important;
+}
+
+body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
+  display: none !important;
+}
+
+.palette-switcher-custom-input {
+  min-height: 92px !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace !important;
+  font-size: 12px !important;
+}
+
+.palette-switcher-help {
+  margin-top: 6px !important;
+  color: var(--theme-muted) !important;
+  font-size: 11px !important;
+  line-height: 1.45 !important;
+}
+
+.palette-switcher-swatches {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  margin-top: 12px !important;
+}
+
+.palette-switcher-swatch {
+  position: relative !important;
+  width: 100% !important;
+  aspect-ratio: 1 / 1 !important;
+  border: 2px solid transparent !important;
+  border-radius: 9px !important;
+  background:
+    linear-gradient(135deg, var(--swatch-primary) 0 38%, var(--swatch-secondary) 38% 70%, var(--swatch-accent) 70% 100%) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.36), 0 4px 12px rgba(0, 0, 0, 0.12) !important;
+  cursor: pointer !important;
+}
+
+.palette-switcher-swatch.is-active {
+  border-color: var(--theme-accent) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--theme-accent) 22%, transparent), inset 0 0 0 1px rgba(255, 255, 255, 0.5) !important;
+}
+
+.palette-switcher-actions {
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-top: 14px !important;
+  flex-wrap: wrap !important;
 }
 
 .btn-floating-whatsapp {
@@ -1668,7 +2034,7 @@ hr {
 .detail-callnumber-tag {
   display: inline-block !important;
   background: var(--rasamala-accent) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
   border-radius: 6px !important;
   box-shadow: 0 5px 14px rgba(var(--theme-accent-rgb), 0.22) !important;
   font-size: 12px !important;
@@ -2072,7 +2438,7 @@ hr {
 .detail-cover .book-cover-content {
   inset: 12px 10px !important;
   padding: 18px 10px !important;
-  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border: 1px solid color-mix(in srgb, currentColor 24%, transparent) !important;
 }
 
 .detail-cover .book-cover-header-text {
@@ -2115,7 +2481,7 @@ hr {
 .detail-link-btn:hover {
   background-color: var(--rasamala-accent) !important;
   border-color: var(--rasamala-accent) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
   transform: translateY(-1px) !important;
   box-shadow: 0 4px 10px rgba(var(--theme-accent-rgb), 0.15) !important;
   text-decoration: none !important;
@@ -2176,7 +2542,7 @@ hr {
 .detail-author-footer a:hover,
 .detail-author-footer a:focus {
   background-color: var(--rasamala-accent) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
   border-color: var(--rasamala-accent) !important;
   box-shadow: 0 4px 12px rgba(var(--theme-accent-rgb), 0.22) !important;
   transform: translateY(-1.5px) !important;
@@ -2241,11 +2607,11 @@ hr {
 .btn-switcher.active {
   background: var(--rasamala-accent) !important;
   border-color: var(--rasamala-accent) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
 }
 
 .btn-switcher.active i {
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
 }
 
 .btn-switcher:not(.active):hover {
@@ -2418,9 +2784,10 @@ hr {
 
 /* Footer layout elements */
 footer {
+  margin-top: auto !important;
   background: var(--rasamala-chrome-bg) !important;
   border-top: 1px solid var(--rasamala-chrome-border) !important;
-  color: rgba(255, 255, 255, 0.88) !important;
+  color: var(--rasamala-chrome-text) !important;
   font-family: var(--rasamala-font-stack) !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
@@ -2434,11 +2801,11 @@ footer {
 
 .footer-book-icon {
   opacity: 0.9 !important;
-  color: #ffffff !important;
+  color: var(--rasamala-chrome-text) !important;
 }
 
 .footer-section-title {
-  color: #ffffff !important;
+  color: var(--rasamala-chrome-text) !important;
   font-weight: 500 !important;
   font-size: 12px !important;
   letter-spacing: -0.005em !important;
@@ -2451,7 +2818,7 @@ footer {
 }
 
 footer .footer-library-name {
-  color: #ffffff !important;
+  color: var(--rasamala-chrome-text) !important;
 }
 
 .footer-link-list {
@@ -2460,13 +2827,13 @@ footer .footer-library-name {
 }
 
 .footer-link {
-  color: rgba(255, 255, 255, 0.82) !important;
+  color: var(--rasamala-chrome-text-muted) !important;
   font-size: 12px !important;
   transition: color 0.2s ease !important;
 }
 
 .footer-link:hover {
-  color: #ffffff !important;
+  color: var(--rasamala-chrome-text) !important;
 }
 
 .footer-social-btn {
@@ -2479,20 +2846,20 @@ footer .footer-library-name {
   justify-content: center !important;
   background: rgba(255, 255, 255, 0.12) !important;
   border: 1px solid rgba(255, 255, 255, 0.18) !important;
-  color: #ffffff !important;
+  color: var(--rasamala-chrome-text) !important;
   transition: all 0.2s ease !important;
   margin-right: 8px !important;
 }
 
 .footer-social-btn:hover {
   background: rgba(255, 255, 255, 0.22) !important;
-  color: #FFFFFF !important;
+  color: var(--rasamala-chrome-text) !important;
 }
 
 .footer-about-text {
   font-size: 13px !important;
   line-height: 1.6 !important;
-  color: rgba(255, 255, 255, 0.82) !important;
+  color: var(--rasamala-chrome-text-muted) !important;
 }
 
 .footer-search-form {
@@ -2503,26 +2870,27 @@ footer .footer-library-name {
   background: rgba(255, 255, 255, 0.12) !important;
   border: 1px solid rgba(255, 255, 255, 0.22) !important;
   border-radius: 8px 0 0 8px !important;
-  color: #ffffff !important;
+  color: var(--rasamala-chrome-text) !important;
 }
 
 .footer-search-input::placeholder {
-  color: rgba(255, 255, 255, 0.72) !important;
+  color: var(--rasamala-chrome-text-muted) !important;
+  opacity: 1 !important;
 }
 
 footer .footer-search-btn {
   border: 1.5px solid rgba(255, 255, 255, 0.45) !important;
   border-left: none !important;
   border-radius: 0 8px 8px 0 !important;
-  color: #ffffff !important;
+  color: var(--rasamala-chrome-text) !important;
   background: rgba(255, 255, 255, 0.12) !important;
 }
 
 footer .footer-search-btn:hover,
 footer .footer-search-btn:focus {
-  color: var(--rasamala-accent) !important;
-  background: #ffffff !important;
-  border-color: #ffffff !important;
+  color: var(--theme-primary) !important;
+  background: var(--theme-surface) !important;
+  border-color: var(--theme-surface) !important;
 }
 
 footer .footer-action-btn {
@@ -2530,16 +2898,16 @@ footer .footer-action-btn {
   font-size: 12px !important;
   font-weight: 600 !important;
   border: 1.5px solid rgba(255, 255, 255, 0.45) !important;
-  color: #ffffff !important;
+  color: var(--rasamala-chrome-text) !important;
   background: rgba(255, 255, 255, 0.1) !important;
   transition: all 0.3s ease !important;
 }
 
 footer .footer-action-btn:hover,
 footer .footer-action-btn:focus {
-  color: var(--rasamala-accent) !important;
-  background: #ffffff !important;
-  border-color: #ffffff !important;
+  color: var(--theme-primary) !important;
+  background: var(--theme-surface) !important;
+  border-color: var(--theme-surface) !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
 }
 
@@ -2654,7 +3022,7 @@ footer .footer-action-btn:focus {
 .prayer-reminder-close:hover,
 .prayer-reminder-close:focus {
   background: var(--rasamala-accent) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
 }
 
 @keyframes prayerReminderEnter {
@@ -2784,6 +3152,18 @@ footer .footer-action-btn:focus {
   font-size: 24px !important;
   color: var(--theme-accent-color) !important;
   letter-spacing: -0.015em !important;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }
 
 .visitor-label {
@@ -2944,7 +3324,7 @@ footer .footer-action-btn:focus {
 .libinfo-modal-btn:hover {
   background: var(--rasamala-accent) !important;
   border-color: var(--rasamala-accent) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
 }
 
 /* Rasamala centered scale modal transition */
@@ -3043,7 +3423,7 @@ a.btn {
 .libinfo-modal-btn {
   background-color: var(--rasamala-accent) !important;
   border-color: var(--rasamala-accent) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
 }
 
 .btn-primary:hover,
@@ -3064,7 +3444,7 @@ a.btn {
 .libinfo-modal-btn:focus {
   background-color: var(--rasamala-accent-hover) !important;
   border-color: var(--rasamala-accent-hover) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary-hover) !important;
 }
 
 .btn-outline-primary,
@@ -3092,7 +3472,7 @@ a.btn {
 .search-type-btn.btn-outline-secondary:focus {
   background-color: var(--rasamala-accent) !important;
   border-color: var(--rasamala-accent) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
 }
 
 .btn-light,
@@ -3178,7 +3558,7 @@ nav.navbar {
   display: inline-flex !important;
   align-items: center !important;
   gap: 6px !important;
-  color: rgba(255, 255, 255, 0.78) !important;
+  color: var(--rasamala-chrome-text-muted) !important;
   font-size: 12px !important;
   font-weight: 500 !important;
   letter-spacing: -0.01em !important;
@@ -3199,7 +3579,7 @@ nav.navbar {
 .c-header .navbar-nav .nav-link:hover,
 .c-header .navbar-nav .nav-item.active .nav-link,
 .c-header .navbar-nav .nav-link.active {
-  color: #ffffff !important;
+  color: var(--rasamala-chrome-text) !important;
   opacity: 1 !important;
 }
 
@@ -3212,14 +3592,14 @@ nav.navbar {
   font-size: 14px !important;
   font-weight: 500 !important;
   letter-spacing: -0.01em !important;
-  color: #ffffff !important;
+  color: var(--rasamala-chrome-text) !important;
   transition: color 0.3s ease !important;
   opacity: 1 !important;
   min-width: 0 !important;
   overflow: hidden !important;
 }
 .c-header .navbar-brand:hover {
-  color: #ffffff !important;
+  color: var(--rasamala-chrome-text) !important;
   opacity: 1 !important;
 }
 .c-header .navbar-brand img {
@@ -3229,10 +3609,10 @@ nav.navbar {
 .c-header .navbar-brand-text,
 .c-header .navbar-lib-name,
 .c-header .navbar-book-icon {
-  color: #ffffff !important;
+  color: var(--rasamala-chrome-text) !important;
 }
 .c-header .navbar-lib-subname {
-  color: rgba(255, 255, 255, 0.74) !important;
+  color: var(--rasamala-chrome-text-muted) !important;
 }
 
 .navbar-brand-text {
@@ -3256,6 +3636,22 @@ nav.navbar {
 .navbar-lib-subname {
   display: block !important;
   max-width: 100% !important;
+}
+
+/* --- Library Name in Hero mode: center navbar menu --- */
+.rasamala-navbar-centered .navbar-brand {
+  flex-shrink: 0 !important;
+  margin-right: 0 !important;
+}
+
+.rasamala-navbar-centered .navbar-collapse {
+  flex-grow: 1 !important;
+  justify-content: center !important;
+}
+
+.rasamala-navbar-centered .navbar-nav.ms-auto {
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 @media (min-width: 992px) {
@@ -3512,7 +3908,7 @@ nav.navbar {
 .c-header .text-bg-danger,
 .c-header .badge-danger {
   background-color: var(--rasamala-accent) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
   font-size: 9px !important;
   font-weight: 600 !important;
   padding: 2px 5px !important;
@@ -3635,10 +4031,28 @@ body.rasamala-home-topic-only #slims-home .topic {
   background: linear-gradient(140deg, rgba(var(--theme-accent-rgb), 0.18) 0%, #ffffff 46%, rgba(var(--theme-accent-rgb), 0.26) 100%) !important;
 }
 
+.rasamala-search-banner-bg-zen-ripples {
+  background:
+    radial-gradient(circle at 32% 28%, rgba(var(--theme-accent-rgb), 0.16), transparent 34%),
+    radial-gradient(circle at 72% 72%, rgba(var(--theme-accent-rgb), 0.12), transparent 38%),
+    linear-gradient(140deg, rgba(var(--theme-accent-rgb), 0.08), #ffffff 54%, rgba(var(--theme-accent-rgb), 0.10)) !important;
+}
+
+.rasamala-search-banner-bg-neural-network,
+.rasamala-search-banner-bg-starfield-warp,
+.rasamala-search-banner-bg-floating-embers {
+  background:
+    radial-gradient(circle at 20% 18%, rgba(var(--theme-accent-rgb), 0.34), transparent 32%),
+    linear-gradient(135deg, rgba(var(--theme-accent-rgb), 0.18) 0%, #111827 54%, rgba(var(--theme-accent-rgb), 0.28) 100%) !important;
+}
+
 .rasamala-search-banner-bg-particles .hero-search-heading h1,
 .rasamala-search-banner-bg-constellation .hero-search-heading h1,
-.rasamala-search-banner-bg-rain .hero-search-heading h1 {
-  color: var(--theme-accent-color);
+.rasamala-search-banner-bg-rain .hero-search-heading h1,
+.rasamala-search-banner-bg-neural-network .hero-search-heading h1,
+.rasamala-search-banner-bg-starfield-warp .hero-search-heading h1,
+.rasamala-search-banner-bg-floating-embers .hero-search-heading h1 {
+  color: var(--theme-text);
   text-shadow:
     0 1px 0 rgba(255, 255, 255, 0.16),
     0 0 18px rgba(var(--theme-accent-rgb), 0.82),
@@ -3756,14 +4170,14 @@ body.rasamala-home-topic-only #slims-home .topic {
 .alert-theme {
   background-color: rgba(var(--theme-accent-rgb), 0.08) !important;
   border: 1px solid rgba(var(--theme-accent-rgb), 0.24) !important;
-  color: var(--theme-accent-color) !important;
+  color: var(--theme-text) !important;
 }
 .alert-theme a,
 .alert-theme strong {
-  color: var(--theme-accent-hover) !important;
+  color: var(--theme-link) !important;
 }
 .alert-theme .close {
-  color: var(--theme-accent-color) !important;
+  color: var(--theme-text) !important;
   opacity: 0.7;
 }
 .alert-theme .close:hover {
@@ -3779,7 +4193,7 @@ body.rasamala-home-topic-only #slims-home .topic {
   border: 1px solid rgba(var(--theme-accent-rgb), 0.32);
   border-radius: 20px !important;
   background: rgba(var(--theme-accent-rgb), 0.08);
-  color: var(--theme-accent-color);
+  color: var(--theme-text);
   font-family: var(--rasamala-font-stack);
   font-size: 0.72rem;
   font-weight: 600;
@@ -3797,7 +4211,7 @@ body.rasamala-home-topic-only #slims-home .topic {
 .latest-content-link:focus {
   border-color: rgba(var(--theme-accent-rgb), 0.58);
   background: rgba(var(--theme-accent-rgb), 0.14);
-  color: var(--theme-accent-hover);
+  color: var(--theme-text);
   text-decoration: none;
   transform: translateY(-1px);
   box-shadow: 0 10px 26px rgba(var(--theme-accent-rgb), 0.14);
@@ -3873,7 +4287,7 @@ body.rasamala-home-topic-only #slims-home .topic {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: #ffffff;
+  color: var(--theme-on-primary);
   font-family: var(--rasamala-font-stack);
   font-size: 0.76rem;
   font-weight: 600;
@@ -3884,7 +4298,8 @@ body.rasamala-home-topic-only #slims-home .topic {
 
 .latest-content-ticker-item:hover,
 .latest-content-ticker-item:focus {
-  color: rgba(255, 255, 255, 0.86);
+  color: var(--theme-on-primary);
+  opacity: 0.86;
   text-decoration: none;
 }
 
@@ -3914,7 +4329,7 @@ body.rasamala-home-topic-only #slims-home .topic {
 
 .background-animation-layer.hero-animation-layer {
   position: fixed;
-  z-index: 0;
+  z-index: 1 !important;
   opacity: 0.78;
   mix-blend-mode: normal;
   contain: strict;
@@ -3923,7 +4338,11 @@ body.rasamala-home-topic-only #slims-home .topic {
 
 .background-animation-layer.hero-animation-particles,
 .background-animation-layer.hero-animation-constellation,
-.background-animation-layer.hero-animation-rain {
+.background-animation-layer.hero-animation-rain,
+.background-animation-layer.hero-animation-zen-ripples,
+.background-animation-layer.hero-animation-neural-network,
+.background-animation-layer.hero-animation-starfield-warp,
+.background-animation-layer.hero-animation-floating-embers {
   background:
     radial-gradient(circle at 18% 20%, rgba(var(--theme-accent-rgb), 0.26), transparent 30%),
     radial-gradient(circle at 78% 8%, rgba(var(--theme-accent-rgb), 0.20), transparent 34%),
@@ -3974,9 +4393,15 @@ body.rasamala-home-topic-only #slims-home .topic {
 .rasamala-search-banner-bg-particles .hero-animation-layer,
 .rasamala-search-banner-bg-constellation .hero-animation-layer,
 .rasamala-search-banner-bg-rain .hero-animation-layer,
+.rasamala-search-banner-bg-neural-network .hero-animation-layer,
+.rasamala-search-banner-bg-starfield-warp .hero-animation-layer,
+.rasamala-search-banner-bg-floating-embers .hero-animation-layer,
 .rasamala-background-animation-particles .background-animation-layer,
 .rasamala-background-animation-constellation .background-animation-layer,
-.rasamala-background-animation-rain .background-animation-layer {
+.rasamala-background-animation-rain .background-animation-layer,
+.rasamala-background-animation-neural-network .background-animation-layer,
+.rasamala-background-animation-starfield-warp .background-animation-layer,
+.rasamala-background-animation-floating-embers .background-animation-layer {
   color: rgb(var(--theme-accent-rgb));
 }
 
@@ -3986,7 +4411,12 @@ body.rasamala-home-topic-only #slims-home .topic {
 .hero-node,
 .hero-bubble,
 .hero-star,
-.hero-orb {
+.hero-orb,
+.hero-ripple,
+.hero-neural-line,
+.hero-neural-node,
+.hero-warp-star,
+.hero-ember {
   position: absolute;
   display: block;
   pointer-events: none;
@@ -4258,6 +4688,130 @@ body.rasamala-home-topic-only #slims-home .topic {
   100% { transform: translate3d(10vw, -10vh, 0) scale(1.1); }
 }
 
+/* Zen Ripples Animation Styles */
+.hero-ripple {
+  border: 1px solid rgba(var(--theme-accent-rgb), 0.26);
+  border-radius: 50%;
+  opacity: 0;
+  transform: translate3d(-50%, -50%, 0) scale(0.2);
+  animation: heroZenRipple ease-out infinite;
+}
+
+@keyframes heroZenRipple {
+  0% {
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0) scale(0.18);
+  }
+  18% {
+    opacity: 0.5;
+  }
+  78% {
+    opacity: 0.16;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0) scale(1.45);
+  }
+}
+
+/* Neural Network Animation Styles */
+.hero-neural-line {
+  height: 1px;
+  transform-origin: left center;
+  background: linear-gradient(90deg, transparent, currentColor 36%, rgba(255, 255, 255, 0.58), currentColor 64%, transparent);
+  opacity: 0.32;
+  animation: heroNeuralPulse ease-in-out infinite;
+}
+
+.hero-neural-node {
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.42;
+  animation: heroNeuralNode ease-in-out infinite;
+}
+
+@keyframes heroNeuralPulse {
+  0%,
+  100% {
+    opacity: 0.14;
+    transform: rotate(var(--angle)) scaleX(0.62);
+  }
+  50% {
+    opacity: 0.62;
+    transform: rotate(var(--angle)) scaleX(1.12);
+  }
+}
+
+@keyframes heroNeuralNode {
+  0%,
+  100% {
+    opacity: 0.22;
+    transform: translate3d(0, 0, 0) scale(0.78);
+  }
+  50% {
+    opacity: 0.72;
+    transform: translate3d(var(--tx), var(--ty), 0) scale(1.18);
+  }
+}
+
+/* Starfield Warp Animation Styles */
+.hero-warp-star {
+  border-radius: 999px;
+  opacity: 0;
+  transform: translate3d(-50%, -50%, 0) scale(0.28);
+  animation: heroStarfieldWarp linear infinite;
+}
+
+.hero-warp-star::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 60%;
+  width: var(--trail, 36px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, currentColor);
+  opacity: 0.42;
+  transform: translateY(-50%);
+}
+
+@keyframes heroStarfieldWarp {
+  0% {
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0) scale(0.18);
+  }
+  12% {
+    opacity: 0.76;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(calc(-50% + var(--dx)), calc(-50% + var(--dy)), 0) scale(1.08);
+  }
+}
+
+/* Floating Embers Animation Styles */
+.hero-ember {
+  border-radius: 999px;
+  opacity: 0;
+  animation: heroFloatingEmber linear infinite;
+}
+
+@keyframes heroFloatingEmber {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(0.64);
+  }
+  12% {
+    opacity: var(--op, 0.4);
+  }
+  82% {
+    opacity: var(--op, 0.4);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--tx), -112vh, 0) scale(1.12);
+  }
+}
+
 
 .hero-search-heading {
   max-width: 860px;
@@ -4265,9 +4819,57 @@ body.rasamala-home-topic-only #slims-home .topic {
   padding: 0 16px;
 }
 
+.hero-search-heading-library {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  max-width: min(860px, 100%);
+}
+
+.hero-library-logo-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  max-width: min(180px, 28vw);
+  margin-bottom: 0;
+}
+
+.hero-library-logo {
+  display: block;
+  width: auto;
+  max-width: min(170px, 26vw);
+  max-height: 56px;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 22px rgba(var(--theme-accent-rgb), 0.18));
+}
+
+.hero-library-logo-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  color: #ffffff;
+  background: var(--theme-accent-color);
+  box-shadow: 0 14px 28px rgba(var(--theme-accent-rgb), 0.24);
+  font-size: 24px;
+}
+
+.hero-search-heading-library h1 {
+  min-width: 0;
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
 .hero-search-heading h1 {
   margin: 0;
-  color: var(--theme-accent-color);
+  color: var(--theme-text);
   font-family: var(--rasamala-font-stack);
   font-weight: 700;
   line-height: 1.12;
@@ -4322,6 +4924,32 @@ body.rasamala-home-topic-only #slims-home .topic {
     padding: 0 8px;
   }
 
+  .hero-search-heading-library {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+ 
+  .hero-library-logo-wrap {
+    max-width: 64px;
+  }
+ 
+  .hero-library-logo {
+    max-width: 64px;
+    max-height: 42px;
+  }
+ 
+  .hero-library-logo-fallback {
+    width: 40px;
+    height: 40px;
+    border-radius: 14px;
+    font-size: 18px;
+  }
+ 
+  .hero-search-heading-library h1 {
+    max-width: 100%;
+  }
+
   .latest-content-strip {
     margin-top: 14px;
     padding: 0 4px;
@@ -4342,6 +4970,12 @@ body.rasamala-home-topic-only #slims-home .topic {
 
   .latest-content-ticker {
     bottom: calc(56px + env(safe-area-inset-bottom)) !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .hero-search-heading-library {
+    display: none !important;
   }
 }
 
@@ -4618,7 +5252,7 @@ body.rasamala-home-topic-only #slims-home .topic {
 .page-member-area .memberButton {
   margin-top: 12px !important;
   background-color: var(--rasamala-accent) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
   border: none !important;
   padding: 12px 24px !important;
   font-size: 15px !important;
@@ -4837,7 +5471,7 @@ body.rasamala-home-topic-only #slims-home .topic {
 
 .member-area .btn-outline-primary:hover {
   background-color: var(--rasamala-accent) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
   border-color: var(--rasamala-accent) !important;
 }
 
@@ -4856,7 +5490,7 @@ body.rasamala-home-topic-only #slims-home .topic {
 .btn-news-readmore {
   background-color: var(--rasamala-accent) !important;
   border-color: var(--rasamala-accent) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
   font-weight: 600 !important;
   border-radius: 8px !important;
   padding: 8px 20px !important;
@@ -5098,7 +5732,7 @@ body.rasamala-home-topic-only #slims-home .topic {
 .pagingList b {
   background-color: var(--rasamala-accent) !important;
   border-color: var(--rasamala-accent) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
   box-shadow: 0 6px 16px rgba(var(--theme-accent-rgb), 0.22) !important;
 }
 
@@ -5350,24 +5984,25 @@ body.rasamala-home-topic-only #slims-home .topic {
 .list-group-item-action.active {
   background-color: var(--rasamala-accent) !important;
   border-color: var(--rasamala-accent) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
 }
 
 .list-group-item.active .text-primary,
 .list-group-item-action.active .text-primary {
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
 }
 
 /* Background utilities */
 .bg-primary {
   background-color: var(--rasamala-accent) !important;
+  color: var(--theme-on-primary) !important;
 }
 
 /* Badges */
 .text-bg-primary,
 .badge-primary {
   background-color: var(--rasamala-accent) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
 }
 
 /* Form controls focus states */
@@ -5390,17 +6025,24 @@ body.rasamala-home-topic-only #slims-home .topic {
 .dropdown-item.active,
 .dropdown-item:active {
   background-color: var(--rasamala-accent) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
 }
 
 /* ====================================================
    Mobile Floating Buttons Adjustment (Clear of bottom nav)
    ==================================================== */
 @media (max-width: 767.98px) {
-  .btn-floating-info,
-  .btn-back-to-top,
-  .btn-color-mode-toggle,
-  .btn-floating-whatsapp {
+  .palette-switcher-grid,
+  .palette-switcher-section-tools,
+  .palette-switcher-section-list {
+    grid-template-columns: 1fr !important;
+  }
+
+	  .btn-floating-info,
+	  .btn-back-to-top,
+	  .btn-color-mode-toggle,
+	  .btn-palette-switcher,
+	  .btn-floating-whatsapp {
     bottom: calc(72px + env(safe-area-inset-bottom)) !important;
     right: 20px !important;
     width: 44px !important;
@@ -5411,10 +6053,23 @@ body.rasamala-home-topic-only #slims-home .topic {
     font-size: 18px !important;
   }
 
-  .btn-color-mode-toggle {
-    right: 74px !important;
-    font-size: 16px !important;
-  }
+	  .btn-color-mode-toggle {
+	    right: 74px !important;
+	    font-size: 16px !important;
+	  }
+
+	  .btn-palette-switcher {
+	    right: 74px !important;
+	    font-size: 16px !important;
+	  }
+
+	  body.rasamala-has-palette-switcher:not(.rasamala-floating-info-hide) .btn-color-mode-toggle {
+	    right: 128px !important;
+	  }
+
+	  body.rasamala-floating-info-hide .btn-palette-switcher {
+	    right: 20px !important;
+	  }
 
   .btn-floating-whatsapp {
     right: 20px !important;
@@ -5433,12 +6088,25 @@ body.rasamala-home-topic-only #slims-home .topic {
     transform: scale(1.08) translateY(-57px) !important;
   }
 
-  .btn-floating-info.has-latest-content-ticker,
-  .btn-color-mode-toggle.has-latest-content-ticker,
-  .btn-back-to-top.has-latest-content-ticker,
-  .btn-floating-whatsapp.has-latest-content-ticker {
-    bottom: calc(108px + env(safe-area-inset-bottom)) !important;
-  }
+	  .btn-floating-info.has-latest-content-ticker,
+	  .btn-color-mode-toggle.has-latest-content-ticker,
+	  .btn-palette-switcher.has-latest-content-ticker,
+	  .btn-back-to-top.has-latest-content-ticker,
+	  .btn-floating-whatsapp.has-latest-content-ticker {
+	    bottom: calc(108px + env(safe-area-inset-bottom)) !important;
+	  }
+
+	  .palette-switcher-panel {
+	    right: 12px !important;
+	    bottom: calc(128px + env(safe-area-inset-bottom)) !important;
+	    width: calc(100vw - 24px) !important;
+	    max-height: calc(100vh - 168px) !important;
+	    overflow-y: auto !important;
+	  }
+
+	  .btn-palette-switcher.has-latest-content-ticker + .palette-switcher-panel {
+	    bottom: calc(164px + env(safe-area-inset-bottom)) !important;
+	  }
 
   /* Reduce subpage container padding on mobile to maximize content width */
   .rasamala-subpage-wrapper .container {
@@ -5723,19 +6391,26 @@ body.rasamala-home-topic-only #slims-home .topic {
 
 /* CSS Book Cover Mockup Placeholders - FLAT DESIGN */
 .book-cover-placeholder {
+  --book-cover-a: var(--theme-primary);
+  --book-cover-b: color-mix(in srgb, var(--theme-primary) 58%, var(--theme-secondary) 42%);
+  --book-cover-c: color-mix(in srgb, var(--theme-accent) 42%, var(--theme-surface) 58%);
+  --book-cover-text: var(--theme-on-primary);
   position: relative !important;
   width: 100% !important;
   height: 100% !important;
   min-height: 185px !important;
   display: flex !important;
-  color: #ffffff !important;
+  color: var(--book-cover-text) !important;
   font-family: var(--rasamala-font-stack) !important;
   overflow: hidden !important;
   border-radius: 6px !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
-  background-color: var(--rasamala-accent) !important;
+  box-shadow: 0 10px 22px color-mix(in srgb, var(--theme-primary) 20%, transparent) !important;
+  background:
+    radial-gradient(circle at 22% 16%, color-mix(in srgb, var(--book-cover-c) 45%, transparent), transparent 33%),
+    linear-gradient(145deg, var(--book-cover-a), var(--book-cover-b)) !important;
+  background-color: var(--book-cover-a) !important;
   transition: transform 0.3s ease, box-shadow 0.3s ease !important;
-  border: 1px solid rgba(0, 0, 0, 0.04) !important;
+  border: 1px solid color-mix(in srgb, var(--theme-primary) 36%, var(--theme-surface) 64%) !important;
 }
 
 .book-cover-spine {
@@ -5751,9 +6426,10 @@ body.rasamala-home-topic-only #slims-home .topic {
   align-items: center !important;
   text-align: center !important;
   z-index: 1 !important;
-  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent) !important;
   border-radius: 4px !important;
   padding: 12px 8px !important;
+  background: color-mix(in srgb, var(--theme-surface) 8%, transparent) !important;
 }
 
 .book-cover-header-text {
@@ -5761,7 +6437,7 @@ body.rasamala-home-topic-only #slims-home .topic {
   font-weight: 700 !important;
   letter-spacing: 0.16em !important;
   text-transform: uppercase !important;
-  color: rgba(255, 255, 255, 0.65) !important;
+  color: currentColor !important;
   margin-bottom: 6px !important;
 }
 
@@ -5772,14 +6448,13 @@ body.rasamala-home-topic-only #slims-home .topic {
   letter-spacing: -0.01em !important;
   text-transform: uppercase !important;
   word-break: break-word !important;
-  color: #ffffff !important;
+  color: currentColor !important;
   display: -webkit-box !important;
   -webkit-line-clamp: 4 !important;
   line-clamp: 4 !important;
   -webkit-box-orient: vertical !important;
   overflow: hidden !important;
   margin: auto 0 !important;
-  text-shadow: none !important;
 }
 
 .book-cover-footer-text {
@@ -5787,20 +6462,43 @@ body.rasamala-home-topic-only #slims-home .topic {
   font-weight: 700 !important;
   letter-spacing: 0.14em !important;
   text-transform: uppercase !important;
-  color: rgba(255, 255, 255, 0.65) !important;
+  color: currentColor !important;
   margin-top: 6px !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-top: 1px solid color-mix(in srgb, currentColor 20%, transparent) !important;
   padding-top: 6px !important;
   width: 55% !important;
 }
 
 /* Book Cover Theme-Matching Patterns - FLAT */
-.book-cover-gradient-0 { background: #9a8c73 !important; }
-.book-cover-gradient-1 { background: #8e7f65 !important; }
-.book-cover-gradient-2 { background: #7c6f56 !important; }
-.book-cover-gradient-3 { background: #a5977e !important; }
-.book-cover-gradient-4 { background: #b0a289 !important; }
-.book-cover-gradient-5 { background: #8b7d63 !important; }
+.book-cover-gradient-0 {
+  --book-cover-a: var(--theme-primary);
+  --book-cover-b: color-mix(in srgb, var(--theme-primary) 62%, var(--theme-secondary) 38%);
+}
+
+.book-cover-gradient-1 {
+  --book-cover-a: color-mix(in srgb, var(--theme-primary) 78%, var(--theme-accent) 22%);
+  --book-cover-b: color-mix(in srgb, var(--theme-secondary) 62%, var(--theme-primary) 38%);
+}
+
+.book-cover-gradient-2 {
+  --book-cover-a: color-mix(in srgb, var(--theme-primary) 68%, var(--theme-text) 32%);
+  --book-cover-b: color-mix(in srgb, var(--theme-accent) 52%, var(--theme-primary) 48%);
+}
+
+.book-cover-gradient-3 {
+  --book-cover-a: color-mix(in srgb, var(--theme-secondary) 70%, var(--theme-primary) 30%);
+  --book-cover-b: color-mix(in srgb, var(--theme-primary) 74%, var(--theme-background) 26%);
+}
+
+.book-cover-gradient-4 {
+  --book-cover-a: color-mix(in srgb, var(--theme-primary) 72%, var(--theme-surface) 28%);
+  --book-cover-b: color-mix(in srgb, var(--theme-accent) 64%, var(--theme-secondary) 36%);
+}
+
+.book-cover-gradient-5 {
+  --book-cover-a: color-mix(in srgb, var(--theme-primary-hover) 74%, var(--theme-primary) 26%);
+  --book-cover-b: color-mix(in srgb, var(--theme-secondary) 56%, var(--theme-accent) 44%);
+}
 
 .book-cover-gradient-0::before,
 .book-cover-gradient-1::before,
@@ -5808,8 +6506,15 @@ body.rasamala-home-topic-only #slims-home .topic {
 .book-cover-gradient-3::before,
 .book-cover-gradient-4::before,
 .book-cover-gradient-5::before {
-  display: none !important;
-  content: none !important;
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, currentColor 14%, transparent) 0 10px, transparent 10px 100%),
+    linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--theme-surface) 10%, transparent) 100%) !important;
+  opacity: 0.34 !important;
+  pointer-events: none !important;
 }
 
 /* Member Card & Avatar Enhancements */
@@ -5890,6 +6595,22 @@ body.rasamala-home-topic-only #slims-home .topic {
   margin-right: 0 !important;
 }
 
+#slims-home .rasamala-group-subject .btn,
+#slims-home slims-group-subject .btn {
+  background: color-mix(in srgb, var(--theme-surface) 90%, transparent) !important;
+  border-color: color-mix(in srgb, var(--theme-muted) 34%, transparent) !important;
+  color: var(--theme-text) !important;
+}
+
+#slims-home .rasamala-group-subject .btn:hover,
+#slims-home .rasamala-group-subject .btn:focus,
+#slims-home slims-group-subject .btn:hover,
+#slims-home slims-group-subject .btn:focus {
+  background: var(--theme-primary) !important;
+  border-color: var(--theme-primary) !important;
+  color: var(--theme-on-primary) !important;
+}
+
 .topic li {
   border: 1px solid rgba(0, 0, 0, 0.04) !important;
   background: rgba(255, 255, 255, 0.9) !important;
@@ -5924,7 +6645,7 @@ body.rasamala-home-topic-only #slims-home .topic {
 .topic li:hover .topic-icon-fa {
   transform: scale(1.15) rotate(-5deg) !important;
   background-color: var(--rasamala-accent) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
 }
 
 /* Unify hero and search sections background */
@@ -5998,7 +6719,7 @@ body.rasamala-home-topic-only #slims-home .topic {
 #search-wraper .latest-content-link:focus {
   background: var(--rasamala-accent) !important;
   border-color: var(--rasamala-accent) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
   transform: translateY(-2px) !important;
   box-shadow: 0 8px 20px rgba(var(--theme-accent-rgb), 0.24) !important;
 }
@@ -6038,11 +6759,11 @@ body.rasamala-home-topic-only #slims-home .topic {
 }
 
 .latest-content-ticker .latest-content-icon {
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
 }
 
 .latest-content-link:hover .latest-content-icon {
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
 }
 
 /* Inline Ticker under Searchbox */
@@ -6068,13 +6789,14 @@ body.rasamala-home-topic-only #slims-home .topic {
 }
 
 #search-wraper .latest-content-ticker-item {
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
   font-size: 11px !important;
   text-decoration: none !important;
 }
 
 #search-wraper .latest-content-ticker-item:hover {
-  color: rgba(255, 255, 255, 0.86) !important;
+  color: var(--theme-on-primary) !important;
+  opacity: 0.86 !important;
 }
 
 
@@ -6217,7 +6939,7 @@ body.rasamala-home-topic-only #slims-home .topic {
   justify-content: center !important;
   border-radius: 50% !important;
   background-color: var(--rasamala-accent) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
   box-shadow: 0 4px 12px rgba(var(--theme-accent-rgb), 0.25) !important;
   transition: all 0.3s ease !important;
   cursor: pointer !important;
@@ -6458,7 +7180,7 @@ body.rasamala-home-topic-only #slims-home .topic {
 #slims-home .subtitle-section {
   max-width: 760px !important;
   margin-top: 4px !important;
-  color: var(--rasamala-text-secondary) !important;
+  color: var(--theme-muted) !important;
   font-size: 13px !important;
   font-weight: 400 !important;
   line-height: 1.55 !important;
@@ -6519,7 +7241,7 @@ body.rasamala-home-topic-only #slims-home .topic {
 
 #slims-home .slims-book-card .parallel-title-alt {
   margin-top: 5px !important;
-  color: var(--rasamala-text-secondary) !important;
+  color: var(--theme-muted) !important;
   font-size: 11.5px !important;
   font-weight: 500 !important;
   line-height: 1.35 !important;
@@ -6639,7 +7361,7 @@ body.rasamala-home-topic-only #slims-home .topic {
   display: -webkit-box !important;
   margin-top: 5px !important;
   overflow: hidden !important;
-  color: var(--rasamala-text-secondary) !important;
+  color: var(--theme-muted) !important;
   font-size: 12px !important;
   font-weight: 400 !important;
   line-height: 1.45 !important;
@@ -6719,7 +7441,7 @@ body.rasamala-home-topic-only #slims-home .topic {
 #slims-home .home-map-description,
 #slims-home .home-map-description p,
 #slims-home .home-map-description li {
-  color: var(--rasamala-text-secondary) !important;
+  color: var(--theme-muted) !important;
   font-size: 13px !important;
   font-weight: 400 !important;
   line-height: 1.6 !important;
@@ -6733,7 +7455,7 @@ body.rasamala-home-topic-only #slims-home .topic {
 
 
 #slims-home .home-map-description a {
-  color: var(--rasamala-accent) !important;
+  color: var(--theme-link) !important;
   font-weight: 600 !important;
 }
 
@@ -7011,7 +7733,7 @@ body.rasamala-home-topic-only #slims-home .topic {
 .biblio-list-cover .book-cover-content {
   inset: 6px !important;
   padding: 8px 4px !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent) !important;
   border-radius: 3px !important;
 }
 
@@ -7189,7 +7911,7 @@ body.rasamala-home-topic-only #slims-home .topic {
 .biblio-list-action-link:focus {
   background: var(--rasamala-accent) !important;
   border-color: var(--rasamala-accent) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
   text-decoration: none !important;
 }
 
@@ -7266,7 +7988,7 @@ footer .footer-link,
 footer .footer-about-text a,
 footer .footer-powered-link,
 footer .footer-powered-link code {
-  color: rgba(255, 255, 255, 0.9) !important;
+  color: var(--rasamala-chrome-text) !important;
   text-decoration: none !important;
 }
 
@@ -7281,25 +8003,32 @@ footer .footer-powered-link:hover,
 footer .footer-powered-link:focus,
 footer .footer-powered-link:hover code,
 footer .footer-powered-link:focus code {
-  color: #ffffff !important;
+  color: var(--rasamala-chrome-text) !important;
   text-decoration: none !important;
 }
 
-.footer-about-text a,
+footer .footer-about-text a,
 .footer-powered-link,
-.footer-powered-link code,
-.home-map-description a,
-.libinfo-content a,
-.rasamala-main-content-card a:not(.btn):not(.dropdown-item):not(.nav-link),
-.detail-description a:not(.btn),
-.content-summary a:not(.btn) {
+.footer-powered-link code {
+  color: var(--rasamala-chrome-text) !important;
   text-decoration: underline !important;
   text-decoration-thickness: 1px !important;
   text-underline-offset: 0.18em !important;
 }
 
-.footer-about-text a:hover,
-.footer-about-text a:focus,
+.home-map-description a,
+.libinfo-content a,
+.rasamala-main-content-card a:not(.btn):not(.dropdown-item):not(.nav-link),
+.detail-description a:not(.btn),
+.content-summary a:not(.btn) {
+  color: var(--theme-link) !important;
+  text-decoration: underline !important;
+  text-decoration-thickness: 1px !important;
+  text-underline-offset: 0.18em !important;
+}
+
+footer .footer-about-text a:hover,
+footer .footer-about-text a:focus,
 .footer-powered-link:hover,
 .footer-powered-link:focus,
 .home-map-description a:hover,
@@ -7383,7 +8112,7 @@ footer .footer-powered-link:focus code {
 #search-wraper .latest-content-link:focus {
   background: var(--rasamala-accent) !important;
   border-color: var(--rasamala-accent) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
   transform: translateY(-1px) !important;
 }
 
@@ -7485,7 +8214,7 @@ body.rasamala-search-panels-transparent .result-search .biblio-list-action-link:
   background: var(--rasamala-accent) !important;
   background-color: var(--rasamala-accent) !important;
   border-color: var(--rasamala-accent) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
 }
 
 
@@ -7671,6 +8400,7 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
 .rasamala-theme .btn-floating-info,
 .rasamala-theme .btn-back-to-top,
 .rasamala-theme .btn-color-mode-toggle,
+.rasamala-theme .btn-palette-switcher,
 .rasamala-theme .footer-social-btn,
 .rasamala-theme .topic-icon,
 .rasamala-theme .latest-content-icon,
@@ -8219,7 +8949,7 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
   background: var(--theme-primary) !important;
   background-color: var(--theme-primary) !important;
   border-color: var(--theme-primary) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
 }
 
 #search-filter .js-input-from,
@@ -8262,7 +8992,7 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
 #mobileFilterModal .irs-single {
   background: color-mix(in srgb, var(--theme-primary) 58%, #111827 42%) !important;
   background-color: color-mix(in srgb, var(--theme-primary) 58%, #111827 42%) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
   border: 1px solid color-mix(in srgb, #ffffff 18%, transparent) !important;
   box-shadow: 0 4px 12px color-mix(in srgb, var(--theme-primary) 18%, transparent) !important;
   font-weight: 700 !important;
@@ -8304,18 +9034,32 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
 }
 
 body.rasamala-search-panels-transparent .result-search .filter-panel-card,
-body.rasamala-search-panels-transparent #mobileFilterModal .modal-content {
+body.rasamala-search-panels-transparent #mobileFilterModal .modal-content,
+body.rasamala-search-panels-transparent .result-search .desktop-sort-bar,
+body.rasamala-search-panels-transparent .detail-record,
+body.rasamala-search-panels-transparent .news-list-card,
+body.rasamala-search-panels-transparent .rasamala-main-content-card,
+body.rasamala-search-panels-transparent .librarian.row-fluid,
+body.rasamala-search-panels-transparent #search-wraper .card {
   background: color-mix(in srgb, var(--theme-surface) 68%, transparent) !important;
   background-color: color-mix(in srgb, var(--theme-surface) 68%, transparent) !important;
   border-color: color-mix(in srgb, var(--theme-muted) 26%, transparent) !important;
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+/* Ensure inner white/light elements on detail/subpages are transparent */
+body.rasamala-search-panels-transparent .detail-record .bg-rasamala-light,
+body.rasamala-search-panels-transparent .detail-record .bg-white,
+body.rasamala-search-panels-transparent .rasamala-main-content-card .bg-rasamala-light,
+body.rasamala-search-panels-transparent .rasamala-main-content-card .bg-white {
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 /* Final transparent panel override for search result surfaces.
    Placed after general card/filter normalization so the Tinfo setting wins. */
 body.rasamala-search-panels-transparent .result-search .filter-panel-card,
-body.rasamala-search-panels-transparent .result-search .desktop-sort-bar,
 body.rasamala-search-panels-transparent .result-search .biblio-simple-item,
 body.rasamala-search-panels-transparent .result-search .biblio-list-card,
 body.rasamala-search-panels-transparent .result-search .biblio-list-card > .card-body,
@@ -8338,12 +9082,9 @@ body.rasamala-search-panels-transparent #mobileSortModal .modal-content {
 body.rasamala-search-panels-transparent .result-search .filter-panel-card,
 body.rasamala-search-panels-transparent .result-search .biblio-list-card,
 body.rasamala-search-panels-transparent .result-search .card.item.border-0,
-body.rasamala-search-panels-transparent .result-search .grid-item > .card {
-  border-color: color-mix(in srgb, var(--theme-muted) 22%, transparent) !important;
-}
-
+body.rasamala-search-panels-transparent .result-search .grid-item > .card,
 body.rasamala-search-panels-transparent .result-search .desktop-sort-bar {
-  border-color: transparent !important;
+  border-color: color-mix(in srgb, var(--theme-muted) 22%, transparent) !important;
 }
 
 body.rasamala-search-panels-transparent .result-search .biblio-simple-item,
@@ -8490,5 +9231,409 @@ body.rasamala-search-panels-transparent .result-search .grid-item .list-group-it
 
   #adv-modal .modal-footer {
     padding: 12px 18px calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
+
+/* Center desktop navbar menus when the library name is moved above the search box. */
+@media (min-width: 992px) {
+  .c-header nav.rasamala-navbar-main.rasamala-navbar-centered {
+    display: grid !important;
+    grid-template-columns: minmax(72px, 1fr) auto minmax(72px, 1fr) !important;
+    align-items: center !important;
+    justify-content: normal !important;
+    column-gap: clamp(8px, 1vw, 16px) !important;
+  }
+
+  .c-header nav.rasamala-navbar-main.rasamala-navbar-centered .navbar-brand {
+    display: none !important;
+    grid-column: 1 !important;
+    justify-self: start !important;
+    flex: 0 1 auto !important;
+    width: auto !important;
+    max-width: min(220px, 24vw) !important;
+    margin-right: 0 !important;
+  }
+
+  .c-header nav.rasamala-navbar-main.rasamala-navbar-centered .navbar-collapse {
+    grid-column: 2 !important;
+    justify-self: center !important;
+    justify-content: center !important;
+    flex: 0 0 auto !important;
+    flex-basis: auto !important;
+    flex-grow: 0 !important;
+    width: auto !important;
+    min-width: 0 !important;
+  }
+
+  .c-header nav.rasamala-navbar-main.rasamala-navbar-centered .rasamala-navbar-menu,
+  .c-header nav.rasamala-navbar-main.rasamala-navbar-centered .navbar-nav.ms-auto {
+    justify-content: center !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+}
+
+/* Final custom-palette readability guard for light mode and white-primary palettes. */
+.rasamala-theme #slims-home .rasamala-home-section-title,
+.rasamala-theme #slims-home section h4,
+.rasamala-theme .rasamala-home-section .rasamala-home-section-title {
+  color: var(--theme-on-background) !important;
+}
+
+.rasamala-theme #slims-home section h4 .subtitle-section,
+.rasamala-theme #slims-home .subtitle-section,
+.rasamala-theme .rasamala-home-section .subtitle-section {
+  color: var(--theme-muted) !important;
+}
+
+.rasamala-theme .topic li,
+.rasamala-theme #slims-home .topic li {
+  background: color-mix(in srgb, var(--theme-surface) 94%, transparent) !important;
+  border-color: color-mix(in srgb, var(--theme-muted) 18%, transparent) !important;
+  color: var(--theme-on-surface) !important;
+}
+
+.rasamala-theme .topic li a,
+.rasamala-theme .topic li span,
+.rasamala-theme #slims-home .topic li a,
+.rasamala-theme #slims-home .topic li span {
+  color: var(--theme-on-surface) !important;
+}
+
+.rasamala-theme .topic-icon-fa,
+.rasamala-theme .topic li i.topic-icon-fa,
+.rasamala-theme #slims-home .topic-icon-fa {
+  background: color-mix(in srgb, var(--theme-accent) 14%, var(--theme-surface) 86%) !important;
+  color: var(--rasamala-readable-accent) !important;
+}
+
+.rasamala-theme .topic li:hover .topic-icon-fa,
+.rasamala-theme #slims-home .topic li:hover .topic-icon-fa {
+  background: var(--theme-accent) !important;
+  color: var(--theme-on-accent) !important;
+}
+
+.rasamala-theme #slims-home .member-card .card-title,
+.rasamala-theme #slims-home .member-card .card-title span,
+.rasamala-theme #slims-home .member-card .card-text b {
+  color: var(--theme-on-surface) !important;
+}
+
+.rasamala-theme #slims-home .member-card .card-title small,
+.rasamala-theme #slims-home .member-card .card-text,
+.rasamala-theme #slims-home .member-card .text-secondary {
+  color: var(--theme-muted) !important;
+}
+
+.rasamala-theme .footer-next-prayer {
+  color: var(--rasamala-chrome-text-muted) !important;
+}
+
+.rasamala-theme .footer-next-prayer strong,
+.rasamala-theme .footer-powered-link code {
+  color: var(--rasamala-chrome-text) !important;
+}
+
+/* Footer bottom contrast guard for custom palettes and PageSpeed readability. */
+.rasamala-theme footer .footer-bottom,
+.rasamala-theme footer .footer-copyright,
+.rasamala-theme footer .footer-powered {
+  color: var(--rasamala-chrome-text) !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+.rasamala-theme footer .footer-bottom {
+  gap: 10px 18px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+.rasamala-theme footer .footer-powered-link,
+.rasamala-theme footer .footer-powered-link code {
+  color: var(--rasamala-chrome-text) !important;
+  font-weight: 800 !important;
+  opacity: 1 !important;
+  text-decoration: underline !important;
+  text-decoration-thickness: 1.5px !important;
+  text-underline-offset: 0.2em !important;
+  text-decoration-color: currentColor !important;
+}
+
+.rasamala-theme footer .footer-powered-link:hover,
+.rasamala-theme footer .footer-powered-link:focus,
+.rasamala-theme footer .footer-powered-link:hover code,
+.rasamala-theme footer .footer-powered-link:focus code {
+  color: var(--rasamala-chrome-text) !important;
+  text-decoration-thickness: 2px !important;
+}
+
+body.rasamala-theme footer .footer-bottom.small,
+body.rasamala-theme footer .footer-bottom.small .footer-copyright,
+body.rasamala-theme footer .footer-bottom.small .footer-powered,
+body.rasamala-theme footer .footer-bottom.small .footer-powered-link,
+body.rasamala-theme footer .footer-bottom.small .footer-powered-link code {
+  color: var(--rasamala-chrome-text) !important;
+  opacity: 1 !important;
+}
+
+.rasamala-theme .prayer-reminder-toast {
+  background:
+    radial-gradient(circle at 22px 14px, rgba(var(--theme-accent-rgb), 0.16), transparent 30px),
+    color-mix(in srgb, var(--theme-surface) 94%, transparent) !important;
+  border-color: color-mix(in srgb, var(--theme-accent) 32%, var(--theme-muted) 18%) !important;
+  color: var(--theme-on-surface) !important;
+  box-shadow: 0 16px 42px color-mix(in srgb, var(--theme-accent) 20%, transparent) !important;
+}
+
+.rasamala-theme .prayer-reminder-icon {
+  background: color-mix(in srgb, var(--theme-accent) 14%, var(--theme-surface) 86%) !important;
+  color: var(--rasamala-readable-accent) !important;
+}
+
+.rasamala-theme .prayer-reminder-text strong {
+  color: var(--theme-on-surface) !important;
+}
+
+.rasamala-theme .prayer-reminder-countdown {
+  color: var(--rasamala-readable-accent) !important;
+}
+
+/* Running text uses the same chrome color as navbar/footer. */
+.rasamala-theme .latest-content-ticker,
+.rasamala-theme #search-wraper .latest-content-ticker {
+  background: var(--rasamala-chrome-bg) !important;
+  background-color: var(--rasamala-chrome-bg) !important;
+  border-color: var(--rasamala-chrome-border) !important;
+  color: var(--rasamala-chrome-text) !important;
+  box-shadow: 0 -10px 28px color-mix(in srgb, var(--theme-primary) 24%, transparent) !important;
+}
+
+.rasamala-theme #search-wraper .latest-content-ticker {
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--theme-primary) 18%, transparent) !important;
+}
+
+.rasamala-theme .latest-content-ticker-item,
+.rasamala-theme #search-wraper .latest-content-ticker-item,
+.rasamala-theme .latest-content-ticker .latest-content-icon,
+.rasamala-theme #search-wraper .latest-content-ticker .latest-content-icon {
+  color: var(--rasamala-chrome-text) !important;
+}
+
+.rasamala-theme .latest-content-ticker-item:hover,
+.rasamala-theme .latest-content-ticker-item:focus,
+.rasamala-theme #search-wraper .latest-content-ticker-item:hover,
+.rasamala-theme #search-wraper .latest-content-ticker-item:focus {
+  color: var(--rasamala-chrome-text) !important;
+  opacity: 0.86 !important;
+}
+
+/* News page keeps a clean neutral reading style. */
+.rasamala-page-news .news-wrapper .opac-section-title {
+  border-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.rasamala-page-news .news-wrapper a,
+.rasamala-page-news .news-list-card .news-card-title a,
+.rasamala-page-news .news-list-card .news-list-thumbnail,
+.rasamala-page-news .news-list-footer .btn-news-readmore {
+  text-decoration: none !important;
+}
+
+body.rasamala-theme.rasamala-page-news:not(.rasamala-dark) .news-list-summary,
+body.rasamala-theme.rasamala-page-news:not(.rasamala-dark) .news-list-date,
+body.rasamala-theme.rasamala-page-news:not(.rasamala-dark) .news-list-date i {
+  color: #111827 !important;
+}
+
+body.rasamala-theme.rasamala-page-news:not(.rasamala-dark) .news-list-card .news-card-title,
+body.rasamala-theme.rasamala-page-news:not(.rasamala-dark) .news-list-card .news-card-title a {
+  color: #111827 !important;
+}
+
+/* Compact advanced search: labels stay accessible but live in fields visually. */
+#adv-modal .modal-body {
+  padding: 18px 20px !important;
+}
+
+#adv-modal label.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+#adv-modal .form-control,
+#adv-modal .form-select {
+  min-height: 42px !important;
+  padding: 9px 13px !important;
+  font-size: 13.5px !important;
+}
+
+#adv-modal .modal-footer {
+  padding: 12px 20px !important;
+}
+
+#whatsappModal .whatsapp-modal-header .btn-close {
+  position: relative !important;
+  z-index: 2 !important;
+  pointer-events: auto !important;
+}
+
+/* Final modal layer and mobile safe-area guard. */
+.rasamala-theme .modal {
+  z-index: 13050 !important;
+}
+
+.rasamala-theme .modal-backdrop {
+  z-index: 13040 !important;
+}
+
+.rasamala-theme .modal .modal-dialog,
+.rasamala-theme .modal .modal-content {
+  pointer-events: auto !important;
+}
+
+.rasamala-theme .modal .btn-close,
+.rasamala-theme .modal button[data-bs-dismiss="modal"] {
+  position: relative !important;
+  z-index: 20 !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+}
+
+#libinfoModal .libinfo-modal-header,
+#adv-modal .modal-header {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+#adv-modal .modal-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  padding-right: 58px !important;
+}
+
+#libinfoModal .libinfo-modal-header .btn-close,
+#adv-modal .modal-header .btn-close {
+  flex: 0 0 auto !important;
+  margin-left: 12px !important;
+}
+
+#adv-modal .modal-header .btn-close {
+  position: absolute !important;
+  top: 50% !important;
+  right: 18px !important;
+  width: 34px !important;
+  height: 34px !important;
+  margin: 0 !important;
+  transform: translateY(-50%) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 30 !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+}
+
+@media (max-width: 767.98px) {
+  #adv-modal {
+    --rasamala-mobile-modal-top: calc(92px + env(safe-area-inset-top, 0px));
+    --rasamala-mobile-modal-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+    padding: var(--rasamala-mobile-modal-top) 0 var(--rasamala-mobile-modal-bottom) !important;
+  }
+
+  body.mobile-bottom-nav-hidden #adv-modal {
+    --rasamala-mobile-modal-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  }
+
+  #adv-modal .modal-dialog {
+    width: calc(100% - 22px) !important;
+    max-width: calc(100% - 22px) !important;
+    height: calc(100dvh - var(--rasamala-mobile-modal-top) - var(--rasamala-mobile-modal-bottom)) !important;
+    max-height: calc(100dvh - var(--rasamala-mobile-modal-top) - var(--rasamala-mobile-modal-bottom)) !important;
+    margin: 0 auto !important;
+    display: flex !important;
+    align-items: stretch !important;
+  }
+
+  @supports not (height: 100dvh) {
+    #adv-modal .modal-dialog {
+      height: calc(100vh - var(--rasamala-mobile-modal-top) - var(--rasamala-mobile-modal-bottom)) !important;
+      max-height: calc(100vh - var(--rasamala-mobile-modal-top) - var(--rasamala-mobile-modal-bottom)) !important;
+    }
+  }
+
+  #adv-modal .modal-content {
+    height: 100% !important;
+    max-height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    border-radius: 14px !important;
+  }
+
+  #adv-modal .modal-header {
+    min-height: 54px !important;
+    padding: 12px 58px 12px 16px !important;
+  }
+
+  #adv-modal .modal-header .btn-close {
+    top: 10px !important;
+    right: 12px !important;
+    width: 38px !important;
+    height: 38px !important;
+    transform: none !important;
+  }
+
+  #adv-modal .modal-title {
+    min-width: 0 !important;
+    overflow-wrap: anywhere !important;
+    font-size: 15px !important;
+    line-height: 1.25 !important;
+  }
+
+  #adv-modal .modal-body {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    padding: 14px 16px !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  #adv-modal .modal-footer {
+    flex: 0 0 auto !important;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  #libinfoModal {
+    padding: calc(80px + env(safe-area-inset-top, 0px)) 12px calc(76px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  #libinfoModal .modal-dialog {
+    margin: 0 auto !important;
+    max-height: calc(100dvh - 156px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  #libinfoModal .modal-content {
+    max-height: inherit !important;
+    overflow: hidden !important;
+  }
+
+  #libinfoModal .libinfo-modal-body {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
   }
 }

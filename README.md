@@ -10,7 +10,7 @@ Tema ini awalnya berevolusi dari `apple-theme`, lalu dirapikan dan diganti menja
 - Lokasi tema: `template/rasamala`.
 - Basis template: PHP template SLiMS dengan Bootstrap 5.3.3, Vue 3.5.39, markup tema utama yang sudah diarahkan ke Bootstrap 5 native, compatibility layer terbatas untuk output lama SLiMS/plugin, dan JavaScript custom yang diarahkan ke vanilla JS.
 - Font Google sudah dilokalkan di `assets/fonts/google/` agar tidak bergantung pada CDN Google Fonts.
-- Terakhir didokumentasikan: 2026-07-15.
+- Terakhir didokumentasikan: 2026-07-16.
 
 ## Fitur Utama
 
@@ -25,8 +25,8 @@ Rasamala menyediakan pilihan keseluruhan tema lewat Tinfo:
 
 ### Dark/Light Mode
 
-- Toggle dark/light mode di OPAC.
-- Tinfo hanya mengatur apakah tombol toggle ditampilkan atau disembunyikan.
+- Tinfo menyediakan enam mode: `auto - button show`, `auto - button hide`, `default dark - button show`, `default dark - button hide`, `default light - button show`, dan `default light - button hide`.
+- Auto mengikuti dark/light mode sistem perangkat. Jika tombol ditampilkan dan user menekan toggle, pilihan user disimpan di browser tersebut. Jika tombol disembunyikan, mode mengikuti setting Tinfo dan mengabaikan pilihan lama di browser.
 - Warna navbar, footer, search result, filter, sort, detail biblio, login/member page, topics, floating button, dropdown, dan modal sudah diarahkan agar mengikuti mode aktif.
 
 ### Aksesibilitas dan Semantik
@@ -42,12 +42,47 @@ Rasamala menyediakan pilihan keseluruhan tema lewat Tinfo:
 
 ### Palette Warna dan Font Tema
 
+- Field Floating Theme Color Palette Menu di Tinfo diganti menjadi Theme Viewer: panel preview visual untuk palette, font, animasi background, speed animasi, efek partikel cursor, ikon cursor, pilihan floating viewer OPAC, dan tombol buka/tutup semua section pengaturan.
+- Setiap heading section Tinfo dapat dibuka/tutup agar pengaturan panjang lebih mudah dipantau tanpa mengubah nilai fitur OPAC.
 - Theme Color Palette menyediakan preset: Warm Gray, Neon Cyan, Neon Emerald, Sunset Orange, Royal Gold, Electric Pink, Minimal White, Dark Gray, Forest Academic, Clean Blue, Warm Library, Mono Minimal, dan Custom Palette.
-- Custom Palette memungkinkan pengisian kode warna sendiri untuk Primary, Secondary, Accent Highlight, Page Background, Surface/Card, Main Text, dan Muted Text/Border.
+- Custom Palette memakai satu field dengan format `light palette | dark palette`. Setiap sisi memakai urutan `Primary; Secondary; Accent; Background; Surface; Text; Muted`. Contoh: `#0B4F54; #5C8374; #F2994A; #F4F6F8; #FFFFFF; #1C1E21; #B0B7BD | #1A2E40; #B38F4D; #D9534F; #101318; #161A22; #F4F6F8; #B6BEC8`.
+- Theme Viewer di Tinfo bisa mengaktifkan floating menu OPAC di sebelah tombol Libinfo/WhatsApp. Tombol memakai Font Awesome lokal (`fa-paint-brush`) yang tersedia di tema. Pengunjung dapat memilih preset atau mengisi custom palette dengan format yang sama; pilihan ini tersimpan lokal di browser pengunjung dan tidak mengubah default global admin.
+- Popup Theme Viewer OPAC menyediakan tombol Copy Prompt untuk membuat palette dengan AI, tombol Paste Palette untuk memasukkan hasil palette dari clipboard, tombol Dark/Light, pilihan Font Tema, Animasi Background, Kecepatan Animasi Background, Efek Partikel Cursor, Ikon Cursor, serta preview show/hide section beranda per browser.
+- Jika Theme Viewer disembunyikan dari Tinfo, override palet di `localStorage` dihapus dan OPAC dipaksa mengikuti pengaturan tema admin.
+- Input custom palette di OPAC dibatasi dan dikanonisasi: hanya kode hex 6 digit yang dipakai, maksimal 7 warna untuk light dan 7 warna untuk dark, sedangkan teks/HTML/CSS lain diabaikan sebelum disimpan ke browser.
 - Dark Gray tetap memakai background terang di light mode. Custom palette yang benar-benar gelap otomatis mendapat guard kontras agar panel legacy, form, dropdown, tabel, filter, search result, member/librarian page, dan elemen plugin tetap terbaca.
+- Token kontras otomatis tersedia sebagai `--theme-on-primary`, `--theme-on-secondary`, dan `--theme-on-accent` agar navbar, footer, tombol, filter aktif, dan komponen di atas warna utama tetap terbaca saat admin memakai warna terang seperti kuning/putih.
+- Topic icon, animasi background, dan reminder waktu sholat memakai Accent asli, bukan Primary, sehingga palette dengan navbar/footer putih tetap menampilkan icon dan highlight yang terlihat.
+- Guard dark mode di CSS memakai `Background`, `Surface`, `Text`, `Muted`, dan token `on-*` supaya custom palette ekstrem tetap terbaca.
 - Komponen utama tetap kompatibel dengan `--theme-accent-color`, tetapi sekarang juga memakai token `--theme-primary`, `--theme-secondary`, `--theme-accent`, `--theme-background`, `--theme-surface`, `--theme-text`, dan `--theme-muted` agar tampilan tidak monoton.
 - Pilihan font: System Default, Inter, Roboto, Poppins, dan Playfair Display.
 - Font eksternal sudah disimpan lokal di folder tema.
+
+Prompt aman untuk membuat Custom Palette dengan AI:
+
+```text
+Buat 1 custom palette OPAC perpustakaan dalam format persis berikut:
+Primary; Secondary; Accent; Background; Surface; Text; Muted | Dark Primary; Dark Secondary; Dark Accent; Dark Background; Dark Surface; Dark Text; Dark Muted
+
+Aturan:
+- Output hanya 1 baris kode warna hex 6 digit, tanpa penjelasan, tanpa bullet, tanpa nama variabel.
+- Gunakan tanda titik koma dan spasi antar warna: #000000; #111111; ...
+- Gunakan tanda | untuk memisahkan light palette dan dark palette.
+- Text wajib kontras minimal 4.5:1 terhadap Background dan Surface pada mode yang sama.
+- Dark Text wajib terang jika Dark Background/Dark Surface gelap.
+- Light Text wajib gelap jika Light Background/Light Surface terang.
+- Primary dipakai untuk navbar/tombol utama, jadi pastikan cocok dengan warna teks otomatis di atasnya.
+- Accent hanya untuk highlight, jangan jadikan semua teks utama mengikuti Accent.
+- Muted untuk teks sekunder dan border, tetap harus terbaca.
+
+Tema visual yang diminta: [isi konsep warna di sini, misal: modern academic green, minimal white, cyber neon, royal archive].
+```
+
+Contoh output AI yang benar dan bisa langsung ditempel ke `Custom Palette Colors`:
+
+```text
+#2F5D50; #8C6A3F; #D5A021; #F6F4EE; #FFFFFF; #1F2A24; #68746D | #5C8374; #C6A15B; #E7C66C; #07110E; #12231E; #F5F3EA; #9FB0A8
+```
 
 ### Navbar
 
@@ -56,6 +91,7 @@ Rasamala menyediakan pilihan keseluruhan tema lewat Tinfo:
 - Menu default mencakup Home, Information, News, Help, Librarian, dan Staff Area.
 - Staff Area diarahkan ke `index.php?p=login`.
 - Area Anggota bisa show/hide.
+- Logo dan nama perpustakaan bisa ditempatkan di navbar atau dipindahkan ke atas search box dalam satu baris untuk desktop. Di mobile, logo dan nama tetap kembali ke navbar agar header tetap jelas. Jika dipindahkan ke hero, menu navbar desktop otomatis berada di tengah.
 - Subnama perpustakaan bisa show/hide.
 - Bahasa yang tampil bisa dibatasi melalui daftar kode bahasa.
 - Mobile bottom navigation bisa show/hide. Jika disembunyikan, burger menu tetap tersedia di mobile.
@@ -82,8 +118,12 @@ Animasi background dapat dipakai di semua halaman, tidak hanya beranda:
 - Floating Bubbles.
 - Twinkling Stars.
 - Gradient Orbs.
+- Zen Ripples.
+- Neural Network.
+- Starfield Warp.
+- Floating Embers.
 
-Kecepatan animasi bisa diatur. Efek dibuat ringan dan mengikuti warna aksen tema, dengan penyesuaian dark/light mode.
+Kecepatan animasi bisa diatur. Efek dibuat ringan dan mengikuti warna aksen tema, dengan penyesuaian dark/light mode. Animasi baru dibuat dengan elemen DOM ringan dan jumlah elemen otomatis dikurangi di mobile/perangkat rendah. Jika Floating Theme Color Palette Menu mengubah palette dari OPAC, animasi digambar ulang agar langsung mengikuti warna tema aktif.
 
 ### Cursor Icon dan Partikel
 
@@ -170,7 +210,10 @@ Link sosial media yang didukung:
 - Teks About Us dan Copyright bisa diubah.
 - Link `Powered by SLiMS` diarahkan ke `https://slims.web.id/`.
 - Footer mengikuti warna navbar dan warna aksen tema.
+- Running text/ticker memakai warna area yang sama dengan navbar dan footer agar konsisten di light/dark mode maupun custom palette.
 - Waktu sholat dapat ditampilkan di footer.
+- Komponen non-footer seperti chat, mobile bottom nav, running text bawah, floating info, WhatsApp, dark/light toggle, dan back to top dipisah ke file part khusus.
+- Menu floating palet warna dipisah ke `parts/palette_switcher.php`.
 
 ### Widget Waktu Sholat
 
@@ -224,7 +267,7 @@ Auto cover untuk buku/koleksi bisa diatur:
 - No cover only.
 - Disable.
 
-Fitur ini diterapkan pada halaman beranda, hasil pencarian, dan detail bibliografi.
+Fitur ini diterapkan pada halaman beranda, hasil pencarian, dan detail bibliografi. Warna cover otomatis mengikuti theme color palette, termasuk palette yang dipilih dari Floating Theme Color Palette Menu.
 
 ### News dan Content
 
@@ -267,6 +310,7 @@ Fitur ini diterapkan pada halaman beranda, hasil pencarian, dan detail bibliogra
 - Floating info button bisa mode Libinfo, WhatsApp, atau hide.
 - WhatsApp mode mendukung nomor, judul layanan, jam layanan, deskripsi, dan kategori pesan.
 - Floating button mengikuti warna accent dan dark/light mode.
+- Floating palette button tampil di sebelah tombol Libinfo/WhatsApp; jika tombol info disembunyikan, palette kembali ke posisi tombol floating utama.
 
 ### Custom CSS
 
@@ -312,6 +356,11 @@ rasamala/
 │   ├── _result-search.php
 │   ├── _other.php
 │   ├── _member.php
+│   ├── bottom_info_bar.php
+│   ├── chat_widget.php
+│   ├── floating_actions.php
+│   ├── mobile_bottom_nav.php
+│   ├── palette_switcher.php
 │   └── waktu_sholat.php
 └── assets/
     ├── css/style.css

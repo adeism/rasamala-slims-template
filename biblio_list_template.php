@@ -240,7 +240,7 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
         <a class="dropdown-item text-start px-3" href="{$marc_url}">{$marc_text}</a>
         <a class="dropdown-item text-start px-3 openPopUp citationLink" href="{$cite_url}" title="{$title_cite}">{$cite_text}</a>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item text-start px-3 add-to-chart-button" data-biblio="{$biblio_id}" href="#">{$add_to_basket_text}</a>
+        <a class="dropdown-item text-start px-3 add-to-chart-button" data-biblio="{$biblio_id}" href="index.php?p=member&sec=title_basket">{$add_to_basket_text}</a>
     </div>
 </div>
 HTML;
@@ -366,11 +366,11 @@ function createButton(int $biblio_id, string $title)
             <i class="far fa-comment-dots" aria-hidden="true"></i>
             <span>{$comment}</span>
         </a>
-        <a href="javascript:void(0)" data-id="{$biblio_id}" class="bookMarkBook biblio-list-quick-action {$setBookmarked}">
+        <a href="index.php?p=member&sec=bookmark" data-id="{$biblio_id}" class="bookMarkBook biblio-list-quick-action {$setBookmarked}">
             <i class="far fa-bookmark" aria-hidden="true"></i>
             <span id="label-{$biblio_id}">{$bookmark}</span>
         </a>
-        <a href="javascript:void(0)" data-id="{$biblio_id}" data-title="{$title_attr}" data-bs-toggle="modal" data-bs-target="#mediaSocialModal" class="biblio-list-quick-action">
+        <a href="index.php?p=sharelink&id={$biblio_id}" data-id="{$biblio_id}" data-title="{$title_attr}" data-bs-toggle="modal" data-bs-target="#mediaSocialModal" class="biblio-list-quick-action">
             <i class="fas fa-share-alt" aria-hidden="true"></i>
             <span>{$share}</span>
         </a>

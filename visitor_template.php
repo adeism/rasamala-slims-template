@@ -551,6 +551,8 @@ body.rasamala-dark .inst-step:hover {
 
 <div class="visitor-bg-gradient"></div>
 
+<h1 class="visually-hidden"><?= themeEscape($visitor_title); ?></h1>
+
 <?php if ($visitor_layout_style === 'split') : ?>
 <div class="d-flex align-items-center justify-content-center min-vh-100 w-100 visitor-backdrop <?= !empty($visitor_ticker_items) ? 'visitor-has-running-text' : ''; ?>" id="visitor-counter">
     <main class="main-split-container">

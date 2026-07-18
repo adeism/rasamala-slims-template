@@ -3,7 +3,7 @@
  * Helper output for Rasamala theme customization fields.
  *
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-15T14:32:37+07:00
+ * @Last modified time  : 2026-07-17T08:06:34+07:00
  */
 if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
@@ -116,7 +116,7 @@ if (!function_exists('rasamalaTinfoLanguageOptions')) {
       'ur_PK' => ['Urdu', 'اردو'],
     ];
     $languages = [];
-    $locale_dir = realpath(__DIR__ . '/../../../lib/lang/locale');
+    $locale_dir = defined('SB') ? SB . 'lib/lang/locale' : realpath(__DIR__ . '/../../../lib/lang/locale');
 
     if ($locale_dir && is_dir($locale_dir)) {
       $locale_codes = glob($locale_dir . '/*', GLOB_ONLYDIR);
@@ -181,7 +181,23 @@ if (!function_exists('rasamalaTinfoCustomizeAssets')) {
         ];
       }
     }
+    $palette_definitions = [];
+    if (function_exists('themeAccentPalettes')) {
+      foreach (themeAccentPalettes() as $palette_key => $palette_info) {
+        $palette_definitions[$palette_key] = [
+          'label' => $palette_info['label'] ?? $palette_key,
+          'primary' => $palette_info['primary'] ?? '#6f5b43',
+          'secondary' => $palette_info['secondary'] ?? '#a58a63',
+          'accent' => $palette_info['accent'] ?? '#c8a24a',
+          'background' => $palette_info['background'] ?? '#f4f1ec',
+          'surface' => $palette_info['surface'] ?? '#ffffff',
+          'text' => $palette_info['text'] ?? '#2f2a24',
+          'muted' => $palette_info['muted'] ?? '#7a7167',
+        ];
+      }
+    }
     $preset_descriptions_json = json_encode($preset_descriptions, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
+    $palette_definitions_json = json_encode($palette_definitions, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
     $default_announcement_json = json_encode("<strong>Info layanan:</strong> Perpustakaan buka Senin-Jumat, pukul 08.00-16.00 WIB.\n<a href=\"index.php?p=libinfo\">Lihat informasi lengkap</a>.", JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
     $default_custom_css_json = json_encode("/* Custom CSS Rasamala\n   Edit contoh di bawah ini sesuai kebutuhan. */\n\n/* Contoh: ubah ukuran nama perpustakaan di navbar */\n/* .navbar-lib-name {\n  font-size: 14px !important;\n} */\n\n/* Contoh: beri jarak tambahan pada judul hero */\n/* .hero-search-heading h1 {\n  margin-bottom: 16px !important;\n} */\n\n/* Contoh: custom warna tombol utama */\n/* .btn-primary {\n  background-color: var(--theme-accent-color) !important;\n  border-color: var(--theme-accent-color) !important;\n} */", JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
     $default_visitor_split_steps_json = json_encode("fas fa-id-card | Isi Identitas | Scan kartu anggota atau ketik identitas pengunjung pada kolom yang tersedia.\nscan | Proses Kunjungan | Sistem akan memeriksa data dan menampilkan status kunjungan secara otomatis.\nfas fa-check | Selesai | Setelah berhasil, pengunjung dapat melanjutkan aktivitas sesuai layanan yang tersedia.", JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
@@ -227,6 +243,33 @@ textarea[name^="classic_"] {
     line-height: 1.5 !important;
 }
 
+.rasamala-palette-combined {
+    min-height: 72px !important;
+    font-family: Consolas, "Liberation Mono", Menlo, monospace !important;
+}
+
+.rasamala-palette-help {
+    max-width: 580px;
+    margin-top: 8px;
+    padding: 10px 12px;
+    border: 1px solid #dce6f0;
+    border-radius: 6px;
+    background: #f8fbff;
+    color: #344054;
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+.rasamala-palette-help code {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 3px 6px;
+    border-radius: 4px;
+    background: #eef4ff;
+    color: #1d4ed8;
+    font-size: 12px;
+}
+
 #themeCustomiseForm tr,
 tr:has(input[name^="classic_"]),
 tr:has(select[name^="classic_"]),
@@ -248,6 +291,13 @@ tr:has(textarea[name^="classic_"]) td {
     border-left: 4px solid #28a745;
     background: #F7FAF8;
     color: #1f2d25;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+.rasamala-tinfo-section-copy {
+    min-width: 0;
 }
 .rasamala-tinfo-section-title {
     display: block;
@@ -261,6 +311,244 @@ tr:has(textarea[name^="classic_"]) td {
     color: #65746B;
     font-size: 11px;
     line-height: 1.35;
+}
+.rasamala-tinfo-section-toggle {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #c9dfd0;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #256339;
+    padding: 5px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.rasamala-tinfo-section-toggle:hover,
+.rasamala-tinfo-section-toggle:focus {
+    border-color: #28a745;
+    background: #ecf8f0;
+    outline: none;
+}
+.rasamala-tinfo-section-row.is-collapsed .rasamala-tinfo-section-box,
+.rasamala-tinfo-section-block.is-collapsed .rasamala-tinfo-section-box {
+    border-left-color: #9ca3af;
+    background: #f4f6f7;
+}
+.rasamala-theme-viewer-row > td,
+.rasamala-theme-viewer-block {
+    padding-top: 0 !important;
+}
+.rasamala-theme-viewer {
+    max-width: 920px;
+    margin: 0 0 16px;
+    border: 1px solid #d9e8de;
+    border-radius: 10px;
+    background: #ffffff;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+.rasamala-theme-viewer-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 14px 16px;
+    border-bottom: 1px solid #edf2ef;
+    background: linear-gradient(135deg, #f7fbf8, #ffffff);
+}
+.rasamala-theme-viewer-title {
+    display: block;
+    font-size: 14px;
+    font-weight: 800;
+    color: #1f2d25;
+}
+.rasamala-theme-viewer-subtitle {
+    display: block;
+    margin-top: 3px;
+    color: #66736a;
+    font-size: 12px;
+    line-height: 1.45;
+}
+.rasamala-theme-viewer-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: flex-end;
+}
+.rasamala-theme-viewer-action {
+    border: 1px solid #d7e3dc;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #26543a;
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.rasamala-theme-viewer-action:hover,
+.rasamala-theme-viewer-action:focus {
+    border-color: #28a745;
+    background: #ecf8f0;
+    outline: none;
+}
+.rasamala-theme-viewer-body {
+    display: grid;
+    grid-template-columns: minmax(240px, 0.9fr) minmax(260px, 1.1fr);
+    gap: 14px;
+    padding: 16px;
+}
+.rasamala-theme-preview {
+    border: 1px solid #e5e7eb;
+    border-radius: 9px;
+    overflow: hidden;
+    background: var(--viewer-background, #f8fafc);
+    color: var(--viewer-text, #111827);
+}
+.rasamala-theme-preview-navbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
+    background: var(--viewer-primary, #6f5b43);
+    color: var(--viewer-on-primary, #ffffff);
+    font-size: 12px;
+    font-weight: 800;
+}
+.rasamala-theme-preview-main {
+    padding: 16px;
+    min-height: 180px;
+    background:
+        radial-gradient(circle at 18% 10%, var(--viewer-accent-soft, rgba(111, 91, 67, 0.18)), transparent 34%),
+        var(--viewer-background, #f8fafc);
+}
+.rasamala-theme-preview-eyebrow {
+    color: var(--viewer-muted, #64748b);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+.rasamala-theme-preview-title {
+    margin: 6px 0 10px;
+    color: var(--viewer-text, #111827);
+    font-size: 20px;
+    line-height: 1.16;
+    font-weight: 850;
+}
+.rasamala-theme-preview-search {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 8px 10px;
+    border: 1px solid var(--viewer-border, #e5e7eb);
+    border-radius: 999px;
+    background: var(--viewer-surface, #ffffff);
+    color: var(--viewer-muted, #64748b);
+    font-size: 12px;
+}
+.rasamala-theme-preview-search i {
+    color: var(--viewer-accent, #c8a24a);
+}
+.rasamala-theme-preview-card {
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    gap: 10px;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid var(--viewer-border, #e5e7eb);
+    border-radius: 8px;
+    background: var(--viewer-surface, #ffffff);
+}
+.rasamala-theme-preview-icon {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--viewer-accent-soft, rgba(111, 91, 67, 0.12));
+    color: var(--viewer-accent, #c8a24a);
+    font-size: 17px;
+}
+.rasamala-theme-preview-text strong {
+    display: block;
+    color: var(--viewer-text, #111827);
+    font-size: 12px;
+}
+.rasamala-theme-preview-text span {
+    display: block;
+    margin-top: 2px;
+    color: var(--viewer-muted, #64748b);
+    font-size: 11px;
+}
+.rasamala-theme-viewer-swatches {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 6px;
+    margin: 12px 16px 0;
+}
+.rasamala-theme-swatch {
+    min-height: 38px;
+    border: 1px solid rgba(15, 23, 42, 0.10);
+    border-radius: 6px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+.rasamala-theme-viewer-controls {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    align-content: start;
+}
+.rasamala-theme-viewer-control {
+    min-width: 0;
+}
+.rasamala-theme-viewer-control label {
+    display: block;
+    margin: 0 0 5px;
+    color: #36463d;
+    font-size: 11px;
+    font-weight: 800;
+}
+.rasamala-theme-viewer-control select {
+    width: 100% !important;
+    max-width: none !important;
+}
+.rasamala-theme-viewer-status {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 2px;
+}
+.rasamala-theme-viewer-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: 1px solid #e0e7e3;
+    border-radius: 999px;
+    background: #f8fbf9;
+    color: #405147;
+    padding: 5px 8px;
+    font-size: 11px;
+    font-weight: 700;
+}
+@media (max-width: 760px) {
+    .rasamala-theme-viewer-body {
+        grid-template-columns: 1fr;
+    }
+    .rasamala-theme-viewer-controls {
+        grid-template-columns: 1fr;
+    }
+    .rasamala-theme-viewer-head {
+        flex-direction: column;
+    }
+    .rasamala-theme-viewer-actions {
+        justify-content: flex-start;
+    }
 }
 .theme-preset-summary {
     margin: 8px 0 14px;
@@ -474,23 +762,38 @@ $(document).ready(function() {
     var topicAssetBase = {$asset_base_json};
     var languageOptions = {$language_options_json};
     var themePresetDescriptions = {$preset_descriptions_json};
+    var themePaletteDefinitions = {$palette_definitions_json};
     var defaultAnnouncementText = {$default_announcement_json};
     var defaultCustomCss = {$default_custom_css_json};
     var defaultVisitorSplitSteps = {$default_visitor_split_steps_json};
     var quickSettingNames = [
         'classic_theme_color',
-        'classic_palette_primary',
-        'classic_palette_secondary',
-        'classic_palette_accent',
-        'classic_palette_background',
-        'classic_palette_surface',
-        'classic_palette_text',
-        'classic_palette_muted',
+        'classic_palette_custom',
         'classic_color_toggle',
+        'classic_palette_switcher_show',
         'classic_font_family',
+        'classic_back_to_top',
+        'classic_floating_info',
+        'classic_whatsapp_number',
+        'classic_whatsapp_title',
+        'classic_whatsapp_desc',
+        'classic_whatsapp_categories',
+        'classic_navbar_menu',
+        'classic_member_area',
+        'classic_library_name_position',
+        'classic_library_subname',
+        'classic_language_visible_codes',
+        'classic_mobile_bottom_nav_show',
+        'classic_hero_text',
+        'classic_hero_text_size',
+        'classic_search_size',
+        'classic_search_placeholder',
         'classic_search_result_layout',
         'classic_search_panel_style',
         'classic_news_list_layout',
+        'classic_announcement_show',
+        'classic_announcement_text',
+        'classic_announcement_style',
         'classic_home_display_show',
         'classic_home_display_style',
         'classic_home_display_source',
@@ -514,6 +817,35 @@ $(document).ready(function() {
         'classic_home_content_path_1',
         'classic_home_content_path_2',
         'classic_home_content_path_3',
+        'classic_topic_show',
+        'classic_topic_heading_display',
+        'classic_topic_items',
+        'classic_popular_collection',
+        'classic_popular_collection_heading_display',
+        'classic_popular_collection_item',
+        'classic_new_collection',
+        'classic_new_collection_heading_display',
+        'classic_new_collection_item',
+        'classic_top_reader',
+        'classic_top_reader_heading_display',
+        'classic_top_reader_item',
+        'classic_homepage_section_order',
+        'classic_map',
+        'classic_map_link',
+        'classic_map_height',
+        'classic_map_desc',
+        'classic_fb_link',
+        'classic_twitter_link',
+        'classic_youtube_link',
+        'classic_instagram_link',
+        'classic_tiktok_link',
+        'classic_whatsapp_link',
+        'classic_telegram_link',
+        'classic_linkedin_link',
+        'classic_footer_show',
+        'classic_footer_about_us',
+        'classic_footer_search_show',
+        'classic_footer_copyright',
         'classic_hero_background_animation',
         'classic_background_animation_speed',
         'classic_cursor_particles',
@@ -521,20 +853,33 @@ $(document).ready(function() {
         'classic_prayer_times_show',
         'classic_prayer_times_city',
         'classic_auto_cover_generator',
+        'classic_title_chars',
+        'classic_parallel_title_separator',
         'classic_show_author_role',
         'classic_detail_label_type',
         'classic_librarian_display_mode',
-        'classic_librarian_custom_usernames'
+        'classic_librarian_custom_usernames',
+        'visitor_layout_style',
+        'visitor_title',
+        'visitor_subtitle',
+        'visitor_theme_toggle',
+        'visitor_log_voice',
+        'visitor_quote',
+        'visitor_split_title',
+        'visitor_split_steps'
     ];
     var quickSectionAnchors = [
         'classic_theme_preset',
         'classic_theme_color',
+        'classic_navbar_menu',
         'classic_hero_text',
         'classic_home_display_show',
         'classic_ticker_show',
         'classic_home_content_cards_show',
+        'classic_map',
         'classic_librarian_display_mode',
-        'classic_footer_show'
+        'classic_footer_show',
+        'classic_title_chars'
     ];
 
     function fillEmptyTextarea(name, value) {
@@ -563,16 +908,174 @@ $(document).ready(function() {
         return settingField(name).closest('.form-group, tr, .row');
     }
 
+    function builderContainerForField(name) {
+        var map = {
+            classic_navbar_menu: '#navbar-menu-builder-container',
+            classic_topic_items: '#topic-items-builder-container',
+            classic_language_visible_codes: '#language-visible-builder-container'
+        };
+        return map[name] ? $(map[name]) : $();
+    }
+
+    function forceBuilderSettingVisible(field) {
+        var row = field.closest('.form-group, tr, .row');
+        if (row.length) {
+            row.show();
+            row.removeAttr('data-rasamala-section-hidden');
+        }
+
+        var container = builderContainerForField(field.attr('name') || '');
+        if (container.length) {
+            container.show();
+            container.closest('.form-group, tr, .row').show().removeAttr('data-rasamala-section-hidden');
+        }
+    }
+
+    function syncBuilderSettingVisibility() {
+        var preset = settingValue('classic_theme_preset') || 'simple_homepage';
+        var isCustomPreset = preset === 'custom';
+        var configs = [
+            {name: 'classic_navbar_menu', selector: '#navbar-menu-builder-container', visible: true},
+            {name: 'classic_language_visible_codes', selector: '#language-visible-builder-container', visible: true},
+            {name: 'classic_topic_items', selector: '#topic-items-builder-container', visible: isCustomPreset || settingValue('classic_topic_show') === '1'}
+        ];
+
+        configs.forEach(function(config) {
+            var field = settingField(config.name);
+            var row = settingRow(config.name);
+            var container = $(config.selector);
+            if (!field.length || !container.length) return;
+
+            var visible = !!config.visible && (isCustomPreset || isQuickSetting(config.name));
+            field.hide();
+            row.toggle(visible).removeAttr('data-rasamala-section-hidden');
+            container.toggle(visible);
+        });
+    }
+
     function settingValue(name) {
         var field = settingField(name);
         return field.length ? String(field.val()) : '';
     }
 
+    function settingLabel(name, fallback) {
+        var field = settingField(name);
+        var option = field.find('option:selected');
+        if (option.length) {
+            return option.text();
+        }
+        return fallback || settingValue(name);
+    }
+
+    function readableTextColor(hex) {
+        hex = String(hex || '').replace('#', '');
+        if (!/^[0-9a-f]{6}$/i.test(hex)) return '#111827';
+        var r = parseInt(hex.slice(0, 2), 16);
+        var g = parseInt(hex.slice(2, 4), 16);
+        var b = parseInt(hex.slice(4, 6), 16);
+        var luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+        return luminance > 0.62 ? '#111827' : '#ffffff';
+    }
+
+    function hexToRgb(hex) {
+        hex = String(hex || '').replace('#', '');
+        if (!/^[0-9a-f]{6}$/i.test(hex)) return '111, 91, 67';
+        return parseInt(hex.slice(0, 2), 16) + ', ' + parseInt(hex.slice(2, 4), 16) + ', ' + parseInt(hex.slice(4, 6), 16);
+    }
+
+    function parseCustomPalettePreview(value) {
+        var base = themePaletteDefinitions.minimalwhite || themePaletteDefinitions.warmgray || {};
+        var segment = String(value || '').split('|')[0] || '';
+        var parts = segment.split(/[;\\r\\n]+/).map(function(item) {
+            return item.trim();
+        }).filter(function(item) {
+            return /^#?[0-9a-f]{6}$/i.test(item);
+        }).slice(0, 7);
+        var keys = ['primary', 'secondary', 'accent', 'background', 'surface', 'text', 'muted'];
+        var palette = {label: 'Custom Palette'};
+        keys.forEach(function(key, index) {
+            var fallback = base[key] || (key === 'surface' ? '#ffffff' : '#111827');
+            palette[key] = parts[index] ? '#' + parts[index].replace('#', '').toLowerCase() : fallback;
+        });
+        return palette;
+    }
+
+    function currentThemePalette() {
+        var key = settingValue('classic_theme_color') || 'warmgray';
+        if (key === 'custom') {
+            return parseCustomPalettePreview(settingValue('classic_palette_custom'));
+        }
+        return themePaletteDefinitions[key] || themePaletteDefinitions.warmgray || {
+            label: 'Warm Gray',
+            primary: '#6f5b43',
+            secondary: '#a58a63',
+            accent: '#c8a24a',
+            background: '#f4f1ec',
+            surface: '#ffffff',
+            text: '#2f2a24',
+            muted: '#7a7167'
+        };
+    }
+
+    var sectionCollapsedState = {};
+
+    function sectionControlledRows(sectionRow) {
+        var rows = $();
+        var next = sectionRow.next();
+        while (next.length && !next.hasClass('rasamala-tinfo-section-row') && !next.hasClass('rasamala-tinfo-section-block')) {
+            rows = rows.add(next);
+            next = next.next();
+        }
+        return rows.not('.rasamala-theme-viewer-row, .rasamala-theme-viewer-block');
+    }
+
+    function clearSectionCollapseMarks() {
+        $('[data-rasamala-section-hidden="1"]').each(function() {
+            $(this).removeAttr('data-rasamala-section-hidden').show();
+        });
+    }
+
+    function applyTinfoSectionCollapse() {
+        $('.rasamala-tinfo-section-row, .rasamala-tinfo-section-block').each(function() {
+            var section = $(this);
+            var anchor = section.attr('data-rasamala-section-anchor') || '';
+            var isCollapsed = !!sectionCollapsedState[anchor];
+            var button = section.find('.rasamala-tinfo-section-toggle');
+            section.toggleClass('is-collapsed', isCollapsed);
+            button.attr('aria-expanded', isCollapsed ? 'false' : 'true');
+            button.find('.rasamala-tinfo-section-toggle-text').text(isCollapsed ? 'Buka' : 'Tutup');
+            button.find('i').attr('class', isCollapsed ? 'fas fa-chevron-down' : 'fas fa-chevron-up');
+            if (isCollapsed) {
+                sectionControlledRows(section).filter(':visible').attr('data-rasamala-section-hidden', '1').hide();
+            }
+        });
+    }
+
+    function setAllTinfoSectionsCollapsed(collapsed) {
+        $('.rasamala-tinfo-section-row, .rasamala-tinfo-section-block').each(function() {
+            var anchor = $(this).attr('data-rasamala-section-anchor') || '';
+            if (anchor !== '') {
+                sectionCollapsedState[anchor] = collapsed;
+            }
+        });
+        clearSectionCollapseMarks();
+        syncConditionalSettings();
+    }
+
     function insertTinfoSection(row, title, description, anchor) {
         if (!row.length) return;
         var sectionContent = $('<div class="rasamala-tinfo-section-box"></div>')
-            .append($('<span class="rasamala-tinfo-section-title"></span>').text(title))
-            .append($('<span class="rasamala-tinfo-section-desc"></span>').text(description));
+            .append(
+                $('<span class="rasamala-tinfo-section-copy"></span>')
+                    .append($('<span class="rasamala-tinfo-section-title"></span>').text(title))
+                    .append($('<span class="rasamala-tinfo-section-desc"></span>').text(description))
+            )
+            .append(
+                $('<button type="button" class="rasamala-tinfo-section-toggle" aria-expanded="true"></button>')
+                    .attr('data-rasamala-section-toggle', anchor || '')
+                    .append($('<i class="fas fa-chevron-up" aria-hidden="true"></i>'))
+                    .append($('<span class="rasamala-tinfo-section-toggle-text"></span>').text('Tutup'))
+            );
 
         if (row.is('tr')) {
             var columns = Math.max(row.children('td, th').length, 1);
@@ -619,25 +1122,171 @@ $(document).ready(function() {
     }
 
     function enhanceCustomPaletteFields() {
-        var paletteFields = [
-            ['classic_palette_primary', '#111827'],
-            ['classic_palette_secondary', '#475569'],
-            ['classic_palette_accent', '#2563eb'],
-            ['classic_palette_background', '#f8fafc'],
-            ['classic_palette_surface', '#ffffff'],
-            ['classic_palette_text', '#111827'],
-            ['classic_palette_muted', '#64748b']
-        ];
+        var field = settingField('classic_palette_custom');
+        if (!field.length || field.data('rasamalaPaletteReady')) return;
+        var tutorial = $('<div class="rasamala-palette-help"></div>')
+            .append($('<strong></strong>').text('Format: '))
+            .append(document.createTextNode('Light palette | Dark palette'))
+            .append($('<br>'))
+            .append(document.createTextNode('Isi setiap palette dengan urutan: Primary; Secondary; Accent; Background; Surface; Text; Muted. Jika bagian setelah | dikosongkan, dark mode memakai fallback otomatis.'))
+            .append($('<br>'))
+            .append(document.createTextNode('Primary = warna utama/navbar/button. Secondary = warna pendamping. Accent = highlight/icon/aksen. Background = latar halaman. Surface = card/panel. Text = teks utama. Muted = teks sekunder/border.'))
+            .append($('<br>'))
+            .append($('<code></code>').text('Contoh: #0B4F54; #5C8374; #F2994A; #F4F6F8; #FFFFFF; #1C1E21; #B0B7BD | #1A2E40; #B38F4D; #D9534F; #101318; #161A22; #F4F6F8; #B6BEC8'));
 
-        paletteFields.forEach(function(item) {
-            var field = settingField(item[0]);
-            if (!field.length || field.data('rasamalaPaletteReady')) return;
-            field
-                .attr('placeholder', item[1])
-                .attr('maxlength', 7)
-                .attr('pattern', '^#?[0-9a-fA-F]{6}$')
-                .addClass('rasamala-palette-input')
-                .data('rasamalaPaletteReady', true);
+        field
+            .attr('placeholder', '#0B4F54; #5C8374; #F2994A; #F4F6F8; #FFFFFF; #1C1E21; #B0B7BD | #1A2E40; #B38F4D; #D9534F; #101318; #161A22; #F4F6F8; #B6BEC8')
+            .addClass('rasamala-palette-input rasamala-palette-combined')
+            .data('rasamalaPaletteReady', true);
+
+        field.after(tutorial);
+    }
+
+    var themeViewerControls = [
+        ['classic_theme_color', 'Palette Warna', 'fas fa-paint-brush'],
+        ['classic_font_family', 'Font Tema', 'fas fa-font'],
+        ['classic_hero_background_animation', 'Animasi Background', 'fas fa-magic'],
+        ['classic_background_animation_speed', 'Kecepatan Animasi', 'fas fa-tachometer-alt'],
+        ['classic_cursor_particles', 'Partikel Cursor', 'fas fa-star'],
+        ['classic_cursor_custom_icon', 'Ikon Cursor', 'fas fa-mouse-pointer']
+    ];
+
+    function buildThemeViewerSelect(name) {
+        var original = settingField(name);
+        var select = $('<select class="rasamala-theme-viewer-select"></select>').attr('data-theme-viewer-target', name);
+        original.find('option').each(function() {
+            select.append($('<option></option>').attr('value', $(this).attr('value')).text($(this).text()));
+        });
+        select.val(original.val());
+        return select;
+    }
+
+    function ensureThemeViewer() {
+        return; // Disable theme viewer injection on the admin side
+
+        var controls = $('<div class="rasamala-theme-viewer-controls"></div>');
+        themeViewerControls.forEach(function(config) {
+            var name = config[0];
+            var label = config[1];
+            var icon = config[2];
+            if (!settingField(name).length) return;
+            controls.append(
+                $('<div class="rasamala-theme-viewer-control"></div>')
+                    .append($('<label></label>').append($('<i></i>').attr('class', icon).attr('aria-hidden', 'true')).append(' ' + label))
+                    .append(buildThemeViewerSelect(name))
+            );
+        });
+        controls.append($('<div class="rasamala-theme-viewer-status"></div>'));
+
+        var viewer = $('<div id="rasamala-theme-viewer" class="rasamala-theme-viewer"></div>')
+            .append(
+                $('<div class="rasamala-theme-viewer-head"></div>')
+                    .append(
+                        $('<span></span>')
+                            .append($('<span class="rasamala-theme-viewer-title"></span>').text('Theme Viewer'))
+                            .append($('<span class="rasamala-theme-viewer-subtitle"></span>').text('Ringkasan visual dan shortcut pengaturan utama: warna, font, animasi background, cursor, serta buka/tutup section tinfo.'))
+                    )
+                    .append(
+                        $('<div class="rasamala-theme-viewer-actions"></div>')
+                            .append($('<button type="button" class="rasamala-theme-viewer-action" id="rasamala-tinfo-show-all-sections"><i class="fas fa-eye" aria-hidden="true"></i> Tampilkan semua section</button>'))
+                            .append($('<button type="button" class="rasamala-theme-viewer-action" id="rasamala-tinfo-hide-all-sections"><i class="fas fa-eye-slash" aria-hidden="true"></i> Tutup semua section</button>'))
+                    )
+            )
+            .append(
+                $('<div class="rasamala-theme-viewer-body"></div>')
+                    .append(
+                        $('<div></div>')
+                            .append(
+                                $('<div class="rasamala-theme-preview"></div>')
+                                    .append($('<div class="rasamala-theme-preview-navbar"><i class="fas fa-book-open" aria-hidden="true"></i><span>Rasamala OPAC</span></div>'))
+                                    .append(
+                                        $('<div class="rasamala-theme-preview-main"></div>')
+                                            .append($('<span class="rasamala-theme-preview-eyebrow"></span>').text('Preview'))
+                                            .append($('<div class="rasamala-theme-preview-title"></div>').text('Search Library Collection'))
+                                            .append($('<div class="rasamala-theme-preview-search"></div>').append($('<span></span>').text('Enter keyword to search collection...')).append($('<i class="fas fa-search" aria-hidden="true"></i>')))
+                                            .append(
+                                                $('<div class="rasamala-theme-preview-card"></div>')
+                                                    .append($('<span class="rasamala-theme-preview-icon"><i class="fas fa-book" aria-hidden="true"></i></span>'))
+                                                    .append($('<span class="rasamala-theme-preview-text"></span>').append($('<strong></strong>').text('Popular Collection')).append($('<span></span>').text('Surface, accent, dan typography aktif.')))
+                                            )
+                                    )
+                            )
+                            .append($('<div class="rasamala-theme-viewer-swatches"></div>'))
+                    )
+                    .append(controls)
+            );
+
+        if (row.is('tr')) {
+            var columns = Math.max(row.children('td, th').length, 1);
+            row.after($('<tr class="rasamala-theme-viewer-row"></tr>').append($('<td></td>').attr('colspan', columns).append(viewer)));
+        } else {
+            row.after($('<div class="rasamala-theme-viewer-block"></div>').append(viewer));
+        }
+    }
+
+    function syncThemeViewer() {
+        ensureThemeViewer();
+        var viewer = $('#rasamala-theme-viewer');
+        if (!viewer.length) return;
+
+        var palette = currentThemePalette();
+        var primary = palette.primary || '#6f5b43';
+        var accent = palette.accent || primary;
+        var surface = palette.surface || '#ffffff';
+        var background = palette.background || '#f4f1ec';
+        var text = palette.text || '#2f2a24';
+        var muted = palette.muted || '#7a7167';
+        var rgb = hexToRgb(accent);
+        viewer.css({
+            '--viewer-primary': primary,
+            '--viewer-on-primary': readableTextColor(primary),
+            '--viewer-accent': accent,
+            '--viewer-accent-soft': 'rgba(' + rgb + ', 0.14)',
+            '--viewer-background': background,
+            '--viewer-surface': surface,
+            '--viewer-text': text,
+            '--viewer-muted': muted,
+            '--viewer-border': 'rgba(' + rgb + ', 0.22)'
+        });
+
+        var fontStacks = {
+            system: 'Outfit, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+            inter: 'Inter, system-ui, sans-serif',
+            roboto: 'Roboto, system-ui, sans-serif',
+            poppins: 'Poppins, system-ui, sans-serif',
+            playfair: '"Playfair Display", Georgia, serif'
+        };
+        viewer.find('.rasamala-theme-preview').css('font-family', fontStacks[settingValue('classic_font_family')] || fontStacks.system);
+
+        viewer.find('.rasamala-theme-viewer-select').each(function() {
+            var target = $(this).attr('data-theme-viewer-target');
+            $(this).val(settingValue(target));
+        });
+        viewer.find('[data-theme-viewer-target="classic_background_animation_speed"]').prop('disabled', settingValue('classic_hero_background_animation') === 'none');
+
+        var swatches = viewer.find('.rasamala-theme-viewer-swatches').empty();
+        [
+            ['Primary', primary],
+            ['Secondary', palette.secondary || primary],
+            ['Accent', accent],
+            ['Background', background],
+            ['Surface', surface],
+            ['Text', text],
+            ['Muted', muted]
+        ].forEach(function(item) {
+            swatches.append($('<span class="rasamala-theme-swatch"></span>').attr('title', item[0] + ': ' + item[1]).css('background-color', item[1]));
+        });
+
+        var status = viewer.find('.rasamala-theme-viewer-status').empty();
+        [
+            ['Palette', settingLabel('classic_theme_color', palette.label)],
+            ['Font', settingLabel('classic_font_family')],
+            ['Animasi', settingLabel('classic_hero_background_animation')],
+            ['Speed', settingValue('classic_hero_background_animation') === 'none' ? 'Off' : settingLabel('classic_background_animation_speed')],
+            ['Partikel', settingLabel('classic_cursor_particles')],
+            ['Cursor', settingLabel('classic_cursor_custom_icon')]
+        ].forEach(function(item) {
+            status.append($('<span class="rasamala-theme-viewer-chip"></span>').append($('<strong></strong>').text(item[0] + ':')).append(document.createTextNode(' ' + item[1])));
         });
     }
 
@@ -692,23 +1341,17 @@ $(document).ready(function() {
             var anchor = $(this).attr('data-rasamala-section-anchor') || '';
             $(this).toggle(isCustomPreset || quickSectionAnchors.indexOf(anchor) !== -1);
         });
+        syncBuilderSettingVisibility();
     }
 
     function syncConditionalSettings() {
+        clearSectionCollapseMarks();
         syncThemePresetSummary();
         syncThemePresetVisibility();
         var isCustomPreset = settingValue('classic_theme_preset') === 'custom';
         var customPaletteOn = settingValue('classic_theme_color') === 'custom';
 
-        setRowsVisible([
-            'classic_palette_primary',
-            'classic_palette_secondary',
-            'classic_palette_accent',
-            'classic_palette_background',
-            'classic_palette_surface',
-            'classic_palette_text',
-            'classic_palette_muted'
-        ], customPaletteOn);
+        setRowsVisible(['classic_palette_custom'], customPaletteOn);
 
         var animationOn = settingValue('classic_hero_background_animation') !== 'none';
         setRowsVisible(['classic_background_animation_speed'], animationOn);
@@ -754,10 +1397,6 @@ $(document).ready(function() {
         setRowsVisible(['classic_ticker_content_filter', 'classic_ticker_content_detail'], tickerOn && tickerSource === 'content');
         setRowsVisible(['classic_ticker_biblio_filter'], tickerOn && tickerSource === 'biblio');
 
-        if (!isCustomPreset) {
-            return;
-        }
-
         var mapField = settingField('classic_map');
         if (mapField.val() === '1') {
             mapField.val('all');
@@ -770,6 +1409,7 @@ $(document).ready(function() {
 
         var topicOn = settingValue('classic_topic_show') === '1';
         setRowsVisible(['classic_topic_heading_display', 'classic_topic_items'], topicOn);
+        syncBuilderSettingVisibility();
 
         var popularOn = settingValue('classic_popular_collection') === '1';
         setRowsVisible(['classic_popular_collection_heading_display', 'classic_popular_collection_item'], popularOn);
@@ -808,15 +1448,24 @@ $(document).ready(function() {
         var footerOn = settingValue('classic_footer_show') === '1';
         setRowsVisible(['classic_footer_about_us', 'classic_footer_search_show', 'classic_footer_copyright'], footerOn);
 
+        syncBuilderSettingVisibility();
+        syncThemeViewer();
+        applyTinfoSectionCollapse();
     }
 
     insertTinfoSections();
     enhanceCustomPaletteFields();
+    ensureThemeViewer();
     syncConditionalSettings();
     $(document).on('change input', [
         'select[name="classic_theme_preset"]',
         'select[name="classic_theme_color"]',
+        'textarea[name="classic_palette_custom"]',
+        'select[name="classic_font_family"]',
         'select[name="classic_hero_background_animation"]',
+        'select[name="classic_background_animation_speed"]',
+        'select[name="classic_cursor_particles"]',
+        'select[name="classic_cursor_custom_icon"]',
         'select[name="classic_announcement_show"]',
         'select[name="classic_home_display_show"]',
         'select[name="classic_home_display_source"]',
@@ -835,6 +1484,26 @@ $(document).ready(function() {
         'select[name="classic_floating_info"]',
         'select[name="visitor_layout_style"]'
     ].join(','), syncConditionalSettings);
+
+    $(document).on('change', '.rasamala-theme-viewer-select', function() {
+        var target = $(this).attr('data-theme-viewer-target');
+        settingField(target).val($(this).val()).trigger('change');
+    });
+
+    $(document).on('click', '.rasamala-tinfo-section-toggle', function() {
+        var anchor = $(this).attr('data-rasamala-section-toggle') || '';
+        sectionCollapsedState[anchor] = !sectionCollapsedState[anchor];
+        clearSectionCollapseMarks();
+        syncConditionalSettings();
+    });
+
+    $(document).on('click', '#rasamala-tinfo-show-all-sections', function() {
+        setAllTinfoSectionsCollapsed(false);
+    });
+
+    $(document).on('click', '#rasamala-tinfo-hide-all-sections', function() {
+        setAllTinfoSectionsCollapsed(true);
+    });
 
     function parseLanguageCodes(value) {
         return String(value || '').split(/[,;\\s]+/).map(function(item) {
@@ -864,6 +1533,7 @@ $(document).ready(function() {
             .append($('<button type="button" class="btn btn-light btn-sm" id="language-clear-btn">Sembunyikan semua</button>'));
         languageContainer.append(languageActions).append(languageGrid);
         languageTextarea.after(languageContainer);
+        forceBuilderSettingVisible(languageTextarea);
 
         languageOptions.forEach(function(language) {
             var code = String(language.code || '').toLowerCase();
@@ -1063,6 +1733,7 @@ $(document).ready(function() {
         var addBtn = $('<button type="button" class="btn btn-success btn-sm mt-2" id="add-menu-row-btn" title="Tambah Menu" style="padding: 4px 12px; cursor: pointer; font-weight: bold; font-size: 14px;">+</button>');
         container.append(addBtn);
         textarea.after(container);
+        forceBuilderSettingVisible(textarea);
 
         var memberRow = $('select[name="classic_member_area"]').closest('.form-group, tr, .row');
         memberRow.hide();
@@ -1178,6 +1849,7 @@ $(document).ready(function() {
         var addTopicBtn = $('<button type="button" class="btn btn-success btn-sm mt-2" id="add-topic-row-btn" title="Tambah Topic" style="padding: 4px 12px; cursor: pointer; font-weight: bold; font-size: 14px;">+</button>');
         topicContainer.append(addTopicBtn);
         topicTextarea.after(topicContainer);
+        forceBuilderSettingVisible(topicTextarea);
 
         function updateTopicTextarea() {
             var itemsList = [];
@@ -1283,6 +1955,8 @@ $(document).ready(function() {
             $('.topic-builder-item').removeClass('is-icon-picker-open');
         });
     }
+
+    syncBuilderSettingVisibility();
 });
 </script>
 HTML;

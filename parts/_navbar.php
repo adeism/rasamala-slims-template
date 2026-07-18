@@ -4,7 +4,7 @@
 # @Email:  ido.alit@gmail.com
 # @Filename: _navbar.php
 # @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-15T15:16:37+07:00
+# @Last modified time: 2026-07-16T11:52:09+07:00
 
 $is_homepage = !isset($_GET['p']) && !isset($_GET['search']);
 $is_hero_only = $is_homepage && themeHomepageOnlyHero($sysconf);
@@ -12,10 +12,16 @@ $is_hero_only = $is_homepage && themeHomepageOnlyHero($sysconf);
 $menu_raw = $sysconf['template']['classic_navbar_menu'] ?? themeNavbarMenuDefault();
 $main_menus = themeParseNavbarMenus($menu_raw);
 
+$lib_name_position = strtolower(trim((string)themeEffectiveTemplateValue('classic_library_name_position', 'navbar', $sysconf)));
+if (!in_array($lib_name_position, ['navbar', 'hero'], true)) {
+    $lib_name_position = 'navbar';
+}
+$lib_name_in_hero = ($lib_name_position === 'hero');
+
 ?>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-transparent rasamala-navbar-main">
-    <a class="navbar-brand d-inline-flex align-items-center flex-nowrap" href="index.php">
+<nav class="navbar navbar-expand-lg navbar-light bg-transparent rasamala-navbar-main<?= $lib_name_in_hero ? ' rasamala-navbar-centered' : '' ?>">
+    <a class="navbar-brand d-inline-flex align-items-center flex-nowrap<?= $lib_name_in_hero ? ' rasamala-navbar-brand-home-link' : '' ?>" href="index.php">
         <?php
         if(isset($sysconf['logo_image']) && $sysconf['logo_image'] != '' && $imagesDisk->isExists($path = 'default/'.$sysconf['logo_image'])){
             echo '<img class="navbar-brand-img" src="'.themeEscape(SWB . 'lib/minigalnano/createthumb.php?filename=images/' . $path.'&width=350').'" alt="" aria-hidden="true">';
@@ -36,7 +42,7 @@ $main_menus = themeParseNavbarMenus($menu_raw);
         </div>
     </a>
     <div class="navbar-mobile-controls d-lg-none">
-        <?php if ((int)themeEffectiveTemplateValue('classic_color_toggle', 1, $sysconf) === 1): ?>
+        <?php if (themeColorModeToggleVisible($sysconf)): ?>
         <button id="color-mode-toggle-nav"
                 class="btn-color-mode-toggle-nav"
                 title="<?= themeEscape(__('Dark mode')) ?>"
@@ -161,7 +167,7 @@ HTML;
 	                </div>
 	            </li>
 	            <?php } ?>
-            <?php if ((int)themeEffectiveTemplateValue('classic_color_toggle', 1, $sysconf) === 1): ?>
+            <?php if (themeColorModeToggleVisible($sysconf)): ?>
             <li class="nav-item d-none d-lg-block nav-color-toggle-wrapper-desktop">
                 <button id="color-mode-toggle-desktop"
                         class="nav-link btn-color-mode-toggle-desktop bg-transparent border-0 px-2"

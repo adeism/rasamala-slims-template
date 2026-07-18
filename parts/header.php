@@ -6,7 +6,7 @@
 # @Email:  ido.alit@gmail.com
 # @Date:   2018-01-23T11:25:57+07:00
 # @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-15T15:16:37+07:00
+# @Last modified time: 2026-07-16T13:33:16+07:00
 -->
 <?php
 // clean request uri from xss (S-05: use parse_url for safer extraction)
@@ -83,10 +83,34 @@ $document_lang = str_replace('_', '-', $document_lang ?: 'en-US');
     <!-- // my custom style -->
     <link rel="stylesheet" href="<?php echo assetsVersioned('css/style.css'); ?>">
     <script>
+      window.rasamalaColorModeDefault = <?php echo json_encode(themeColorModeDefault($sysconf), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
+      window.rasamalaColorModeToggleVisible = <?php echo themeColorModeToggleVisible($sysconf) ? 'true' : 'false'; ?>;
       window.rasamalaDarkCssUrl = '<?php echo assetsVersioned("css/style-dark.css"); ?>';
+      window.rasamalaResolveColorMode = function() {
+        var fallback = window.rasamalaColorModeDefault || 'auto';
+
+        if (window.rasamalaColorModeToggleVisible !== false) {
+          try {
+            var stored = window.localStorage.getItem('rasamala-color-mode');
+            if (stored === 'dark' || stored === 'light') {
+              return stored;
+            }
+          } catch (e) {}
+        }
+
+        if (fallback === 'dark' || fallback === 'light') {
+          return fallback;
+        }
+
+        try {
+          return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        } catch (e) {}
+
+        return 'light';
+      };
       (function() {
         try {
-          if (window.localStorage.getItem('rasamala-color-mode') === 'dark') {
+          if (window.rasamalaResolveColorMode() === 'dark') {
             var darkCss = document.createElement('link');
             darkCss.id = 'rasamala-dark-css';
             darkCss.rel = 'stylesheet';
@@ -105,6 +129,7 @@ $document_lang = str_replace('_', '-', $document_lang ?: 'en-US');
     <?php
     $effective_palette_key = strtolower((string) themeEffectiveAccentColorKey($sysconf));
     $selected_color = themeSelectedAccentColor($effective_palette_key, $sysconf);
+    $selected_dark_color = themeSelectedDarkAccentColor($effective_palette_key, $sysconf);
     $ticker_speed_val = '18s';
     $ticker_speed = themeEffectiveTemplateValue('classic_ticker_speed', 'normal', $sysconf);
     if ($ticker_speed === 'fast') {
@@ -140,25 +165,126 @@ $document_lang = str_replace('_', '-', $document_lang ?: 'en-US');
         --theme-text: <?php echo themeEscape($selected_color['text']); ?>;
         --theme-muted: <?php echo themeEscape($selected_color['muted']); ?>;
         --theme-primary-rgb: <?php echo themeEscape($selected_color['rgb']); ?>;
+        --theme-accent-rgb-value: <?php echo themeEscape($selected_color['accent_rgb']); ?>;
+        --theme-on-primary: <?php echo themeEscape($selected_color['on_primary']); ?>;
+        --theme-on-primary-hover: <?php echo themeEscape($selected_color['on_primary_hover']); ?>;
+        --theme-on-secondary: <?php echo themeEscape($selected_color['on_secondary']); ?>;
+        --theme-on-accent: <?php echo themeEscape($selected_color['on_accent']); ?>;
+        --theme-on-background: <?php echo themeEscape($selected_color['on_background']); ?>;
+        --theme-on-surface: <?php echo themeEscape($selected_color['on_surface']); ?>;
+        --theme-dark-primary: <?php echo themeEscape($selected_dark_color['primary']); ?>;
+        --theme-dark-primary-hover: <?php echo themeEscape($selected_dark_color['hover']); ?>;
+        --theme-dark-secondary: <?php echo themeEscape($selected_dark_color['secondary']); ?>;
+        --theme-dark-accent: <?php echo themeEscape($selected_dark_color['accent']); ?>;
+        --theme-dark-background: <?php echo themeEscape($selected_dark_color['background']); ?>;
+        --theme-dark-surface: <?php echo themeEscape($selected_dark_color['surface']); ?>;
+        --theme-dark-text: <?php echo themeEscape($selected_dark_color['text']); ?>;
+        --theme-dark-muted: <?php echo themeEscape($selected_dark_color['muted']); ?>;
+        --theme-dark-primary-rgb: <?php echo themeEscape($selected_dark_color['rgb']); ?>;
+        --theme-dark-accent-rgb-value: <?php echo themeEscape($selected_dark_color['accent_rgb']); ?>;
+        --theme-dark-on-primary: <?php echo themeEscape($selected_dark_color['on_primary']); ?>;
+        --theme-dark-on-primary-hover: <?php echo themeEscape($selected_dark_color['on_primary_hover']); ?>;
+        --theme-dark-on-secondary: <?php echo themeEscape($selected_dark_color['on_secondary']); ?>;
+        --theme-dark-on-accent: <?php echo themeEscape($selected_dark_color['on_accent']); ?>;
+        --theme-dark-on-background: <?php echo themeEscape($selected_dark_color['on_background']); ?>;
+        --theme-dark-on-surface: <?php echo themeEscape($selected_dark_color['on_surface']); ?>;
+        --color-primary: var(--theme-primary);
+        --color-secondary: var(--theme-secondary);
+        --color-accent: var(--theme-accent);
+        --color-background: var(--theme-background);
+        --color-surface: var(--theme-surface);
+        --color-text: var(--theme-text);
+        --color-muted: var(--theme-muted);
+        --color-on-primary: var(--theme-on-primary);
+        --color-on-secondary: var(--theme-on-secondary);
+        --color-on-accent: var(--theme-on-accent);
         --rasamala-light-bg: var(--theme-background);
         --rasamala-text-primary: var(--theme-text);
-        --rasamala-text-secondary: var(--theme-primary);
+        --rasamala-text-secondary: var(--theme-secondary);
         --rasamala-text-muted: var(--theme-muted);
         --rasamala-surface: var(--theme-surface);
-        --rasamala-accent: <?php echo themeEscape($selected_color['primary']); ?>;
-        --rasamala-accent-hover: <?php echo themeEscape($selected_color['hover']); ?>;
-        --theme-accent-color: <?php echo themeEscape($selected_color['primary']); ?>;
-        --theme-accent-rgb: <?php echo themeEscape($selected_color['rgb']); ?>;
-        --theme-accent-glow: rgba(<?php echo themeEscape($selected_color['rgb']); ?>, 0.8);
-        --theme-accent-glow-half: rgba(<?php echo themeEscape($selected_color['rgb']); ?>, 0.4);
+        --rasamala-accent: <?php echo themeEscape($selected_color['accent']); ?>;
+        --rasamala-accent-hover: <?php echo themeEscape($selected_color['accent_hover']); ?>;
+        --rasamala-readable-accent: color-mix(in srgb, var(--theme-accent) 72%, var(--theme-text) 28%);
+        --theme-accent-color: <?php echo themeEscape($selected_color['accent']); ?>;
+        --theme-accent-rgb: <?php echo themeEscape($selected_color['accent_rgb']); ?>;
+        --theme-accent-glow: rgba(<?php echo themeEscape($selected_color['accent_rgb']); ?>, 0.8);
+        --theme-accent-glow-half: rgba(<?php echo themeEscape($selected_color['accent_rgb']); ?>, 0.4);
         --rasamala-chrome-bg: color-mix(in srgb, var(--theme-primary) 92%, #000 8%);
         --rasamala-chrome-border: color-mix(in srgb, var(--theme-primary) 38%, transparent);
+        --rasamala-chrome-text: var(--theme-on-primary);
+        --rasamala-chrome-text-muted: color-mix(in srgb, var(--theme-on-primary) 76%, transparent);
         --bs-body-bg: var(--theme-background);
         --bs-body-color: var(--theme-text);
         --bs-secondary-color: var(--theme-muted);
         --rasamala-font-stack: <?php echo $font_stack; ?>;
-        --ticker-speed: <?php echo themeEscape($ticker_speed_val); ?>;
-      }
+	        --ticker-speed: <?php echo themeEscape($ticker_speed_val); ?>;
+	      }
+	      html.rasamala-dark {
+	        background-color: var(--theme-dark-background) !important;
+	      }
+	      body.rasamala-dark {
+	        --theme-primary: var(--theme-dark-primary);
+	        --theme-primary-hover: var(--theme-dark-primary-hover);
+	        --theme-secondary: var(--theme-dark-secondary);
+	        --theme-accent: var(--theme-dark-accent);
+	        --theme-background: var(--theme-dark-background);
+	        --theme-surface: var(--theme-dark-surface);
+	        --theme-text: var(--theme-dark-text);
+	        --theme-muted: var(--theme-dark-muted);
+	        --theme-primary-rgb: var(--theme-dark-primary-rgb);
+	        --theme-on-primary: var(--theme-dark-on-primary);
+	        --theme-on-primary-hover: var(--theme-dark-on-primary-hover);
+	        --theme-on-secondary: var(--theme-dark-on-secondary);
+	        --theme-on-accent: var(--theme-dark-on-accent);
+	        --theme-on-background: var(--theme-dark-on-background);
+	        --theme-on-surface: var(--theme-dark-on-surface);
+	        --color-primary: var(--theme-primary);
+	        --color-secondary: var(--theme-secondary);
+	        --color-accent: var(--theme-accent);
+	        --color-background: var(--theme-background);
+	        --color-surface: var(--theme-surface);
+	        --color-text: var(--theme-text);
+	        --color-muted: var(--theme-muted);
+	        --color-on-primary: var(--theme-on-primary);
+	        --color-on-secondary: var(--theme-on-secondary);
+	        --color-on-accent: var(--theme-on-accent);
+	        --rasamala-light-bg: var(--theme-dark-background);
+	        --rasamala-text-primary: var(--theme-dark-text);
+	        --rasamala-text-secondary: var(--theme-dark-muted);
+	        --rasamala-text-muted: var(--theme-dark-muted);
+	        --rasamala-surface: var(--theme-dark-surface);
+	        --rasamala-accent: var(--theme-dark-accent);
+	        --rasamala-accent-hover: color-mix(in srgb, var(--theme-dark-accent) 84%, #000 16%);
+	        --rasamala-readable-accent: color-mix(in srgb, var(--theme-dark-accent) 62%, var(--theme-dark-text) 38%);
+	        --theme-accent-color: var(--theme-dark-accent);
+	        --theme-accent-rgb: var(--theme-dark-accent-rgb-value);
+	        --theme-accent-glow: rgba(var(--theme-dark-accent-rgb-value), 0.8);
+	        --theme-accent-glow-half: rgba(var(--theme-dark-accent-rgb-value), 0.4);
+	        --rasamala-chrome-bg: color-mix(in srgb, var(--theme-dark-primary) 88%, #000 12%);
+	        --rasamala-chrome-border: color-mix(in srgb, var(--theme-dark-primary) 38%, transparent);
+	        --rasamala-chrome-text: var(--theme-on-primary);
+	        --rasamala-chrome-text-muted: color-mix(in srgb, var(--theme-on-primary) 76%, transparent);
+	        --rasamala-dark-surface: var(--theme-dark-surface);
+	        --rasamala-dark-surface-strong: color-mix(in srgb, var(--theme-dark-surface) 88%, #000 12%);
+	        --rasamala-dark-surface-soft: color-mix(in srgb, var(--theme-dark-surface) 72%, transparent);
+	        --rasamala-dark-text: var(--theme-dark-text);
+	        --rasamala-dark-muted: var(--theme-dark-muted);
+	        --rasamala-dark-link: color-mix(in srgb, var(--theme-dark-accent) 58%, #ffffff 42%);
+	        --rasamala-dark-link-strong: color-mix(in srgb, var(--theme-dark-accent) 38%, #ffffff 62%);
+	        --rasamala-dark-action-bg: color-mix(in srgb, var(--theme-dark-primary) 82%, #05070a 18%);
+	        --rasamala-dark-action-hover-bg: color-mix(in srgb, var(--theme-dark-primary) 82%, #ffffff 18%);
+	        --rasamala-dark-action-border: color-mix(in srgb, var(--theme-dark-accent) 46%, rgba(255, 255, 255, 0.22) 54%);
+	        --rasamala-dark-accent-text: var(--rasamala-dark-link);
+	        --rasamala-dark-accent-text-strong: var(--rasamala-dark-link-strong);
+	        --rasamala-dark-accent-bg: color-mix(in srgb, var(--theme-dark-primary) 30%, transparent 70%);
+	        --rasamala-dark-accent-border: var(--rasamala-dark-action-border);
+	        --bs-body-bg: var(--theme-dark-background);
+	        --bs-body-color: var(--theme-dark-text);
+	        --bs-secondary-color: var(--theme-dark-muted);
+	        background-color: var(--theme-dark-background) !important;
+	        color: var(--theme-dark-text) !important;
+	      }
       body,
       button,
       input,
@@ -280,6 +406,7 @@ $document_lang = str_replace('_', '-', $document_lang ?: 'en-US');
 <?php
 $background_animation = themeBackgroundAnimation();
 $background_animation_enabled = $background_animation !== 'none';
+$palette_switcher_show = (int) themeEffectiveTemplateValue('classic_palette_switcher_show', 1, $sysconf) === 1;
 $is_homepage = !isset($_GET['p']) && !isset($_GET['search']);
 $is_homepage_only_hero = $is_homepage && themeHomepageOnlyHero($sysconf);
 $search_panel_style = strtolower(trim((string) themeEffectiveTemplateValue('classic_search_panel_style', 'transparent', $sysconf)));
@@ -289,6 +416,19 @@ if (!in_array($search_panel_style, ['transparent', 'solid'], true)) {
 $body_classes = 'bg-light rasamala-theme';
 $body_classes .= ' rasamala-preset-' . preg_replace('/[^a-z0-9_-]+/i', '-', themePresetKey($sysconf));
 $body_classes .= ' rasamala-palette-' . preg_replace('/[^a-z0-9_-]+/i', '-', $effective_palette_key ?? 'warmgray');
+if ((int) themeEffectiveTemplateValue('classic_palette_switcher_show', 1, $sysconf) === 1) {
+    $body_classes .= ' rasamala-has-palette-switcher';
+}
+$floating_info_body_mode = themeEffectiveTemplateValue('classic_floating_info', 'libinfo', $sysconf);
+if ($floating_info_body_mode == '1') {
+    $floating_info_body_mode = 'libinfo';
+} elseif ($floating_info_body_mode == '0') {
+    $floating_info_body_mode = 'hide';
+}
+if (!in_array($floating_info_body_mode, ['libinfo', 'whatsapp', 'hide'], true)) {
+    $floating_info_body_mode = 'libinfo';
+}
+$body_classes .= ' rasamala-floating-info-' . $floating_info_body_mode;
 if (function_exists('themePaletteIsDark') && themePaletteIsDark($selected_color ?? [])) {
     $body_classes .= ' rasamala-palette-dark';
 }
@@ -323,14 +463,15 @@ $body_classes .= $mobile_bottom_nav_enabled ? ' mobile-bottom-nav-enabled' : ' m
 <script>
 (function () {
     try {
-        if (window.localStorage.getItem('rasamala-color-mode') === 'dark') {
+        var mode = window.rasamalaResolveColorMode ? window.rasamalaResolveColorMode() : window.localStorage.getItem('rasamala-color-mode');
+        if (mode === 'dark') {
             document.documentElement.classList.add('rasamala-dark');
             document.body.classList.add('rasamala-dark');
         }
     } catch (error) {}
 }());
 </script>
-<?php if ($background_animation_enabled) :
+<?php if ($background_animation_enabled || $palette_switcher_show) :
 $anim_speed = themeEffectiveTemplateValue('classic_background_animation_speed', 'normal', $sysconf);
 $speed_mult = 1.0;
 if ($anim_speed === 'slow') {
@@ -343,5 +484,6 @@ if ($anim_speed === 'slow') {
      class="background-animation-layer hero-animation-layer hero-animation-<?php echo themeEscape($background_animation); ?>"
      data-animation="<?php echo themeEscape($background_animation); ?>"
      data-speed-multiplier="<?php echo themeEscape($speed_mult); ?>"
-     aria-hidden="true"></div>
+     aria-hidden="true"
+     <?php echo !$background_animation_enabled ? 'hidden' : ''; ?>></div>
 <?php endif; ?>

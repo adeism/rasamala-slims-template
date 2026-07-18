@@ -4,7 +4,7 @@
  * @Date                : 2020-01-02 15:12
  * @File name           : tinfo.inc.php
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-15T14:44:49+07:00
+ * @Last modified time  : 2026-07-16T15:21:55+07:00
  */
 
 $rasamala_default_topic_items = "Literature | index.php?callnumber=8&search=search | fas fa-book ; Social Sciences | index.php?callnumber=3&search=search | fas fa-users ; Applied Sciences | index.php?callnumber=6&search=search | fas fa-flask ; Art & Recreation | index.php?callnumber=7&search=search | fas fa-paint-brush ; Language | index.php?callnumber=4&search=search | fas fa-language ; see more.. | #exampleModal | fas fa-th-large";
@@ -41,6 +41,7 @@ TEXT;
 $sysconf['template']['base'] = 'php';
 $sysconf['template']['responsive'] = true;
 
+$sysconf['template']['classic_library_name_position'] = 'navbar';
 $sysconf['template']['classic_library_subname'] = 0;
 $sysconf['template']['classic_popular_collection'] = 1;
 $sysconf['template']['classic_popular_collection_heading_display'] = 'all';
@@ -145,6 +146,7 @@ $sysconf['template']['classic_whatsapp_desc'] = 'Pilih salah satu kategori perta
 $sysconf['template']['classic_whatsapp_categories'] = "Tugas Akhir | Halo, saya ingin bertanya tentang layanan tugas akhir.\nDenda | Halo, saya ingin bertanya tentang informasi denda.\nLogin | Halo, saya mengalami kendala login OPAC/akun.";
 $sysconf['template']['classic_member_area'] = 1;
 $sysconf['template']['classic_theme_color'] = 'warmgray';
+$sysconf['template']['classic_palette_custom'] = '#0B4F54; #5C8374; #F2994A; #F4F6F8; #FFFFFF; #1C1E21; #B0B7BD | #1A2E40; #B38F4D; #D9534F; #101318; #161A22; #F4F6F8; #B6BEC8';
 $sysconf['template']['classic_palette_primary'] = '#111827';
 $sysconf['template']['classic_palette_secondary'] = '#475569';
 $sysconf['template']['classic_palette_accent'] = '#2563eb';
@@ -152,7 +154,8 @@ $sysconf['template']['classic_palette_background'] = '#f8fafc';
 $sysconf['template']['classic_palette_surface'] = '#ffffff';
 $sysconf['template']['classic_palette_text'] = '#111827';
 $sysconf['template']['classic_palette_muted'] = '#64748b';
-$sysconf['template']['classic_color_toggle'] = 1;
+$sysconf['template']['classic_color_toggle'] = 'auto_show';
+$sysconf['template']['classic_palette_switcher_show'] = 1;
 $sysconf['template']['classic_font_family'] = 'system';
 $sysconf['template']['classic_search_result_layout'] = 'simple';
 $sysconf['template']['classic_search_panel_style'] = 'transparent';
@@ -219,65 +222,29 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
             ['custom', __('Custom Palette')]
         ]
     ],
-    'palette-primary' => [
-        'dbfield' => 'classic_palette_primary',
-        'label' => __('Palette Primary Color'),
-        'type' => 'text',
-        'default' => '#111827',
-        'width' => '20',
-        'max' => 7
-    ],
-    'palette-secondary' => [
-        'dbfield' => 'classic_palette_secondary',
-        'label' => __('Palette Secondary Color'),
-        'type' => 'text',
-        'default' => '#475569',
-        'width' => '20',
-        'max' => 7
-    ],
-    'palette-accent' => [
-        'dbfield' => 'classic_palette_accent',
-        'label' => __('Palette Accent Highlight'),
-        'type' => 'text',
-        'default' => '#2563eb',
-        'width' => '20',
-        'max' => 7
-    ],
-    'palette-background' => [
-        'dbfield' => 'classic_palette_background',
-        'label' => __('Palette Page Background'),
-        'type' => 'text',
-        'default' => '#f8fafc',
-        'width' => '20',
-        'max' => 7
-    ],
-    'palette-surface' => [
-        'dbfield' => 'classic_palette_surface',
-        'label' => __('Palette Surface/Card Color'),
-        'type' => 'text',
-        'default' => '#ffffff',
-        'width' => '20',
-        'max' => 7
-    ],
-    'palette-text' => [
-        'dbfield' => 'classic_palette_text',
-        'label' => __('Palette Main Text Color'),
-        'type' => 'text',
-        'default' => '#111827',
-        'width' => '20',
-        'max' => 7
-    ],
-    'palette-muted' => [
-        'dbfield' => 'classic_palette_muted',
-        'label' => __('Palette Muted Text/Border Color'),
-        'type' => 'text',
-        'default' => '#64748b',
-        'width' => '20',
-        'max' => 7
+    'palette-custom' => [
+        'dbfield' => 'classic_palette_custom',
+        'label' => __('Custom Palette Colors'),
+        'type' => 'longtext',
+        'default' => '#0B4F54; #5C8374; #F2994A; #F4F6F8; #FFFFFF; #1C1E21; #B0B7BD | #1A2E40; #B38F4D; #D9534F; #101318; #161A22; #F4F6F8; #B6BEC8',
     ],
     'color-toggle' => [
         'dbfield' => 'classic_color_toggle',
         'label' => __('Tombol Dark/Light Mode'),
+        'type' => 'dropdown',
+        'default' => 'auto_show',
+        'data' => [
+            ['auto_show', __('Auto - Button Show (Mengikuti Sistem Perangkat)')],
+            ['auto_hide', __('Auto - Button Hide (Mengikuti Sistem Perangkat)')],
+            ['dark_show', __('Default Dark - Button Show')],
+            ['dark_hide', __('Default Dark - Button Hide')],
+            ['light_show', __('Default Light - Button Show')],
+            ['light_hide', __('Default Light - Button Hide')]
+        ]
+    ],
+    'palette-switcher-show' => [
+        'dbfield' => 'classic_palette_switcher_show',
+        'label' => __('Theme Viewer'),
         'type' => 'dropdown',
         'default' => 1,
         'data' => [
@@ -379,6 +346,16 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
             [0, __('Hide')]
         ]
     ],
+    'library-name-position' => [
+        'dbfield' => 'classic_library_name_position',
+        'label' => __('Posisi Logo & Nama Perpustakaan (Desktop View)'),
+        'type' => 'dropdown',
+        'default' => 'navbar',
+        'data' => [
+            ['navbar', __('Logo & nama di Navbar (default)')],
+            ['hero', __('Logo & nama di atas Search Box (Desktop)')]
+        ]
+    ],
     'subtitle' => [
         'dbfield' => 'classic_library_subname',
         'label' => __('Subnama Perpustakaan di Navbar'),
@@ -453,13 +430,13 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
         'data' => [
             ['none', __('None')],
             ['particles', __('Floating Glyphs')],
-            ['constellation', __('Constellation Lines')],
             ['rain', __('Code Rain')],
-            ['waves', __('Ambient Waves')],
             ['grid', __('Moving Grid')],
-            ['bubbles', __('Floating Bubbles')],
             ['twinkle', __('Twinkling Stars')],
-            ['glow', __('Gradient Orbs')]
+            ['zen-ripples', __('Zen Ripples')],
+            ['neural-network', __('Neural Network')],
+            ['starfield-warp', __('Starfield Warp')],
+            ['floating-embers', __('Floating Embers')]
         ]
     ],
     'background-animation-speed' => [
@@ -494,15 +471,10 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
         'data' => [
             ['default', __('Default Browser')],
             ['neon-comet', __('Neon Comet')],
-            ['fire-phoenix', __('Fire Phoenix')],
             ['pixel-sword', __('Pixel Sword')],
-            ['galaxy-orb', __('Galaxy Orb')],
             ['electric-bolt', __('Electric Bolt')],
             ['ink-brush', __('Ink Brush')],
-            ['cyber-drone', __('Cyber Drone')],
-            ['rainbow-ribbon', __('Rainbow Ribbon')],
-            ['ghost-spirit', __('Ghost Spirit')],
-            ['crystal-shard', __('Crystal Shard')]
+            ['rainbow-ribbon', __('Rainbow Ribbon')]
         ]
     ],
     'announcement-show' => [
@@ -1194,7 +1166,15 @@ $sysconf['template']['option'][$sysconf['template']['theme']] = [
     ],
 ];
 
-if (isset($_GET['customize']) && $_GET['customize'] == 'public' && isset($_GET['theme']) && $_GET['theme'] == 'rasamala') {
+$rasamala_is_public_customizer = isset($_GET['customize']) && $_GET['customize'] == 'public';
+$rasamala_requested_theme = strtolower(trim((string)($_GET['theme'] ?? '')));
+$rasamala_current_theme = strtolower(trim((string)($sysconf['template']['theme'] ?? '')));
+$rasamala_is_theme_context = $rasamala_requested_theme === ''
+  || $rasamala_requested_theme === 'rasamala'
+  || $rasamala_current_theme === 'rasamala'
+  || basename(__DIR__) === 'rasamala';
+
+if ($rasamala_is_public_customizer && $rasamala_is_theme_context) {
   include_once __DIR__ . '/tinfo_helpers.php';
   if (function_exists('rasamalaTinfoCustomizeAssets')) {
     echo rasamalaTinfoCustomizeAssets();

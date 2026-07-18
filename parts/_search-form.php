@@ -4,7 +4,7 @@
 # @Email:  ido.alit@gmail.com
 # @Filename: _search-form.php
 # @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-15T15:16:37+07:00
+# @Last modified time: 2026-07-16T09:25:50+07:00
 
 if ($opac->invalid_token) {
     //die($opac->error('invalid CSRF token'));
@@ -21,7 +21,24 @@ if (!in_array($hero_text_size, ['small', 'medium', 'large'], true)) {
     $hero_text_size = 'small';
 }
 $is_homepage_search = !isset($_GET['p']) && !isset($_GET['search']);
-$show_hero_text = $is_homepage_search && $hero_text !== '';
+
+// When library name position is 'hero', display library name above search box
+$_search_lib_name_position = strtolower(trim((string)themeEffectiveTemplateValue('classic_library_name_position', 'navbar', $sysconf)));
+$_search_lib_name_in_hero = ($_search_lib_name_position === 'hero');
+$_search_hero_logo_html = '';
+if ($_search_lib_name_in_hero) {
+    $hero_text = trim((string)($sysconf['library_name'] ?? ''));
+
+    if (isset($sysconf['logo_image'], $imagesDisk) && $sysconf['logo_image'] !== '' && $imagesDisk->isExists($path = 'default/'.$sysconf['logo_image'])) {
+        $_search_hero_logo_html = '<img class="hero-library-logo" src="' . themeEscape(SWB . 'lib/minigalnano/createthumb.php?filename=images/' . $path . '&width=350') . '" alt="">';
+    } elseif (file_exists(__DIR__ . '/../assets/images/logo.png')) {
+        $_search_hero_logo_html = '<img class="hero-library-logo hero-library-logo-local" src="' . themeEscape(assets('images/logo.png')) . '" alt="">';
+    } else {
+        $_search_hero_logo_html = '<span class="hero-library-logo-fallback"><i class="fas fa-book-open" aria-hidden="true"></i></span>';
+    }
+}
+
+$show_hero_text = ($is_homepage_search || $_search_lib_name_in_hero) && $hero_text !== '';
 $latest_content_display = strtolower(trim((string)themeEffectiveTemplateValue('classic_home_display_show', 'below', $sysconf)));
 if ($latest_content_display === '1') {
     $latest_content_display = 'below';
@@ -112,7 +129,12 @@ if ($search_size === 'small') {
                 </div>
                 <?php endif; ?>
                 <?php if ($show_hero_text) : ?>
-                <div class="hero-search-heading hero-search-heading-<?= themeEscape($hero_text_size) ?> text-center">
+                <div class="hero-search-heading hero-search-heading-<?= themeEscape($hero_text_size) ?><?= $_search_lib_name_in_hero ? ' hero-search-heading-library' : '' ?> text-center">
+                    <?php if ($_search_lib_name_in_hero && $_search_hero_logo_html !== '') : ?>
+                    <div class="hero-library-logo-wrap" aria-hidden="true">
+                        <?= $_search_hero_logo_html; ?>
+                    </div>
+                    <?php endif; ?>
                     <h1><?= themeEscape($hero_text); ?></h1>
                 </div>
                 <?php endif; ?>
@@ -128,7 +150,7 @@ if ($search_size === 'small') {
                                        placeholder="<?= themeEscape(__($sysconf['template']['classic_search_placeholder'] ?? 'Enter keyword to search collection...'));?>"/>
                                 <div class="d-flex align-items-center ms-2">
                                     <!-- Advanced Search Icon -->
-                                    <a href="javascript:void(0)" class="me-3" data-bs-toggle="modal" data-bs-target="#adv-modal" title="<?= themeEscape(__('Advanced Search')) ?>" aria-label="<?= themeEscape(__('Advanced Search')) ?>">
+                                    <a href="index.php?search=search" class="me-3" data-bs-toggle="modal" data-bs-target="#adv-modal" title="<?= themeEscape(__('Advanced Search')) ?>" aria-label="<?= themeEscape(__('Advanced Search')) ?>">
                                         <i class="fas fa-sliders-h" aria-hidden="true"></i>
                                     </a>
                                     <!-- Search Button -->

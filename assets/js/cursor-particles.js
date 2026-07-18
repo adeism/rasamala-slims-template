@@ -2,7 +2,7 @@
  * Rasamala cursor trail and particle renderer.
  *
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-11T10:54:36+07:00
+ * @Last modified time  : 2026-07-16T15:30:11+07:00
  */
 (function () {
   'use strict';
@@ -10,9 +10,9 @@
   var LEGACY_MODE_MAP = {
     rocket: 'neon-comet',
     wand: 'electric-bolt',
-    book: 'pixel-sword',
-    sparkles: 'galaxy-orb'
+    book: 'pixel-sword'
   };
+  var activeCleanup = null;
 
   function pointerIsFine() {
     return window.matchMedia && window.matchMedia('(pointer: fine)').matches;
@@ -78,6 +78,11 @@
   }
 
   function init() {
+    if (typeof activeCleanup === 'function') {
+      activeCleanup();
+      activeCleanup = null;
+    }
+
     var body = document.body;
     if (!body || reducedMotion() || !pointerIsFine()) return;
 
@@ -112,6 +117,7 @@
     var speed = 0;
     var visible = true;
     var lastFrame = 0;
+    var frameId = 0;
     var trail = [];
     var particles = [];
     var trailPool = [];
@@ -238,11 +244,8 @@
       var type = 'circle';
       var gravity = 0;
 
-      if (mode.id === 'pixel-sword' || mode.id === 'cyber-drone') type = 'pixel';
+      if (mode.id === 'pixel-sword') type = 'pixel';
       if (mode.id === 'electric-bolt') type = 'spark';
-      if (mode.id === 'crystal-shard') type = 'shard';
-      if (mode.id === 'fire-phoenix') gravity = -0.025;
-      if (mode.id === 'ghost-spirit') gravity = -0.018;
 
       spawn(rate, {
         x: mouseX,
@@ -251,9 +254,9 @@
         spread: mode.id === 'ink-brush' ? 0.35 : 0.85,
         speedMin: 0.25,
         speedMax: 1.7 + speed * 0.04,
-        sizeMin: mode.id === 'ghost-spirit' ? 4 : 1.5,
-        sizeMax: mode.id === 'ghost-spirit' ? 10 : 4.8,
-        decay: mode.id === 'ghost-spirit' ? 0.016 : 0.032,
+        sizeMin: 1.5,
+        sizeMax: 4.8,
+        decay: 0.032,
         type: type,
         gravity: gravity
       });
@@ -269,7 +272,7 @@
         sizeMin: 2,
         sizeMax: 5,
         decay: 0.026,
-        type: mode.id === 'crystal-shard' ? 'shard' : mode.id === 'electric-bolt' ? 'spark' : 'circle'
+        type: mode.id === 'electric-bolt' ? 'spark' : 'circle'
       });
     }
 
@@ -298,9 +301,7 @@
       }
       context.strokeStyle = rgba(palette.rgb, 0.65);
       context.lineWidth = mode.id === 'electric-bolt' ? 2 : 3;
-      if (mode.id === 'cyber-drone') context.setLineDash([5, 7]);
       context.stroke();
-      context.setLineDash([]);
     }
 
     function drawParticles() {
@@ -338,14 +339,6 @@
           context.moveTo(0, -p.size);
           context.lineTo(0, p.size);
           context.stroke();
-        } else if (p.type === 'shard') {
-          context.beginPath();
-          context.moveTo(0, -p.size);
-          context.lineTo(p.size * 0.55, 0);
-          context.lineTo(0, p.size);
-          context.lineTo(-p.size * 0.55, 0);
-          context.closePath();
-          context.fill();
         } else {
           context.beginPath();
           context.arc(0, 0, Math.max(0.8, p.size * 0.45), 0, Math.PI * 2);
@@ -367,7 +360,7 @@
     }
 
     function frame(timestamp) {
-      requestAnimationFrame(frame);
+      frameId = requestAnimationFrame(frame);
       if (!visible) return;
       if (timestamp - lastFrame < 1000 / q.fps) return;
       lastFrame = timestamp;
@@ -383,15 +376,44 @@
       canvas.style.opacity = visible ? '1' : '0';
     }
 
+    function onMouseLeave() {
+      setVisible(false);
+    }
+
+    function onMouseEnter() {
+      setVisible(true);
+    }
+
+    function onVisibilityChange() {
+      setVisible(!document.hidden);
+    }
+
     window.addEventListener('resize', resize, { passive: true });
     document.addEventListener('mousemove', onMove, { passive: true });
     document.addEventListener('click', onClick, { passive: true });
-    document.addEventListener('mouseleave', function () { setVisible(false); }, { passive: true });
-    document.addEventListener('mouseenter', function () { setVisible(true); }, { passive: true });
-    document.addEventListener('visibilitychange', function () { setVisible(!document.hidden); });
+    document.addEventListener('mouseleave', onMouseLeave, { passive: true });
+    document.addEventListener('mouseenter', onMouseEnter, { passive: true });
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
+    activeCleanup = function () {
+      if (frameId) window.cancelAnimationFrame(frameId);
+      window.removeEventListener('resize', resize);
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('click', onClick);
+      document.removeEventListener('mouseleave', onMouseLeave);
+      document.removeEventListener('mouseenter', onMouseEnter);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      if (canvas && canvas.parentNode) {
+        canvas.parentNode.removeChild(canvas);
+      }
+      trail = [];
+      particles = [];
+      trailPool = [];
+      particlePool = [];
+    };
 
     resize();
-    requestAnimationFrame(frame);
+    frameId = requestAnimationFrame(frame);
   }
 
   if (document.readyState === 'loading') {
@@ -399,4 +421,6 @@
   } else {
     init();
   }
+
+  document.addEventListener('rasamala:cursor-settings-changed', init);
 }());

@@ -2,29 +2,24 @@
  * Rasamala cursor icon renderer.
  *
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-11T10:54:36+07:00
+ * @Last modified time  : 2026-07-16T15:30:11+07:00
  */
 (function () {
   'use strict';
 
   var MODES = [
     { id: 'neon-comet', label: 'Neon Comet', color: '#22d3ee', accent: '#7c5cff' },
-    { id: 'fire-phoenix', label: 'Fire Phoenix', color: '#ff6b2c', accent: '#ffd166' },
     { id: 'pixel-sword', label: 'Pixel Sword', color: '#a3e635', accent: '#4ade80' },
-    { id: 'galaxy-orb', label: 'Galaxy Orb', color: '#c084fc', accent: '#60a5fa' },
     { id: 'electric-bolt', label: 'Electric Bolt', color: '#fde047', accent: '#38bdf8' },
     { id: 'ink-brush', label: 'Ink Brush', color: '#f472b6', accent: '#e2e8f0' },
-    { id: 'cyber-drone', label: 'Cyber Drone', color: '#34d399', accent: '#22d3ee' },
-    { id: 'rainbow-ribbon', label: 'Rainbow Ribbon', color: '#f472b6', accent: '#22d3ee' },
-    { id: 'ghost-spirit', label: 'Ghost Spirit', color: '#a5b4fc', accent: '#e0e7ff' },
-    { id: 'crystal-shard', label: 'Crystal Shard', color: '#67e8f9', accent: '#f0abfc' }
+    { id: 'rainbow-ribbon', label: 'Rainbow Ribbon', color: '#f472b6', accent: '#22d3ee' }
   ];
   var LEGACY_MODE_MAP = {
     rocket: 'neon-comet',
     wand: 'electric-bolt',
-    book: 'pixel-sword',
-    sparkles: 'galaxy-orb'
+    book: 'pixel-sword'
   };
+  var activeCleanup = null;
 
   function hexToRgb(hex) {
     var c = String(hex || '').replace('#', '');
@@ -125,11 +120,23 @@
   }
 
   function init() {
+    if (typeof activeCleanup === 'function') {
+      activeCleanup();
+      activeCleanup = null;
+    }
+
     var body = document.body;
-    if (!body || reducedMotion() || !pointerIsFine()) return;
+    if (!body || reducedMotion() || !pointerIsFine()) {
+      document.body && document.body.classList.remove('rasamala-custom-cursor-active');
+      return;
+    }
 
     var modeId = body.getAttribute('data-cursor-custom-icon') || 'default';
-    if (modeId === 'default' || modeId === 'none' || modeId === '0') return;
+    if (modeId === 'default' || modeId === 'none' || modeId === '0') {
+      document.body.classList.remove('rasamala-custom-cursor-active');
+      window.RasamalaCursorState = null;
+      return;
+    }
 
     var modeData = findMode(modeId);
     var mode = modeData.mode;
@@ -155,6 +162,7 @@
     var maxDpr = quality === 0 ? 1 : quality === 1 ? 1.15 : 1.35;
     var frameInterval = quality === 0 ? 1000 / 30 : quality === 1 ? 1000 / 45 : 1000 / 60;
     var lastFrame = 0;
+    var frameId = 0;
 
     injectStyles();
     canvas.id = 'rasamala-cursor-icon-canvas';
@@ -232,20 +240,6 @@
         context.beginPath();
         context.arc(x, y, 10 * pulse, 0, Math.PI * 2);
         context.stroke();
-      } else if (mode.id === 'fire-phoenix') {
-        glow(x, y, 32 * pulse, palette.rgb, 0.36);
-        context.translate(x, y);
-        context.rotate(moveAngle + Math.PI / 2);
-        context.fillStyle = palette.color;
-        context.beginPath();
-        context.moveTo(0, -20 * pulse);
-        context.bezierCurveTo(12, -2, 8, 16, 0, 18);
-        context.bezierCurveTo(-8, 16, -12, -2, 0, -20 * pulse);
-        context.fill();
-        context.fillStyle = '#fff7ed';
-        context.beginPath();
-        context.ellipse(0, -3, 3.5, 8, 0, 0, Math.PI * 2);
-        context.fill();
       } else if (mode.id === 'pixel-sword') {
         context.translate(x, y);
         context.rotate(moveAngle + Math.PI / 4);
@@ -256,23 +250,6 @@
         context.fillRect(-6, 0, 12, 4);
         context.fillStyle = '#ca8a04';
         context.fillRect(-2, 8, 4, 12);
-      } else if (mode.id === 'galaxy-orb') {
-        glow(x, y, 30 * pulse, palette.rgb, 0.3);
-        context.translate(x, y);
-        context.rotate(angle);
-        context.fillStyle = palette.color;
-        context.beginPath();
-        context.arc(0, 0, 12 * pulse, 0, Math.PI * 2);
-        context.fill();
-        context.fillStyle = '#fff';
-        context.beginPath();
-        context.arc(-3, -3, 4, 0, Math.PI * 2);
-        context.fill();
-        context.strokeStyle = palette.accent;
-        context.lineWidth = 1.5;
-        context.beginPath();
-        context.ellipse(0, 0, 22, 8, 0.4, 0, Math.PI * 2);
-        context.stroke();
       } else if (mode.id === 'electric-bolt') {
         glow(x, y, 26 * pulse, palette.rgb, 0.35);
         context.translate(x, y);
@@ -303,24 +280,6 @@
         context.fill();
         context.fillStyle = '#f8fafc';
         context.fillRect(-3.5, 16, 7, 5);
-      } else if (mode.id === 'cyber-drone') {
-        glow(x, y, 26 * pulse, palette.rgb, 0.28);
-        context.translate(x, y);
-        context.strokeStyle = palette.accent;
-        context.lineWidth = 1.4;
-        context.beginPath();
-        context.arc(0, 0, 16, 0, Math.PI * 2);
-        context.stroke();
-        context.beginPath();
-        context.arc(0, 0, 10, angle, angle + 3.5);
-        context.stroke();
-        context.fillStyle = 'rgba(15,23,42,0.9)';
-        context.strokeStyle = palette.color;
-        context.lineWidth = 2;
-        context.beginPath();
-        context.rect(-7, -5, 14, 10);
-        context.fill();
-        context.stroke();
       } else if (mode.id === 'rainbow-ribbon') {
         context.translate(x, y);
         for (var i = 0; i < 6; i += 1) {
@@ -335,47 +294,13 @@
         context.beginPath();
         context.arc(0, 0, 4 * pulse, 0, Math.PI * 2);
         context.fill();
-      } else if (mode.id === 'ghost-spirit') {
-        glow(x, y, 30 * pulse, palette.rgb, 0.22);
-        context.translate(x, y);
-        context.globalAlpha = 0.82;
-        context.fillStyle = rgba(palette.rgbA, 0.75);
-        context.beginPath();
-        context.ellipse(0, Math.sin(time * 0.005) * 2, 11 * pulse, 14 * pulse, 0, Math.PI, 0);
-        context.lineTo(11 * pulse, 12);
-        context.quadraticCurveTo(5, 18, 0, 12);
-        context.quadraticCurveTo(-5, 18, -11 * pulse, 12);
-        context.closePath();
-        context.fill();
-        context.globalAlpha = 1;
-        context.fillStyle = '#1e1b4b';
-        context.beginPath();
-        context.arc(-3.5, -2, 2, 0, Math.PI * 2);
-        context.arc(3.5, -2, 2, 0, Math.PI * 2);
-        context.fill();
-      } else if (mode.id === 'crystal-shard') {
-        glow(x, y, 28 * pulse, palette.rgb, 0.33);
-        context.translate(x, y);
-        context.rotate(angle * 0.6 + moveAngle * 0.15);
-        context.fillStyle = palette.color;
-        context.strokeStyle = 'rgba(255,255,255,0.75)';
-        context.lineWidth = 1.1;
-        context.beginPath();
-        context.moveTo(0, -16 * pulse);
-        context.lineTo(9 * pulse, -1 * pulse);
-        context.lineTo(5 * pulse, 14 * pulse);
-        context.lineTo(-7 * pulse, 9 * pulse);
-        context.lineTo(-10 * pulse, -5 * pulse);
-        context.closePath();
-        context.fill();
-        context.stroke();
       }
 
       context.restore();
     }
 
     function frame(timestamp) {
-      requestAnimationFrame(frame);
+      frameId = requestAnimationFrame(frame);
       if (!visible) return;
       if (timestamp - lastFrame < frameInterval) return;
       lastFrame = timestamp;
@@ -408,14 +333,29 @@
       canvas.style.opacity = visible ? '1' : '0';
     }
 
+    function onMouseLeave() { setVisible(false); }
+    function onMouseEnter() { setVisible(true); }
+    function onVisibilityChange() { setVisible(!document.hidden); }
+
     window.addEventListener('resize', resize, { passive: true });
     document.addEventListener('mousemove', onMove, { passive: true });
-    document.addEventListener('mouseleave', function () { setVisible(false); }, { passive: true });
-    document.addEventListener('mouseenter', function () { setVisible(true); }, { passive: true });
-    document.addEventListener('visibilitychange', function () { setVisible(!document.hidden); });
+    document.addEventListener('mouseleave', onMouseLeave, { passive: true });
+    document.addEventListener('mouseenter', onMouseEnter, { passive: true });
+    document.addEventListener('visibilitychange', onVisibilityChange);
 
     resize();
-    requestAnimationFrame(frame);
+    frameId = requestAnimationFrame(frame);
+    activeCleanup = function () {
+      cancelAnimationFrame(frameId);
+      window.removeEventListener('resize', resize);
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseleave', onMouseLeave);
+      document.removeEventListener('mouseenter', onMouseEnter);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      canvas.remove();
+      document.body.classList.remove('rasamala-custom-cursor-active');
+      window.RasamalaCursorState = null;
+    };
   }
 
   if (document.readyState === 'loading') {
@@ -423,4 +363,5 @@
   } else {
     init();
   }
+  document.addEventListener('rasamala:cursor-settings-changed', init);
 }());

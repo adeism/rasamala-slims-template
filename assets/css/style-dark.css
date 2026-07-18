@@ -9,7 +9,7 @@ body.rasamala-dark .detail-author-footer a {
 body.rasamala-dark .detail-author-footer a:hover,
 body.rasamala-dark .detail-author-footer a:focus {
   background-color: var(--rasamala-accent) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
   border-color: var(--rasamala-accent) !important;
   box-shadow: 0 4px 12px rgba(var(--theme-accent-rgb), 0.3) !important;
 }
@@ -54,18 +54,18 @@ body.rasamala-dark .news-list-card--title_only:hover {
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18) !important;
 }/* Color Mode: Dark styles */
 html.rasamala-dark {
-  background-color: #101318 !important;
+  background-color: var(--theme-background) !important;
 }
 
 
 body.rasamala-dark {
-  --rasamala-light-bg: #101318;
-  --rasamala-text-primary: #f4f6f8;
-  --rasamala-text-secondary: #b6bec8;
+  --rasamala-light-bg: var(--theme-background);
+  --rasamala-text-primary: var(--theme-text);
+  --rasamala-text-secondary: var(--theme-muted);
   --rasamala-border: rgba(255, 255, 255, 0.11);
   --rasamala-card-shadow: 0 18px 46px rgba(0, 0, 0, 0.32);
-  background-color: #101318 !important;
-  color: #e7ebef !important;
+  background-color: var(--theme-background) !important;
+  color: var(--theme-text) !important;
 }
 
 
@@ -174,7 +174,11 @@ body.rasamala-dark .background-animation-layer.hero-animation-layer {
 
 body.rasamala-dark .background-animation-layer.hero-animation-particles,
 body.rasamala-dark .background-animation-layer.hero-animation-constellation,
-body.rasamala-dark .background-animation-layer.hero-animation-rain {
+body.rasamala-dark .background-animation-layer.hero-animation-rain,
+body.rasamala-dark .background-animation-layer.hero-animation-zen-ripples,
+body.rasamala-dark .background-animation-layer.hero-animation-neural-network,
+body.rasamala-dark .background-animation-layer.hero-animation-starfield-warp,
+body.rasamala-dark .background-animation-layer.hero-animation-floating-embers {
   background:
     radial-gradient(circle at 18% 20%, rgba(var(--theme-accent-rgb), 0.20), transparent 30%),
     radial-gradient(circle at 78% 8%, rgba(var(--theme-accent-rgb), 0.16), transparent 34%),
@@ -184,6 +188,14 @@ body.rasamala-dark .background-animation-layer.hero-animation-rain {
 
 body.rasamala-dark .hero-line {
   background: linear-gradient(90deg, transparent 0%, currentColor 42%, rgba(var(--theme-accent-rgb), 0.4) 50%, currentColor 58%, transparent 100%) !important;
+}
+
+body.rasamala-dark .hero-neural-line {
+  background: linear-gradient(90deg, transparent 0%, currentColor 36%, rgba(var(--theme-accent-rgb), 0.72) 50%, currentColor 64%, transparent 100%) !important;
+}
+
+body.rasamala-dark .hero-ripple {
+  border-color: rgba(var(--theme-accent-rgb), 0.36) !important;
 }
 
 
@@ -198,14 +210,14 @@ body.rasamala-dark .c-header {
 
 body.rasamala-dark .c-header .navbar-nav .nav-link,
 body.rasamala-dark .navbar-light .navbar-nav .nav-link {
-  color: rgba(231, 235, 239, 0.82) !important;
+  color: var(--rasamala-chrome-text-muted) !important;
 }
 
 
 body.rasamala-dark .c-header .navbar-nav .nav-link:hover,
 body.rasamala-dark .c-header .navbar-nav .nav-item.active .nav-link,
 body.rasamala-dark .c-header .navbar-nav .nav-link.active {
-  color: var(--theme-accent-color) !important;
+  color: var(--rasamala-chrome-text) !important;
 }
 
 
@@ -536,7 +548,7 @@ body.rasamala-dark .btn-modal-action,
 body.rasamala-dark .libinfo-modal-btn {
   background-color: var(--rasamala-accent) !important;
   border-color: var(--rasamala-accent) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary) !important;
 }
 
 
@@ -558,7 +570,7 @@ body.rasamala-dark .libinfo-modal-btn:hover,
 body.rasamala-dark .libinfo-modal-btn:focus {
   background-color: var(--rasamala-accent-hover) !important;
   border-color: var(--rasamala-accent-hover) !important;
-  color: #ffffff !important;
+  color: var(--theme-on-primary-hover) !important;
 }
 
 
@@ -2067,7 +2079,7 @@ body.rasamala-dark footer .footer-link,
 body.rasamala-dark footer .footer-about-text a,
 body.rasamala-dark footer .footer-powered-link,
 body.rasamala-dark footer .footer-powered-link code {
-  color: var(--rasamala-dark-accent-text-strong) !important;
+  color: var(--rasamala-chrome-text) !important;
 }
 
 
@@ -2081,7 +2093,7 @@ body.rasamala-dark footer .footer-powered-link:hover,
 body.rasamala-dark footer .footer-powered-link:focus,
 body.rasamala-dark footer .footer-powered-link:hover code,
 body.rasamala-dark footer .footer-powered-link:focus code {
-  color: #fff0c9 !important;
+  color: var(--rasamala-chrome-text) !important;
 }
 
 
@@ -2584,10 +2596,18 @@ body.rasamala-dark #mobileFilterModal .irs-handle {
 }
 
 body.rasamala-dark.rasamala-search-panels-transparent .result-search .filter-panel-card,
-body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal .modal-content {
+body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal .modal-content,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .desktop-sort-bar,
+body.rasamala-dark.rasamala-search-panels-transparent .detail-record,
+body.rasamala-dark.rasamala-search-panels-transparent .news-list-card,
+body.rasamala-dark.rasamala-search-panels-transparent .rasamala-main-content-card,
+body.rasamala-dark.rasamala-search-panels-transparent .librarian.row-fluid,
+body.rasamala-dark.rasamala-search-panels-transparent #search-wraper .card {
   background: rgba(22, 26, 34, 0.58) !important;
   background-color: rgba(22, 26, 34, 0.58) !important;
   border-color: rgba(255, 255, 255, 0.14) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  backdrop-filter: blur(12px) !important;
 }
 
 /* Dark mode contrast guard for every theme color palette.
@@ -2804,7 +2824,6 @@ body.rasamala-dark #mobileFilterModal .irs-single::after {
 
 /* Final dark transparent panel override for search result surfaces. */
 body.rasamala-dark.rasamala-search-panels-transparent .result-search .filter-panel-card,
-body.rasamala-dark.rasamala-search-panels-transparent .result-search .desktop-sort-bar,
 body.rasamala-dark.rasamala-search-panels-transparent .result-search .biblio-simple-item,
 body.rasamala-dark.rasamala-search-panels-transparent .result-search .biblio-list-card,
 body.rasamala-dark.rasamala-search-panels-transparent .result-search .biblio-list-card > .card-body,
@@ -2827,12 +2846,9 @@ body.rasamala-dark.rasamala-search-panels-transparent #mobileSortModal .modal-co
 body.rasamala-dark.rasamala-search-panels-transparent .result-search .filter-panel-card,
 body.rasamala-dark.rasamala-search-panels-transparent .result-search .biblio-list-card,
 body.rasamala-dark.rasamala-search-panels-transparent .result-search .card.item.border-0,
-body.rasamala-dark.rasamala-search-panels-transparent .result-search .grid-item > .card {
-  border-color: rgba(255, 255, 255, 0.14) !important;
-}
-
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .grid-item > .card,
 body.rasamala-dark.rasamala-search-panels-transparent .result-search .desktop-sort-bar {
-  border-color: transparent !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
 }
 
 body.rasamala-dark.rasamala-search-panels-transparent .result-search .biblio-simple-item,
@@ -2892,4 +2908,418 @@ body.rasamala-dark.rasamala-search-panels-transparent .result-search .grid-item 
     color: var(--rasamala-dark-text) !important;
     border-color: var(--rasamala-dark-action-border) !important;
   }
+}
+
+/* Final custom-palette contrast guard.
+   Keep this block last: older dark-mode rules above still contain fixed colors. */
+body.rasamala-dark {
+  --rasamala-dark-page: var(--theme-background);
+  --rasamala-dark-surface: var(--theme-surface);
+  --rasamala-dark-surface-strong: color-mix(in srgb, var(--theme-surface) 88%, var(--theme-background) 12%);
+  --rasamala-dark-surface-soft: color-mix(in srgb, var(--theme-surface) 72%, transparent);
+  --rasamala-dark-border: color-mix(in srgb, var(--theme-muted) 30%, transparent);
+  --rasamala-dark-text: var(--theme-on-surface);
+  --rasamala-dark-page-text: var(--theme-on-background);
+  --rasamala-dark-muted: var(--theme-muted);
+  --rasamala-dark-link: color-mix(in srgb, var(--theme-accent) 70%, var(--theme-on-background) 30%);
+  --rasamala-dark-link-strong: color-mix(in srgb, var(--theme-accent) 82%, var(--theme-on-background) 18%);
+  --rasamala-dark-action-bg: var(--theme-primary);
+  --rasamala-dark-action-hover-bg: var(--theme-primary-hover);
+  --rasamala-dark-action-border: color-mix(in srgb, var(--theme-primary) 46%, var(--theme-muted) 24%);
+  background: var(--theme-background) !important;
+  background-color: var(--theme-background) !important;
+  color: var(--theme-on-background) !important;
+}
+
+body.rasamala-dark.rasamala-background-animation-active {
+  background-color: var(--theme-background) !important;
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(var(--theme-accent-rgb), 0.18), transparent 30%),
+    radial-gradient(circle at 88% 4%, rgba(var(--theme-accent-rgb), 0.14), transparent 34%),
+    linear-gradient(180deg, var(--theme-background) 0%, var(--theme-background) 56%, rgba(var(--theme-accent-rgb), 0.16) 100%) !important;
+}
+
+body.rasamala-dark .rasamala-hero-section,
+body.rasamala-dark .rasamala-search-banner-section,
+body.rasamala-dark .rasamala-subpage-wrapper,
+body.rasamala-dark #slims-home,
+body.rasamala-dark .result-search,
+body.rasamala-dark .member-area,
+body.rasamala-dark.rasamala-home-hero-only {
+  background: var(--theme-background) !important;
+  background-color: var(--theme-background) !important;
+  color: var(--theme-on-background) !important;
+}
+
+body.rasamala-dark h1,
+body.rasamala-dark h2,
+body.rasamala-dark h3,
+body.rasamala-dark h4,
+body.rasamala-dark h5,
+body.rasamala-dark h6,
+body.rasamala-dark .section-title,
+body.rasamala-dark .subtitle-section,
+body.rasamala-dark .search-found-info,
+body.rasamala-dark .breadcrumb,
+body.rasamala-dark .breadcrumb a {
+  color: var(--theme-on-background) !important;
+}
+
+body.rasamala-dark .card,
+body.rasamala-dark .bg-light,
+body.rasamala-dark .bg-white,
+body.rasamala-dark .bg-rasamala-light,
+body.rasamala-dark .rasamala-main-content-card,
+body.rasamala-dark .detail-record,
+body.rasamala-dark .card.item.border-0,
+body.rasamala-dark .desktop-sort-bar,
+body.rasamala-dark .slims-book-card,
+body.rasamala-dark .member-card,
+body.rasamala-dark .visitor-info-card,
+body.rasamala-dark .biblio-list-card,
+body.rasamala-dark .list-group-item,
+body.rasamala-dark #search-filter li.list-group-item,
+body.rasamala-dark #desktop-filter-container .card,
+body.rasamala-dark #mobileFilterModal .modal-content,
+body.rasamala-dark #mobileSortModal .modal-content,
+body.rasamala-dark .modal-content,
+body.rasamala-dark .libinfo-modal-content,
+body.rasamala-dark .palette-switcher-panel,
+body.rasamala-dark .rasamala-subpage-wrapper .librarian.row-fluid,
+body.rasamala-dark .page-member-area .rasamala-main-content-card,
+body.rasamala-dark .member-area .rasamala-main-content-card {
+  background: var(--theme-surface) !important;
+  background-color: var(--theme-surface) !important;
+  border-color: var(--rasamala-dark-border) !important;
+  color: var(--theme-on-surface) !important;
+}
+
+body.rasamala-dark .card h1,
+body.rasamala-dark .card h2,
+body.rasamala-dark .card h3,
+body.rasamala-dark .card h4,
+body.rasamala-dark .card h5,
+body.rasamala-dark .card h6,
+body.rasamala-dark .detail-record h1,
+body.rasamala-dark .detail-record h2,
+body.rasamala-dark .detail-record h3,
+body.rasamala-dark .detail-record h4,
+body.rasamala-dark .detail-record h5,
+body.rasamala-dark .detail-record h6,
+body.rasamala-dark .modal-content h1,
+body.rasamala-dark .modal-content h2,
+body.rasamala-dark .modal-content h3,
+body.rasamala-dark .modal-content h4,
+body.rasamala-dark .modal-content h5,
+body.rasamala-dark .modal-content h6,
+body.rasamala-dark .card a:not(.btn),
+body.rasamala-dark .detail-record a:not(.btn),
+body.rasamala-dark .modal-content a:not(.btn) {
+  color: var(--theme-on-surface) !important;
+}
+
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .filter-panel-card,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .desktop-sort-bar,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .biblio-simple-item,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .biblio-list-card,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .biblio-list-card > .card-body,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .card.item.border-0,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .card.item.border-0 > .card-body,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .grid-item > .card,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .grid-item > .card > .card-body,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .grid-item .bg-rasamala-light,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .grid-item .list-group,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .grid-item .list-group-item {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: var(--theme-on-background) !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+body.rasamala-dark .text-muted,
+body.rasamala-dark .news-list-summary,
+body.rasamala-dark .news-list-date,
+body.rasamala-dark .small,
+body.rasamala-dark small,
+body.rasamala-dark .detail-label,
+body.rasamala-dark .detail-meta-label,
+body.rasamala-dark .filter-panel-card .small,
+body.rasamala-dark .filter-panel-card small {
+  color: var(--theme-muted) !important;
+}
+
+body.rasamala-dark .form-control,
+body.rasamala-dark .form-select,
+body.rasamala-dark .custom-select,
+body.rasamala-dark input,
+body.rasamala-dark select,
+body.rasamala-dark textarea,
+body.rasamala-dark .select2-selection,
+body.rasamala-dark .chosen-container .chosen-single,
+body.rasamala-dark .chosen-container .chosen-drop,
+body.rasamala-dark .dropdown-menu {
+  background: color-mix(in srgb, var(--theme-surface) 92%, var(--theme-background) 8%) !important;
+  background-color: color-mix(in srgb, var(--theme-surface) 92%, var(--theme-background) 8%) !important;
+  border-color: var(--rasamala-dark-border) !important;
+  color: var(--theme-on-surface) !important;
+}
+
+body.rasamala-dark .form-control::placeholder,
+body.rasamala-dark input::placeholder,
+body.rasamala-dark textarea::placeholder {
+  color: var(--theme-muted) !important;
+  opacity: 1 !important;
+}
+
+body.rasamala-dark option,
+body.rasamala-dark optgroup,
+body.rasamala-dark .dropdown-item,
+body.rasamala-dark .select2-results__option,
+body.rasamala-dark .chosen-container .chosen-results li {
+  background: var(--theme-surface) !important;
+  background-color: var(--theme-surface) !important;
+  color: var(--theme-on-surface) !important;
+}
+
+body.rasamala-dark .dropdown-item:hover,
+body.rasamala-dark .dropdown-item:focus,
+body.rasamala-dark .select2-results__option--highlighted,
+body.rasamala-dark .chosen-container .chosen-results li.highlighted {
+  background: var(--theme-primary) !important;
+  background-color: var(--theme-primary) !important;
+  color: var(--theme-on-primary) !important;
+}
+
+body.rasamala-dark .rasamala-header-dark,
+body.rasamala-dark .c-header,
+body.rasamala-dark footer,
+body.rasamala-dark .mobile-bottom-nav {
+  background: var(--rasamala-chrome-bg) !important;
+  background-color: var(--rasamala-chrome-bg) !important;
+  border-color: var(--rasamala-chrome-border) !important;
+  color: var(--rasamala-chrome-text) !important;
+}
+
+body.rasamala-dark .c-header a,
+body.rasamala-dark .c-header .nav-link,
+body.rasamala-dark .navbar-lib-name,
+body.rasamala-dark footer,
+body.rasamala-dark footer a,
+body.rasamala-dark footer .footer-powered-link,
+body.rasamala-dark footer .footer-powered-link code,
+body.rasamala-dark .mobile-bottom-nav .nav-item {
+  color: var(--rasamala-chrome-text) !important;
+}
+
+body.rasamala-dark .btn-primary,
+body.rasamala-dark .btn-success,
+body.rasamala-dark .btn-info,
+body.rasamala-dark .sort-chip.active,
+body.rasamala-dark .pagination .page-item.active .page-link,
+body.rasamala-dark .pagingList b,
+body.rasamala-dark #desktop-sort-chips .sort-chip.active,
+body.rasamala-dark #mobile-sort-options .list-group-item.active,
+body.rasamala-dark #mobile-filter-container input[type="checkbox"]:checked + label,
+body.rasamala-dark #mobile-filter-container input[type="radio"]:checked + label,
+body.rasamala-dark .btn-floating-info,
+body.rasamala-dark .btn-color-mode-toggle,
+body.rasamala-dark .btn-palette-switcher,
+body.rasamala-dark .btn-back-to-top,
+body.rasamala-dark .btn-floating-whatsapp {
+  background: var(--theme-primary) !important;
+  background-color: var(--theme-primary) !important;
+  border-color: var(--theme-primary) !important;
+  color: var(--theme-on-primary) !important;
+}
+
+body.rasamala-dark .btn-palette-switcher .palette-switcher-icon {
+  color: var(--theme-on-primary) !important;
+}
+
+body.rasamala-dark #search-filter .irs-from,
+body.rasamala-dark #search-filter .irs-to,
+body.rasamala-dark #search-filter .irs-single,
+body.rasamala-dark #mobileFilterModal .irs-from,
+body.rasamala-dark #mobileFilterModal .irs-to,
+body.rasamala-dark #mobileFilterModal .irs-single {
+  background: var(--theme-primary) !important;
+  background-color: var(--theme-primary) !important;
+  color: var(--theme-on-primary) !important;
+}
+
+body.rasamala-dark #search-filter .irs-from::after,
+body.rasamala-dark #search-filter .irs-to::after,
+body.rasamala-dark #search-filter .irs-single::after,
+body.rasamala-dark #mobileFilterModal .irs-from::after,
+body.rasamala-dark #mobileFilterModal .irs-to::after,
+body.rasamala-dark #mobileFilterModal .irs-single::after {
+  border-top-color: var(--theme-primary) !important;
+}
+
+/* Final custom-palette readability guard for dark mode. */
+body.rasamala-dark #slims-home .rasamala-home-section-title,
+body.rasamala-dark #slims-home section h4,
+body.rasamala-dark .rasamala-home-section .rasamala-home-section-title {
+  color: var(--theme-on-background) !important;
+}
+
+body.rasamala-dark #slims-home section h4 .subtitle-section,
+body.rasamala-dark #slims-home .subtitle-section,
+body.rasamala-dark .rasamala-home-section .subtitle-section {
+  color: var(--theme-muted) !important;
+}
+
+body.rasamala-dark .topic li,
+body.rasamala-dark #slims-home .topic li {
+  background: color-mix(in srgb, var(--theme-surface) 92%, transparent) !important;
+  border-color: color-mix(in srgb, var(--theme-muted) 28%, transparent) !important;
+  color: var(--theme-on-surface) !important;
+}
+
+body.rasamala-dark .topic li a,
+body.rasamala-dark .topic li span,
+body.rasamala-dark #slims-home .topic li a,
+body.rasamala-dark #slims-home .topic li span {
+  color: var(--theme-on-surface) !important;
+}
+
+body.rasamala-dark .topic-icon-fa,
+body.rasamala-dark .topic li i.topic-icon-fa,
+body.rasamala-dark #slims-home .topic-icon-fa {
+  background: color-mix(in srgb, var(--theme-accent) 18%, var(--theme-surface) 82%) !important;
+  color: var(--rasamala-readable-accent) !important;
+}
+
+body.rasamala-dark .topic li:hover .topic-icon-fa,
+body.rasamala-dark #slims-home .topic li:hover .topic-icon-fa {
+  background: var(--theme-accent) !important;
+  color: var(--theme-on-accent) !important;
+}
+
+body.rasamala-dark #slims-home .member-card .card-title,
+body.rasamala-dark #slims-home .member-card .card-title span,
+body.rasamala-dark #slims-home .member-card .card-text b {
+  color: var(--theme-on-surface) !important;
+}
+
+body.rasamala-dark #slims-home .member-card .card-title small,
+body.rasamala-dark #slims-home .member-card .card-text,
+body.rasamala-dark #slims-home .member-card .text-secondary {
+  color: var(--theme-muted) !important;
+}
+
+body.rasamala-dark .footer-next-prayer {
+  color: var(--rasamala-chrome-text-muted) !important;
+}
+
+body.rasamala-dark .footer-next-prayer strong,
+body.rasamala-dark .footer-powered-link code {
+  color: var(--rasamala-chrome-text) !important;
+}
+
+body.rasamala-dark footer .footer-bottom.small,
+body.rasamala-dark footer .footer-bottom.small .footer-copyright,
+body.rasamala-dark footer .footer-bottom.small .footer-powered,
+body.rasamala-dark footer .footer-bottom.small .footer-powered-link,
+body.rasamala-dark footer .footer-bottom.small .footer-powered-link code {
+  color: var(--rasamala-chrome-text) !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+body.rasamala-dark footer .footer-bottom.small {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+body.rasamala-dark footer .footer-bottom.small .footer-powered-link,
+body.rasamala-dark footer .footer-bottom.small .footer-powered-link code {
+  font-weight: 800 !important;
+  text-decoration: underline !important;
+  text-decoration-thickness: 1.5px !important;
+  text-underline-offset: 0.2em !important;
+  text-decoration-color: currentColor !important;
+}
+
+body.rasamala-dark .prayer-reminder-toast {
+  background:
+    radial-gradient(circle at 22px 14px, rgba(var(--theme-accent-rgb), 0.18), transparent 30px),
+    color-mix(in srgb, var(--theme-surface) 94%, transparent) !important;
+  border-color: color-mix(in srgb, var(--theme-accent) 36%, var(--theme-muted) 20%) !important;
+  color: var(--theme-on-surface) !important;
+  box-shadow: 0 16px 42px color-mix(in srgb, var(--theme-accent) 24%, transparent) !important;
+}
+
+body.rasamala-dark .prayer-reminder-icon {
+  background: color-mix(in srgb, var(--theme-accent) 18%, var(--theme-surface) 82%) !important;
+  color: var(--rasamala-readable-accent) !important;
+}
+
+body.rasamala-dark .prayer-reminder-text strong {
+  color: var(--theme-on-surface) !important;
+}
+
+body.rasamala-dark .prayer-reminder-countdown {
+  color: var(--rasamala-readable-accent) !important;
+}
+
+body.rasamala-dark .latest-content-ticker,
+body.rasamala-dark #search-wraper .latest-content-ticker {
+  background: var(--rasamala-chrome-bg) !important;
+  background-color: var(--rasamala-chrome-bg) !important;
+  border-color: var(--rasamala-chrome-border) !important;
+  color: var(--rasamala-chrome-text) !important;
+  box-shadow: 0 -10px 30px color-mix(in srgb, #000 32%, transparent) !important;
+}
+
+body.rasamala-dark #search-wraper .latest-content-ticker {
+  box-shadow: 0 8px 24px color-mix(in srgb, #000 24%, transparent) !important;
+}
+
+body.rasamala-dark .latest-content-ticker-item,
+body.rasamala-dark #search-wraper .latest-content-ticker-item,
+body.rasamala-dark .latest-content-ticker .latest-content-icon,
+body.rasamala-dark #search-wraper .latest-content-ticker .latest-content-icon {
+  color: var(--rasamala-chrome-text) !important;
+}
+
+body.rasamala-dark .latest-content-ticker-item:hover,
+body.rasamala-dark .latest-content-ticker-item:focus,
+body.rasamala-dark #search-wraper .latest-content-ticker-item:hover,
+body.rasamala-dark #search-wraper .latest-content-ticker-item:focus {
+  color: var(--rasamala-chrome-text) !important;
+  opacity: 0.86 !important;
+}
+
+body.rasamala-dark.rasamala-page-news .news-wrapper .opac-section-title {
+  border-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+body.rasamala-dark.rasamala-page-news .news-wrapper a,
+body.rasamala-dark.rasamala-page-news .news-list-card .news-card-title a,
+body.rasamala-dark.rasamala-page-news .news-list-card .news-list-thumbnail,
+body.rasamala-dark.rasamala-page-news .news-list-footer .btn-news-readmore {
+  text-decoration: none !important;
+}
+
+body.rasamala-dark.rasamala-page-news .news-list-summary,
+body.rasamala-dark.rasamala-page-news .news-list-date,
+body.rasamala-dark.rasamala-page-news .news-list-date i {
+  color: var(--theme-on-surface) !important;
+}
+
+body.rasamala-dark.rasamala-page-news .news-list-card .news-card-title,
+body.rasamala-dark.rasamala-page-news .news-list-card .news-card-title a {
+  color: var(--theme-on-surface) !important;
+}
+
+body.rasamala-dark #adv-modal .form-select {
+  background-color: color-mix(in srgb, var(--theme-surface) 92%, var(--theme-background) 8%) !important;
+  border-color: var(--rasamala-dark-border) !important;
+  color: var(--theme-on-surface) !important;
 }

@@ -3,7 +3,7 @@
  * Shared helpers for templates that can be loaded before classic.php.
  *
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-15T15:16:37+07:00
+ * @Last modified time  : 2026-07-16T13:07:27+07:00
  */
 if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
@@ -77,9 +77,7 @@ if (!function_exists('themePresetDefinitions')) {
           'classic_home_display_show' => 'below',
           'classic_ticker_show' => 'bottom',
           'classic_footer_show' => 1,
-          'classic_theme_color' => 'warmlibrary',
-          'classic_font_family' => 'poppins',
-          'classic_hero_background_animation' => 'constellation',
+          'classic_hero_background_animation' => 'twinkle',
           'classic_cursor_particles' => 'auto',
         ],
       ],
@@ -181,9 +179,7 @@ if (!function_exists('themePresetDefinitions')) {
           'classic_home_display_show' => 'below',
           'classic_ticker_show' => 0,
           'classic_footer_show' => 1,
-          'classic_theme_color' => 'forest',
-          'classic_font_family' => 'playfair',
-          'classic_hero_background_animation' => 'constellation',
+          'classic_hero_background_animation' => 'twinkle',
         ],
       ],
       'minimalist' => [
@@ -201,9 +197,7 @@ if (!function_exists('themePresetDefinitions')) {
           'classic_home_display_show' => 'below',
           'classic_ticker_show' => 0,
           'classic_footer_show' => 1,
-          'classic_theme_color' => 'monominimal',
-          'classic_font_family' => 'roboto',
-          'classic_hero_background_animation' => 'glow',
+          'classic_hero_background_animation' => 'twinkle',
           'classic_cursor_particles' => 'low',
         ],
       ],
@@ -267,9 +261,7 @@ if (!function_exists('themePresetDefinitions')) {
           'classic_footer_show' => 1,
           'classic_theme_color' => 'darkgray',
           'classic_font_family' => 'poppins',
-          'classic_hero_background_animation' => 'rain',
-          'classic_cursor_particles' => 'high',
-          'classic_cursor_custom_icon' => 'cyber-drone',
+          'classic_cursor_custom_icon' => 'electric-bolt',
         ],
       ],
       'custom' => [
@@ -319,14 +311,9 @@ if (!function_exists('themePresetQuickSettingKeys')) {
   {
     return [
       'classic_theme_color',
-      'classic_palette_primary',
-      'classic_palette_secondary',
-      'classic_palette_accent',
-      'classic_palette_background',
-      'classic_palette_surface',
-      'classic_palette_text',
-      'classic_palette_muted',
+      'classic_palette_custom',
       'classic_color_toggle',
+      'classic_palette_switcher_show',
       'classic_font_family',
       'classic_search_result_layout',
       'classic_search_panel_style',
@@ -395,6 +382,46 @@ if (!function_exists('themeEffectiveTemplateValue')) {
     }
 
     return $source['template'][$key] ?? $default;
+  }
+}
+
+if (!function_exists('themeColorModeSetting')) {
+  function themeColorModeSetting($sysconf_param = null)
+  {
+    $value = strtolower(trim((string)themeEffectiveTemplateValue('classic_color_toggle', 'auto_show', $sysconf_param)));
+
+    if ($value === '1' || $value === 'show') {
+      return 'auto_show';
+    }
+    if ($value === '0' || $value === 'hide') {
+      return 'auto_hide';
+    }
+
+    $allowed = ['auto_show', 'auto_hide', 'dark_show', 'dark_hide', 'light_show', 'light_hide'];
+    return in_array($value, $allowed, true) ? $value : 'auto_show';
+  }
+}
+
+if (!function_exists('themeColorModeDefault')) {
+  function themeColorModeDefault($sysconf_param = null)
+  {
+    $setting = themeColorModeSetting($sysconf_param);
+
+    if (strpos($setting, 'dark_') === 0) {
+      return 'dark';
+    }
+    if (strpos($setting, 'light_') === 0) {
+      return 'light';
+    }
+
+    return 'auto';
+  }
+}
+
+if (!function_exists('themeColorModeToggleVisible')) {
+  function themeColorModeToggleVisible($sysconf_param = null)
+  {
+    return substr(themeColorModeSetting($sysconf_param), -5) === '_show';
   }
 }
 
@@ -631,7 +658,7 @@ if (!function_exists('themeLimitTitleText')) {
 if (!function_exists('themeBackgroundAnimationOptions')) {
   function themeBackgroundAnimationOptions()
   {
-    return ['none', 'particles', 'constellation', 'rain', 'waves', 'grid', 'bubbles', 'twinkle', 'glow'];
+    return ['none', 'particles', 'rain', 'grid', 'twinkle', 'zen-ripples', 'neural-network', 'starfield-warp', 'floating-embers'];
   }
 }
 
@@ -1159,6 +1186,98 @@ if (!function_exists('themeHexToRgbString')) {
   }
 }
 
+if (!function_exists('themeParseCustomPaletteString')) {
+  function themeParseCustomPaletteString($value, $base)
+  {
+    if (strpos((string)$value, '|') !== false) {
+      $value = explode('|', (string)$value, 2)[0];
+    }
+
+    $parts = array_slice(array_map('trim', preg_split('/[;\r\n]+/', substr((string)$value, 0, 320))), 0, 7);
+    $keys = ['primary', 'secondary', 'accent', 'background', 'surface', 'text', 'muted'];
+    $palette = [
+      'label' => 'Custom Palette',
+    ];
+
+    foreach ($keys as $index => $key) {
+      $palette[$key] = themeNormalizeHexColor($parts[$index] ?? '', $base[$key] ?? '#ffffff');
+    }
+
+    $palette['hover'] = themeAdjustHexColor($palette['primary'], -28);
+    $palette['accent_hover'] = themeAdjustHexColor($palette['accent'], -28);
+    $palette['rgb'] = themeHexToRgbString($palette['primary']);
+    $palette['accent_rgb'] = themeHexToRgbString($palette['accent']);
+
+    return themePaletteWithContrast($palette);
+  }
+}
+
+if (!function_exists('themeSanitizeCustomPaletteSegment')) {
+  function themeSanitizeCustomPaletteSegment($value)
+  {
+    $parts = array_slice(array_map('trim', preg_split('/[;\r\n]+/', substr((string)$value, 0, 320))), 0, 7);
+    $clean = [];
+
+    foreach ($parts as $part) {
+      $clean[] = preg_match('/^#?[0-9a-fA-F]{6}$/', $part) ? '#' . strtolower(ltrim($part, '#')) : '';
+    }
+
+    while (!empty($clean) && end($clean) === '') {
+      array_pop($clean);
+    }
+
+    return implode('; ', $clean);
+  }
+}
+
+if (!function_exists('themeSanitizeCustomPaletteString')) {
+  function themeSanitizeCustomPaletteString($value)
+  {
+    $segments = explode('|', substr((string)$value, 0, 320), 2);
+    $light = themeSanitizeCustomPaletteSegment($segments[0] ?? '');
+    $dark = themeSanitizeCustomPaletteSegment($segments[1] ?? '');
+
+    return ($light !== '' && $dark !== '') ? $light . ' | ' . $dark : $light;
+  }
+}
+
+if (!function_exists('themeSelectedDarkAccentColor')) {
+  function themeSelectedDarkAccentColor($color, $sysconf_param = null)
+  {
+    global $sysconf;
+
+    $source = is_array($sysconf_param) ? $sysconf_param : $sysconf;
+    $key = strtolower((string)($color ?? 'warmgray'));
+    $light_palette = themeSelectedAccentColor($key, $source);
+    $base = [
+      'label' => 'Dark Palette',
+      'primary' => $light_palette['primary'] ?? '#1a2e40',
+      'hover' => themeAdjustHexColor($light_palette['primary'] ?? '#1a2e40', -28),
+      'secondary' => $light_palette['secondary'] ?? '#b38f4d',
+      'accent' => $light_palette['accent'] ?? '#d9534f',
+      'background' => '#101318',
+      'surface' => '#161a22',
+      'text' => '#f4f6f8',
+      'muted' => '#b6bec8',
+      'rgb' => themeHexToRgbString($light_palette['primary'] ?? '#1a2e40'),
+      'accent_rgb' => themeHexToRgbString($light_palette['accent'] ?? '#d9534f'),
+    ];
+
+    if ($key === 'custom') {
+      $custom_palette = (string)($source['template']['classic_palette_custom'] ?? '');
+      if (strpos($custom_palette, '|') !== false) {
+        $segments = explode('|', $custom_palette, 2);
+        $dark_segment = trim($segments[1] ?? '');
+        if ($dark_segment !== '') {
+          return themePaletteWithContrast(themeParseCustomPaletteString($dark_segment, $base));
+        }
+      }
+    }
+
+    return themePaletteWithContrast($base);
+  }
+}
+
 if (!function_exists('themeHexColorLuminance')) {
   function themeHexColorLuminance($hex)
   {
@@ -1170,6 +1289,62 @@ if (!function_exists('themeHexColorLuminance')) {
     }
 
     return (0.2126 * $channels[0]) + (0.7152 * $channels[1]) + (0.0722 * $channels[2]);
+  }
+}
+
+if (!function_exists('themeContrastRatio')) {
+  function themeContrastRatio($background, $foreground)
+  {
+    $background_luminance = themeHexColorLuminance($background);
+    $foreground_luminance = themeHexColorLuminance($foreground);
+    $lighter = max($background_luminance, $foreground_luminance);
+    $darker = min($background_luminance, $foreground_luminance);
+
+    return ($lighter + 0.05) / ($darker + 0.05);
+  }
+}
+
+if (!function_exists('themeReadableTextColor')) {
+  function themeReadableTextColor($background, $preferred_dark = '#111827', $preferred_light = '#ffffff')
+  {
+    $background = themeNormalizeHexColor($background, '#ffffff');
+    $dark = themeNormalizeHexColor($preferred_dark, '#111827');
+    $light = themeNormalizeHexColor($preferred_light, '#ffffff');
+
+    return themeContrastRatio($background, $dark) >= themeContrastRatio($background, $light) ? $dark : $light;
+  }
+}
+
+if (!function_exists('themePaletteWithContrast')) {
+  function themePaletteWithContrast($palette)
+  {
+    if (!is_array($palette)) {
+      return [];
+    }
+
+    $palette['primary'] = themeNormalizeHexColor($palette['primary'] ?? '', '#6f5b43');
+    $palette['hover'] = themeNormalizeHexColor($palette['hover'] ?? '', themeAdjustHexColor($palette['primary'], -28));
+    $palette['secondary'] = themeNormalizeHexColor($palette['secondary'] ?? '', '#a58a63');
+    $palette['accent'] = themeNormalizeHexColor($palette['accent'] ?? '', '#c8a24a');
+    $palette['background'] = themeNormalizeHexColor($palette['background'] ?? '', '#f4f1ec');
+    $palette['surface'] = themeNormalizeHexColor($palette['surface'] ?? '', '#ffffff');
+    $palette['text'] = themeNormalizeHexColor($palette['text'] ?? '', '#2f2a24');
+    $palette['muted'] = themeNormalizeHexColor($palette['muted'] ?? '', '#7a7167');
+    $palette['accent_hover'] = themeNormalizeHexColor($palette['accent_hover'] ?? '', themeAdjustHexColor($palette['accent'], -28));
+    $palette['rgb'] = themeHexToRgbString($palette['primary']);
+    $palette['accent_rgb'] = themeHexToRgbString($palette['accent']);
+    $palette['on_primary'] = themeReadableTextColor($palette['primary']);
+    $palette['on_primary_hover'] = themeReadableTextColor($palette['hover']);
+    $palette['on_secondary'] = themeReadableTextColor($palette['secondary']);
+    $palette['on_accent'] = themeReadableTextColor($palette['accent']);
+    $palette['on_background'] = themeContrastRatio($palette['background'], $palette['text']) >= 4.5
+      ? $palette['text']
+      : themeReadableTextColor($palette['background']);
+    $palette['on_surface'] = themeContrastRatio($palette['surface'], $palette['text']) >= 4.5
+      ? $palette['text']
+      : themeReadableTextColor($palette['surface']);
+
+    return $palette;
   }
 }
 
@@ -1211,6 +1386,11 @@ if (!function_exists('themeSelectedAccentColor')) {
     if ($key === 'custom') {
       $source = is_array($sysconf_param) ? $sysconf_param : $sysconf;
       $base = $palettes['minimalwhite'];
+      $custom_palette = trim((string)($source['template']['classic_palette_custom'] ?? ''));
+      if ($custom_palette !== '') {
+        return themePaletteWithContrast(themeParseCustomPaletteString($custom_palette, $base));
+      }
+
       $primary = themeNormalizeHexColor($source['template']['classic_palette_primary'] ?? '', $base['primary']);
       $palette = [
         'label' => 'Custom Palette',
@@ -1224,10 +1404,10 @@ if (!function_exists('themeSelectedAccentColor')) {
         'muted' => themeNormalizeHexColor($source['template']['classic_palette_muted'] ?? '', $base['muted']),
       ];
       $palette['rgb'] = themeHexToRgbString($palette['primary']);
-      return $palette;
+      return themePaletteWithContrast($palette);
     }
 
-    return $palettes[$key] ?? $palettes['warmgray'];
+    return themePaletteWithContrast($palettes[$key] ?? $palettes['warmgray']);
   }
 }
 
