@@ -145,10 +145,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then((data) => {
                     notify(data.status ? 'success' : 'error', data.message);
 
-                    const basketCounter = query('#count-basket');
-                    if (basketCounter) {
-                        basketCounter.textContent = data.count || 0;
-                    }
+                    const newCount = typeof data.count !== 'undefined' ? data.count : 0;
+                    queryAll('#count-basket, .count-basket, #count-basket-mobile, .basket-badge-mobile').forEach((basketCounter) => {
+                        basketCounter.textContent = newCount;
+                    });
                 })
                 .catch((error) => {
                     console.error('ERROR!', error);
@@ -388,18 +388,60 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    const resizeObserver = new ResizeObserver(entries => {
-        adjustTickerMarqueeSpeeds();
-    });
-
     const tickers = document.querySelectorAll('.latest-content-ticker');
-    tickers.forEach(ticker => {
-        resizeObserver.observe(ticker);
-        const track = ticker.querySelector('.latest-content-ticker-track');
-        if (track) {
-            resizeObserver.observe(track);
-        }
-    });
+    if ('ResizeObserver' in window) {
+        const resizeObserver = new ResizeObserver(() => {
+            adjustTickerMarqueeSpeeds();
+        });
+
+        tickers.forEach(ticker => {
+            resizeObserver.observe(ticker);
+            const track = ticker.querySelector('.latest-content-ticker-track');
+            if (track) {
+                resizeObserver.observe(track);
+            }
+        });
+    } else {
+        window.addEventListener('resize', adjustTickerMarqueeSpeeds);
+        window.addEventListener('orientationchange', adjustTickerMarqueeSpeeds);
+    }
 
     adjustTickerMarqueeSpeeds();
+
+    // Simplify pagination by replacing text with FontAwesome icons
+    const simplifyPagination = () => {
+        const firstLinks = document.querySelectorAll('.pagingList .first_link');
+        const prevLinks = document.querySelectorAll('.pagingList .prev_link');
+        const nextLinks = document.querySelectorAll('.pagingList .next_link');
+        const lastLinks = document.querySelectorAll('.pagingList .last_link');
+
+        firstLinks.forEach(link => {
+            const text = link.textContent.trim();
+            link.setAttribute('title', text);
+            link.setAttribute('aria-label', text);
+            link.innerHTML = '<i class="fas fa-angle-double-left" aria-hidden="true"></i>';
+        });
+
+        prevLinks.forEach(link => {
+            const text = link.textContent.trim();
+            link.setAttribute('title', text);
+            link.setAttribute('aria-label', text);
+            link.innerHTML = '<i class="fas fa-chevron-left" aria-hidden="true"></i>';
+        });
+
+        nextLinks.forEach(link => {
+            const text = link.textContent.trim();
+            link.setAttribute('title', text);
+            link.setAttribute('aria-label', text);
+            link.innerHTML = '<i class="fas fa-chevron-right" aria-hidden="true"></i>';
+        });
+
+        lastLinks.forEach(link => {
+            const text = link.textContent.trim();
+            link.setAttribute('title', text);
+            link.setAttribute('aria-label', text);
+            link.innerHTML = '<i class="fas fa-angle-double-right" aria-hidden="true"></i>';
+        });
+    };
+    simplifyPagination();
 });

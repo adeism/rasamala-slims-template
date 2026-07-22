@@ -99,13 +99,8 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
     }
 
     // availability
-    $item_availability_data = ['items' => [], 'total' => 0, 'available' => 0];
-    if (in_array($current_view, ['simple', 'list'], true)) {
-        $item_availability_data = rasamalaGetItemsAndAvailability($dbs, $biblio_id);
-        $availability = $item_availability_data['available'];
-    } else {
-        $availability = getAvailability($dbs, $biblio_id, $sysconf);
-    }
+    $item_availability_data = rasamalaGetItemsAndAvailability($dbs, $biblio_id);
+    $availability = themeSafeInt($item_availability_data['available'] ?? 0);
     $class_avail = ($availability > 0) ? '' : 'text-danger';
     $availability_total = themeSafeInt($item_availability_data['total'] ?? 0);
     $availability_summary = $availability_total > 0
@@ -113,18 +108,6 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
         : themeSafeInt($availability);
     $availability_state_class = $availability > 0 ? 'is-available' : 'is-unavailable';
     $availability_side_icon = $availability > 0 ? 'fas fa-check-circle' : 'fas fa-times-circle';
-
-    if ($current_view !== 'simple') {
-        if (themeShouldGenerateBookCover($biblio_detail['image'] ?? '', $sysconf)) {
-            $generated_cover = themeGenerateBookCoverHtml($biblio_detail['title'] ?? '');
-            $cover_html_list = $generated_cover;
-            $cover_html_grid = $generated_cover;
-        } else {
-            $cover_alt = themeEscape(sprintf(__('Cover of %s'), trim(strip_tags((string)($biblio_detail['title'] ?? __('collection'))))));
-            $cover_html_list = '<img loading="lazy" src="'.themeEscape($thumb_url).'" alt="'.$cover_alt.'" class="img-fluid rounded '.($availability > 0 ?: 'not-available').'" title="' . themeEscape($availability > 0 ? '' :  __('Items is not available')) . '"/>';
-            $cover_html_grid = '<img loading="lazy" src="'.themeEscape($thumb_url).'" alt="'.$cover_alt.'" class="img-fluid img-thumbnail shadow '.($availability > 0 ?: 'not-available').'" title="' . themeEscape($availability > 0 ? '' :  __('Items is not available')) . '"/>';
-        }
-    }
 
     // authors
     $_authors = isset($biblio_detail['author'])?$biblio_detail['author']:biblio_list_model::getAuthors($dbs, $biblio_id, true);
@@ -145,6 +128,18 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
         }
         if ($_author_names) {
             $_authors_plain = themeEscape(implode('; ', $_author_names));
+        }
+    }
+
+    if ($current_view !== 'simple') {
+        if (themeShouldGenerateBookCover($biblio_detail['image'] ?? '', $sysconf)) {
+            $generated_cover = themeGenerateBookCoverHtml($biblio_detail['title'] ?? '', $_authors_plain);
+            $cover_html_list = $generated_cover;
+            $cover_html_grid = $generated_cover;
+        } else {
+            $cover_alt = themeEscape(sprintf(__('Cover of %s'), trim(strip_tags((string)($biblio_detail['title'] ?? __('collection'))))));
+            $cover_html_list = '<img loading="lazy" src="'.themeEscape($thumb_url).'" alt="'.$cover_alt.'" class="img-fluid rounded '.($availability > 0 ?: 'not-available').'" title="' . themeEscape($availability > 0 ? '' :  __('Items is not available')) . '"/>';
+            $cover_html_grid = '<img loading="lazy" src="'.themeEscape($thumb_url).'" alt="'.$cover_alt.'" class="img-fluid img-thumbnail shadow '.($availability > 0 ?: 'not-available').'" title="' . themeEscape($availability > 0 ? '' :  __('Items is not available')) . '"/>';
         }
     }
 
@@ -272,7 +267,21 @@ function getNotes($dbs, $biblio_id)
     $biblio_id = themeSafeInt($biblio_id);
     $query = $dbs->query('SELECT notes FROM biblio WHERE biblio_id = ' . $biblio_id);
     $data = $query->fetch_row();
-    return addEllipsis($data[0] ?? '', 400);
+    $notes_text = $data[0] ?? '';
+    
+    // Remove literal string representations of newlines
+    $notes_text = str_replace(['\r\n', '\r', '\n', "\\r\\n", "\\r", "\\n"], ' ', $notes_text);
+    
+    // Remove actual carriage returns and newlines
+    $notes_text = str_replace(["\r\n", "\r", "\n"], ' ', $notes_text);
+    
+    // Strip HTML tags for clean preview
+    $notes_text = strip_tags($notes_text);
+    
+    // Collapse multiple consecutive spaces to a single space
+    $notes_text = preg_replace('/\s+/', ' ', $notes_text);
+    
+    return addEllipsis(trim($notes_text), 400);
 }
 
 function addEllipsis($string, $length, $end='…')
@@ -289,18 +298,8 @@ function addEllipsis($string, $length, $end='…')
 
 function getAvailability($dbs, $biblio_id, $sysconf)
 {
-    $biblio_id = themeSafeInt($biblio_id);
-    // get total number of this biblio items/copies
-    $_item_q = $dbs->query('SELECT COUNT(*) FROM item WHERE biblio_id='.$biblio_id);
-    $_item_c = $_item_q->fetch_row();
-    // get total number of currently borrowed copies
-    $_borrowed_q = $dbs->query('SELECT COUNT(*) FROM loan AS l INNER JOIN item AS i'
-        .' ON l.item_code=i.item_code WHERE l.is_lent=1 AND l.is_return=0 AND i.biblio_id='.$biblio_id);
-    $_borrowed_c = $_borrowed_q->fetch_row();
-    // total available
-    $_total_avail = $_item_c[0]-$_borrowed_c[0];
-
-    return $_total_avail;
+    $availability_data = rasamalaGetItemsAndAvailability($dbs, $biblio_id);
+    return themeSafeInt($availability_data['available'] ?? 0);
 }
 
 function rasamalaGetItemsAndAvailability($dbs, $biblio_id)

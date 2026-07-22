@@ -1,13 +1,13 @@
 <?php
-# @Author: Waris Agung Widodo <user>
+# @Author: Ade Ismail Siregar <adeismailbox@gmail.com>
 # @Date:   2026-07-16T10:08:00+07:00
-# @Email:  ido.alit@gmail.com
+# @Email:  adeismailbox@gmail.com
 # @Filename: mobile_bottom_nav.php
 # @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-16T10:08:00+07:00
+# @Last modified time: 2026-07-22T12:54:00+07:00
 
 // Bottom Navigation Bar for Mobile
-$basket_count = isset($_SESSION['m_mark_biblio']) ? count($_SESSION['m_mark_biblio']) : 0;
+$basket_count = (isset($_SESSION['m_mark_biblio']) && is_array($_SESSION['m_mark_biblio'])) ? count($_SESSION['m_mark_biblio']) : 0;
 $current_p = $_GET['p'] ?? 'home';
 
 // Icon map for menus
@@ -82,7 +82,8 @@ if (!$has_member_in_main && ($sysconf['template']['classic_member_area'] ?? 1) =
     $bottom_items[] = [
         'key' => 'member',
         'text' => __('Member Area'),
-        'url' => 'index.php?p=member'
+        'url' => 'index.php?p=member',
+        'icon' => 'fas fa-user'
     ];
 }
 
@@ -98,60 +99,143 @@ if (!empty($mobile_language_links)) {
 $primary_bottom_nav = [];
 $sheet_bottom_nav = [];
 $total_nav_count = count($bottom_items);
+$is_logged_in_member = isset($_SESSION['mid']) && $_SESSION['mid'];
 
-if ($basket_count > 0) {
-    if ($total_nav_count <= 4) {
-        $primary_bottom_nav = $bottom_items;
-        $primary_bottom_nav[] = [
-            'key' => 'basket',
+if ($current_p === 'member' && $is_logged_in_member) {
+    $primary_bottom_nav = [
+        [
+            'key' => 'home_back',
+            'text' => __('Beranda'),
+            'url' => 'index.php',
+            'icon' => 'fas fa-home'
+        ],
+        [
+            'key' => 'member_loans',
+            'text' => __('Loans'),
+            'url' => 'index.php?p=member&sec=current_loan',
+            'icon' => 'fas fa-exchange-alt'
+        ],
+        [
+            'key' => 'member_card',
+            'text' => __('My Card'),
+            'url' => 'index.php?p=member&sec=my_card',
+            'icon' => 'fas fa-id-card'
+        ],
+        [
+            'key' => 'member_basket',
             'text' => __('Basket'),
             'url' => 'index.php?p=member&sec=title_basket',
+            'icon' => 'fas fa-shopping-basket',
             'badge' => $basket_count
-        ];
-    } else {
-        $primary_bottom_nav = array_slice($bottom_items, 0, 4);
-        $primary_bottom_nav[] = [
+        ],
+        [
             'key' => 'more',
             'text' => __('More'),
             'url' => '#',
-            'badge' => $basket_count
-        ];
-        $sheet_bottom_nav = array_slice($bottom_items, 4);
-        $sheet_bottom_nav[] = [
-            'key' => 'basket',
-            'text' => __('Basket') . ' (' . $basket_count . ')',
-            'url' => 'index.php?p=member&sec=title_basket',
-            'badge' => $basket_count
-        ];
-    }
+            'icon' => 'fas fa-ellipsis-h'
+        ]
+    ];
+    $sheet_bottom_nav = [
+        [
+            'key' => 'member_account',
+            'text' => __('Account'),
+            'url' => 'index.php?p=member&sec=my_account',
+            'icon' => 'fas fa-user-circle'
+        ],
+        [
+            'key' => 'member_bookmarks',
+            'text' => __('Bookmarks'),
+            'url' => 'index.php?p=member&sec=bookmark',
+            'icon' => 'fas fa-bookmark'
+        ],
+        [
+            'key' => 'member_history',
+            'text' => __('History'),
+            'url' => 'index.php?p=member&sec=loan_history',
+            'icon' => 'fas fa-history'
+        ],
+        [
+            'key' => 'member_logout',
+            'text' => __('Logout'),
+            'url' => 'index.php?p=member&logout=1',
+            'icon' => 'fas fa-sign-out-alt'
+        ]
+    ];
 } else {
-    if ($total_nav_count <= 5) {
-        $primary_bottom_nav = $bottom_items;
-    } else {
-        $primary_bottom_nav = array_slice($bottom_items, 0, 4);
-        $primary_bottom_nav[] = [
-            'key' => 'more',
-            'text' => __('More'),
-            'url' => '#'
-        ];
-        $sheet_bottom_nav = array_slice($bottom_items, 4);
+    // OPAC / Visitor View
+    // Primary bottom keys: 1. home, 2. news, 3. basket (Center replacing member area), 4. help
+    $primary_keys = ['home', 'news', 'basket', 'help'];
+
+    foreach ($primary_keys as $pkey) {
+        if ($pkey === 'basket') {
+            $primary_bottom_nav[] = [
+                'key' => 'basket',
+                'text' => __('Basket'),
+                'url' => 'index.php?p=member&sec=title_basket',
+                'icon' => 'fas fa-shopping-basket',
+                'badge' => $basket_count
+            ];
+        } else {
+            $found = false;
+            foreach ($bottom_items as $item) {
+                if ($item['key'] === $pkey) {
+                    $primary_bottom_nav[] = $item;
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) {
+                if ($pkey === 'home') {
+                    $primary_bottom_nav[] = ['key' => 'home', 'text' => __('Beranda'), 'url' => 'index.php', 'icon' => 'fas fa-home'];
+                } elseif ($pkey === 'news') {
+                    $primary_bottom_nav[] = ['key' => 'news', 'text' => __('News'), 'url' => 'index.php?p=news', 'icon' => 'fas fa-newspaper'];
+                } elseif ($pkey === 'help') {
+                    $primary_bottom_nav[] = ['key' => 'help', 'text' => __('Help'), 'url' => 'index.php?p=help', 'icon' => 'fas fa-question-circle'];
+                }
+            }
+        }
+    }
+
+    // Append More button
+    $primary_bottom_nav[] = [
+        'key' => 'more',
+        'text' => __('More'),
+        'url' => '#',
+        'icon' => 'fas fa-ellipsis-h'
+    ];
+
+    // Put remaining menu items in the sheet bottom nav (including 'member' if not in primary_keys)
+    $primary_keys_set = array_flip($primary_keys);
+    foreach ($bottom_items as $item) {
+        if (!isset($primary_keys_set[$item['key']])) {
+            $sheet_bottom_nav[] = $item;
+        }
     }
 }
 ?>
 
 <?php if (($sysconf['template']['classic_mobile_bottom_nav_show'] ?? 1) == 1) : ?>
-<div class="mobile-bottom-nav d-md-none">
+<div class="mobile-bottom-nav d-lg-none">
     <?php
     foreach ($primary_bottom_nav as $item) {
         $key = $item['key'];
         $url = themeEscape(themeSafeHref($item['url'] ?? '#'));
         $text = themeEscape(__($item['text'] ?? ''));
-        $icon = themeEscape(themeNavbarMenuIconClass($item, $icon_map[$key] ?? 'fas fa-link'));
+        $icon_raw = $item['icon'] ?? null;
+        $icon_val = (is_string($icon_raw) && $icon_raw !== '') ? $icon_raw : themeNavbarMenuIconClass($item, $icon_map[$key] ?? 'fas fa-link');
+        $icon = themeEscape($icon_val);
 
         // Active state detection
         $active_class = '';
-        if ($key === 'more' || $key === 'language') {
+        $current_sec = $_GET['sec'] ?? 'current_loan';
+        if ($key === 'more' || $key === 'language' || $key === 'home_back') {
             $active_class = '';
+        } elseif ($key === 'member_loans') {
+            $active_class = ($current_p === 'member' && ($current_sec === 'current_loan' || $current_sec === '')) ? 'active' : '';
+        } elseif ($key === 'member_card') {
+            $active_class = ($current_p === 'member' && $current_sec === 'my_card') ? 'active' : '';
+        } elseif ($key === 'member_basket') {
+            $active_class = ($current_p === 'member' && $current_sec === 'title_basket') ? 'active' : '';
         } elseif ($key === 'home') {
             $active_class = ($current_p === 'home' && !isset($_GET['search'])) ? 'active' : '';
         } elseif ($key === 'basket') {
@@ -171,8 +255,10 @@ if ($basket_count > 0) {
                 <?php else: ?>
                 <i class="<?= $icon ?>" aria-hidden="true"></i>
                 <?php endif; ?>
-                <?php if ($badge > 0): ?>
-                    <span class="badge text-bg-danger position-absolute basket-badge-mobile"><?= themeEscape($badge) ?></span>
+                <?php if ($key === 'basket' || $key === 'member_basket'): ?>
+                    <span class="badge text-bg-danger position-absolute basket-badge-mobile count-basket" id="count-basket-mobile"><?= themeEscape($badge) ?></span>
+                <?php elseif ($badge > 0): ?>
+                    <span class="badge text-bg-danger position-absolute basket-badge-mobile count-basket"><?= themeEscape($badge) ?></span>
                 <?php endif; ?>
             </div>
             <span><?= $text ?></span>
@@ -185,7 +271,7 @@ if ($basket_count > 0) {
 
 <?php if (!empty($sheet_bottom_nav) || !empty($mobile_language_links)): ?>
 <!-- Mobile More Menu Overlay Bottom Sheet -->
-<div id="mobile-more-menu-overlay" class="mobile-more-menu-overlay d-md-none">
+<div id="mobile-more-menu-overlay" class="mobile-more-menu-overlay d-lg-none">
     <div class="mobile-more-menu-sheet">
         <div class="mobile-more-menu-header">
             <span class="mobile-more-menu-title"><?= themeEscape(__('More Menu')) ?></span>
@@ -200,10 +286,21 @@ if ($basket_count > 0) {
                 }
                 $url = themeEscape(themeSafeHref($item['url'] ?? '#'));
                 $text = themeEscape(__($item['text'] ?? ''));
-                $icon = themeEscape(themeNavbarMenuIconClass($item, $icon_map[$key] ?? 'fas fa-link'));
+                $icon_raw = $item['icon'] ?? null;
+                $icon_val = (is_string($icon_raw) && $icon_raw !== '') ? $icon_raw : themeNavbarMenuIconClass($item, $icon_map[$key] ?? 'fas fa-link');
+                $icon = themeEscape($icon_val);
 
                 $active_class = '';
-                if ($key === 'basket') {
+                $current_sec = $_GET['sec'] ?? '';
+                if ($key === 'member_account') {
+                    $active_class = ($current_p === 'member' && $current_sec === 'my_account') ? 'text-primary' : '';
+                } elseif ($key === 'member_bookmarks') {
+                    $active_class = ($current_p === 'member' && $current_sec === 'bookmark') ? 'text-primary' : '';
+                } elseif ($key === 'member_history') {
+                    $active_class = ($current_p === 'member' && $current_sec === 'loan_history') ? 'text-primary' : '';
+                } elseif ($key === 'member_logout') {
+                    $active_class = '';
+                } elseif ($key === 'basket') {
                     $active_class = ($current_p === 'member' && ($_GET['sec'] ?? '') === 'title_basket') ? 'text-primary' : '';
                 } else {
                     $active_class = ($current_p === $key) ? 'text-primary' : '';

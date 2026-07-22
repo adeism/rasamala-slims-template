@@ -4,8 +4,20 @@
 # @Email:  ido.alit@gmail.com
 # @Filename: _result-search.php
 # @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-15T15:16:37+07:00
+# @Last modified time: 2026-07-20T10:51:24+07:00
 
+if (!function_exists('rasamalaSearchFilterHtml')) {
+    function rasamalaSearchFilterHtml($html)
+    {
+        $html = (string)$html;
+        $html = preg_replace('/class="list-group\s+list-group-flush"/i', 'class="rasamala-filter-list"', $html);
+        $html = preg_replace('/class="([^"]*)\blist-group-item\b([^"]*)"/i', 'class="$1rasamala-filter-facet$2"', $html);
+        $html = preg_replace('/\s*\bborder-top-0\b/i', '', $html);
+        $html = preg_replace('/\s*\bborder-left\b|\s*\bborder-right\b/i', '', $html);
+
+        return $html;
+    }
+}
 ?>
 
 <div class="result-search rasamala-subpage-wrapper">
@@ -32,7 +44,7 @@
                 <div class="card filter-panel-card border-0 shadow-sm p-3 rounded">
                     <h5 class="filter-panel-title fw-bold mb-3 border-bottom pb-2"><i class="fas fa-filter me-2" aria-hidden="true"></i><?= __('Filter by') ?></h5>
                     <div id="desktop-filter-container">
-                        <?= $engine->getFilter($opac, true) ?>
+                        <?= rasamalaSearchFilterHtml($engine->getFilter($opac, true)) ?>
                     </div>
                 </div>
             </div>
@@ -40,8 +52,6 @@
             <div class="col-md-9">
                 <?php
                 $view_csrf = $opac->getCsrf();
-                $default_layout = $sysconf['template']['classic_search_result_layout'] ?? 'simple';
-                $current_view = $_SESSION['LIST_VIEW'] ?? $default_layout;
                 $view_options = [
                     'simple' => [
                         'label' => __('Simple'),
@@ -59,6 +69,16 @@
                         'icon' => 'fas fa-th-large',
                     ],
                 ];
+                $default_layout = $sysconf['template']['classic_search_result_layout'] ?? 'simple';
+                $default_layout = is_scalar($default_layout) ? (string)$default_layout : 'simple';
+                if (!isset($view_options[$default_layout])) {
+                    $default_layout = 'simple';
+                }
+                $current_view = $_SESSION['LIST_VIEW'] ?? $default_layout;
+                $current_view = is_scalar($current_view) ? (string)$current_view : $default_layout;
+                if (!isset($view_options[$current_view])) {
+                    $current_view = $default_layout;
+                }
                 $view_action = $_SERVER['PHP_SELF'] . '?' . http_build_query(array_merge(
                     ['csrf_token' => $view_csrf],
                     array_filter($_GET, fn($key) => $key !== 'csrf_token', ARRAY_FILTER_USE_KEY)
@@ -68,26 +88,26 @@
                 <div class="d-md-none mb-3">
                     <div class="row g-0">
                         <div class="col-4 pe-1">
-                            <button type="button" class="btn btn-light btn-modern-filter w-100 shadow-sm border d-flex align-items-center justify-content-center py-2" data-bs-toggle="modal" data-bs-target="#mobileFilterModal">
-                                <i class="fas fa-filter me-1 text-primary"></i> <?= __('Filter') ?>
+                            <button type="button" class="btn btn-light btn-modern-filter w-100 shadow-sm border d-flex align-items-center justify-content-center py-2" data-bs-toggle="modal" data-bs-target="#mobileFilterModal" aria-label="<?= themeEscape(__('Open filter options')) ?>">
+                                <i class="fas fa-filter me-1 text-primary" aria-hidden="true"></i> <?= __('Filter') ?>
                             </button>
                         </div>
                         <div class="col-4 px-1">
-                            <button type="button" class="btn btn-light btn-modern-filter w-100 shadow-sm border d-flex align-items-center justify-content-center py-2" data-bs-toggle="modal" data-bs-target="#mobileSortModal">
-                                <i class="fas fa-sort me-1 text-primary"></i> <?= __('Sort') ?>
+                            <button type="button" class="btn btn-light btn-modern-filter w-100 shadow-sm border d-flex align-items-center justify-content-center py-2" data-bs-toggle="modal" data-bs-target="#mobileSortModal" aria-label="<?= themeEscape(__('Open sort options')) ?>">
+                                <i class="fas fa-sort me-1 text-primary" aria-hidden="true"></i> <?= __('Sort') ?>
                             </button>
                         </div>
                         <div class="col-4 ps-1">
                             <div class="dropdown w-100">
-                                <button type="button" class="btn btn-light btn-modern-filter w-100 shadow-sm border d-flex align-items-center justify-content-center py-2 dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="<?= themeEscape($view_options[$current_view]['icon']) ?> me-1 text-primary"></i> <?= themeEscape($view_options[$current_view]['label']) ?>
+                                <button type="button" class="btn btn-light btn-modern-filter w-100 shadow-sm border d-flex align-items-center justify-content-center py-2 dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="<?= themeEscape(__('Change result view')) ?>">
+                                    <i class="<?= themeEscape($view_options[$current_view]['icon']) ?> me-1 text-primary" aria-hidden="true"></i> <?= themeEscape($view_options[$current_view]['label']) ?>
                                 </button>
-                                <div class="dropdown-menu dropdown-menu-end shadow-sm border" style="min-width: 140px;">
+                                <div class="dropdown-menu dropdown-menu-end shadow-sm border search-view-menu">
                                     <form method="POST" action="<?= themeEscape($view_action) ?>" class="m-0">
                                         <input type="hidden" name="csrf_token" value="<?= themeEscape($view_csrf) ?>"/>
                                         <?php foreach ($view_options as $view_key => $view_option) : ?>
                                         <button type="submit" name="view" value="<?= themeEscape($view_key) ?>" class="dropdown-item d-flex align-items-center py-2 <?= $current_view === $view_key ? 'active' : '' ?>">
-                                            <i class="<?= themeEscape($view_option['icon']) ?> me-2"></i>
+                                            <i class="<?= themeEscape($view_option['icon']) ?> me-2" aria-hidden="true"></i>
                                             <span><?= themeEscape($view_option['label']) ?></span>
                                         </button>
                                         <?php endforeach; ?>
@@ -132,7 +152,7 @@
                             <i class="<?= themeEscape($view_options[$current_view]['icon']) ?> me-2 text-primary"></i>
                             <span><?= themeEscape($view_options[$current_view]['label']) ?></span>
                         </button>
-                        <div class="dropdown-menu dropdown-menu-end shadow-sm border" style="min-width: 140px;">
+                        <div class="dropdown-menu dropdown-menu-end shadow-sm border search-view-menu">
                             <form method="POST" action="<?= themeEscape($view_action) ?>" class="m-0">
                                 <input type="hidden" name="csrf_token" value="<?= themeEscape($view_csrf) ?>"/>
                                 <?php foreach ($view_options as $view_key => $view_option) : ?>
@@ -163,127 +183,8 @@
         </div>
     </section>
 </div>
-<?php if(($_SESSION['LIST_VIEW'] ?? 'simple') === 'grid'): ?>
-    <script>
-        $(document).ready(function () {
-            var $grid = $('.biblioResult').addClass('row').masonry({
-                itemSelector: '.grid-item',
-                columnWidth: '.grid-item',
-                percentPosition: true
-            });
-
-            var images = $(".grid-item img");
-            if (images.length > 0) {
-                images.each(function (idx, img) {
-                    var tempImg = new Image();
-                    tempImg.onload = tempImg.onerror = function() {
-                        $grid.masonry('layout');
-                    };
-                    tempImg.src = $(img).attr("src");
-                });
-            }
-
-            $('.dropdown-toggle').dropdown();
-        });
-    </script>
-<?php endif; ?>
-
-<?php if(($_SESSION['LIST_VIEW'] ?? 'simple') === 'simple'): ?>
-    <script>
-    (function () {
-        var activePopover = null;
-        var activePinned = false;
-
-        function closeActive() {
-            if (activePopover) {
-                activePopover.classList.remove('show');
-            }
-            activePopover = null;
-            activePinned = false;
-        }
-
-        function openPopover(popover, pinned) {
-            if (!popover) {
-                return;
-            }
-
-            if (activePopover && activePopover !== popover) {
-                activePopover.classList.remove('show');
-            }
-
-            popover.classList.add('show');
-            activePopover = popover;
-            activePinned = !!pinned;
-        }
-
-        document.addEventListener('click', function (event) {
-            var badge = event.target.closest('.biblio-avail-badge');
-
-            if (badge) {
-                var wrap = badge.closest('.biblio-avail-wrap');
-                var popover = wrap ? wrap.querySelector('.biblio-avail-popover') : null;
-
-                if (popover) {
-                    event.preventDefault();
-                    event.stopPropagation();
-
-                    if (activePopover === popover && activePinned) {
-                        closeActive();
-                    } else {
-                        openPopover(popover, true);
-                    }
-
-                    return;
-                }
-            }
-
-            if (activePopover && !event.target.closest('.biblio-avail-popover')) {
-                closeActive();
-            }
-        });
-
-        document.addEventListener('mouseover', function (event) {
-            if (activePinned) {
-                return;
-            }
-
-            var badge = event.target.closest('.biblio-avail-badge');
-            if (!badge) {
-                return;
-            }
-
-            var wrap = badge.closest('.biblio-avail-wrap');
-            var popover = wrap ? wrap.querySelector('.biblio-avail-popover') : null;
-            openPopover(popover, false);
-        });
-
-        document.addEventListener('mouseout', function (event) {
-            var wrap = event.target.closest('.biblio-avail-wrap');
-            if (!wrap || activePinned) {
-                return;
-            }
-
-            if (event.relatedTarget && wrap.contains(event.relatedTarget)) {
-                return;
-            }
-
-            var popover = wrap.querySelector('.biblio-avail-popover');
-            if (popover && activePopover === popover) {
-                closeActive();
-            }
-        });
-
-        document.addEventListener('keydown', function (event) {
-            if (event.key === 'Escape') {
-                closeActive();
-            }
-        });
-    })();
-    </script>
-<?php endif; ?>
-
 <!-- Mobile Filter Modal (Tokopedia/Shopee style slideout) -->
-<div class="modal fade" id="mobileFilterModal" tabindex="-1" role="dialog" aria-labelledby="mobileFilterModalLabel" aria-hidden="true" inert>
+<div class="modal fade" id="mobileFilterModal" tabindex="-1" role="dialog" aria-labelledby="mobileFilterModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-slideout" role="document">
         <div class="modal-content border-0 h-100">
             <div class="modal-header border-bottom py-3">
@@ -309,7 +210,7 @@
 </div>
 
 <!-- Mobile Sort Modal (Tokopedia/Shopee style sheet modal) -->
-<div class="modal fade" id="mobileSortModal" tabindex="-1" role="dialog" aria-labelledby="mobileSortModalLabel" aria-hidden="true" inert>
+<div class="modal fade" id="mobileSortModal" tabindex="-1" role="dialog" aria-labelledby="mobileSortModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content border-0 rounded-3">
             <div class="modal-header border-bottom py-3">
@@ -323,116 +224,4 @@
     </div>
 </div>
 
-<script>
-$(document).ready(function() {
-    // Populate desktop sort options as chips
-    $('#search-order option').each(function() {
-        var value = $(this).val();
-        var text = $(this).text().replace(/[_-]/g, ' ');
-        text = text.charAt(0).toUpperCase() + text.slice(1);
-        var isActive = $(this).prop('selected') ? 'active fw-bold' : '';
-        
-        $('#desktop-sort-chips').append(
-            '<a href="#" class="sort-chip ' + isActive + '" data-value="' + value + '">' + text + '</a>'
-        );
-    });
-    
-    // Handle clicking desktop sort chip
-    $(document).on('click', '#desktop-sort-chips .sort-chip', function(e) {
-        e.preventDefault();
-        var val = $(this).data('value');
-        $('#search-order').val(val).trigger('change');
-    });
-
-    // Populate mobile sort options from the desktop select dropdown
-    $('#search-order option').each(function() {
-        var value = $(this).val();
-        var text = $(this).text().replace(/[_-]/g, ' ');
-        text = text.charAt(0).toUpperCase() + text.slice(1);
-        var selected = $(this).prop('selected') ? 'active fw-bold' : '';
-        var checkIcon = $(this).prop('selected') ? '<i class="fas fa-check text-primary float-end mt-1"></i>' : '';
-        
-        $('#mobile-sort-options').append(
-            '<a href="#" class="list-group-item list-group-item-action ' + selected + '" data-value="' + value + '">' + 
-            text + checkIcon + '</a>'
-        );
-    });
-    
-    // Handle clicking mobile sort option
-    $(document).on('click', '#mobile-sort-options a', function(e) {
-        e.preventDefault();
-        var val = $(this).data('value');
-        $('#search-order').val(val).trigger('change');
-    });
-
-    // Mobile filter modal handlers to prevent auto-submit on change and fix range slider width
-    $('#mobileFilterModal').on('show.bs.modal', function() {
-        $('#mobile-filter-container #search-filter input').off('change change.filter');
-    });
-
-    $('#mobileFilterModal').on('shown.bs.modal', function () {
-        var slider = $('#mobile-filter-container #search-filter .input-slider').data("ionRangeSlider");
-        if (slider) {
-            slider.update();
-        }
-    });
-
-    // When clicking mobile filter apply, trigger SLiMS filter function
-    $('#apply-mobile-filter').on('click', function() {
-        if (typeof filter === 'function') {
-            filter();
-        }
-    });
-    
-    // Handle clicking reset button in mobile filter modal
-    $('#reset-mobile-filter').on('click', function() {
-        // Uncheck all checkboxes and radios
-        $('#mobile-filter-container #search-filter input[type="checkbox"]').prop('checked', false);
-        $('#mobile-filter-container #search-filter input[type="radio"]').prop('checked', false);
-        
-        // Reset the ionRangeSlider if it exists
-        var slider = $('#mobile-filter-container #search-filter .input-slider').data("ionRangeSlider");
-        if (slider) {
-            var minVal = $('#mobile-filter-container #search-filter .input-slider').data('min');
-            var maxVal = $('#mobile-filter-container #search-filter .input-slider').data('max');
-            slider.update({
-                from: minVal,
-                to: maxVal
-            });
-            
-            // Also update the input boxes if any (like js-input-from and js-input-to)
-            $('#mobile-filter-container #search-filter .js-input-from').val(minVal);
-            $('#mobile-filter-container #search-filter .js-input-to').val(maxVal);
-        }
-    });
-
-    // Dynamic responsive filter position adjustment
-    function adjustFilterPosition() {
-        if ($(window).width() <= 768) {
-            // Move to mobile modal if not already there
-            if ($('#mobile-filter-container #search-filter').length === 0) {
-                $('#search-filter').appendTo('#mobile-filter-container');
-                // Disable SLiMS auto-submit on change for mobile view
-                $('#mobile-filter-container #search-filter input:not(.input-slider)').off('change');
-            }
-        } else {
-            // Move back to desktop sidebar if not already there
-            if ($('#desktop-filter-container #search-filter').length === 0) {
-                $('#search-filter').appendTo('#desktop-filter-container');
-                // Re-bind SLiMS auto-submit on change for desktop view
-                $('#desktop-filter-container #search-filter input:not(.input-slider)').off('change').on('change', function() {
-                    if (typeof filter === 'function') {
-                        filter($(this).attr('clear'));
-                    }
-                });
-            }
-        }
-    }
-
-    // Adjust position on load and on resize
-    adjustFilterPosition();
-    $(window).on('resize', function() {
-        adjustFilterPosition();
-    });
-});
-</script>
+<script src="<?= themeEscape(assetsVersioned('js/result_search.js')); ?>"></script>

@@ -1,0 +1,84 @@
+/* Rasamala admin customizer builder utilities */
+.rasamala-builder-row {
+  gap: 10px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.rasamala-builder-input-name {
+  width: 34%;
+  margin-right: 10px;
+  display: inline-block;
+}
+
+.rasamala-builder-input-url {
+  width: 42%;
+  margin-right: 10px;
+  display: inline-block;
+}
+
+.rasamala-builder-input-menu-name {
+  width: 40%;
+  margin-right: 10px;
+  display: inline-block;
+}
+
+.rasamala-builder-input-menu-url {
+  width: 40%;
+  margin-right: 10px;
+  display: inline-block;
+}
+
+.rasamala-builder-input-topic-label {
+  width: 30%;
+  margin-right: 10px;
+  display: inline-block;
+}
+
+.rasamala-builder-input-topic-url {
+  width: 32%;
+  margin-right: 10px;
+  display: inline-block;
+}
+
+.rasamala-builder-input-topic-icon {
+  width: 28%;
+  margin-right: 10px;
+  display: inline-block;
+}
+
+.rasamala-builder-action-btn {
+  padding: 4px 12px;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.navbar-menu-extra-settings {
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.rasamala-builder-toggle-label {
+  font-weight: 500;
+  font-size: 13px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 0;
+  user-select: none;
+}
+
+.member-area-toggle {
+  margin: 0 !important;
+  cursor: pointer;
+  width: auto;
+  height: auto;
+}

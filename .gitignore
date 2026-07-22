@@ -1,0 +1,28 @@
+# ====================================================
+# Gitignore for Rasamala SLiMS Template Repository
+# ====================================================
+
+# Ignore internal reports, reviews, logs, and development notes
+/docs/
+
+# OS metadata & system generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Log and temporary files
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# IDE & Editor settings
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace

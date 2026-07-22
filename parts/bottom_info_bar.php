@@ -1,10 +1,10 @@
 <?php
-# @Author: Waris Agung Widodo <user>
+# @Author: Ade Ismail Siregar <adeismailbox@gmail.com>
 # @Date:   2026-07-16T10:08:00+07:00
-# @Email:  ido.alit@gmail.com
+# @Email:  adeismailbox@gmail.com
 # @Filename: bottom_info_bar.php
 # @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-16T10:08:00+07:00
+# @Last modified time: 2026-07-22T12:54:00+07:00
 
 $show_home_display_footer = themeEffectiveTemplateValue('classic_home_display_show', 'below', $sysconf) === 'bottom';
 $show_ticker_footer = themeEffectiveTemplateValue('classic_ticker_show', 0, $sysconf) === 'bottom';

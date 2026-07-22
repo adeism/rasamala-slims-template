@@ -4,7 +4,7 @@
  * @Date                : 2019-01-30 00:58
  * @File name           : detail_template.php
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-15T08:25:01+07:00
+ * @Last modified time  : 2026-07-20T10:10:22+07:00
  */
 include_once __DIR__ . '/theme_helpers.php';
 
@@ -15,7 +15,7 @@ $title_attr = themeEscape(strip_tags($title ?? ''));
 $setBookmarked = trim(isset($_SESSION['bookmark'][$biblio_id_safe]) ? 'bg-success text-white rounded-3 px-2 py-1' : 'text-muted px-2 py-1');
 $detail_title_html = themeParallelTitleHtml($title ?? '', 'detail');
 if (themeShouldGenerateBookCover($image ?? '', $sysconf)) {
-    $image = themeGenerateBookCoverHtml($title ?? '');
+    $image = themeGenerateBookCoverHtml($title ?? '', $authors ?? '');
 }
 
 $availability_html = $availability ?? '';
@@ -36,6 +36,43 @@ $detail_row = function ($label, $html, $value = null) use ($detail_has_value) {
                 <dt class="col-sm-3"><?= themeEscape($label); ?></dt>
                 <dd class="col-sm-9"><?= $html; ?></dd>
     <?php
+};
+$detail_notes_html = function ($value) use ($detail_has_value) {
+    $raw = (string) ($value ?? '');
+    if (!$detail_has_value($raw)) {
+        return '';
+    }
+
+    $raw = html_entity_decode($raw, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $raw = str_replace(["\\r\\n", "\\n\\r", "\\r", "\\n"], "\n", $raw);
+    $raw = preg_replace("/\r\n|\r/", "\n", $raw);
+    $raw = preg_replace("/[ \t]+\n/", "\n", $raw);
+    $raw = preg_replace("/\n[ \t]+/", "\n", $raw);
+    $raw = trim($raw);
+
+    $has_html = preg_match('/<\s*[a-z][^>]*>/i', $raw);
+    if ($has_html) {
+        $has_structured_html = preg_match('/<(p|br|div|ul|ol|li|table|blockquote|h[1-6])\b/i', $raw);
+        $raw = preg_replace("/\n{3,}/", "\n\n", $raw);
+        if (!$has_structured_html) {
+            $raw = nl2br($raw, false);
+        }
+
+        return themeSanitizeHtml($raw);
+    }
+
+    $paragraphs = preg_split("/\n{2,}/", $raw);
+    $html = '';
+    foreach ($paragraphs as $paragraph) {
+        $paragraph = trim($paragraph);
+        if ($paragraph === '') {
+            continue;
+        }
+
+        $html .= '<p>' . nl2br(themeEscape($paragraph), false) . '</p>';
+    }
+
+    return themeSanitizeHtml($html);
 };
 $publisher_html = '';
 if ($detail_has_value($publish_place ?? '')) {
@@ -195,7 +232,8 @@ $detail_availability_html = function ($dbs, $biblio_id, $fallback_html) use ($de
     $output = '<div class="detail-avail-rows">';
     foreach ($locations as $location) {
         $location_index++;
-        $hidden_attr = $location_index > $max_location_rows ? ' style="display:none;" data-avail-hidden="1"' : '';
+        $hidden_class = $location_index > $max_location_rows ? ' detail-avail-row-hidden' : '';
+        $hidden_attr = $location_index > $max_location_rows ? ' data-avail-hidden="1"' : '';
         $count_class = $location['available'] > 0 ? 'avail-count-ok' : 'avail-count-no';
         $item_rows = '';
 
@@ -214,7 +252,7 @@ $detail_availability_html = function ($dbs, $biblio_id, $fallback_html) use ($de
             $item_rows .= '</tr>';
         }
 
-        $output .= '<div class="detail-avail-row biblio-avail-wrap" tabindex="0"' . $hidden_attr . '>';
+        $output .= '<div class="detail-avail-row biblio-avail-wrap' . $hidden_class . '" tabindex="0"' . $hidden_attr . '>';
         $output .= '<div class="avail-loc-callno"><span class="avail-loc-name">' . themeEscape($location['name']) . '</span></div>';
         $output .= '<span class="avail-count ' . themeEscape($count_class) . '">';
         $output .= '<i class="' . ($location['available'] > 0 ? 'fas fa-check-circle' : 'fas fa-times-circle') . '" aria-hidden="true"></i> ';
@@ -246,7 +284,7 @@ $detail_availability_html = function ($dbs, $biblio_id, $fallback_html) use ($de
 };
 ?>
 
-<div class="container">
+
     <div class="detail-record p-4 p-md-5">
         <div class="row">
             <div class="col-md-3 mb-4 text-center text-md-left">
@@ -312,7 +350,7 @@ $detail_availability_html = function ($dbs, $biblio_id, $fallback_html) use ($de
                         <i class="fas fa-align-left" aria-hidden="true"></i><?= __('Description'); ?>
                     </div>
                     <div class="detail-notes-content">
-                        <?= themeSanitizeHtml($notes); ?>
+                        <?= $detail_notes_html($notes); ?>
                     </div>
                 </div>
                 <?php else: ?>
@@ -381,7 +419,6 @@ $detail_availability_html = function ($dbs, $biblio_id, $fallback_html) use ($de
         </div>
     </div>
 </div>
-</div>
 
 <script>
 (function () {
@@ -389,7 +426,7 @@ $detail_availability_html = function ($dbs, $biblio_id, $fallback_html) use ($de
     if (button) {
         button.addEventListener('click', function () {
             document.querySelectorAll('[data-avail-hidden="1"]').forEach(function (row) {
-                row.style.display = '';
+                row.classList.remove('detail-avail-row-hidden');
                 row.removeAttribute('data-avail-hidden');
             });
             button.style.display = 'none';

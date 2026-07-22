@@ -4,7 +4,7 @@
  * @Date                : 2019-01-31 17:30
  * @File name           : news_template.php
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-15T15:16:37+07:00
+ * @Last modified time  : 2026-07-20T15:45:01+07:00
  */
 
 if (!function_exists('rasamalaNewsFirstImageSrc')) {
@@ -22,7 +22,10 @@ if (!function_exists('rasamalaNewsFirstImageSrc')) {
       }
 
       $src = trim($matches[2] ?? $matches[1] ?? '', " \t\n\r\0\x0B\"'");
-      if ($src !== '' && !preg_match('/^\s*(javascript:|data:text\/html)/i', $src)) {
+      $src = function_exists('themeSafeContentImageSrc')
+        ? themeSafeContentImageSrc($src)
+        : (preg_match('/^\s*(javascript:|vbscript:|data:text\/html)/i', $src) ? '' : $src);
+      if ($src !== '') {
         return $src;
       }
     }
@@ -34,10 +37,13 @@ if (!function_exists('rasamalaNewsFirstImageSrc')) {
 if (!function_exists('rasamalaNewsRawContentByPath')) {
   function rasamalaNewsRawContentByPath($path)
   {
-    global $dbs;
+    $dbs = $GLOBALS['dbs'] ?? null;
+    if (!$dbs || !($dbs instanceof \mysqli)) {
+      return '';
+    }
 
     $path = trim((string)$path);
-    if ($path === '' || !isset($dbs) || !$dbs || !method_exists($dbs, 'query')) {
+    if ($path === '') {
       return '';
     }
 
@@ -66,6 +72,11 @@ function news_list_tpl($title, $path, $date, $summary) {
       ? themeEscape($value)
       : htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
   };
+
+  $display_title = trim(preg_replace('/\s+/', ' ', str_replace('_', ' ', (string)$title)));
+  if ($display_title === '') {
+    $display_title = (string)$title;
+  }
 
   $raw_summary = html_entity_decode((string)$summary, ENT_QUOTES, 'UTF-8');
   $raw_content = $raw_summary;
@@ -106,20 +117,20 @@ function news_list_tpl($title, $path, $date, $summary) {
   <div class="card shadow-sm mb-4 rasamala-main-content-card news-list-card news-list-card--<?= $escape($news_layout) ?><?= $show_thumbnail ? ' has-thumbnail' : '' ?>">
       <div class="card-body p-4 news-list-body">
           <?php if ($show_thumbnail) : ?>
-          <a class="news-list-thumbnail" href="<?= $escape($news_url) ?>" aria-label="<?= $escape($title) ?>">
+          <a class="news-list-thumbnail" href="<?= $escape($news_url) ?>" aria-label="<?= $escape($display_title) ?>">
               <img loading="lazy" src="<?= $escape($thumbnail_src) ?>" alt="" aria-hidden="true">
           </a>
           <?php endif; ?>
           <div class="news-list-content">
               <h3 class="content-title mb-2 fw-bold news-card-title">
-                  <a href="<?= $escape($news_url) ?>"><?= $escape($title) ?></a>
+                  <a class="news-card-title-link" href="<?= $escape($news_url) ?>"><?= $escape($display_title) ?></a>
               </h3>
               <?php if ($show_excerpt) : ?>
               <p class="content-summary mb-3 detail-description news-list-summary"><?= $escape($excerpt) ?></p>
               <?php endif; ?>
               <div class="news-list-footer">
                   <?php if ($date_html !== '') : ?>
-                  <div class="content-date detail-link-btn news-list-date"><i class="far fa-clock me-2"></i><?= $escape($date_html) ?></div>
+                  <div class="content-date news-list-date"><i class="far fa-clock me-2" aria-hidden="true"></i><?= $escape($date_html) ?></div>
                   <?php endif; ?>
                   <?php if ($show_readmore) : ?>
                   <a class="btn btn-primary btn-sm btn-news-readmore" href="<?= $escape($news_url) ?>"><?php echo __('Read More') ?></a>

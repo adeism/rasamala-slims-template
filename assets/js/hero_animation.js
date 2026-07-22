@@ -6,6 +6,18 @@
 document.addEventListener('DOMContentLoaded', () => {
     const query = (selector, root = document) => root.querySelector(selector);
     const queryAll = (selector, root = document) => Array.prototype.slice.call(root.querySelectorAll(selector));
+    const reducedMotionMedia = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+    const prefersReducedMotion = () => reducedMotionMedia && reducedMotionMedia.matches;
+
+    // Global cursor spotlight tracking
+    window.addEventListener('mousemove', (e) => {
+        if (prefersReducedMotion()) return;
+        const layer = query('#background-animation-layer') || query('#hero-animation-layer');
+        if (layer) {
+            layer.style.setProperty('--mouse-x', `${e.clientX}px`);
+            layer.style.setProperty('--mouse-y', `${e.clientY}px`);
+        }
+    }, { passive: true });
 
     const initializeHeroAnimation = () => {
         const layer = query('#background-animation-layer') || query('#hero-animation-layer');
@@ -14,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const animation = layer.getAttribute('data-animation') || 'particles';
         const isGlobalBackground = layer.classList.contains('background-animation-layer');
-        const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const reducedMotion = prefersReducedMotion();
         const cpuCores = Number(window.navigator.hardwareConcurrency || 4);
         const deviceMemory = Number(window.navigator.deviceMemory || 4);
         const smallViewport = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
@@ -65,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             canvas.className = 'hero-animation-canvas';
             canvas.setAttribute('aria-hidden', 'true');
+            canvas.setAttribute('role', 'presentation');
             canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;';
             layer.appendChild(canvas);
 
@@ -104,6 +117,28 @@ document.addEventListener('DOMContentLoaded', () => {
             const started = startCanvasStage(() => {
                 let nodes = [];
                 const maxDistance = liteMode ? 108 : 136;
+                const mouse = { x: null, y: null, max: 180 };
+                
+                const mouseMove = (e) => {
+                    mouse.x = e.clientX;
+                    mouse.y = e.clientY;
+                };
+                
+                const mouseLeave = () => {
+                    mouse.x = null;
+                    mouse.y = null;
+                };
+                
+                window.addEventListener('mousemove', mouseMove, { passive: true });
+                window.addEventListener('mouseleave', mouseLeave, { passive: true });
+                
+                const parentCleanup = layer._rasamalaAnimationCleanup;
+                layer._rasamalaAnimationCleanup = () => {
+                    if (typeof parentCleanup === 'function') parentCleanup();
+                    window.removeEventListener('mousemove', mouseMove);
+                    window.removeEventListener('mouseleave', mouseLeave);
+                };
+
                 const resize = (width, height) => {
                     const nodeCount = liteMode
                         ? Math.min(28, Math.max(14, Math.floor((width * height) / 36000)))
@@ -113,7 +148,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         y: random(0, height),
                         vx: random(-0.28, 0.28),
                         vy: random(-0.28, 0.28),
-                        r: random(1.3, 2.6)
+                        r: random(1.6, 3.2),
+                        pulse: random(0, Math.PI * 2)
                     }));
                 };
 
@@ -139,23 +175,43 @@ document.addEventListener('DOMContentLoaded', () => {
                             node.vy *= -1;
                         }
 
-                        context.beginPath();
-                        context.arc(node.x, node.y, node.r, 0, Math.PI * 2);
-                        context.fillStyle = accentAlpha(0.68);
-                        context.fill();
-
+                        // Draw connections to other nodes
                         for (let j = i + 1; j < nodes.length; j += 1) {
                             const other = nodes[j];
                             const dist = Math.hypot(node.x - other.x, node.y - other.y);
                             if (dist < maxDistance) {
+                                const ratio = 1 - dist / maxDistance;
                                 context.beginPath();
                                 context.moveTo(node.x, node.y);
                                 context.lineTo(other.x, other.y);
-                                context.strokeStyle = accentAlpha((1 - dist / maxDistance) * 0.16);
-                                context.lineWidth = 0.8;
+                                // Much brighter opacity (0.75 ratio) and dynamic line width based on proximity
+                                context.strokeStyle = accentAlpha(ratio * 0.75);
+                                context.lineWidth = ratio * 1.5 + 0.4;
                                 context.stroke();
                             }
                         }
+
+                        // Draw connections to mouse pointer for interactive glow lines
+                        if (mouse.x !== null && mouse.y !== null) {
+                            const mDist = Math.hypot(node.x - mouse.x, node.y - mouse.y);
+                            if (mDist < mouse.max) {
+                                const mRatio = 1 - mDist / mouse.max;
+                                context.beginPath();
+                                context.moveTo(node.x, node.y);
+                                context.lineTo(mouse.x, mouse.y);
+                                context.strokeStyle = accentAlpha(mRatio * 0.85);
+                                context.lineWidth = mRatio * 2.0 + 0.6;
+                                context.stroke();
+                            }
+                        }
+
+                        // Draw nodes with smooth pulse effect
+                        node.pulse += 0.04;
+                        const pulseRadius = node.r + Math.sin(node.pulse) * 0.8;
+                        context.beginPath();
+                        context.arc(node.x, node.y, pulseRadius, 0, Math.PI * 2);
+                        context.fillStyle = accentAlpha(0.85);
+                        context.fill();
                     }
                 };
 
@@ -167,6 +223,29 @@ document.addEventListener('DOMContentLoaded', () => {
         if (animation === 'starfield-warp') {
             const started = startCanvasStage(() => {
                 let stars = [];
+                let mouseX = null;
+                let mouseY = null;
+                
+                const mouseMove = (e) => {
+                    mouseX = e.clientX;
+                    mouseY = e.clientY;
+                };
+                
+                const mouseLeave = () => {
+                    mouseX = null;
+                    mouseY = null;
+                };
+                
+                window.addEventListener('mousemove', mouseMove, { passive: true });
+                window.addEventListener('mouseleave', mouseLeave, { passive: true });
+                
+                const parentCleanup = layer._rasamalaAnimationCleanup;
+                layer._rasamalaAnimationCleanup = () => {
+                    if (typeof parentCleanup === 'function') parentCleanup();
+                    window.removeEventListener('mousemove', mouseMove);
+                    window.removeEventListener('mouseleave', mouseLeave);
+                };
+
                 const resize = (width, height) => {
                     const count = liteMode ? 80 : 160;
                     stars = Array.from({length: count}, () => ({
@@ -183,7 +262,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     const cx = width / 2;
                     const cy = height / 2;
-                    const speed = 2.4 / speedMult;
+                    
+                    // Mouse Y controls speed throttle (no center shift = zero dizziness)
+                    const speedThrottle = mouseY !== null ? 0.35 + (mouseY / height) * 2.3 : 1.2;
+                    const speed = (speedThrottle * 2.0) / speedMult;
 
                     for (let i = 0; i < stars.length; i += 1) {
                         const star = stars[i];
@@ -209,6 +291,20 @@ document.addEventListener('DOMContentLoaded', () => {
                         context.arc(px, py, size, 0, Math.PI * 2);
                         context.fillStyle = accentColor;
                         context.fill();
+
+                        // Glowing link line when a star flies close to mouse coordinates
+                        if (mouseX !== null && mouseY !== null) {
+                            const dist = Math.hypot(px - mouseX, py - mouseY);
+                            if (dist < 140) {
+                                const ratio = 1 - dist / 140;
+                                context.beginPath();
+                                context.moveTo(px, py);
+                                context.lineTo(mouseX, mouseY);
+                                context.strokeStyle = accentAlpha(ratio * 0.45);
+                                context.lineWidth = ratio * 1.1;
+                                context.stroke();
+                            }
+                        }
                     }
                 };
 
@@ -221,12 +317,41 @@ document.addEventListener('DOMContentLoaded', () => {
             const started = startCanvasStage(() => {
                 let ripples = [];
                 const maxRadius = liteMode ? 180 : 260;
+                let lastMouseX = null;
+                let lastMouseY = null;
+                let rippleIndex = 0;
+                
+                const mouseMove = (e) => {
+                    const mx = e.clientX;
+                    const my = e.clientY;
+                    if (lastMouseX === null || Math.hypot(mx - lastMouseX, my - lastMouseY) > 35) {
+                        if (ripples.length > 0) {
+                            const ripple = ripples[rippleIndex];
+                            ripple.x = mx;
+                            ripple.y = my;
+                            ripple.r = 0;
+                            ripple.alpha = 1;
+                            rippleIndex = (rippleIndex + 1) % ripples.length;
+                        }
+                        lastMouseX = mx;
+                        lastMouseY = my;
+                    }
+                };
+                
+                window.addEventListener('mousemove', mouseMove, { passive: true });
+                
+                const parentCleanup = layer._rasamalaAnimationCleanup;
+                layer._rasamalaAnimationCleanup = () => {
+                    if (typeof parentCleanup === 'function') parentCleanup();
+                    window.removeEventListener('mousemove', mouseMove);
+                };
+
                 const resize = (width, height) => {
-                    ripples = Array.from({length: liteMode ? 3 : 5}, (_, index) => ({
+                    ripples = Array.from({length: liteMode ? 5 : 8}, (_, index) => ({
                         x: random(0.2 * width, 0.8 * width),
                         y: random(0.2 * height, 0.8 * height),
-                        r: (index / (liteMode ? 3 : 5)) * maxRadius,
-                        dr: random(0.3, 0.6) / speedMult,
+                        r: (index / (liteMode ? 5 : 8)) * maxRadius,
+                        dr: random(0.4, 0.8) / speedMult,
                         alpha: 1
                     }));
                 };
@@ -243,8 +368,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         ripple.alpha = 1 - ripple.r / maxRadius;
                         context.beginPath();
                         context.arc(ripple.x, ripple.y, ripple.r, 0, Math.PI * 2);
-                        context.strokeStyle = accentAlpha(ripple.alpha * 0.15);
-                        context.lineWidth = 1.2;
+                        context.strokeStyle = accentAlpha(ripple.alpha * 0.55);
+                        context.lineWidth = 1.4;
                         context.stroke();
                     });
                 };
@@ -268,26 +393,52 @@ document.addEventListener('DOMContentLoaded', () => {
                 element.style.animationDuration = `${random(8, 20) * speedMult}s`;
                 element.style.animationDelay = `-${random(0, 10)}s`;
                 element.textContent = randomGlyph();
+
+                element.addEventListener('mouseenter', () => {
+                    element.style.transform = `scale(1.8) rotate(${random(-180, 180)}deg)`;
+                    element.style.color = 'var(--theme-accent-color)';
+                    element.style.textShadow = '0 0 10px var(--theme-accent-color)';
+                    setTimeout(() => {
+                        element.style.transform = '';
+                        element.style.textShadow = '';
+                        element.style.color = randomColor();
+                    }, 1000);
+                });
+
                 fragment.appendChild(element);
             }
         } else if (animation === 'rain') {
+            const config = window.rasamalaPaletteSwitcher || {};
+            const subjects = Array.isArray(config.topSubjects) ? config.topSubjects : [];
             const columns = Math.min(liteMode ? 20 : 52, Math.floor(window.innerWidth / 28));
             for (let i = 0; i < columns; i += 1) {
                 const element = document.createElement('span');
                 element.className = 'hero-animation-item hero-rain-column';
                 element.style.left = `${(i / columns) * 100}%`;
-                element.style.fontSize = `${randomInt(10, 22)}px`;
+                element.style.fontSize = `${randomInt(10, 20)}px`;
                 element.style.color = accentColor;
-                element.style.animationDuration = `${random(1.2, 3.8) * speedMult}s`;
-                element.style.animationDelay = `-${random(0, 4)}s`;
+                element.style.animationDuration = `${random(8, 20) * speedMult}s`;
+                element.style.animationDelay = `-${random(0, 16)}s`;
                 element.style.opacity = random(0.24, 0.88);
  
+                const subject = subjects.length > 0 ? subjects[randomInt(0, subjects.length - 1)] : 'RASAMALA';
                 let content = '';
-                const lines = randomInt(4, 11);
-                for (let j = 0; j < lines; j += 1) {
-                    content += `${randomGlyph()}\n`;
+                for (let j = 0; j < subject.length; j += 1) {
+                    content += `${subject.charAt(j)}\n`;
                 }
                 element.textContent = content;
+
+                element.addEventListener('mouseenter', () => {
+                    element.style.color = '#ffffff';
+                    element.style.textShadow = '0 0 12px var(--theme-accent-color)';
+                    element.style.transform = 'scaleY(1.15)';
+                    setTimeout(() => {
+                        element.style.color = accentColor;
+                        element.style.textShadow = '';
+                        element.style.transform = '';
+                    }, 1200);
+                });
+
                 fragment.appendChild(element);
             }
         } else if (animation === 'grid') {
@@ -308,6 +459,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 element.style.height = `${size}px`;
                 element.style.animationDuration = `${random(1.2, 4) * speedMult}s`;
                 element.style.animationDelay = `-${random(0, 4)}s`;
+
+                element.addEventListener('mouseenter', () => {
+                    element.style.transform = 'scale(3.5)';
+                    element.style.backgroundColor = 'var(--theme-accent-color)';
+                    element.style.boxShadow = '0 0 12px var(--theme-accent-color)';
+                    setTimeout(() => {
+                        element.style.transform = '';
+                        element.style.backgroundColor = randomColor();
+                        element.style.boxShadow = '';
+                    }, 1000);
+                });
+
                 fragment.appendChild(element);
             }
         } else if (animation === 'floating-embers') {
@@ -326,6 +489,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 ember.style.setProperty('--tx', `${random(-18, 18)}vw`);
                 ember.style.animationDuration = `${random(11, 23) * speedMult}s`;
                 ember.style.animationDelay = `-${random(0, 18)}s`;
+
+                ember.addEventListener('mouseenter', () => {
+                    ember.style.transform = 'translateY(-30px) scale(2.2)';
+                    ember.style.backgroundColor = '#ffffff';
+                    ember.style.boxShadow = '0 0 15px #ffffff';
+                    setTimeout(() => {
+                        ember.style.transform = '';
+                        ember.style.backgroundColor = colors[i % colors.length];
+                        ember.style.boxShadow = '';
+                    }, 800);
+                });
+
                 fragment.appendChild(ember);
             }
         }
@@ -348,4 +523,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('rasamala:palette-changed', refreshHeroAnimation);
     document.addEventListener('rasamala:color-mode-changed', refreshHeroAnimation);
     document.addEventListener('rasamala:theme-viewer-changed', refreshHeroAnimation);
+    if (reducedMotionMedia) {
+        if (reducedMotionMedia.addEventListener) {
+            reducedMotionMedia.addEventListener('change', refreshHeroAnimation);
+        } else if (reducedMotionMedia.addListener) {
+            reducedMotionMedia.addListener(refreshHeroAnimation);
+        }
+    }
 });

@@ -4,7 +4,7 @@
  * @Date                : 2019-01-29 10:43
  * @File name           : _other.php
  * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-15T08:25:01+07:00
+ * @Last modified time  : 2026-07-20T15:49:02+07:00
  */
 
 ?>
@@ -27,9 +27,14 @@
 
     <section class="container mt-5">
       <?php
-      $breadcrumb_label = ($page_title ?? '');
+      $display_page_title = trim(preg_replace('/\s+/', ' ', str_replace('_', ' ', (string)($page_title ?? ''))));
+      if ($display_page_title === '') {
+        $display_page_title = (string)($page_title ?? '');
+      }
+
+      $breadcrumb_label = $display_page_title;
       if (($_GET['p'] ?? '') === 'show_detail') {
-        $breadcrumb_label = !empty($page_title) ? $page_title : __('Detail');
+        $breadcrumb_label = !empty($display_page_title) ? $display_page_title : __('Detail');
       } elseif (($_GET['p'] ?? '') === 'login') {
         $breadcrumb_label = __('Staff Area');
       }
@@ -45,7 +50,8 @@
           echo '</div>';
           echo '</div></div>';
         } else {
-          echo '<h2 class="mb-4 fw-bold detail-title">' . themeEscape($page_title) . '</h2><hr class="rasamala-divider mb-4">';
+          $title_divider = ($_GET['p'] === 'news') ? '' : '<hr class="rasamala-divider mb-4">';
+          echo '<h2 class="mb-4 fw-bold detail-title">' . themeEscape($display_page_title) . '</h2>' . $title_divider;
           if ($_GET['p'] === 'librarian') {
             $librarian_content = function_exists('themeRenderLibrarianPage') ? themeRenderLibrarianPage($dbs, $sysconf) : $main_content;
             echo '<div class="d-flex flex-row flex-wrap rasamala-librarian-list">' . $librarian_content . '</div>';

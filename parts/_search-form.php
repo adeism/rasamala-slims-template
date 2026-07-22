@@ -29,13 +29,7 @@ $_search_hero_logo_html = '';
 if ($_search_lib_name_in_hero) {
     $hero_text = trim((string)($sysconf['library_name'] ?? ''));
 
-    if (isset($sysconf['logo_image'], $imagesDisk) && $sysconf['logo_image'] !== '' && $imagesDisk->isExists($path = 'default/'.$sysconf['logo_image'])) {
-        $_search_hero_logo_html = '<img class="hero-library-logo" src="' . themeEscape(SWB . 'lib/minigalnano/createthumb.php?filename=images/' . $path . '&width=350') . '" alt="">';
-    } elseif (file_exists(__DIR__ . '/../assets/images/logo.png')) {
-        $_search_hero_logo_html = '<img class="hero-library-logo hero-library-logo-local" src="' . themeEscape(assets('images/logo.png')) . '" alt="">';
-    } else {
-        $_search_hero_logo_html = '<span class="hero-library-logo-fallback"><i class="fas fa-book-open" aria-hidden="true"></i></span>';
-    }
+    $_search_hero_logo_html = themeLibraryLogoHtml($sysconf, $imagesDisk ?? null, 'hero-library-logo');
 }
 
 $show_hero_text = ($is_homepage_search || $_search_lib_name_in_hero) && $hero_text !== '';
@@ -125,7 +119,7 @@ if ($search_size === 'small') {
                 <?php if ((int)themeEffectiveTemplateValue('classic_announcement_show', 0, $sysconf) === 1 && !empty($sysconf['template']['classic_announcement_text'])) : ?>
                 <div class="alert alert-<?= themeEscape($sysconf['template']['classic_announcement_style'] ?? 'info'); ?> alert-dismissible fade show shadow-sm px-4 mb-4 text-center rounded-3" role="alert">
                     <?= themeSanitizeHtml($sysconf['template']['classic_announcement_text']); ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="top: 50%; transform: translateY(-50%); right: 15px; padding: 0; position: absolute;"></button>
+                    <button type="button" class="btn-close rasamala-alert-close-centered" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 <?php endif; ?>
                 <?php if ($show_hero_text) : ?>
@@ -148,14 +142,15 @@ if ($search_size === 'small') {
                                        name="keywords" class="input-transparent flex-grow-1" autocomplete="off"
                                        aria-label="<?= themeEscape(__('Search keyword')); ?>"
                                        placeholder="<?= themeEscape(__($sysconf['template']['classic_search_placeholder'] ?? 'Enter keyword to search collection...'));?>"/>
-                                <div class="d-flex align-items-center ms-2">
+                                <div class="d-flex align-items-center gap-2 ms-2">
                                     <!-- Advanced Search Icon -->
-                                    <a href="index.php?search=search" class="me-3" data-bs-toggle="modal" data-bs-target="#adv-modal" title="<?= themeEscape(__('Advanced Search')) ?>" aria-label="<?= themeEscape(__('Advanced Search')) ?>">
+                                    <a href="index.php?search=search" class="d-inline-flex" data-bs-toggle="modal" data-bs-target="#adv-modal" title="<?= themeEscape(__('Advanced Search')) ?>" aria-label="<?= themeEscape(__('Advanced Search')) ?>">
                                         <i class="fas fa-sliders-h" aria-hidden="true"></i>
                                     </a>
                                     <!-- Search Button -->
-                                    <button type="submit" class="btn p-0 border-0 bg-transparent" aria-label="<?= themeEscape(__('Search')) ?>">
-                                        <i class="fas fa-search" aria-hidden="true"></i>
+                                    <button type="submit" class="btn p-0 border-0 bg-transparent" aria-label="<?= themeEscape(__('Search')) ?>" :disabled="loading">
+                                        <i v-if="loading" class="fas fa-spinner fa-spin" aria-hidden="true"></i>
+                                        <i v-else class="fas fa-search" aria-hidden="true"></i>
                                     </button>
                                 </div>
                             </form>

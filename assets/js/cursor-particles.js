@@ -13,13 +13,14 @@
     book: 'pixel-sword'
   };
   var activeCleanup = null;
+  var reducedMotionMedia = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
 
   function pointerIsFine() {
     return window.matchMedia && window.matchMedia('(pointer: fine)').matches;
   }
 
   function reducedMotion() {
-    return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    return reducedMotionMedia && reducedMotionMedia.matches;
   }
 
   function hexToRgb(hex) {
@@ -126,6 +127,7 @@
     injectStyles();
     canvas.id = 'rasamala-cursor-particles-canvas';
     canvas.setAttribute('aria-hidden', 'true');
+    canvas.setAttribute('role', 'presentation');
     document.body.appendChild(canvas);
 
     function acquireTrail(x, y) {
@@ -423,4 +425,11 @@
   }
 
   document.addEventListener('rasamala:cursor-settings-changed', init);
+  if (reducedMotionMedia) {
+    if (reducedMotionMedia.addEventListener) {
+      reducedMotionMedia.addEventListener('change', init);
+    } else if (reducedMotionMedia.addListener) {
+      reducedMotionMedia.addListener(init);
+    }
+  }
 }());

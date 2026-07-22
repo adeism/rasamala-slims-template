@@ -1,99 +1,154 @@
 <?php
-# @Author: Waris Agung Widodo <user>
+# @Author: Ade Ismail Siregar <adeismailbox@gmail.com>
 # @Date:   2026-07-16T10:08:00+07:00
-# @Email:  ido.alit@gmail.com
+# @Email:  adeismailbox@gmail.com
 # @Filename: floating_actions.php
 # @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-16T11:52:09+07:00
+# @Last modified time: 2026-07-22T12:54:00+07:00
 
-if (!function_exists('rasamalaWhatsappDefaultCategories')) {
-    function rasamalaWhatsappDefaultCategories()
+if (!function_exists('rasamalaWhatsappDefaultMessageTemplate')) {
+    function rasamalaWhatsappDefaultMessageTemplate()
     {
-        return "Tugas Akhir | Halo, saya ingin bertanya tentang layanan tugas akhir.\n"
-            . "Denda | Halo, saya ingin bertanya tentang informasi denda.\n"
-            . "Login | Halo, saya mengalami kendala login OPAC/akun.";
+        return "Nama:\nNomor Anggota (opsional):\nPertanyaan:";
     }
 }
 
-if (!function_exists('rasamalaParseWhatsappCategories')) {
-    function rasamalaParseWhatsappCategories($raw)
+if (!function_exists('rasamalaWhatsappMessageTemplate')) {
+    function rasamalaWhatsappMessageTemplate($raw)
     {
         $raw = trim((string)$raw);
         if ($raw === '') {
-            $raw = rasamalaWhatsappDefaultCategories();
+            return rasamalaWhatsappDefaultMessageTemplate();
         }
 
-        $categories = [];
-        $lines = preg_split('/\R+/', $raw);
-        foreach ($lines as $line) {
-            $line = trim($line);
-            if ($line === '' || strpos($line, '|') === false) {
-                continue;
-            }
+        $raw = html_entity_decode($raw, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $raw = str_replace(["\\r\\n", "\\n\\r", "\\r", "\\n"], "\n", $raw);
+        $raw = preg_replace("/\r\n|\r/", "\n", $raw);
 
-            [$title, $message] = array_map('trim', explode('|', $line, 2));
-            if ($title === '' || $message === '') {
-                continue;
-            }
-
-            $categories[] = [
-                'title' => $title,
-                'message' => $message,
-            ];
-        }
-
-        if (!empty($categories)) {
-            return $categories;
-        }
-
-        // Backward compatible fallback for old one-line "title | message title | message" values.
-        $parts = explode('|', $raw);
-        $num_parts = count($parts);
-        if ($num_parts < 2) {
-            return [];
-        }
-
-        $current_title = trim($parts[0]);
-        for ($i = 1; $i < $num_parts; $i++) {
-            $content = $parts[$i];
-            if ($i < $num_parts - 1) {
-                $boundary_pos = false;
-                foreach (['.', '?', '!', "\n"] as $punctuation) {
-                    $pos = strrpos($content, $punctuation);
-                    if ($pos !== false && ($boundary_pos === false || $pos > $boundary_pos)) {
-                        $boundary_pos = $pos;
-                    }
+        if (strpos($raw, '|') !== false) {
+            $service_names = [];
+            foreach (preg_split("/\n+/", $raw) as $line) {
+                if (strpos($line, '|') === false) {
+                    continue;
                 }
-
-                if ($boundary_pos !== false) {
-                    $message = trim(substr($content, 0, $boundary_pos + 1));
-                    $next_title = trim(substr($content, $boundary_pos + 1));
-                } else {
-                    $content_trimmed = trim($content);
-                    $last_space = strrpos($content_trimmed, ' ');
-                    if ($last_space !== false) {
-                        $message = trim(substr($content_trimmed, 0, $last_space));
-                        $next_title = trim(substr($content_trimmed, $last_space));
-                    } else {
-                        $message = '';
-                        $next_title = $content_trimmed;
-                    }
+                [$title] = explode('|', $line, 2);
+                $title = trim(preg_replace('/\s+/', ' ', strip_tags($title)));
+                if ($title !== '') {
+                    $service_names[] = $title;
                 }
-            } else {
-                $message = trim($content);
-                $next_title = '';
             }
 
-            if ($current_title !== '' && $message !== '') {
-                $categories[] = [
-                    'title' => $current_title,
-                    'message' => $message,
-                ];
+            $template = rasamalaWhatsappDefaultMessageTemplate();
+            if (!empty($service_names)) {
+                $template .= "\nKategori layanan (opsional): " . implode(', ', array_unique($service_names));
             }
-            $current_title = $next_title;
+
+            return $template;
         }
 
-        return $categories;
+        if (preg_match('/[;,]/', $raw) === 1) {
+            $fields = [];
+            foreach (preg_split('/[;,]+/', $raw) as $field) {
+                $field = trim(preg_replace('/\s+/', ' ', strip_tags($field)));
+                $field = rtrim($field, " \t\n\r\0\x0B:.");
+                if ($field !== '') {
+                    $fields[] = $field . ':';
+                }
+            }
+
+            if (!empty($fields)) {
+                return implode("\n", $fields);
+            }
+        }
+
+        return trim(strip_tags($raw));
+    }
+}
+
+if (!function_exists('rasamalaWhatsappMemberContext')) {
+    function rasamalaWhatsappMemberContext()
+    {
+        $clean = function ($value) {
+            $value = html_entity_decode((string)$value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $value = trim(preg_replace('/\s+/', ' ', strip_tags($value)));
+            return $value;
+        };
+
+        $name = isset($_SESSION['m_name']) ? $clean($_SESSION['m_name']) : '';
+        $id = isset($_SESSION['mid']) ? $clean($_SESSION['mid']) : '';
+
+        return [
+            'is_logged_in' => ($name !== '' || $id !== ''),
+            'name' => $name,
+            'id' => $id,
+        ];
+    }
+}
+
+if (!function_exists('rasamalaWhatsappBubbleContent')) {
+    function rasamalaWhatsappBubbleContent($raw, array $member_context = [])
+    {
+        $fallback_author = 'Pustakawan';
+        $fallback_message = 'Halo, silakan ketik pesan Anda langsung di kolom bawah. Agar kami dapat membantu lebih cepat, tuliskan nama, nomor anggota (jika ada), lalu pertanyaan Anda.';
+
+        $raw = trim((string)$raw);
+        if ($raw === '') {
+            $raw = $fallback_author . '; ' . $fallback_message;
+        }
+
+        $raw = html_entity_decode($raw, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $raw = str_replace(["\\r\\n", "\\n\\r", "\\r", "\\n"], "\n", $raw);
+        $raw = preg_replace("/\r\n|\r/", "\n", $raw);
+
+        $line = '';
+        foreach (preg_split("/\n+/", $raw) as $candidate) {
+            $candidate = trim($candidate);
+            if ($candidate !== '') {
+                $line = $candidate;
+                break;
+            }
+        }
+
+        if ($line === '') {
+            $line = $fallback_author . '; ' . $fallback_message;
+        }
+
+        $author = $fallback_author;
+        $message = $line;
+        if (strpos($line, ';') !== false) {
+            [$author_raw, $message_raw] = explode(';', $line, 2);
+            $author = trim(preg_replace('/\s+/', ' ', strip_tags($author_raw)));
+            $message = trim(strip_tags($message_raw));
+        }
+
+        if ($author === '') {
+            $author = $fallback_author;
+        }
+        if ($message === '') {
+            $message = $fallback_message;
+        }
+
+        $member_name = trim((string)($member_context['name'] ?? ''));
+        $member_id = trim((string)($member_context['id'] ?? ''));
+        $member_display = $member_name !== '' ? $member_name : $member_id;
+        $has_member_token = preg_match('/\{(?:member_name|nama_member|member_id|id_member)\}/i', $message) === 1;
+
+        if (!$has_member_token && !empty($member_context['is_logged_in']) && $member_display !== '' && preg_match('/^Halo,\s*/i', $message)) {
+            $message = preg_replace('/^Halo,\s*/i', 'Halo ' . $member_display . ', ', $message, 1);
+        }
+
+        $message = strtr($message, [
+            '{member_name}' => $member_display,
+            '{nama_member}' => $member_display,
+            '{member_id}' => $member_id,
+            '{id_member}' => $member_id,
+        ]);
+        $message = trim(preg_replace('/\s+/', ' ', strip_tags($message)));
+
+        return [
+            'author' => $author,
+            'message' => $message !== '' ? $message : $fallback_message,
+        ];
     }
 }
 
@@ -140,7 +195,7 @@ if ($show_floating_libinfo && isset($dbs) && $dbs) {
         <i class="fas fa-info-circle" aria-hidden="true"></i>
     </button>
 
-    <div class="modal fade" id="libinfoModal" tabindex="-1" role="dialog" aria-labelledby="libinfoModalLabel" aria-hidden="true" inert>
+    <div class="modal fade" id="libinfoModal" tabindex="-1" role="dialog" aria-labelledby="libinfoModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content libinfo-modal-content">
                 <div class="modal-header libinfo-modal-header">
@@ -166,22 +221,32 @@ if ($show_floating_libinfo && isset($dbs) && $dbs) {
     <?php
     $wa_title = themeEffectiveTemplateValue('classic_whatsapp_title', 'Layanan Chat WhatsApp', $sysconf);
     $wa_hours = themeEffectiveTemplateValue('classic_service_hours', 'Senin - Jumat (08:00 - 16:00)', $sysconf);
-    $wa_desc = themeEffectiveTemplateValue('classic_whatsapp_desc', 'Pilih salah satu kategori pertanyaan di bawah ini untuk memulai chat dengan pustakawan kami via WhatsApp.', $sysconf);
+    $wa_desc_raw = themeEffectiveTemplateValue('classic_whatsapp_desc', 'Pustakawan; Halo, silakan ketik pesan Anda langsung di kolom bawah. Agar kami dapat membantu lebih cepat, tuliskan nama, nomor anggota (jika ada), lalu pertanyaan Anda.', $sysconf);
     $wa_num = preg_replace('/[^0-9]/', '', themeEffectiveTemplateValue('classic_whatsapp_number', '628123456789', $sysconf));
-    $parsed_categories = rasamalaParseWhatsappCategories(themeEffectiveTemplateValue('classic_whatsapp_categories', '', $sysconf));
+    $wa_member = rasamalaWhatsappMemberContext();
+    $wa_bubble = rasamalaWhatsappBubbleContent($wa_desc_raw, $wa_member);
+    $wa_author = $wa_bubble['author'];
+    $wa_desc = $wa_bubble['message'];
+    if ($wa_member['is_logged_in']) {
+        $wa_message_template = '';
+        $wa_placeholder = __('Tulis pertanyaan Anda...');
+    } else {
+        $wa_message_template = rasamalaWhatsappMessageTemplate(themeEffectiveTemplateValue('classic_whatsapp_categories', '', $sysconf));
+        $wa_placeholder = __('Tulis nama, nomor anggota, dan pertanyaan Anda.');
+    }
     ?>
     <button id="floating-whatsapp-btn" class="btn-floating-whatsapp shadow-lg <?= !empty($latest_content_ticker_items) ? 'has-latest-content-ticker' : '' ?>" data-bs-toggle="modal" data-bs-target="#whatsappModal" title="WhatsApp Chat" aria-label="WhatsApp Chat">
         <i class="fab fa-whatsapp" aria-hidden="true"></i>
     </button>
 
-    <div class="modal fade" id="whatsappModal" tabindex="-1" role="dialog" aria-labelledby="whatsappModalLabel" aria-hidden="true" inert>
+    <div class="modal fade" id="whatsappModal" tabindex="-1" role="dialog" aria-labelledby="whatsappModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-md" role="document">
             <div class="modal-content whatsapp-modal-content">
                 <div class="modal-header whatsapp-modal-header d-flex align-items-center justify-content-between">
                     <div class="d-flex flex-column text-start">
                         <span class="whatsapp-modal-name"><?= htmlspecialchars($wa_title, ENT_QUOTES, 'UTF-8') ?></span>
                         <?php if (!empty($wa_hours)) : ?>
-                        <span class="whatsapp-modal-status"><i class="far fa-clock me-1" style="font-size: 11px;" aria-hidden="true"></i> Jam Layanan: <?= htmlspecialchars($wa_hours, ENT_QUOTES, 'UTF-8') ?></span>
+                        <span class="whatsapp-modal-status"><i class="far fa-clock me-1 whatsapp-modal-status-icon" aria-hidden="true"></i> Jam Layanan: <?= htmlspecialchars($wa_hours, ENT_QUOTES, 'UTF-8') ?></span>
                         <?php endif; ?>
                     </div>
                     <button type="button" class="btn-close btn-close-white m-0" data-bs-dismiss="modal" aria-label="<?= themeEscape(__('Close')) ?>"></button>
@@ -189,26 +254,78 @@ if ($show_floating_libinfo && isset($dbs) && $dbs) {
                 <div class="modal-body whatsapp-modal-body">
                     <div class="whatsapp-chat-container d-flex flex-column">
                         <div class="chat-bubble-incoming d-flex flex-column">
-                            <div class="chat-bubble-author">Pustakawan</div>
+                            <div class="chat-bubble-author"><?= htmlspecialchars($wa_author, ENT_QUOTES, 'UTF-8') ?></div>
                             <div class="chat-bubble-text"><?= htmlspecialchars($wa_desc, ENT_QUOTES, 'UTF-8') ?></div>
                         </div>
 
-                        <div class="whatsapp-quick-reply-label mb-2 text-center text-xs text-muted">Pilih Kategori Pertanyaan (Mulai Chat):</div>
-
-                        <div class="whatsapp-categories-list d-flex flex-column gap-2">
-                            <?php foreach ($parsed_categories as $cat) : ?>
-                                <?php $wa_url = 'https://wa.me/' . $wa_num . '?text=' . urlencode($cat['message']); ?>
-                                <a href="<?= themeEscape($wa_url); ?>" target="_blank" rel="noopener noreferrer" class="chat-bubble-outgoing whatsapp-quick-reply">
-                                    <span><?= themeEscape($cat['title']); ?></span>
-                                    <i class="fab fa-whatsapp" aria-hidden="true"></i>
-                                </a>
-                            <?php endforeach; ?>
-                        </div>
+                        <form class="whatsapp-message-form"
+                              data-whatsapp-form
+                              data-whatsapp-number="<?= themeEscape($wa_num); ?>"
+                              data-member-name="<?= themeEscape($wa_member['name']); ?>"
+                              data-member-id="<?= themeEscape($wa_member['id']); ?>">
+                            <label class="whatsapp-message-label" for="whatsapp-message-input"><?= themeEscape(__('Tulis pesan Anda')) ?></label>
+                            <textarea id="whatsapp-message-input"
+                                      class="form-control whatsapp-message-input"
+                                      rows="5"
+                                      placeholder="<?= themeEscape($wa_placeholder) ?>"><?= htmlspecialchars($wa_message_template, ENT_QUOTES, 'UTF-8') ?></textarea>
+                            <button type="submit" class="btn whatsapp-send-button"<?= $wa_num === '' ? ' disabled' : '' ?>>
+                                <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                                <span><?= themeEscape(__('Kirim via WhatsApp')) ?></span>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        (function () {
+            var form = document.querySelector('[data-whatsapp-form]');
+            if (!form) {
+                return;
+            }
+
+            var textarea = form.querySelector('.whatsapp-message-input');
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+                var number = form.getAttribute('data-whatsapp-number') || '';
+                var memberName = (form.getAttribute('data-member-name') || '').trim();
+                var memberId = (form.getAttribute('data-member-id') || '').trim();
+                var message = textarea ? textarea.value.trim() : '';
+                if (!number || !message) {
+                    if (textarea) {
+                        textarea.classList.add('is-invalid');
+                        textarea.focus();
+                    }
+                    return;
+                }
+
+                if (textarea) {
+                    textarea.classList.remove('is-invalid');
+                }
+
+                if (memberName || memberId) {
+                    var finalMessage = [];
+                    if (memberName) {
+                        finalMessage.push('Nama: ' + memberName);
+                    }
+                    if (memberId) {
+                        finalMessage.push('Member ID: ' + memberId);
+                    }
+                    finalMessage.push('Pertanyaan:\n' + message);
+                    message = finalMessage.join('\n');
+                }
+
+                window.open('https://wa.me/' + number + '?text=' + encodeURIComponent(message), '_blank', 'noopener,noreferrer');
+            });
+
+            if (textarea) {
+                textarea.addEventListener('input', function () {
+                    textarea.classList.remove('is-invalid');
+                });
+            }
+        })();
+    </script>
 <?php endif; ?>
 
 <?php if ($show_back_to_top): ?>

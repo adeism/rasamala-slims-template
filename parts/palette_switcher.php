@@ -1,30 +1,15 @@
 <?php
-# @Author: Waris Agung Widodo <user>
+# @Author: Ade Ismail Siregar <adeismailbox@gmail.com>
 # @Date:   2026-07-16T11:02:00+07:00
-# @Email:  ido.alit@gmail.com
+# @Email:  adeismailbox@gmail.com
 # @Filename: palette_switcher.php
 # @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-16T15:30:11+07:00
+# @Last modified time: 2026-07-22T12:54:00+07:00
 
 $palette_switcher_show = (int)themeEffectiveTemplateValue('classic_palette_switcher_show', 1, $sysconf) === 1;
 if (!$palette_switcher_show) {
     ?>
-<script>
-window.rasamalaPaletteSwitcher = { enabled: false };
-(function () {
-    try {
-        window.localStorage.removeItem('rasamala-theme-palette-key');
-        window.localStorage.removeItem('rasamala-theme-custom-palette');
-        window.localStorage.removeItem('rasamala-theme-font-family');
-        window.localStorage.removeItem('rasamala-theme-background-animation');
-        window.localStorage.removeItem('rasamala-theme-background-animation-speed');
-        window.localStorage.removeItem('rasamala-theme-cursor-particles');
-        window.localStorage.removeItem('rasamala-theme-cursor-icon');
-        window.localStorage.removeItem('rasamala-theme-sections-hidden');
-        window.localStorage.removeItem('rasamala-theme-hidden-sections');
-    } catch (error) {}
-}());
-</script>
+<template id="rasamala-palette-switcher-config"><?= themeEscape(json_encode(['enabled' => false], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT)); ?></template>
     <?php
     return;
 }
@@ -41,7 +26,10 @@ if (!function_exists('rasamalaPaletteForSwitcher')) {
             'surface' => $palette['surface'] ?? '#ffffff',
             'text' => $palette['text'] ?? '#2f2a24',
             'muted' => $palette['muted'] ?? '#7a7167',
+            'mutedOnBackground' => $palette['muted_on_background'] ?? ($palette['muted'] ?? '#7a7167'),
+            'mutedOnSurface' => $palette['muted_on_surface'] ?? ($palette['muted'] ?? '#7a7167'),
             'rgb' => $palette['rgb'] ?? themeHexToRgbString($palette['primary'] ?? '#6f5b43'),
+            'accentRgb' => $palette['accent_rgb'] ?? themeHexToRgbString($palette['accent'] ?? '#c8a24a'),
             'onPrimary' => $palette['on_primary'] ?? themeReadableTextColor($palette['primary'] ?? '#6f5b43'),
             'onPrimaryHover' => $palette['on_primary_hover'] ?? themeReadableTextColor($palette['hover'] ?? '#5d4b36'),
             'onSecondary' => $palette['on_secondary'] ?? themeReadableTextColor($palette['secondary'] ?? '#a58a63'),
@@ -119,9 +107,32 @@ $home_section_options = [
     ['key' => 'footer', 'label' => __('Footer'), 'selector' => 'footer'],
 ];
 
-$palette_prompt = "Buat 1 custom palette OPAC perpustakaan dalam format persis berikut: #PRIMARY; #SECONDARY; #ACCENT; #BACKGROUND; #SURFACE; #TEXT; #MUTED | #DARK_PRIMARY; #DARK_SECONDARY; #DARK_ACCENT; #DARK_BACKGROUND; #DARK_SURFACE; #DARK_TEXT; #DARK_MUTED. Output hanya 1 baris kode warna hex 6 digit, tanpa markdown, tanpa bullet, tanpa nama variabel, tanpa penjelasan. Pastikan Primary cocok untuk navbar/footer and tombol utama, Surface cocok untuk card/input, Background untuk halaman, Text kontras minimal WCAG AA terhadap Background/Surface, Muted tetap terbaca, Accent tidak dipakai untuk teks panjang. Buat light palette dan dark palette yang berbeda tetapi tetap satu identitas visual. Tema visual yang diminta: [tulis konsep warna di sini].";
+$palette_prompt = "Buat 1 custom palette OPAC perpustakaan dalam format persis berikut: #PRIMARY; #SECONDARY; #ACCENT; #BACKGROUND; #SURFACE; #TEXT; #MUTED | #DARK_PRIMARY; #DARK_SECONDARY; #DARK_ACCENT; #DARK_BACKGROUND; #DARK_SURFACE; #DARK_TEXT; #DARK_MUTED. Output hanya 1 baris kode warna hex 6 digit, tanpa markdown, tanpa bullet, tanpa nama variabel, tanpa penjelasan. Aturan wajib: untuk light palette, Background dan Surface harus sama-sama terang/soft, Text harus gelap dan memiliki contrast ratio minimal 4.5:1 terhadap Background serta Surface, Muted juga minimal 4.5:1. Untuk dark palette, Background dan Surface harus sama-sama gelap, Text harus terang dan minimal 4.5:1 terhadap keduanya, Muted juga tetap terbaca minimal 4.5:1. Primary dipakai untuk navbar/footer/tombol utama; pastikan teks putih atau hitam terbaca di atas Primary. Accent hanya untuk highlight/icon/status, bukan teks panjang. Jangan pilih Text/Muted yang mirip Background atau Surface. Jika ragu gunakan Text #111827 dan Muted #374151 untuk light, Text #f8fafc dan Muted #cbd5e1 untuk dark. Buat light palette dan dark palette yang berbeda tetapi tetap satu identitas visual. Tema visual yang diminta: [tulis konsep warna di sini].";
+
+$top_subjects = [];
+if (isset($dbs) && $dbs) {
+    try {
+        $q = $dbs->query("SELECT mt.topic FROM mst_topic AS mt LEFT JOIN biblio_topic AS bt ON mt.topic_id = bt.topic_id GROUP BY mt.topic_id ORDER BY COUNT(bt.biblio_id) DESC, mt.topic ASC LIMIT 50");
+        if ($q) {
+            while ($row = $q->fetch_row()) {
+                $topic_name = trim((string)$row[0]);
+                if ($topic_name !== '') {
+                    $top_subjects[] = $topic_name;
+                }
+            }
+        }
+    } catch (\Exception $e) {}
+}
+if (empty($top_subjects)) {
+    $top_subjects = [
+        'Kesusastraan', 'Teknologi', 'Sains', 'Sejarah', 'Filsafat', 'Seni', 'Agama', 'Bahasa', 'Ilmu Sosial', 'Ekonomi',
+        'Komputer', 'Fisika', 'Kimia', 'Matematika', 'Biologi', 'Kedokteran', 'Hukum', 'Politik', 'Pendidikan', 'Psikologi'
+    ];
+}
 
 $palette_switcher_config = [
+    'topSubjects' => $top_subjects,
+
     'enabled' => true,
     'currentPreset' => function_exists('themePresetKey') ? themePresetKey($sysconf) : 'simple_homepage',
     'presets' => [
@@ -131,7 +142,7 @@ $palette_switcher_config = [
         'custom' => __('Custom (Fully Unlocked)')
     ],
     'currentKey' => $effective_palette_key ?? 'warmgray',
-    'customValue' => themeEffectiveTemplateValue('classic_palette_custom_colors', '', $sysconf),
+    'customValue' => $custom_palette_value,
     'fontFamily' => themeEffectiveTemplateValue('classic_font_family', 'system', $sysconf),
     'backgroundAnimation' => themeEffectiveTemplateValue('classic_background_animation', 'none', $sysconf),
     'backgroundAnimationSpeed' => themeEffectiveTemplateValue('classic_background_animation_speed', 'normal', $sysconf),
@@ -153,9 +164,7 @@ $palette_switcher_config = [
 ];
 ?>
 
-<script>
-window.rasamalaPaletteSwitcher = <?= json_encode($palette_switcher_config, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
-</script>
+<template id="rasamala-palette-switcher-config"><?= themeEscape(json_encode($palette_switcher_config, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT)); ?></template>
 
 <div class="rasamala-palette-switcher" id="rasamala-palette-switcher">
     <button type="button"
@@ -202,52 +211,52 @@ window.rasamalaPaletteSwitcher = <?= json_encode($palette_switcher_config, JSON_
             </div>
         </div>
         <div class="palette-switcher-section-tools" aria-label="<?= themeEscape(__('Section Beranda')); ?>">
-            <div class="d-flex justify-content-between align-items-center mb-1" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                <span class="palette-switcher-label palette-switcher-section-label" style="margin: 0; font-weight: 700;"><?= themeEscape(__('Section Beranda')); ?></span>
-                <div style="display: flex; gap: 4px;">
+            <div class="d-flex justify-content-between align-items-center mb-1 palette-switcher-section-head">
+                <span class="palette-switcher-label palette-switcher-section-label palette-switcher-label-flush"><?= themeEscape(__('Section Beranda')); ?></span>
+                <div class="palette-switcher-section-actions">
                     <button type="button" 
-                            class="palette-switcher-tool-btn" 
+                            class="palette-switcher-tool-btn palette-switcher-tool-btn-compact" 
                             id="theme-viewer-show-sections" 
-                            style="width: 26px; height: 26px; padding: 0; min-height: 26px; border-radius: 6px;" 
                             title="<?= themeEscape(__('Show all sections')); ?>"
                             aria-label="<?= themeEscape(__('Show all sections')); ?>">
-                        <i class="fas fa-eye" style="font-size: 11px;" aria-hidden="true"></i>
+                        <i class="fas fa-eye palette-switcher-tool-icon-small" aria-hidden="true"></i>
                     </button>
                     <button type="button" 
-                            class="palette-switcher-tool-btn" 
+                            class="palette-switcher-tool-btn palette-switcher-tool-btn-compact" 
                             id="theme-viewer-hide-sections" 
-                            style="width: 26px; height: 26px; padding: 0; min-height: 26px; border-radius: 6px;" 
                             title="<?= themeEscape(__('Hide all sections')); ?>"
                             aria-label="<?= themeEscape(__('Hide all sections')); ?>">
-                        <i class="fas fa-eye-slash" style="font-size: 11px;" aria-hidden="true"></i>
+                        <i class="fas fa-eye-slash palette-switcher-tool-icon-small" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>
             <div class="palette-switcher-section-list" id="theme-viewer-section-list"></div>
         </div>
         <div class="palette-switcher-custom" id="palette-switcher-custom" hidden>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
-                <label class="palette-switcher-label" for="palette-switcher-custom-input" style="margin: 0;"><?= themeEscape(__('Custom Palette Colors')); ?></label>
+            <div class="palette-switcher-custom-head">
+                <label class="palette-switcher-label palette-switcher-label-flush" for="palette-switcher-custom-input"><?= themeEscape(__('Custom Palette Colors')); ?></label>
                 <button type="button"
                         id="palette-switcher-apply"
-                        class="btn btn-primary btn-sm"
-                        style="padding: 4px 10px; font-size: 11px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px; background: var(--theme-accent) !important; color: var(--theme-on-accent) !important; border-color: var(--theme-accent) !important; font-weight: bold;"
+                        class="btn btn-primary btn-sm palette-switcher-apply-btn"
                         title="<?= themeEscape(__('Apply')); ?>"
                         aria-label="<?= themeEscape(__('Apply')); ?>">
-                    <i class="fas fa-check" style="color: var(--theme-on-accent) !important; font-size: 10px;" aria-hidden="true"></i>
+                    <i class="fas fa-check palette-switcher-apply-icon" aria-hidden="true"></i>
                     <span><?= themeEscape(__('Apply')); ?></span>
                 </button>
             </div>
             <textarea id="palette-switcher-custom-input"
-                      class="form-control palette-switcher-custom-input"
+                      class="form-control palette-switcher-custom-input palette-switcher-custom-textarea"
                       rows="4"
                       maxlength="320"
                       autocomplete="off"
-                      spellcheck="false"
-                      style="margin-top: 6px;"></textarea>
-            <div class="palette-switcher-help" style="font-size: 10px; line-height: 1.3; margin-top: 4px;"><?= themeEscape(__('Format: Light palette | Dark palette. Urutan tiap sisi: Primary; Secondary; Accent; Background; Surface; Text; Muted. Hanya kode hex 6 digit yang dipakai.')); ?></div>
+                      spellcheck="false"></textarea>
+            <div class="palette-switcher-help palette-switcher-format-help">
+                <?= themeEscape(__('Klik tombol Copy Prompt di bawah untuk generate kode warna via ChatGPT/AI, atau isi manual dengan format:')); ?>
+                <br>
+                <code class="palette-switcher-format-code">#1e3a8a;#3b82f6;#10b981;#f3f4f6;#ffffff;#1f2937;#4b5563 | #0f172a;#1e293b;#10b981;#0f172a;#1e293b;#f9fafb;#94a3b8</code>
+            </div>
         </div>
-        <div class="palette-switcher-actions-compact" style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 18px; padding-top: 12px; border-top: 1px solid color-mix(in srgb, var(--theme-muted) 16%, transparent); width: 100%;">
+        <div class="palette-switcher-actions-compact">
             <button type="button"
                     id="palette-color-mode-toggle"
                     class="palette-switcher-tool-btn"

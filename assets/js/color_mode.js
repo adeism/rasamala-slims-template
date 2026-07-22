@@ -35,12 +35,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const activeToggles = queryAll('#color-mode-toggle, #color-mode-toggle-nav, #color-mode-toggle-desktop, #palette-color-mode-toggle');
         activeToggles.forEach(toggle => {
             toggle.setAttribute('aria-pressed', isDarkMode ? 'true' : 'false');
-            toggle.setAttribute(
-                'title',
-                isDarkMode
-                    ? (toggle.getAttribute('data-light-title') || 'Light mode')
-                    : (toggle.getAttribute('data-dark-title') || 'Dark mode')
-            );
+            const nextLabel = isDarkMode
+                ? (toggle.getAttribute('data-light-title') || 'Light mode')
+                : (toggle.getAttribute('data-dark-title') || 'Dark mode');
+            toggle.setAttribute('title', nextLabel);
+            toggle.setAttribute('aria-label', nextLabel);
 
             const icon = query('i', toggle);
             if (icon) {

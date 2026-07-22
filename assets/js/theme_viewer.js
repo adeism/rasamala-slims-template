@@ -7,7 +7,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const query = (selector, root = document) => root.querySelector(selector);
     const queryAll = (selector, root = document) => Array.prototype.slice.call(root.querySelectorAll(selector));
 
-    const paletteSwitcherConfig = window.rasamalaPaletteSwitcher || null;
+    const readJsonConfig = (id, fallback = null) => {
+        const element = query(`#${id}`);
+        if (!element) return fallback;
+
+        const text = (element.content ? element.content.textContent : element.textContent) || '';
+        if (!text.trim()) return fallback;
+
+        try {
+            return JSON.parse(text);
+        } catch (error) {
+            return fallback;
+        }
+    };
+
+    const paletteSwitcherConfig = readJsonConfig('rasamala-palette-switcher-config', window.rasamalaPaletteSwitcher || null);
     const paletteStorageKey = 'rasamala-theme-palette-key';
     const paletteCustomStorageKey = 'rasamala-theme-custom-palette';
     const themeViewerStorageKeys = {
@@ -48,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const paletteKeys = ['primary', 'secondary', 'accent', 'background', 'surface', 'text', 'muted'];
     const paletteInputMaxLength = 320;
+    const minimumTextContrast = 4.5;
     const fontStacks = {
         system: 'system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
         inter: '"Inter", system-ui, BlinkMacSystemFont, "Segoe UI", sans-serif',
@@ -137,6 +152,29 @@ document.addEventListener('DOMContentLoaded', () => {
         return contrastRatio(bg, dark) >= contrastRatio(bg, light) ? dark : light;
     };
 
+    const accessibleTextColor = (background, preferred = '', fallback = '', minimumRatio = minimumTextContrast) => {
+        const bg = normalizeHex(background, '#ffffff');
+        const candidates = [normalizePaletteToken(preferred), normalizePaletteToken(fallback), '#111827', '#ffffff'];
+        const seen = new Set();
+        let bestColor = '#111827';
+        let bestRatio = 0;
+
+        for (const candidate of candidates) {
+            if (!candidate || seen.has(candidate)) continue;
+            seen.add(candidate);
+            const ratio = contrastRatio(bg, candidate);
+            if (ratio >= minimumRatio) {
+                return candidate;
+            }
+            if (ratio > bestRatio) {
+                bestRatio = ratio;
+                bestColor = candidate;
+            }
+        }
+
+        return bestColor;
+    };
+
     const hydratePaletteContrast = (palette) => {
         const output = Object.assign({}, palette);
         output.primary = normalizeHex(output.primary, '#6f5b43');
@@ -145,18 +183,37 @@ document.addEventListener('DOMContentLoaded', () => {
         output.accent = normalizeHex(output.accent, '#c8a24a');
         output.background = normalizeHex(output.background, '#f4f1ec');
         output.surface = normalizeHex(output.surface, '#ffffff');
-        output.text = normalizeHex(output.text, '#2f2a24');
-        output.muted = normalizeHex(output.muted, '#7a7167');
+        const textCandidate = normalizeHex(output.text, '#2f2a24');
+        const mutedCandidate = normalizeHex(output.muted, '#7a7167');
+        output.text = textCandidate;
+        output.muted = mutedCandidate;
         output.accentHover = normalizeHex(output.accentHover, adjustHex(output.accent, -28));
         output.rgb = output.rgb || hexToRgb(output.primary);
         output.accentRgb = output.accentRgb || hexToRgb(output.accent);
-        output.onPrimary = output.onPrimary || readableTextColor(output.primary);
-        output.onPrimaryHover = output.onPrimaryHover || readableTextColor(output.hover);
-        output.onSecondary = output.onSecondary || readableTextColor(output.secondary);
-        output.onAccent = output.onAccent || readableTextColor(output.accent);
-        output.onBackground = output.onBackground || (contrastRatio(output.background, output.text) >= 4.5 ? output.text : readableTextColor(output.background));
-        output.onSurface = output.onSurface || (contrastRatio(output.surface, output.text) >= 4.5 ? output.text : readableTextColor(output.surface));
+        output.onPrimary = output.onPrimary || accessibleTextColor(output.primary);
+        output.onPrimaryHover = output.onPrimaryHover || accessibleTextColor(output.hover);
+        output.onSecondary = output.onSecondary || accessibleTextColor(output.secondary);
+        output.onAccent = output.onAccent || accessibleTextColor(output.accent);
+        output.onBackground = accessibleTextColor(output.background, textCandidate);
+        output.onSurface = accessibleTextColor(output.surface, textCandidate, output.onBackground);
+        output.mutedOnBackground = accessibleTextColor(output.background, mutedCandidate, output.onBackground);
+        output.mutedOnSurface = accessibleTextColor(output.surface, mutedCandidate, output.onSurface);
+        output.text = output.onBackground;
+        output.muted = output.mutedOnBackground;
         return output;
+    };
+
+    const serializePaletteSegment = (palette) => paletteKeys
+        .map(key => palette[key] || '#111827')
+        .join('; ');
+
+    const normalizePaletteInputForContrast = (value, fallbackLight = {}, fallbackDark = {}) => {
+        const rawValue = String(value || '');
+        const hasDarkSegment = rawValue.indexOf('|') !== -1;
+        const pair = parsePalettePair(rawValue, fallbackLight, fallbackDark);
+        const light = serializePaletteSegment(pair.light);
+        const dark = serializePaletteSegment(pair.dark);
+        return hasDarkSegment ? `${light} | ${dark}` : light;
     };
 
     const parsePaletteSegment = (value, fallback = {}) => {
@@ -194,6 +251,8 @@ document.addEventListener('DOMContentLoaded', () => {
             '--theme-surface': light.surface,
             '--theme-text': light.text,
             '--theme-muted': light.muted,
+            '--theme-muted-on-background': light.mutedOnBackground,
+            '--theme-muted-on-surface': light.mutedOnSurface,
             '--theme-primary-rgb': light.rgb,
             '--theme-accent-rgb-value': light.accentRgb,
             '--theme-on-primary': light.onPrimary,
@@ -210,6 +269,8 @@ document.addEventListener('DOMContentLoaded', () => {
             '--theme-dark-surface': dark.surface,
             '--theme-dark-text': dark.text,
             '--theme-dark-muted': dark.muted,
+            '--theme-dark-muted-on-background': dark.mutedOnBackground,
+            '--theme-dark-muted-on-surface': dark.mutedOnSurface,
             '--theme-dark-primary-rgb': dark.rgb,
             '--theme-dark-accent-rgb-value': dark.accentRgb,
             '--theme-dark-on-primary': dark.onPrimary,
@@ -223,15 +284,15 @@ document.addEventListener('DOMContentLoaded', () => {
             '--color-accent': 'var(--theme-accent)',
             '--color-background': 'var(--theme-background)',
             '--color-surface': 'var(--theme-surface)',
-            '--color-text': 'var(--theme-text)',
-            '--color-muted': 'var(--theme-muted)',
+            '--color-text': 'var(--theme-on-background)',
+            '--color-muted': 'var(--theme-muted-on-background)',
             '--color-on-primary': 'var(--theme-on-primary)',
             '--color-on-secondary': 'var(--theme-on-secondary)',
             '--color-on-accent': 'var(--theme-on-accent)',
             '--rasamala-light-bg': 'var(--theme-background)',
-            '--rasamala-text-primary': 'var(--theme-text)',
+            '--rasamala-text-primary': 'var(--theme-on-background)',
             '--rasamala-text-secondary': 'var(--theme-secondary)',
-            '--rasamala-text-muted': 'var(--theme-muted)',
+            '--rasamala-text-muted': 'var(--theme-muted-on-background)',
             '--rasamala-surface': 'var(--theme-surface)',
             '--rasamala-accent': light.accent,
             '--rasamala-accent-hover': light.accentHover,
@@ -245,8 +306,8 @@ document.addEventListener('DOMContentLoaded', () => {
             '--rasamala-chrome-text': 'var(--theme-on-primary)',
             '--rasamala-chrome-text-muted': 'color-mix(in srgb, var(--theme-on-primary) 76%, transparent)',
             '--bs-body-bg': 'var(--theme-background)',
-            '--bs-body-color': 'var(--theme-text)',
-            '--bs-secondary-color': 'var(--theme-muted)'
+            '--bs-body-color': 'var(--theme-on-background)',
+            '--bs-secondary-color': 'var(--theme-muted-on-background)'
         };
 
         Object.entries(values).forEach(([name, value]) => {
@@ -271,13 +332,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!paletteSwitcherConfig || paletteSwitcherConfig.enabled === false || !paletteSwitcherConfig.palettes) return;
         const palettes = paletteSwitcherConfig.palettes;
         const selectedKey = palettes[key] ? key : (paletteSwitcherConfig.currentKey || 'warmgray');
-        const cleanCustomValue = sanitizePaletteInput(customValue);
+        let cleanCustomValue = sanitizePaletteInput(customValue);
         let pair = palettes[selectedKey] || palettes.warmgray;
 
         if (selectedKey === 'custom') {
             const fallback = palettes.custom || palettes[paletteSwitcherConfig.currentKey] || palettes.warmgray;
             const fallbackCustomValue = sanitizePaletteInput(paletteSwitcherConfig.customValue || '');
-            pair = parsePalettePair(cleanCustomValue || fallbackCustomValue, fallback.light || {}, fallback.dark || {});
+            cleanCustomValue = normalizePaletteInputForContrast(cleanCustomValue || fallbackCustomValue, fallback.light || {}, fallback.dark || {});
+            pair = parsePalettePair(cleanCustomValue, fallback.light || {}, fallback.dark || {});
         }
 
         pair = {
@@ -292,7 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 window.localStorage.setItem(paletteStorageKey, selectedKey);
                 if (selectedKey === 'custom') {
-                    window.localStorage.setItem(paletteCustomStorageKey, cleanCustomValue || sanitizePaletteInput(paletteSwitcherConfig.customValue || ''));
+                    window.localStorage.setItem(paletteCustomStorageKey, cleanCustomValue);
                 }
             } catch (error) {}
         }
@@ -384,6 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const presetSelect = query('#theme-preset-select');
         const activePreset = presetSelect ? presetSelect.value : (getStoredThemeViewerValue(themeViewerStorageKeys.preset) || paletteSwitcherConfig.currentPreset || 'simple_homepage');
         const isOnlyHero = (activePreset === 'simple_homepage');
+        const isOffice = (activePreset === 'office');
 
         document.body.classList.toggle('rasamala-home-hero-only', isOnlyHero);
         queryAll('.rasamala-hero-section').forEach(element => {
@@ -391,6 +454,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         queryAll('.rasamala-search-banner-section').forEach(element => {
             element.classList.toggle('rasamala-search-banner-hero-only', isOnlyHero);
+        });
+
+        // Hide/show topic heading based on preset 'office' (Simple + Topics)
+        queryAll('.rasamala-home-section-topic .rasamala-home-section-title').forEach(element => {
+            element.hidden = isOffice;
         });
 
         sectionOptions().forEach(section => {
@@ -750,7 +818,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         applyButton.addEventListener('click', () => {
-            const cleanCustomValue = sanitizePaletteInput(customInput.value);
+            const fallback = palettes.custom || palettes[paletteSwitcherConfig.currentKey] || palettes.warmgray;
+            const cleanCustomValue = normalizePaletteInputForContrast(customInput.value, fallback.light || {}, fallback.dark || {});
             customInput.value = cleanCustomValue;
             applyPaletteChoice(select.value, cleanCustomValue, true);
             applyThemeViewerChoice(currentThemeViewerSettings(), true);
@@ -849,11 +918,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (pastePaletteButton) {
             pastePaletteButton.addEventListener('click', () => {
                 readText().then((clipboardText) => {
-                    const cleanValue = sanitizePaletteInput(clipboardText);
-                    if (!cleanValue) {
+                    const sanitizedValue = sanitizePaletteInput(clipboardText);
+                    if (!sanitizedValue) {
                         setTemporaryButtonLabel(pastePaletteButton, (paletteSwitcherConfig.labels && paletteSwitcherConfig.labels.clipboardUnavailable) || 'Clipboard unavailable', 1800);
                         return;
                     }
+
+                    const fallback = palettes.custom || palettes[paletteSwitcherConfig.currentKey] || palettes.warmgray;
+                    const cleanValue = normalizePaletteInputForContrast(sanitizedValue, fallback.light || {}, fallback.dark || {});
 
                     customInput.value = cleanValue;
                     syncControls('custom');

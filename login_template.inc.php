@@ -12,10 +12,10 @@ if (isset($_GET['p']) && $_GET['p'] === 'visitor') {
   include_once "classic.php";
   include "parts/header.php";
   echo $main_content;
-  echo '<script src="' . themeEscape(assets(v('js/color_mode.js'))) . '"></script>';
-  echo '<script src="' . themeEscape(assets(v('js/hero_animation.js'))) . '"></script>';
-  echo '<script src="' . themeEscape(assets(v('js/theme_viewer.js'))) . '"></script>';
-  echo '<script src="' . themeEscape(assets(v('js/app_jquery.js'))) . '"></script>';
+  echo '<script src="' . themeEscape(assetsVersioned('js/color_mode.js')) . '"></script>';
+  echo '<script src="' . themeEscape(assetsVersioned('js/hero_animation.js')) . '"></script>';
+  echo '<script src="' . themeEscape(assetsVersioned('js/theme_viewer.js')) . '"></script>';
+  echo '<script src="' . themeEscape(assetsVersioned('js/app_jquery.js')) . '"></script>';
   echo '</body></html>';
 } else {
   include "index_template.inc.php";

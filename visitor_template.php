@@ -12,42 +12,53 @@ include_once __DIR__ . '/classic.php';
 
 // set default language
 if (isset($_GET['select_lang'])) {
-    $select_lang = trim(strip_tags($_GET['select_lang']));
-    // delete previous language cookie
-    if (isset($_COOKIE['select_lang'])) {
-        #@setcookie('select_lang', $select_lang, time()-14400, SWB);
-        #@setcookie('select_lang', $select_lang, time()-14400, SWB, "", FALSE, TRUE);
-
+    $select_lang = preg_replace('/[^a-zA-Z0-9_-]/', '', $_GET['select_lang']);
+    $is_valid_lang = false;
+    if (isset($available_languages) && is_array($available_languages)) {
+        foreach ($available_languages as $lang_index) {
+            if (($lang_index[0] ?? '') === $select_lang) {
+                $is_valid_lang = true;
+                break;
+            }
+        }
+    }
+    if ($is_valid_lang) {
+        // delete previous language cookie
+        if (isset($_COOKIE['select_lang'])) {
+            @setcookie('select_lang', $select_lang, [
+                'expires' => time()-14400,
+                'path' => SWB,
+                'domain' => '',
+                'secure' => (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'),
+                'httponly' => true,
+                'samesite' => 'Lax',
+            ]);
+        }
+        // create language cookie
         @setcookie('select_lang', $select_lang, [
-            'expires' => time()-14400,
+            'expires' => time()+14400,
             'path' => SWB,
             'domain' => '',
             'secure' => (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'),
             'httponly' => true,
             'samesite' => 'Lax',
         ]);
-
-
-
+        $sysconf['default_lang'] = $select_lang;
     }
-    // create language cookie
-    #@setcookie('select_lang', $select_lang, time()+14400, SWB);
-    #@setcookie('select_lang', $select_lang, time()+14400, SWB, "", FALSE, TRUE);
-
-    @setcookie('select_lang', $select_lang, [
-        'expires' => time()+14400,
-        'path' => SWB,
-        'domain' => '',
-        'secure' => (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'),
-        'httponly' => true,
-        'samesite' => 'Lax',
-    ]);
-
-
-
-    $sysconf['default_lang'] = $select_lang;
 } else if (isset($_COOKIE['select_lang'])) {
-    $sysconf['default_lang'] = trim(strip_tags($_COOKIE['select_lang']));
+    $select_lang = preg_replace('/[^a-zA-Z0-9_-]/', '', $_COOKIE['select_lang']);
+    $is_valid_lang = false;
+    if (isset($available_languages) && is_array($available_languages)) {
+        foreach ($available_languages as $lang_index) {
+            if (($lang_index[0] ?? '') === $select_lang) {
+                $is_valid_lang = true;
+                break;
+            }
+        }
+    }
+    if ($is_valid_lang) {
+        $sysconf['default_lang'] = $select_lang;
+    }
 }
 
 $visitor_quote_enabled = ($sysconf['template']['visitor_quote'] ?? 1) == 1;
@@ -58,6 +69,12 @@ if (trim((string)$visitor_title) === '') {
 $visitor_subtitle = themeEffectiveTemplateValue('visitor_subtitle', 'Visitor Check-In Portal', $sysconf);
 $visitor_theme_toggle_enabled = (themeEffectiveTemplateValue('visitor_theme_toggle', 1, $sysconf) == 1);
 $visitor_layout_style = themeEffectiveTemplateValue('visitor_layout_style', 'kiosk', $sysconf);
+$visitor_institution_select_label = trim((string)themeEffectiveTemplateValue('visitor_institution_select_label', __('Pilih Fakultas / Institusi'), $sysconf));
+if ($visitor_institution_select_label === '') {
+    $visitor_institution_select_label = __('Pilih Fakultas / Institusi');
+}
+$visitor_institution_options = themeVisitorInstitutionOptions(themeEffectiveTemplateValue('visitor_institution_options', '', $sysconf));
+$visitor_other_institution_value = themeVisitorInstitutionManualValue($visitor_institution_options);
 
 if (!function_exists('rasamalaVisitorSplitDefaultSteps')) {
     function rasamalaVisitorSplitDefaultSteps()
@@ -130,6 +147,24 @@ if (!function_exists('rasamalaVisitorSplitSteps')) {
     }
 }
 
+if (!function_exists('rasamalaVisitorSplitDefaultHtml')) {
+    function rasamalaVisitorSplitDefaultHtml()
+    {
+        return '<div class="inst-step">'
+            . '<div class="inst-icon-box"><i class="fas fa-id-card"></i></div>'
+            . '<div class="inst-content"><h3>1. Isi Identitas</h3><p>Scan kartu anggota atau ketik identitas pengunjung pada kolom yang tersedia.</p></div>'
+            . '</div>'
+            . '<div class="inst-step inst-step-featured">'
+            . '<div class="inst-icon-box"><i class="fas fa-sync-alt"></i></div>'
+            . '<div class="inst-content"><h3>2. Proses Kunjungan</h3><p>Sistem akan memeriksa data dan menampilkan status kunjungan secara otomatis.</p></div>'
+            . '</div>'
+            . '<div class="inst-step">'
+            . '<div class="inst-icon-box"><i class="fas fa-check"></i></div>'
+            . '<div class="inst-content"><h3>3. Selesai</h3><p>Setelah berhasil, pengunjung dapat melanjutkan aktivitas sesuai layanan yang tersedia.</p></div>'
+            . '</div>';
+    }
+}
+
 if (!function_exists('rasamalaVisitorSplitIcon')) {
     function rasamalaVisitorSplitIcon($icon)
     {
@@ -155,11 +190,78 @@ if (!function_exists('rasamalaVisitorSplitIcon')) {
     }
 }
 
+if (!function_exists('rasamalaVisitorSplitLegacyHtml')) {
+    function rasamalaVisitorSplitLegacyHtml($raw_steps)
+    {
+        $html = '';
+        foreach (rasamalaVisitorSplitSteps($raw_steps) as $visitor_step_index => $visitor_step) {
+            $visitor_step_icon = rasamalaVisitorSplitIcon($visitor_step['icon'] ?? '');
+            $html .= '<div class="inst-step' . ($visitor_step_icon['is_scan'] ? ' inst-step-featured' : '') . '">';
+            $html .= '<div class="inst-icon-box' . ($visitor_step_icon['is_scan'] ? ' inst-icon-box-scan' : '') . '">' . $visitor_step_icon['html'] . '</div>';
+            $html .= '<div class="inst-content">';
+            $html .= '<h3>' . themeEscape(($visitor_step_index + 1) . '. ' . ($visitor_step['title'] ?? 'Info')) . '</h3>';
+            if (trim((string)($visitor_step['description'] ?? '')) !== '') {
+                $html .= '<p>' . themeSanitizeHtml($visitor_step['description']) . '</p>';
+            }
+            $html .= '</div></div>';
+        }
+
+        return $html !== '' ? $html : rasamalaVisitorSplitDefaultHtml();
+    }
+}
+
+if (!function_exists('rasamalaVisitorSplitHasHtml')) {
+    function rasamalaVisitorSplitHasHtml($raw_steps)
+    {
+        return preg_match('/<\s*\/?\s*(div|p|ul|ol|li|h[1-6]|blockquote|table|span|strong|em|a|i|br|hr|img)\b/i', (string)$raw_steps) === 1;
+    }
+}
+
+if (!function_exists('rasamalaVisitorSplitHasStepContainer')) {
+    function rasamalaVisitorSplitHasStepContainer($raw_steps)
+    {
+        return preg_match('/class\s*=\s*(["\'])(?:(?!\1).)*\binst-step\b(?:(?!\1).)*\1/i', (string)$raw_steps) === 1;
+    }
+}
+
+if (!function_exists('rasamalaVisitorSplitWrapHtml')) {
+    function rasamalaVisitorSplitWrapHtml($raw_steps)
+    {
+        return '<div class="inst-step">'
+            . '<div class="inst-icon-box"><i class="fas fa-info-circle"></i></div>'
+            . '<div class="inst-content">' . $raw_steps . '</div>'
+            . '</div>';
+    }
+}
+
+if (!function_exists('rasamalaVisitorSplitStepsHtml')) {
+    function rasamalaVisitorSplitStepsHtml($raw_steps)
+    {
+        $raw_steps = trim((string)($raw_steps ?? ''));
+        if (stripos($raw_steps, 'psb.feb.ui.ac.id') !== false || stripos($raw_steps, 'Login Web PSB') !== false) {
+            $raw_steps = '';
+        }
+        if ($raw_steps === '') {
+            return themeSanitizeHtml(rasamalaVisitorSplitDefaultHtml());
+        }
+        $html_steps = html_entity_decode($raw_steps, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        if (rasamalaVisitorSplitHasHtml($html_steps)) {
+            return themeSanitizeHtml(
+                rasamalaVisitorSplitHasStepContainer($html_steps)
+                    ? $html_steps
+                    : rasamalaVisitorSplitWrapHtml($html_steps)
+            );
+        }
+
+        return rasamalaVisitorSplitLegacyHtml($raw_steps);
+    }
+}
+
 $visitor_split_title = trim((string)themeEffectiveTemplateValue('visitor_split_title', 'Petunjuk Penggunaan', $sysconf));
 if ($visitor_split_title === '') {
     $visitor_split_title = 'Petunjuk Penggunaan';
 }
-$visitor_split_steps = rasamalaVisitorSplitSteps(themeEffectiveTemplateValue('visitor_split_steps', '', $sysconf));
+$visitor_split_steps_html = rasamalaVisitorSplitStepsHtml(themeEffectiveTemplateValue('visitor_split_steps', '', $sysconf));
 
 $visitor_ticker_items = [];
 $visitor_ticker_speed = themeEffectiveTemplateValue('classic_ticker_speed', 'normal', $sysconf);
@@ -187,367 +289,6 @@ if ($visitor_ticker_enabled && isset($dbs) && $dbs && function_exists('themeGetD
 }
 
 ?>
-<style>
-/* Kiosk Mode Visitor Styles */
-.visitor-bg-gradient {
-  background: linear-gradient(135deg, #f5f6f8 0%, #e2e5e9 100%) !important;
-}
-body.rasamala-dark .visitor-bg-gradient {
-  background: linear-gradient(135deg, #0c0f14 0%, #151922 100%) !important;
-}
-
-.visitor-kiosk-card {
-  width: 90% !important;
-  max-width: 500px !important;
-  background: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.4) !important;
-  border-radius: 20px !important;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15) !important;
-  transition: all 0.3s ease !important;
-  margin: auto !important;
-}
-
-body.rasamala-dark .visitor-kiosk-card {
-  background: rgba(20, 24, 32, 0.95) !important;
-  border-color: rgba(255, 255, 255, 0.08) !important;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35) !important;
-}
-
-.visitor-kiosk-card .visitor-welcome-title {
-  color: var(--rasamala-accent) !important;
-  font-size: 26px !important;
-  letter-spacing: -0.02em !important;
-}
-
-.visitor-kiosk-card .visitor-subtitle {
-  font-size: 14px !important;
-  letter-spacing: 0.05em !important;
-  text-transform: uppercase !important;
-  font-weight: 600 !important;
-  opacity: 0.6 !important;
-}
-
-.visitor-input {
-  background: rgba(0, 0, 0, 0.02) !important;
-  border: 1.5px solid rgba(0, 0, 0, 0.08) !important;
-  border-radius: 12px !important;
-  padding: 14px 20px !important;
-  font-size: 16px !important;
-  height: auto !important;
-  color: var(--rasamala-text-primary) !important;
-  transition: all 0.25s ease !important;
-}
-
-body.rasamala-dark .visitor-input {
-  background: rgba(255, 255, 255, 0.03) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-.visitor-input:focus {
-  border-color: var(--rasamala-accent) !important;
-  box-shadow: 0 0 0 4px rgba(var(--theme-accent-rgb), 0.12) !important;
-  background: transparent !important;
-}
-
-.visitor-label {
-  font-size: 12px !important;
-  letter-spacing: 0.08em !important;
-  color: var(--rasamala-text-secondary) !important;
-}
-
-.btn-visitor-checkin {
-  border-radius: 12px !important;
-  font-weight: 700 !important;
-  padding: 14px !important;
-  font-size: 16px !important;
-  background-color: var(--rasamala-accent) !important;
-  border-color: var(--rasamala-accent) !important;
-  transition: all 0.25s ease !important;
-  letter-spacing: 0.02em !important;
-}
-
-.btn-visitor-checkin:hover, .btn-visitor-checkin:focus {
-  background-color: var(--rasamala-accent-hover) !important;
-  border-color: var(--rasamala-accent-hover) !important;
-  transform: translateY(-1px) !important;
-}
-
-.btn-visitor-checkin:disabled {
-  opacity: 0.6 !important;
-  transform: none !important;
-}
-
-/* Feedback Layout */
-.feedback-container {
-  min-height: 180px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-.feedback-card {
-  width: 100% !important;
-  border-radius: 14px !important;
-  padding: 24px !important;
-  transition: all 0.3s ease !important;
-}
-
-.feedback-success {
-  background: rgba(40, 167, 69, 0.08) !important;
-  border: 1px solid rgba(40, 167, 69, 0.2) !important;
-  color: #28a745 !important;
-}
-
-.feedback-danger {
-  background: rgba(220, 53, 69, 0.08) !important;
-  border: 1px solid rgba(220, 53, 69, 0.2) !important;
-  color: #dc3545 !important;
-}
-
-.feedback-warning {
-  background: rgba(255, 193, 7, 0.08) !important;
-  border: 1px solid rgba(255, 193, 7, 0.2) !important;
-  color: #ffc107 !important;
-}
-
-.feedback-info {
-  background: rgba(23, 162, 184, 0.08) !important;
-  border: 1px solid rgba(23, 162, 184, 0.2) !important;
-  color: #17a2b8 !important;
-}
-
-.visitor-avatar-wrap {
-  width: 100px !important;
-  height: 100px !important;
-  border: 4px solid #ffffff !important;
-  border-radius: 50% !important;
-  overflow: hidden !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-body.rasamala-dark .visitor-avatar-wrap {
-  border-color: rgba(255, 255, 255, 0.15) !important;
-}
-
-.visitor-feedback-text {
-  font-size: 20px !important;
-  color: inherit !important;
-  line-height: 1.3 !important;
-}
-
-.visitor-clock {
-  font-family: monospace, sans-serif !important;
-  font-size: 42px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.05em !important;
-  color: var(--rasamala-accent) !important;
-  text-shadow: 0 0 12px rgba(var(--theme-accent-rgb), 0.18) !important;
-  text-align: center !important;
-  margin: 4px auto !important;
-  display: inline-block !important;
-}
-
-.visitor-toggle-btn {
-  position: absolute !important;
-  right: 0 !important;
-  bottom: 12px !important;
-  opacity: 0.25 !important;
-  color: var(--rasamala-text-secondary) !important;
-  background: transparent !important;
-  border: none !important;
-  padding: 4px 8px !important;
-  transition: all 0.25s ease !important;
-  font-size: 14px !important;
-  cursor: pointer !important;
-}
-
-.visitor-toggle-btn:hover {
-  opacity: 0.9 !important;
-  color: var(--rasamala-accent) !important;
-}
-
-.visitor-has-running-text {
-  padding-bottom: 54px !important;
-}
-
-.visitor-latest-content-ticker {
-  bottom: 0 !important;
-  z-index: 1050 !important;
-}
-
-/* Split Layout Custom Styles (Following Theme) */
-.main-split-container {
-  display: flex;
-  flex-direction: row;
-  gap: 40px;
-  max-width: 1000px;
-  width: 92%;
-  margin: 40px auto !important;
-  align-items: stretch;
-  z-index: 10;
-}
-.left-form-section, .right-instruction-section {
-  flex: 1;
-  background: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.4) !important;
-  padding: 40px !important;
-  border-radius: 20px !important;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15) !important;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  transition: all 0.3s ease !important;
-}
-body.rasamala-dark .left-form-section,
-body.rasamala-dark .right-instruction-section {
-  background: rgba(20, 24, 32, 0.95) !important;
-  border-color: rgba(255, 255, 255, 0.08) !important;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35) !important;
-}
-
-/* Tabs styling */
-.tabs {
-  display: flex;
-  margin-bottom: 30px;
-  border-bottom: 2px solid rgba(0,0,0,0.06);
-  justify-content: center;
-  gap: 20px;
-}
-body.rasamala-dark .tabs {
-  border-bottom-color: rgba(255, 255, 255, 0.08);
-}
-.tab-link {
-  background: none;
-  border: none;
-  color: var(--rasamala-text-secondary);
-  padding: 12px 20px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 600;
-  transition: all 0.2s ease;
-  border-bottom: 4px solid transparent;
-  margin-bottom: -2px;
-}
-.tab-link.active {
-  color: var(--rasamala-accent);
-  border-bottom-color: var(--rasamala-accent);
-}
-.tab-link:focus {
-  outline: none;
-}
-
-/* Instructions */
-.inst-title {
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 25px;
-  color: var(--rasamala-text-primary);
-  text-align: center;
-}
-.inst-steps {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-.inst-step {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  padding: 15px;
-  border-radius: 12px;
-  background: rgba(var(--theme-accent-rgb), 0.03);
-  border: 1px solid transparent;
-  transition: all 0.25s ease;
-}
-.inst-step:hover {
-  border-color: rgba(0,0,0,0.08);
-  background: rgba(255,255,255,0.5);
-}
-.inst-step-featured {
-  border-color: var(--rasamala-accent);
-  background: rgba(var(--theme-accent-rgb), 0.06);
-}
-body.rasamala-dark .inst-step:hover {
-  border-color: rgba(255,255,255,0.08);
-  background: rgba(255,255,255,0.02);
-}
-.inst-icon-box {
-  flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  background: var(--rasamala-accent);
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  color: white;
-  box-shadow: 0 4px 10px rgba(var(--theme-accent-rgb), 0.25);
-}
-.inst-icon-box i {
-  font-size: 18px;
-  line-height: 1;
-}
-.inst-icon-box-scan {
-  background: transparent;
-  box-shadow: none;
-  overflow: hidden;
-  color: var(--rasamala-accent);
-}
-.inst-content h3 {
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 6px;
-  color: var(--rasamala-text-primary);
-}
-.inst-content p {
-  font-size: 13px;
-  color: var(--rasamala-text-secondary);
-  line-height: 1.5;
-}
-.highlight {
-  color: var(--rasamala-accent);
-  font-weight: 700;
-}
-
-/* Scan laser animation theme colors */
-.scan-anim-container {
-  position: relative;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.barcode-svg {
-  width: 100%;
-  height: auto;
-  fill: var(--rasamala-text-primary);
-  opacity: 0.2;
-}
-.scan-laser {
-  position: absolute;
-  width: 100%;
-  height: 2px;
-  background: var(--rasamala-accent);
-  box-shadow: 0 0 8px var(--rasamala-accent), 0 0 15px var(--rasamala-accent);
-  top: 0;
-  animation: laserMove 2.5s ease-in-out infinite alternate;
-}
-@keyframes laserMove { 0% { top: 10%; opacity: 0.7; } 100% { top: 90%; opacity: 1; } }
-
-@media (max-width: 900px) {
-  .main-split-container {
-    flex-direction: column;
-    gap: 20px;
-    margin-top: 20px;
-    margin-bottom: 40px;
-  }
-}
-</style>
 
 <div class="visitor-bg-gradient"></div>
 
@@ -566,10 +307,10 @@ body.rasamala-dark .inst-step:hover {
             <!-- Form and Feedback Area -->
             <div class="visitor-card-body position-relative">
                 <!-- Checking status card (Success/Error/Warning) -->
-                <div v-if="textInfo !== ''" class="feedback-container mb-4">
+                <div v-if="textInfo !== ''" class="feedback-container mb-4" role="status" aria-live="polite" aria-atomic="true">
                     <div class="feedback-card d-flex flex-column align-items-center" :class="'feedback-' + textInfoType">
                         <div class="visitor-avatar-wrap mb-3 shadow-sm">
-                            <img :src="image" alt="avatar" class="img-fluid rounded-circle visitor-avatar-img" @error="onImageError">
+                            <img :src="image" alt="<?= themeEscape(__('Visitor profile photo')) ?>" class="img-fluid rounded-circle visitor-avatar-img" @error="onImageError">
                         </div>
                         <h4 class="fw-bold mb-2 visitor-feedback-text" v-text="textInfo"></h4>
                         <p class="text-xs text-muted mb-0"><?= themeEscape(__('Auto resetting in 5 seconds...')) ?></p>
@@ -579,55 +320,42 @@ body.rasamala-dark .inst-step:hover {
                 <!-- Input Form Tabs -->
                 <div v-show="textInfo === ''">
                     <nav class="tabs" role="tablist">
-                        <button type="button" class="tab-link" :class="{ active: activeTab === 'member' }" @click="activeTab = 'member'" role="tab"><?= __('Member') ?></button>
-                        <button type="button" class="tab-link" :class="{ active: activeTab === 'non-member' }" @click="activeTab = 'non-member'" role="tab"><?= __('Non-Member') ?></button>
+                        <button type="button" id="visitor-tab-member" class="tab-link" :class="{ active: activeTab === 'member' }" @click="activeTab = 'member'" role="tab" aria-controls="visitor-panel-member" :aria-selected="activeTab === 'member' ? 'true' : 'false'"><?= __('Member') ?></button>
+                        <button type="button" id="visitor-tab-non-member" class="tab-link" :class="{ active: activeTab === 'non-member' }" @click="activeTab = 'non-member'" role="tab" aria-controls="visitor-panel-non-member" :aria-selected="activeTab === 'non-member' ? 'true' : 'false'"><?= __('Non-Member') ?></button>
                     </nav>
 
                     <!-- Member Tab Form -->
-                    <form v-show="activeTab === 'member'" @submit.prevent="onSubmit" :aria-busy="isSubmitting ? 'true' : 'false'">
+                    <form id="visitor-panel-member" v-show="activeTab === 'member'" @submit.prevent="onSubmit" :aria-busy="isSubmitting ? 'true' : 'false'" role="tabpanel" aria-labelledby="visitor-tab-member">
                         <div class="mb-3 text-start mb-4">
                             <input v-model="memberId" ref="memberId" autofocus type="text" class="form-control form-control-lg visitor-input" id="member-id-input-split"
-                                   placeholder="<?= themeEscape(__('Enter your member ID')) ?>" autocomplete="off">
+                                   placeholder="<?= themeEscape(__('Enter your member ID')) ?>" aria-label="<?= themeEscape(__('Enter your member ID')) ?>" autocomplete="off">
                         </div>
                         <p class="instruction-text text-muted text-center text-xs mb-3"><?= __('Pastikan kursor aktif di kolom sebelum scan / ketik.') ?></p>
                         <button type="submit" class="btn btn-primary w-100 btn-lg btn-visitor-checkin shadow-sm" :disabled="isSubmitting">
-                            <i class="fas fa-sign-in-alt me-2" v-if="!isSubmitting"></i>
+                            <i class="fas fa-sign-in-alt me-2" v-if="!isSubmitting" aria-hidden="true"></i>
                             <span>{{ isSubmitting ? submittingLabel : submitLabel }}</span>
                         </button>
                     </form>
 
                     <!-- Non-Member Tab Form -->
-                    <form v-show="activeTab === 'non-member'" @submit.prevent="onSubmit" :aria-busy="isSubmitting ? 'true' : 'false'">
+                    <form id="visitor-panel-non-member" v-show="activeTab === 'non-member'" @submit.prevent="onSubmit" :aria-busy="isSubmitting ? 'true' : 'false'" role="tabpanel" aria-labelledby="visitor-tab-non-member">
                         <div class="mb-3 text-start mb-4">
-                            <input v-model="memberId" ref="nonMemberNameInput" type="text" class="form-control form-control-lg visitor-input mb-3"
-                                   placeholder="<?= themeEscape(__('Nama Lengkap')) ?>" autocomplete="off">
+                            <input v-model="visitorName" ref="nonMemberNameInput" type="text" class="form-control form-control-lg visitor-input mb-3"
+                                   placeholder="<?= themeEscape(__('Nama Lengkap')) ?>" aria-label="<?= themeEscape(__('Nama Lengkap')) ?>" autocomplete="off">
                             
-                            <select v-model="selectInstitution" class="form-control form-control-lg visitor-input mb-3">
-                                <option value="" disabled selected><?= __('Pilih Fakultas / Institusi') ?></option>
-                                <option value="FEB">Fakultas Ekonomi dan Bisnis UI</option>
-                                <option value="FF">Fakultas Farmasi UI</option>
-                                <option value="FH">Fakultas Hukum UI</option>
-                                <option value="FIA">Fakultas Ilmu Administrasi UI</option>
-                                <option value="FIB">Fakultas Ilmu Budaya UI</option>
-                                <option value="FIK">Fakultas Ilmu Keperawatan UI</option>
-                                <option value="Fasilkom">Fakultas Ilmu Komputer UI</option>
-                                <option value="FISIP">Fakultas Ilmu Sosial dan Ilmu Politik UI</option>
-                                <option value="FK">Fakultas Kedokteran UI</option>
-                                <option value="FKG">Fakultas Kedokteran Gigi UI</option>
-                                <option value="FKM">Fakultas Kesehatan Masyarakat UI</option>
-                                <option value="FMIPA">Fakultas Matematika dan Ilmu Pengetahuan Alam UI</option>
-                                <option value="FPsi">Fakultas Psikologi UI</option>
-                                <option value="FT">Fakultas Teknik UI</option>
-                                <option value="Vokasi">Program Vokasi UI</option>
-                                <option value="Lainnya">Lainnya (ketik manual)</option>
+                            <select v-model="selectInstitution" class="form-control form-control-lg visitor-input mb-3" aria-label="<?= themeEscape($visitor_institution_select_label) ?>">
+                                <option value="" disabled selected><?= themeEscape($visitor_institution_select_label) ?></option>
+                                <?php foreach ($visitor_institution_options as $visitor_institution_option) : ?>
+                                <option value="<?= themeEscape($visitor_institution_option['value']); ?>"><?= themeEscape($visitor_institution_option['label']); ?></option>
+                                <?php endforeach; ?>
                             </select>
 
-                            <input v-show="selectInstitution === 'Lainnya'" v-model="manualInstitution" type="text" class="form-control form-control-lg visitor-input"
-                                   placeholder="<?= themeEscape(__('Tulis Nama Institusi...')) ?>" autocomplete="off">
+                            <input v-show="isManualInstitutionSelected()" v-model="manualInstitution" type="text" class="form-control form-control-lg visitor-input"
+                                   placeholder="<?= themeEscape(__('Tulis Nama Institusi...')) ?>" aria-label="<?= themeEscape(__('Tulis Nama Institusi...')) ?>" autocomplete="off">
                         </div>
                         <p class="instruction-text text-muted text-center text-xs mb-3"><?= __('Isi data diri untuk pengunjung non-member') ?></p>
                         <button type="submit" class="btn btn-primary w-100 btn-lg btn-visitor-checkin shadow-sm" :disabled="isSubmitting">
-                            <i class="fas fa-sign-in-alt me-2" v-if="!isSubmitting"></i>
+                            <i class="fas fa-sign-in-alt me-2" v-if="!isSubmitting" aria-hidden="true"></i>
                             <span>{{ isSubmitting ? submittingLabel : submitLabel }}</span>
                         </button>
                     </form>
@@ -638,8 +366,8 @@ body.rasamala-dark .inst-step:hover {
             <div class="mt-4 pt-3 border-top visitor-card-footer text-center position-relative">
                 <div class="visitor-clock fw-bold" v-text="currentTime"></div>
                 <?php if ($visitor_theme_toggle_enabled) : ?>
-                <button type="button" id="color-mode-toggle-desktop" class="visitor-toggle-btn" title="<?= themeEscape(__('Toggle Color Mode')) ?>">
-                    <i class="fas fa-moon"></i>
+                <button type="button" id="color-mode-toggle-desktop" class="visitor-toggle-btn" title="<?= themeEscape(__('Dark mode')) ?>" data-dark-title="<?= themeEscape(__('Dark mode')) ?>" data-light-title="<?= themeEscape(__('Light mode')) ?>" aria-label="<?= themeEscape(__('Toggle dark/light mode')) ?>" aria-pressed="false">
+                    <i class="fas fa-moon" aria-hidden="true"></i>
                 </button>
                 <?php endif; ?>
             </div>
@@ -648,18 +376,7 @@ body.rasamala-dark .inst-step:hover {
         <section class="right-instruction-section">
             <h2 class="inst-title"><?= themeEscape($visitor_split_title); ?></h2>
             <div class="inst-steps">
-                <?php foreach ($visitor_split_steps as $visitor_step_index => $visitor_step) : ?>
-                <?php $visitor_step_icon = rasamalaVisitorSplitIcon($visitor_step['icon'] ?? ''); ?>
-                <div class="inst-step<?= $visitor_step_icon['is_scan'] ? ' inst-step-featured' : ''; ?>">
-                    <div class="inst-icon-box<?= $visitor_step_icon['is_scan'] ? ' inst-icon-box-scan' : ''; ?>"><?= $visitor_step_icon['html']; ?></div>
-                    <div class="inst-content">
-                        <h3><?= themeEscape(($visitor_step_index + 1) . '. ' . ($visitor_step['title'] ?? 'Info')); ?></h3>
-                        <?php if (trim((string)($visitor_step['description'] ?? '')) !== '') : ?>
-                        <p><?= themeSanitizeHtml($visitor_step['description']); ?></p>
-                        <?php endif; ?>
-                    </div>
-                </div>
-                <?php endforeach; ?>
+                <?= $visitor_split_steps_html; ?>
             </div>
         </section>
     </main>
@@ -676,10 +393,10 @@ body.rasamala-dark .inst-step:hover {
         <!-- Form and Feedback Area -->
         <div class="visitor-card-body position-relative">
             <!-- Checking status card (Success/Error/Warning) -->
-            <div v-if="textInfo !== ''" class="feedback-container mb-4">
+            <div v-if="textInfo !== ''" class="feedback-container mb-4" role="status" aria-live="polite" aria-atomic="true">
                 <div class="feedback-card d-flex flex-column align-items-center" :class="'feedback-' + textInfoType">
                     <div class="visitor-avatar-wrap mb-3 shadow-sm">
-                        <img :src="image" alt="avatar" class="img-fluid rounded-circle visitor-avatar-img" @error="onImageError">
+                        <img :src="image" alt="<?= themeEscape(__('Visitor profile photo')) ?>" class="img-fluid rounded-circle visitor-avatar-img" @error="onImageError">
                     </div>
                     <h4 class="fw-bold mb-2 visitor-feedback-text" v-text="textInfo"></h4>
                     <p class="text-xs text-muted mb-0"><?= themeEscape(__('Auto resetting in 5 seconds...')) ?></p>
@@ -690,15 +407,15 @@ body.rasamala-dark .inst-step:hover {
             <form v-show="textInfo === ''" @submit.prevent="onSubmit" :aria-busy="isSubmitting ? 'true' : 'false'">
                 <div class="mb-3 text-start mb-4">
                     <input v-model="memberId" ref="memberId" autofocus type="text" class="form-control form-control-lg visitor-input" id="member-id-input"
-                           placeholder="<?= themeEscape(__('Enter your member ID')) ?>" autocomplete="off">
+                           placeholder="<?= themeEscape(__('Enter your member ID')) ?>" aria-label="<?= themeEscape(__('Enter your member ID')) ?>" autocomplete="off">
                 </div>
                 <div class="mb-3 text-start mb-4">
                     <input v-model="institution" type="text" class="form-control form-control-lg visitor-input" id="institution-input"
-                           placeholder="<?= themeEscape(__('Enter your institution')) ?>" autocomplete="off">
+                           placeholder="<?= themeEscape(__('Enter your institution')) ?>" aria-label="<?= themeEscape(__('Enter your institution')) ?>" autocomplete="off">
                     <small class="form-text text-muted mt-2 text-center w-100 d-block"><?= themeEscape(__('Enough fill your member ID if you are member of ').$sysconf['library_name']); ?></small>
                 </div>
                 <button type="submit" class="btn btn-primary w-100 btn-lg btn-visitor-checkin mt-2 shadow-sm" :disabled="isSubmitting">
-                    <i class="fas fa-sign-in-alt me-2" v-if="!isSubmitting"></i>
+                    <i class="fas fa-sign-in-alt me-2" v-if="!isSubmitting" aria-hidden="true"></i>
                     <span>{{ isSubmitting ? submittingLabel : submitLabel }}</span>
                 </button>
             </form>
@@ -708,8 +425,8 @@ body.rasamala-dark .inst-step:hover {
         <div class="mt-4 pt-3 border-top visitor-card-footer text-center position-relative">
             <div class="visitor-clock fw-bold" v-text="currentTime"></div>
             <?php if ($visitor_theme_toggle_enabled) : ?>
-            <button type="button" id="color-mode-toggle-desktop" class="visitor-toggle-btn" title="<?= themeEscape(__('Toggle Color Mode')) ?>">
-                <i class="fas fa-moon"></i>
+            <button type="button" id="color-mode-toggle-desktop" class="visitor-toggle-btn" title="<?= themeEscape(__('Dark mode')) ?>" data-dark-title="<?= themeEscape(__('Dark mode')) ?>" data-light-title="<?= themeEscape(__('Light mode')) ?>" aria-label="<?= themeEscape(__('Toggle dark/light mode')) ?>" aria-pressed="false">
+                <i class="fas fa-moon" aria-hidden="true"></i>
             </button>
             <?php endif; ?>
         </div>
@@ -734,212 +451,49 @@ body.rasamala-dark .inst-step:hover {
 </div>
 <?php endif; ?>
 
+<?php
+$visitor_room_query = trim(isset($_GET['room']) ? '&room=' . simbio_security::xssFree($_GET['room']) : '');
+$visitor_counter_script = function_exists('assetsVersioned')
+    ? assetsVersioned('js/visitor_counter.js')
+    : $sysconf['template']['dir'] . '/' . $sysconf['template']['theme'] . '/assets/js/visitor_counter.js';
+$visitor_js_config = [
+    'submitLabel' => __('Check In'),
+    'submittingLabel' => __('Checking in...'),
+    'failureMessage' => __('Check in failed'),
+    'defaultImage' => './images/persons/photo.png',
+    'feedbackResetDelay' => 5000,
+    'quickFeedbackResetDelay' => 1800,
+    'quotesEnabled' => $visitor_quote_enabled,
+    'quoteFallback' => [
+        'content' => 'Sing penting madhiang.',
+        'author' => 'Pai-Jo',
+    ],
+    'localQuotes' => [
+        [
+            'content' => __('Libraries store the memory of a community and open the door to its future.'),
+            'author' => $sysconf['library_name'] ?? 'SLiMS Library',
+        ],
+        [
+            'content' => __('Reading is a quiet way to travel farther than the room you are in.'),
+            'author' => 'Rasamala',
+        ],
+        [
+            'content' => __('Good information helps people make better decisions.'),
+            'author' => $sysconf['library_name'] ?? 'SLiMS Library',
+        ],
+        [
+            'content' => __('A library grows each time someone finds what they need.'),
+            'author' => 'Rasamala',
+        ],
+    ],
+    'csrfName' => \Volnix\CSRF\CSRF::getTokenName(),
+    'csrfToken' => \Volnix\CSRF\CSRF::getToken(),
+    'visitorUrl' => 'index.php?p=visitor' . $visitor_room_query,
+    'otherInstitutionValue' => $visitor_other_institution_value,
+    'voiceEnabled' => !empty($sysconf['template']['visitor_log_voice']),
+    'speechLang' => str_replace('_', '-', $sysconf['default_lang']),
+];
+?>
+<script id="rasamala-visitor-config" type="application/json"><?= json_encode($visitor_js_config, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?></script>
 <script src="<?php echo themeEscape($sysconf['template']['dir'].'/'.$sysconf['template']['theme'].'/assets/js/axios.min.js'); ?>"></script>
-<script>
-    Vue.createApp({
-        data() {
-            return {
-                memberId: '',
-                institution: '',
-                textInfo: '',
-                textInfoType: 'info',
-                isSubmitting: false,
-                submitLabel: <?= json_encode(__('Check In')) ?>,
-                submittingLabel: <?= json_encode(__('Checking in...')) ?>,
-                image: './images/persons/photo.png',
-                quotesEnabled: <?= json_encode($visitor_quote_enabled) ?>,
-                quoteFallback: {
-                    content: "Sing penting madhiang.",
-                    author: "Pai-Jo"
-                },
-                localQuotes: [
-                    {
-                        content: <?= json_encode(__('Libraries store the memory of a community and open the door to its future.')) ?>,
-                        author: <?= json_encode($sysconf['library_name']) ?>
-                    },
-                    {
-                        content: <?= json_encode(__('Reading is a quiet way to travel farther than the room you are in.')) ?>,
-                        author: 'Rasamala'
-                    },
-                    {
-                        content: <?= json_encode(__('Good information helps people make better decisions.')) ?>,
-                        author: <?= json_encode($sysconf['library_name']) ?>
-                    },
-                    {
-                        content: <?= json_encode(__('A library grows each time someone finds what they need.')) ?>,
-                        author: 'Rasamala'
-                    }
-                ],
-                quotes: {
-                    content: "Sing penting madhiang.",
-                    author: "Pai-Jo"
-                },
-                activeTab: 'member',
-                selectInstitution: '',
-                manualInstitution: '',
-                currentTime: '',
-                timeout: null,
-                csrfName: <?= json_encode(\Volnix\CSRF\CSRF::getTokenName()) ?>,
-                csrfToken: <?= json_encode(\Volnix\CSRF\CSRF::getToken()) ?>
-            }
-        },
-        watch: {
-            selectInstitution: function(val) {
-                if (val !== 'Lainnya') {
-                    this.institution = val;
-                } else {
-                    this.institution = this.manualInstitution;
-                }
-            },
-            manualInstitution: function(val) {
-                if (this.selectInstitution === 'Lainnya') {
-                    this.institution = val;
-                }
-            },
-            activeTab: function(val) {
-                this.memberId = '';
-                this.institution = '';
-                this.selectInstitution = '';
-                this.manualInstitution = '';
-                this.$nextTick(() => {
-                    if (val === 'member' && this.$refs.memberId) {
-                        this.$refs.memberId.focus();
-                    } else if (val === 'non-member' && this.$refs.nonMemberNameInput) {
-                        this.$refs.nonMemberNameInput.focus();
-                    }
-                });
-            }
-        },
-        mounted() {
-            if (this.$refs.memberId) {
-                this.$refs.memberId.focus()
-            }
-            this.updateTime()
-            setInterval(this.updateTime, 1000)
-            if (this.quotesEnabled) {
-                this.getQuotes()
-            }
-            document.addEventListener('click', (e) => {
-                if (this.textInfo === '') {
-                    if (e.target.closest('input, select, button, .tab-link')) {
-                        return
-                    }
-                    if (this.activeTab === 'member' && this.$refs.memberId) {
-                        this.$refs.memberId.focus()
-                    } else if (this.activeTab === 'non-member' && this.$refs.nonMemberNameInput) {
-                        this.$refs.nonMemberNameInput.focus()
-                    }
-                }
-            })
-        },
-        methods: {
-            updateTime: function() {
-                const now = new Date()
-                this.currentTime = now.toTimeString().split(' ')[0]
-            },
-            onImageError: function() {
-                this.image = './images/persons/photo.png'
-            },
-            getQuotes: function() {
-                if (!this.quotesEnabled) {
-                    this.quotes = this.quoteFallback
-                    this.textInfo = ''
-                    this.textInfoType = 'info'
-                    return
-                }
-                const quotes = this.localQuotes && this.localQuotes.length ? this.localQuotes : [this.quoteFallback]
-                this.quotes = quotes[Math.floor(Math.random() * quotes.length)] || this.quoteFallback
-                this.textInfo = ''
-                this.textInfoType = 'info'
-            },
-            plainText: function(message) {
-                return String(message || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim()
-            },
-            responseType: function(response) {
-                const type = response && response.type ? String(response.type).toLowerCase() : ''
-                if (['success', 'info', 'warning', 'danger'].indexOf(type) !== -1) {
-                    return type
-                }
-                if (type === 'error') {
-                    return 'danger'
-                }
-                return response && response.status === false ? 'danger' : 'info'
-            },
-            safeImageName: function(image) {
-                return String(image || 'photo.png').replace(/[^a-zA-Z0-9._-]/g, '') || 'photo.png'
-            },
-            onSubmit: function() {
-                if (this.memberId === '' || this.isSubmitting) {
-                    this.resetForm()
-                    return
-                }
-                this.isSubmitting = true
-                let url = 'index.php?p=visitor<?= trim(isset($_GET['room']) ? '&room=' . simbio_security::xssFree($_GET['room']) : '')  ?>'
-                let data = new FormData()
-                data.append('memberID', this.memberId)
-                data.append('institution', this.institution)
-                data.append('counter', 1)
-                data.append(this.csrfName, this.csrfToken)
-
-                axios({
-                    url: url,
-                    method: 'post',
-                    data: data,
-                    headers: {'Content-Type': 'multipart/form-data', 'X-Requested-With': 'XMLHttpRequest' }
-                })
-                    .then(res => {
-                        this.textInfo = this.plainText(res.data.message)
-                        this.textInfoType = this.responseType(res.data)
-                        this.image = `./images/persons/${this.safeImageName(res.data.image)}`
-                        if (res.data.new_token) {
-                            this.csrfToken = res.data.new_token
-                        }
-                        <?php if ($sysconf['template']['visitor_log_voice']) : ?>
-                            this.textToSpeech(this.textInfo)
-                        <?php endif; ?>
-                    })
-                    .catch(err => {
-                        // R-02: removed console.log to avoid leaking error details in production
-                        this.textInfo = this.plainText((err.response && err.response.data && err.response.data.message) || <?= json_encode(__('Check in failed')) ?>)
-                        this.textInfoType = 'danger'
-                        if (err.response && err.response.data.new_token) {
-                            this.csrfToken = err.response.data.new_token
-                        }
-                    })
-                    .finally(() => {
-                        this.isSubmitting = false
-                        this.resetForm()
-                        clearTimeout(this.timeout)
-                        this.timeout = setTimeout(() => {
-                            this.getQuotes()
-                        }, 5000)
-                    })
-            },
-            resetForm: function () {
-                this.memberId = ''
-                this.institution = ''
-                this.selectInstitution = ''
-                this.manualInstitution = ''
-                this.$nextTick(() => {
-                    if (this.activeTab === 'member' && this.$refs.memberId) {
-                        this.$refs.memberId.focus()
-                    } else if (this.activeTab === 'non-member' && this.$refs.nonMemberNameInput) {
-                        this.$refs.nonMemberNameInput.focus()
-                    }
-                })
-            },
-            // R-01: fix var shadowing — use distinct variable name
-            textToSpeech: function(text) {
-                var utterance = new SpeechSynthesisUtterance(text);
-                var voices = speechSynthesis.getVoices();
-                utterance['volume'] = 1;
-                utterance['rate'] = 1;
-                utterance['pitch'] = 1;
-                utterance['lang'] = <?= json_encode(str_replace('_', '-', $sysconf['default_lang'])) ?>;
-                utterance['voice'] = null;
-                speechSynthesis.cancel();
-                speechSynthesis.speak(utterance);
-            }
-        }
-    }).mount('#visitor-counter');
-</script>
+<script src="<?= themeEscape($visitor_counter_script); ?>"></script>

@@ -32,6 +32,73 @@ const makeSearchUrl = function (searchBy, text) {
     params.set('search', 'search');
     return `index.php?${params.toString()}`;
 };
+const searchHistoryStorageKey = 'keywords';
+const searchHistoryLimit = 25;
+const searchHistoryKeywordMaxLength = 120;
+const normalizeSearchKeyword = function (value) {
+    const keyword = String(value || '').replace(/\s+/g, ' ').trim();
+    return keyword.length > 0 && keyword.length <= searchHistoryKeywordMaxLength ? keyword : '';
+};
+const normalizeSearchHistory = function (history) {
+    if (!history || typeof history !== 'object' || Array.isArray(history)) {
+        return {};
+    }
+
+    const entries = [];
+    Object.keys(history).forEach(key => {
+        const item = history[key];
+        const text = normalizeSearchKeyword(key);
+        if (!text || !item || typeof item !== 'object') {
+            return;
+        }
+
+        const time = Number(item.time);
+        if (!Number.isFinite(time) || time < 0) {
+            return;
+        }
+
+        const count = Number(item.count);
+        const searchBy = allowedSearchFields.indexOf(item.searchBy) !== -1 ? item.searchBy : 'keywords';
+        entries.push({
+            text: text,
+            count: Number.isFinite(count) ? Math.max(1, Math.min(9999, Math.floor(count))) : 1,
+            searchBy: searchBy,
+            time: time
+        });
+    });
+
+    entries.sort((a, b) => b.time - a.time);
+    return entries.slice(0, searchHistoryLimit).reduce((result, item) => {
+        result[item.text] = {
+            count: item.count,
+            searchBy: item.searchBy,
+            time: item.time
+        };
+        return result;
+    }, {});
+};
+const readSearchHistory = function () {
+    try {
+        if (!window.localStorage) {
+            return {};
+        }
+        const raw = window.localStorage.getItem(searchHistoryStorageKey);
+        if (!raw || raw.length > 20000) {
+            return {};
+        }
+        return normalizeSearchHistory(JSON.parse(raw));
+    } catch (e) {
+        return {};
+    }
+};
+const writeSearchHistory = function (history) {
+    try {
+        if (!window.localStorage) {
+            return;
+        }
+        window.localStorage.setItem(searchHistoryStorageKey, JSON.stringify(normalizeSearchHistory(history)));
+    } catch (e) {}
+};
 const fetchJsonArray = function (url) {
     return fetch(url, {headers: {'Accept': 'application/json'}})
         .then(res => {
@@ -611,35 +678,27 @@ if (document.getElementById('search-wraper')) {
                 searchBy: 'keywords',
                 keywords: '',
                 tmpObj: {},
-                isProgrammaticFocus: false
+                isProgrammaticFocus: false,
+                loading: false
             };
         },
         computed: {
             lastKeywords() {
-                let raw = localStorage.getItem('keywords');
-                if (raw) {
-                    try {
-                        let keywords = JSON.parse(raw), arr = [];
-                        for (let key in keywords) {
-                            if (keywords.hasOwnProperty(key)) {
-                                arr.push(keywords[key].time);
-                                keywords[key].text = key;
-                                this.tmpObj[keywords[key].time] = keywords[key];
-                            }
-                        }
-                        arr.sort();
-                        arr.reverse();
-                        return arr.slice(0, 5);
-                    } catch (e) {
-                        console.error(e.message);
-                        return [];
+                let keywords = readSearchHistory(), arr = [];
+                this.tmpObj = {};
+                for (let key in keywords) {
+                    if (Object.prototype.hasOwnProperty.call(keywords, key)) {
+                        arr.push(keywords[key].time);
+                        keywords[key].text = key;
+                        this.tmpObj[keywords[key].time] = keywords[key];
                     }
                 }
-                return [];
+                arr.sort((a, b) => b - a);
+                return arr.slice(0, 5);
             }
         },
         mounted() {
-            if (this.$refs.keywords) {
+            if (this.$refs.keywords && window.innerWidth >= 768) {
                 this.isProgrammaticFocus = true;
                 this.$refs.keywords.focus();
             }
@@ -673,33 +732,30 @@ if (document.getElementById('search-wraper')) {
             },
             searchSubmit() {
                 if (this.keywords !== '') this.saveKeyword();
+                this.loading = true;
                 window.location.href = makeSearchUrl(this.searchBy, this.keywords);
             },
             saveKeyword() {
-                let rawKeywords = localStorage.getItem('keywords');
-                let keywords = {};
-                if (rawKeywords) {
-                    try {
-                        keywords = JSON.parse(rawKeywords);
-                    } catch (e) {
-                        console.error(e.message);
-                    }
+                const keyword = normalizeSearchKeyword(this.keywords);
+                if (!keyword) {
+                    return;
                 }
-                if (keywords.hasOwnProperty(this.keywords)) {
-                    keywords[this.keywords] = {
-                        count: keywords[this.keywords].count + 1,
+
+                let keywords = readSearchHistory();
+                if (Object.prototype.hasOwnProperty.call(keywords, keyword)) {
+                    keywords[keyword] = {
+                        count: keywords[keyword].count + 1,
                         searchBy: this.searchBy,
                         time: Date.now()
                     };
                 } else {
-                    keywords[this.keywords] = {
+                    keywords[keyword] = {
                         count: 1,
                         searchBy: this.searchBy,
                         time: Date.now()
                     };
                 }
-                let strKeyword = JSON.stringify(keywords);
-                localStorage.setItem('keywords', strKeyword);
+                writeSearchHistory(keywords);
             }
         }
     });
