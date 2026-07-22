@@ -1,34 +1,50 @@
 # 🌲 Rasamala Theme for SLiMS 9 Bulian
-
-![SLiMS Version](https://img.shields.io/badge/SLiMS-9%20Bulian-006699?style=for-the-badge&logo=php&logoColor=white)
-![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.3-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
-![Vue.js](https://img.shields.io/badge/Vue.js-3.5.39-4FC08D?style=for-the-badge&logo=vuedotjs&logoColor=white)
-![Code Quality](https://img.shields.io/badge/Code%20Quality-Grade%20A%2B-success?style=for-the-badge)
-![License](https://img.shields.io/badge/License-GPL%20v3-blue?style=for-the-badge)
-
 **Rasamala** adalah templat OPAC modern, cepat, dan kaya fitur untuk **SLiMS 9 Bulian**. Dikembangkan dengan pendekatan *mobile-first*, arsitektur PHP yang sangat rapi dan modular, serta kontrol kustomisasi visual penuh melalui **Tinfo (Pengaturan Tema)** tanpa menyentuh core SLiMS.
 
 ![Preview Rasamala](preview.png)
 
 ---
 
-## 🎭 Filosofi Desain: Antara "Minimalis Anteng" dan "Pesta Visual"
+## 🎨 Filosofi Desain: Antara "Minimalis" dan "Pesta Visual"
 
 Mari jujur sebentar: **tidak semua perpustakaan itu sama dan butuh selera yang seragam!** ☕✨
 
-Ada perpustakaan yang sukanya tampil *super-clean*, hening, dan polos tanpa distraksi—mirip ruang baca sunyi tempat Anda bisa mendengar suara semut berbisik. Namun, tidak sedikit pula perpustakaan (terutama sekolah, kampus kekinian, atau perpustakaan umum interaktif) yang ingin OPAC-nya tampil **fun, atraktif, dan meriah** lengkap dengan animasi melayang, widget waktu sholat, *running text*, hingga *cursor neon* yang bikin pemustaka betah *scrolling*! 🚀
+Ada perpustakaan yang sukanya tampil *super-clean*, hening, dan polos tanpa distraksi—mirip ruang baca sunyi tempat Anda bisa mendengar suara semut berbisik. Namun, tidak sedikit pula perpustakaan (terutama sekolah, kampus kekinian, atau perpustakaan umum interaktif) yang ingin OPAC-nya tampil **fun, atraktif, dan meriah** lengkap dengan animasi melayang, widget waktu sholat, *running text*, hingga *cursor neon* yang bikin pemustaka betah *scrolling*! 
 
 Karena itulah **Rasamala** dirancang fleksibel ibarat bunglon yang serba bisa:
 - 🌿 **Ingin Tampilan Minimalis & Polos?** Cukup pilih preset *Simple*, matikan animasi & partikel cursor. Hasilnya: OPAC super cepat, bersih, dan fokus pada pencarian tanpa distraksi.
-- 🎉 **Ingin Tampilan Meriah & Interaktif?** Aktifkan preset *Full*, hidupkan *Background Animation*, pasang *Cursor Particles*, tambah widget WhatsApp & waktu sholat. Hasilnya: OPAC bergaya portal modern yang *Instagrammable* dan memanjakan mata pemustaka!
+- 🎉 **Ingin Tampilan Meriah & Interaktif?** Aktifkan preset *Full*, hidupkan *Background Animation*, pasang *Cursor Particles*, tambah widget WhatsApp & waktu sholat. Hasilnya: OPAC bergaya portal modern yang memanjakan mata pemustaka!
 
-Apapun selera kepustakawanan Anda—mulai dari aliran *"Harap Tenang, Perbanyak Membaca"* sampai aliran *"Perpustakaan Ramai, Pemustaka Ceria"*—Rasamala siap memfasilitasinya hanya dengan beberapa klik di Tinfo! 🎛️
+Apapun selera kepustakawanan Anda—mulai dari aliran *"Harap Tenang, Perbanyak Membaca"* sampai aliran *"Perpustakaan Ramai, Pemustaka Ceria"*—Rasamala siap memfasilitasinya hanya dengan beberapa klik! 🎛️
+
+---
+
+## 🏆 Ide Kreatif: Kampanye "Lomba Desain OPAC Pemustaka"
+
+Ingin meningkatkan keterikatan (*user engagement*) pemustaka dengan perpustakaan Anda secara interaktif dan viral di media sosial? **Gunakan fitur Theme Viewer Floating OPAC Rasamala untuk menggelar kompetisi desain tema!** 📸🎨
+
+### 💡 Bagaimana Cara Kerjanya?
+
+1. 🎨 **Aktifkan Theme Viewer OPAC via Admin Tinfo:**  
+   Set opsi `Floating Theme Color Palette Menu` ke `Show`. Tombol kuas melayang (`fa-paint-brush`) akan muncul secara ajaib di pojok kanan bawah OPAC publik Anda!
+2. 🖌️ **Biarkan Pemustaka Berkreasi Bebas:**  
+   Pengunjung perpustakaan (siswa, mahasiswa, dosen, atau masyarakat umum) dapat menguji kombinasi *Custom Palette*, animasi background, efek partikel, hingga ikon *cursor* favorit mereka secara *real-time* di browser masing-masing tanpa mengganggu pengguna lain.
+3. 📸 **Mekanisme Lomba Media Sosial (Instagram / TikTok / X):**  
+   - Pemustaka merancang tampilan OPAC impian mereka, menekan tombol **"Copy Palette"** di Theme Viewer, lalu mengambil *screenshot* atau video layar saat menjelajahi OPAC perpustakaan Anda.
+   - Peserta mengunggah hasil kreasi ke sosial media dengan me-tag akun resmi perpustakaan dan menyertakan tagar khusus (contoh: `#OPACKreatifPerpustakaanKu` atau `#RasamalaThemeChallenge`).
+   - **Kategori Pemenang:**  
+     - ❤️ **Kategori Favorit Netizen:** Desain dengan *Like & Share* terbanyak.
+     - 👑 **Kategori Pilihan Kepala Perpustakaan:** Desain paling estetis dan sesuai identitas instansi.
+4. 🎉 **Terapkan Karya Pemenang Sebagai Tema Resmi!**  
+   Pustakawan admin cukup menyalin string *Palette Code* dari peserta pemenang, lalu menempelkannya ke field `Custom Palette Colors` di Tinfo Admin.  
+   *Voila!* Tampilan buatan pemustaka resmi menjadi wajah visual OPAC perpustakaan bulan ini! 🌟
 
 ---
 
 ## 📑 Daftar Isi
 
 - [🎭 Filosofi Desain: Antara "Minimalis Anteng" dan "Pesta Visual"](#-filosofi-desain-antara-minimalis-anteng-dan-pesta-visual)
+- [🏆 Ide Kreatif: Kampanye "Lomba Desain OPAC Pemustaka"](#-ide-kreatif-kampanye-lomba-desain-opac-pemustaka)
 - [⚡ Sorotan Utama](#-sorotan-utama)
 - [🎛️ Panduan Lengkap Pengaturan Tema (Tinfo)](#️-panduan-lengkap-pengaturan-tema-tinfo)
   - [1. 🎨 Preset & Skema Warna (Color Palette)](#1--preset--skema-warna-color-palette)
