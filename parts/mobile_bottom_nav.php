@@ -116,17 +116,17 @@ if ($current_p === 'member' && $is_logged_in_member) {
             'icon' => 'fas fa-exchange-alt'
         ],
         [
-            'key' => 'member_card',
-            'text' => __('My Card'),
-            'url' => 'index.php?p=member&sec=my_card',
-            'icon' => 'fas fa-id-card'
-        ],
-        [
             'key' => 'member_basket',
             'text' => __('Basket'),
             'url' => 'index.php?p=member&sec=title_basket',
             'icon' => 'fas fa-shopping-basket',
             'badge' => $basket_count
+        ],
+        [
+            'key' => 'member_card',
+            'text' => __('My Card'),
+            'url' => 'index.php?p=member&sec=my_card',
+            'icon' => 'fas fa-id-card'
         ],
         [
             'key' => 'more',
