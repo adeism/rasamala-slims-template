@@ -12,8 +12,23 @@
 
 ---
 
+## 🎭 Filosofi Desain: Antara "Minimalis Anteng" dan "Pesta Visual"
+
+Mari jujur sebentar: **tidak semua perpustakaan itu sama dan butuh selera yang seragam!** ☕✨
+
+Ada perpustakaan yang sukanya tampil *super-clean*, hening, dan polos tanpa distraksi—mirip ruang baca sunyi tempat Anda bisa mendengar suara semut berbisik. Namun, tidak sedikit pula perpustakaan (terutama sekolah, kampus kekinian, atau perpustakaan umum interaktif) yang ingin OPAC-nya tampil **fun, atraktif, dan meriah** lengkap dengan animasi melayang, widget waktu sholat, *running text*, hingga *cursor neon* yang bikin pemustaka betah *scrolling*! 🚀
+
+Karena itulah **Rasamala** dirancang fleksibel ibarat bunglon yang serba bisa:
+- 🌿 **Ingin Tampilan Minimalis & Polos?** Cukup pilih preset *Simple*, matikan animasi & partikel cursor. Hasilnya: OPAC super cepat, bersih, dan fokus pada pencarian tanpa distraksi.
+- 🎉 **Ingin Tampilan Meriah & Interaktif?** Aktifkan preset *Full*, hidupkan *Background Animation*, pasang *Cursor Particles*, tambah widget WhatsApp & waktu sholat. Hasilnya: OPAC bergaya portal modern yang *Instagrammable* dan memanjakan mata pemustaka!
+
+Apapun selera kepustakawanan Anda—mulai dari aliran *"Harap Tenang, Perbanyak Membaca"* sampai aliran *"Perpustakaan Ramai, Pemustaka Ceria"*—Rasamala siap memfasilitasinya hanya dengan beberapa klik di Tinfo! 🎛️
+
+---
+
 ## 📑 Daftar Isi
 
+- [🎭 Filosofi Desain: Antara "Minimalis Anteng" dan "Pesta Visual"](#-filosofi-desain-antara-minimalis-anteng-dan-pesta-visual)
 - [⚡ Sorotan Utama](#-sorotan-utama)
 - [🎛️ Panduan Lengkap Pengaturan Tema (Tinfo)](#️-panduan-lengkap-pengaturan-tema-tinfo)
   - [1. 🎨 Preset & Skema Warna (Color Palette)](#1--preset--skema-warna-color-palette)
