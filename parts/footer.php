@@ -65,9 +65,9 @@ if ($show_footer): ?>
             </div>
         </div>
         <hr class="rasamala-divider my-4">
-        <div class="footer-bottom d-flex flex-wrap small justify-content-between align-items-center">
+        <div class="footer-bottom d-flex flex-wrap justify-content-between align-items-center">
             <p class="footer-copyright m-0">&copy; <?php echo date('Y'); ?> &mdash; <?= themeEscape($sysconf['template']['classic_footer_copyright'] ?? 'Senayan Developer Community'); ?></p>
-            <div class="footer-powered text-end"><?= __('Powered by '); ?><a class="footer-powered-link" target="_blank" rel="noopener noreferrer" href="https://slims.web.id/"><code>SLiMS</code></a></div>
+            <div class="footer-powered text-end"><?= __('Powered by '); ?><a class="footer-powered-link" target="_blank" rel="noopener noreferrer" href="https://slims.web.id/">SLiMS</a> &amp; template by <a class="footer-powered-link" target="_blank" rel="noopener noreferrer" href="https://feb.ui.ac.id/">FEB UI</a></div>
         </div>
 	    </div>
 	</footer>
@@ -92,10 +92,18 @@ if ($show_footer): ?>
 <script src="<?php echo assetsVersioned('js/color_mode.js'); ?>"></script>
 <?php
 $hero_animation = themeEffectiveTemplateValue('classic_hero_background_animation', 'twinkle', $sysconf);
-if ($is_homepage && $hero_animation !== 'none'):
+$palette_switcher_show = (int)themeEffectiveTemplateValue('classic_palette_switcher_show', 1, $sysconf) === 1;
+if ($hero_animation !== 'none' || $palette_switcher_show):
 ?>
 <script src="<?php echo assetsVersioned('js/hero_animation.js'); ?>"></script>
 <?php endif; ?>
+<?php include __DIR__ . '/mobile_bottom_nav.php'; ?>
+<?php include __DIR__ . '/bottom_info_bar.php'; ?>
+<?php include __DIR__ . '/floating_actions.php'; ?>
+<?php include __DIR__ . '/palette_switcher.php'; ?>
+
+<script src="<?php echo assetsVersioned('js/palette_switcher.js'); ?>"></script>
+<script src="<?php echo assetsVersioned('js/theme_drawer.js'); ?>"></script>
 <script src="<?php echo assetsVersioned('js/theme_viewer.js'); ?>"></script>
 <script src="<?php echo assetsVersioned('js/app_jquery.js'); ?>"></script>
 <?php
@@ -110,11 +118,6 @@ if ($cursor_particles !== 'none'):
 ?>
 <script src="<?php echo assetsVersioned('js/cursor-particles.js'); ?>"></script>
 <?php endif; ?>
-
-<?php include __DIR__ . '/mobile_bottom_nav.php'; ?>
-<?php include __DIR__ . '/bottom_info_bar.php'; ?>
-<?php include __DIR__ . '/floating_actions.php'; ?>
-<?php include __DIR__ . '/palette_switcher.php'; ?>
 
 
 </body>

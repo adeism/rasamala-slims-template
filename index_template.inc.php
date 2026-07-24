@@ -11,20 +11,18 @@ $imagesDisk = \SLiMS\Filesystems\Storage::images();
 // setup list view
 $available_list_views = ['simple', 'list', 'grid'];
 $list_view_default_marker = 'rasamala-simple-default-20260708';
-if (
-  isset($_POST['view'], $_POST['csrf_token'], $_GET['csrf_token'])
-  && in_array($_POST['view'], $available_list_views, true)
-  && hash_equals((string)$_GET['csrf_token'], (string)$_POST['csrf_token'])
-) {
-  $_SESSION['LIST_VIEW'] = $_POST['view'];
-  $_SESSION['RASAMALA_LIST_VIEW_DEFAULT'] = $list_view_default_marker;
+$req_view = $_POST['view'] ?? $_GET['view'] ?? null;
+
+if ($req_view !== null && in_array((string)$req_view, $available_list_views, true)) {
+    $_SESSION['LIST_VIEW'] = (string)$req_view;
+    $_SESSION['RASAMALA_LIST_VIEW_DEFAULT'] = $list_view_default_marker;
 } elseif (($_SESSION['RASAMALA_LIST_VIEW_DEFAULT'] ?? '') !== $list_view_default_marker) {
-  $_SESSION['LIST_VIEW'] = 'simple';
-  $_SESSION['RASAMALA_LIST_VIEW_DEFAULT'] = $list_view_default_marker;
+    $_SESSION['LIST_VIEW'] = 'simple';
+    $_SESSION['RASAMALA_LIST_VIEW_DEFAULT'] = $list_view_default_marker;
 } else {
-  $_SESSION['LIST_VIEW'] = in_array(($_SESSION['LIST_VIEW'] ?? ''), $available_list_views, true)
-    ? $_SESSION['LIST_VIEW']
-    : 'simple';
+    $_SESSION['LIST_VIEW'] = in_array(($_SESSION['LIST_VIEW'] ?? ''), $available_list_views, true)
+        ? $_SESSION['LIST_VIEW']
+        : 'simple';
 }
 
 // ----------------------------------------------------------------------------

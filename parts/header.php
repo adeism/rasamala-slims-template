@@ -90,6 +90,14 @@ $rasamala_host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? '';
 
     <link rel="shortcut icon" href="<?= themeEscape($rasamala_header['icon']) ?>" type="image/x-icon"/>
 
+    <!-- PWA Manifest & Web App Meta Tags -->
+    <link rel="manifest" href="<?php echo assetsVersioned('manifest.json.php'); ?>">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="<?php echo themeEscape($sysconf['library_name'] ?? 'SLiMS OPAC'); ?>">
+    <link rel="apple-touch-icon" href="<?php echo themeEscape($rasamala_header['icon']); ?>">
+
     <!-- // load vue js -->
     <script src="<?php echo assets('js/vue.min.js'); ?>"></script>
     <!-- // load jquery library -->

@@ -143,6 +143,10 @@ if ($search_size === 'small') {
                                        aria-label="<?= themeEscape(__('Search keyword')); ?>"
                                        placeholder="<?= themeEscape(__($sysconf['template']['classic_search_placeholder'] ?? 'Enter keyword to search collection...'));?>"/>
                                 <div class="d-flex align-items-center gap-2 ms-2">
+                                    <!-- Keyboard Shortcut Badge -->
+                                    <kbd class="search-kbd-badge shadow-sm" id="search-kbd-badge" title="<?= themeEscape(__('Press Ctrl+K to search')) ?>" aria-label="Ctrl K" onclick="document.getElementById('search-input') && document.getElementById('search-input').focus()">
+                                        <span id="search-kbd-modifier">Ctrl</span> K
+                                    </kbd>
                                     <!-- Advanced Search Icon -->
                                     <a href="index.php?search=search" class="d-inline-flex" data-bs-toggle="modal" data-bs-target="#adv-modal" title="<?= themeEscape(__('Advanced Search')) ?>" aria-label="<?= themeEscape(__('Advanced Search')) ?>">
                                         <i class="fas fa-sliders-h" aria-hidden="true"></i>

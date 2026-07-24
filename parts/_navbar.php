@@ -77,6 +77,7 @@ HTML;
           $menu_basket_active = (isset($_GET['p'], $_GET['sec']) && $_GET['p'] === 'member' && $_GET['sec'] === 'title_basket') ? 'active' : '';
           $menu_member_active = (isset($_GET['p']) && $_GET['p'] === 'member' && ($_GET['sec'] ?? '') !== 'title_basket') ? 'active' : '';
           $count_basket = (isset($_SESSION['m_mark_biblio']) && is_array($_SESSION['m_mark_biblio'])) ? count($_SESSION['m_mark_biblio']) : 0;
+          if ($is_login) :
           ?>
           <li class="nav-item <?= $menu_basket_active; ?>">
               <a class="nav-link" href="index.php?p=member&sec=title_basket" aria-label="<?= themeEscape(__('Basket')) ?>" title="<?= themeEscape(__('Basket')) ?>">
@@ -84,6 +85,7 @@ HTML;
                   <sup id="count-basket" class="badge text-bg-danger"><?php echo themeEscape(themeSafeInt($count_basket)); ?></sup>
               </a>
           </li>
+          <?php endif; ?>
           <?php
           if (($sysconf['template']['classic_member_area'] ?? 1) == 1) {
             if ($is_login) {

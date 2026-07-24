@@ -66,16 +66,16 @@
 }
 
 #section1 #search-wraper .card {
-  background: color-mix(in srgb, var(--theme-surface) 92%, transparent) !important;
-  border: 1px solid color-mix(in srgb, var(--theme-muted) 24%, transparent) !important;
+  background: color-mix(in srgb, var(--theme-surface) 96%, var(--theme-background) 4%) !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted) 30%, transparent) !important;
   border-radius: 9999px !important;
-  box-shadow: none !important;
+  box-shadow: 0 14px 36px color-mix(in srgb, var(--theme-primary) 8%, transparent) !important;
 }
 
 #section1 #search-wraper .card:focus-within {
-  background: rgba(255, 255, 255, 1) !important;
-  border-color: var(--rasamala-accent) !important;
-  box-shadow: 0 0 0 4px rgba(var(--theme-accent-rgb), 0.15) !important;
+  background: var(--theme-surface) !important;
+  border-color: color-mix(in srgb, var(--theme-accent) 62%, var(--theme-primary) 38%) !important;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--theme-accent) 20%, transparent), 0 18px 44px color-mix(in srgb, var(--theme-primary) 12%, transparent) !important;
 }
 
 #section1 #search-wraper #search-input {
@@ -440,7 +440,7 @@
 }
 
 .authors a.btn-outline-secondary {
-  border-radius: 20px !important;
+  border-radius: var(--rasamala-radius-button) !important;
   font-size: 11px !important;
   font-weight: 500 !important;
   color: var(--rasamala-text-secondary) !important;
@@ -619,7 +619,7 @@
   color: var(--rasamala-text-primary) !important;
   background: #ffffff !important;
   border: 1px solid var(--rasamala-border) !important;
-  border-radius: 20px !important;
+  border-radius: var(--rasamala-radius-button) !important;
   cursor: pointer !important;
   transition: background-color 0.2s cubic-bezier(0.25, 0.1, 0.25, 1), border-color 0.2s cubic-bezier(0.25, 0.1, 0.25, 1), color 0.2s cubic-bezier(0.25, 0.1, 0.25, 1) !important;
   user-select: none !important;
@@ -656,7 +656,7 @@
   padding: 5px 12px !important;
   font-size: 11px !important;
   font-weight: 500 !important;
-  border-radius: 20px !important;
+  border-radius: var(--rasamala-radius-button) !important;
   border: 1px solid var(--rasamala-control-border) !important;
   background: var(--rasamala-control-bg) !important;
   color: var(--rasamala-control-text) !important;
@@ -682,6 +682,152 @@
 
 #search-order {
   display: none !important;
+}
+
+.search-sort-bar {
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px 16px;
+  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 20%, transparent);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--theme-surface) 92%, transparent);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+.search-sort-controls {
+  display: flex;
+  align-items: flex-start;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  min-width: 0;
+  gap: 9px 10px;
+}
+
+.search-sort-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  flex: 0 0 auto;
+  color: var(--theme-muted-on-surface);
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+.search-sort-label-icon {
+  color: var(--theme-accent);
+  font-size: 13px;
+}
+
+.search-sort-chips {
+  display: flex;
+  align-items: center;
+  flex: 1 1 420px;
+  flex-wrap: wrap;
+  min-width: 0;
+  gap: 8px;
+}
+
+.search-sort-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  max-width: 100%;
+  padding: 0 13px;
+  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 24%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--theme-surface) 96%, var(--theme-primary) 4%);
+  color: var(--theme-on-surface);
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.15;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.search-sort-chip:hover,
+.search-sort-chip:focus {
+  border-color: color-mix(in srgb, var(--theme-accent) 42%, transparent);
+  background: color-mix(in srgb, var(--theme-accent) 10%, var(--theme-surface));
+  color: var(--theme-on-surface);
+  box-shadow: 0 8px 18px rgba(var(--theme-accent-rgb), 0.12);
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.search-sort-chip.active {
+  border-color: transparent;
+  background: var(--theme-accent);
+  color: var(--theme-on-accent);
+  box-shadow: 0 9px 20px rgba(var(--theme-accent-rgb), 0.18);
+}
+
+.search-view-dropdown {
+  flex: 0 0 auto;
+}
+
+.search-view-toggle {
+  min-height: 38px;
+  gap: 8px;
+  padding: 0 14px;
+  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 24%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--theme-surface) 96%, var(--theme-primary) 4%);
+  color: var(--theme-on-surface);
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: none;
+}
+
+.search-view-toggle:hover,
+.search-view-toggle:focus,
+.show>.search-view-toggle.dropdown-toggle {
+  border-color: color-mix(in srgb, var(--theme-accent) 42%, transparent);
+  background: color-mix(in srgb, var(--theme-accent) 10%, var(--theme-surface));
+  color: var(--theme-on-surface);
+  box-shadow: 0 8px 18px rgba(var(--theme-accent-rgb), 0.12);
+}
+
+.search-view-toggle-icon {
+  color: var(--theme-accent);
+  font-size: 13px;
+}
+
+.search-view-toggle-label {
+  overflow-wrap: anywhere;
+}
+
+body.rasamala-search-panels-transparent .result-search .search-sort-bar {
+  border-color: color-mix(in srgb, var(--theme-accent) 18%, transparent);
+  background: color-mix(in srgb, var(--theme-surface) 68%, transparent);
+  box-shadow: none;
+}
+
+body.rasamala-search-panels-transparent .result-search .search-sort-chip,
+body.rasamala-search-panels-transparent .result-search .search-view-toggle {
+  background: color-mix(in srgb, var(--theme-surface) 74%, transparent);
+}
+
+@media (max-width: 991.98px) {
+  .search-sort-bar {
+    gap: 12px;
+  }
+
+  .search-sort-controls {
+    gap: 8px;
+  }
+
+  .search-sort-chips {
+    flex-basis: 100%;
+  }
 }
 
 /* ----------------------------------------------------
@@ -816,7 +962,7 @@ hr {
   background-color: var(--rasamala-text-primary) !important;
   border-color: var(--rasamala-text-primary) !important;
   color: #ffffff !important;
-  border-radius: 8px !important;
+  border-radius: var(--rasamala-radius-button) !important;
   font-weight: 500 !important;
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease !important;
 }
@@ -826,12 +972,28 @@ hr {
   border-color: #424242 !important;
 }
 
-/* ----------------------------------------------------
+/* ---------------------------------------------------- */
+
+.palette-switcher-panel {
+  padding: 14px 16px !important;
+  border-radius: 14px !important;
+}
+
+.palette-switcher-label {
+  display: block !important;
+  margin: 6px 0 3px !important;
+  color: var(--theme-muted) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.3px !important;
+}
+
 .palette-switcher-grid {
   display: grid !important;
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  gap: 8px 10px !important;
-  margin-top: 12px !important;
+  gap: 6px 10px !important;
+  margin-top: 6px !important;
 }
 
 .palette-switcher-field {
@@ -842,50 +1004,80 @@ hr {
   margin-top: 0 !important;
 }
 
+.palette-switcher-select {
+  width: 100% !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 3px 10px !important;
+  font-size: 12px !important;
+  border-radius: 6px !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted) 28%, transparent) !important;
+  background-color: var(--theme-surface) !important;
+  color: var(--theme-text) !important;
+  line-height: 1.3 !important;
+  box-shadow: none !important;
+}
+
+.palette-switcher-select:focus {
+  border-color: var(--theme-accent) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--theme-accent) 25%, transparent) !important;
+}
+
 .palette-switcher-section-tools {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  gap: 8px !important;
-  margin-top: 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  margin-top: 10px !important;
+  padding-top: 8px !important;
+  border-top: 1px solid color-mix(in srgb, var(--theme-muted) 16%, transparent) !important;
+}
+
+.palette-switcher-section-head {
+  margin-bottom: 2px !important;
 }
 
 .palette-switcher-section-label {
-  grid-column: 1 / -1 !important;
-  margin: 0 0 -2px !important;
-}
-
-.palette-switcher-section-help {
-  grid-column: 1 / -1 !important;
-  color: var(--theme-muted) !important;
-  font-size: 11px !important;
-  line-height: 1.4 !important;
+  margin: 0 !important;
 }
 
 .palette-switcher-section-list {
-  grid-column: 1 / -1 !important;
   display: grid !important;
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  gap: 6px !important;
+  gap: 5px 8px !important;
+  width: 100% !important;
 }
 
 .palette-switcher-section-option {
   display: flex !important;
   align-items: center !important;
-  gap: 7px !important;
+  gap: 6px !important;
   min-width: 0 !important;
   margin: 0 !important;
-  padding: 7px 8px !important;
-  border: 1px solid color-mix(in srgb, var(--theme-muted) 24%, transparent) !important;
-  border-radius: 8px !important;
-  background: color-mix(in srgb, var(--theme-surface) 92%, transparent) !important;
+  padding: 5px 8px !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted) 22%, transparent) !important;
+  border-radius: var(--rasamala-radius-button) !important;
+  background: color-mix(in srgb, var(--theme-surface) 90%, transparent) !important;
   color: var(--theme-text) !important;
-  font-size: 12px !important;
-  line-height: 1.25 !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+  cursor: pointer !important;
+  transition: background 0.15s ease, border-color 0.15s ease !important;
+}
+
+.palette-switcher-section-option:hover {
+  border-color: color-mix(in srgb, var(--theme-accent) 40%, transparent) !important;
+  background: color-mix(in srgb, var(--theme-accent) 10%, var(--theme-surface) 90%) !important;
 }
 
 .palette-switcher-section-option input {
   flex: 0 0 auto !important;
-  accent-color: var(--theme-primary) !important;
+  width: 14px !important;
+  height: 14px !important;
+  margin: 0 !important;
+  accent-color: var(--theme-accent) !important;
+  cursor: pointer !important;
 }
 
 .palette-switcher-section-option span {
@@ -893,15 +1085,6 @@ hr {
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
-}
-
-.palette-switcher-select,
-.palette-switcher-custom-input {
-  width: 100% !important;
-  border-radius: 8px !important;
-  border-color: color-mix(in srgb, var(--theme-muted) 30%, transparent) !important;
-  background: var(--theme-surface) !important;
-  color: var(--theme-text) !important;
 }
 
 body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
@@ -1571,7 +1754,7 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
   display: inline-flex !important;
   align-items: center !important;
   padding: 8px 16px !important;
-  border-radius: 20px !important;
+  border-radius: var(--rasamala-radius-button) !important;
   font-size: 13px !important;
   font-weight: 600 !important;
   background-color: #ffffff !important;
@@ -1632,7 +1815,7 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
   display: inline-flex !important;
   align-items: center !important;
   padding: 6px 14px !important;
-  border-radius: 20px !important;
+  border-radius: var(--rasamala-radius-button) !important;
   font-size: 13px !important;
   font-weight: 600 !important;
   text-decoration: none !important;
@@ -1685,7 +1868,7 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
 }
 
 .btn-modern-filter {
-  border-radius: 10px !important;
+  border-radius: var(--rasamala-radius-button) !important;
   font-weight: 600 !important;
   font-size: 13px !important;
 }
@@ -1711,13 +1894,13 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
 }
 
 .view-switcher .btn-switcher:first-child {
-  border-top-left-radius: 8px !important;
-  border-bottom-left-radius: 8px !important;
+  border-top-left-radius: var(--rasamala-radius-button) !important;
+  border-bottom-left-radius: var(--rasamala-radius-button) !important;
 }
 
 .view-switcher .btn-switcher:last-child {
-  border-top-right-radius: 8px !important;
-  border-bottom-right-radius: 8px !important;
+  border-top-right-radius: var(--rasamala-radius-button) !important;
+  border-bottom-right-radius: var(--rasamala-radius-button) !important;
 }
 
 .btn-switcher.active {
@@ -1778,9 +1961,9 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
   }
 
   #desktop-sort-chips {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 6px 8px !important;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
   .desktop-sort-title {
@@ -1808,7 +1991,7 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
 }
 
 .btn-modal-action {
-  border-radius: 8px !important;
+  border-radius: var(--rasamala-radius-button) !important;
   font-size: 14px !important;
 }
 
@@ -1902,7 +2085,7 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
 }
 
 .btn-visitor-checkin {
-  border-radius: 8px !important;
+  border-radius: var(--rasamala-radius-button) !important;
   font-weight: 600 !important;
   padding: 10px !important;
   background: var(--rasamala-dark-bg) !important;
@@ -1955,7 +2138,7 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
 }
 
 .btn-news-readmore {
-  border-radius: 8px !important;
+  border-radius: var(--rasamala-radius-button) !important;
   font-weight: 500 !important;
   padding: 6px 16px !important;
 }
@@ -2153,11 +2336,8 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 .rasamala-search-banner-bg-neural-network .hero-search-heading h1,
 .rasamala-search-banner-bg-starfield-warp .hero-search-heading h1,
 .rasamala-search-banner-bg-floating-embers .hero-search-heading h1 {
-  color: var(--theme-text);
-  text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.16),
-    0 0 18px rgba(var(--theme-accent-rgb), 0.82),
-    0 16px 40px rgba(0, 0, 0, 0.45);
+  color: var(--theme-on-background);
+  text-shadow: none;
 }
 
 .rasamala-search-banner-hero-only>.container,
@@ -2174,11 +2354,11 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 }
 
 .rasamala-search-banner-hero-only #search-wraper .card {
-  background: rgba(255, 255, 255, 0.94) !important;
-  border-color: rgba(var(--theme-accent-rgb), 0.28) !important;
-  box-shadow: 0 18px 54px rgba(var(--theme-accent-rgb), 0.18), var(--rasamala-card-shadow) !important;
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
+  background: color-mix(in srgb, var(--theme-surface) 96%, var(--theme-background) 4%) !important;
+  border-color: color-mix(in srgb, var(--theme-muted) 30%, transparent) !important;
+  box-shadow: 0 14px 36px color-mix(in srgb, var(--theme-primary) 8%, transparent) !important;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
 }
 
 .rasamala-search-banner-hero-only .hero-search-heading {
@@ -2297,7 +2477,7 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   max-width: min(320px, 86vw) !important;
   padding: 8px 14px !important;
   border: 1px solid rgba(var(--theme-accent-rgb), 0.32);
-  border-radius: 20px !important;
+  border-radius: var(--rasamala-radius-button) !important;
   background: rgba(var(--theme-accent-rgb), 0.08);
   color: var(--theme-text);
   font-family: var(--rasamala-font-stack);
@@ -2341,7 +2521,7 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 .rasamala-search-banner-bg-constellation .latest-content-icon,
 .rasamala-search-banner-bg-rain .latest-content-icon {
   color: var(--theme-accent-color);
-  text-shadow: 0 0 18px rgba(var(--theme-accent-rgb), 0.65);
+  text-shadow: none;
 }
 
 .rasamala-search-banner-bg-particles .latest-content-link,
@@ -2672,10 +2852,13 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   margin-top: 8px !important;
 }
 
-.page-member-area .login_input input.form-control {
-  border-radius: 12px !important;
+.page-member-area .login_input input.form-control,
+.page-member-area input.form-control,
+.page-member-area select.form-control,
+.page-member-area select {
+  border-radius: 999px !important;
   border: 1px solid var(--rasamala-border) !important;
-  padding: 12px 16px !important;
+  padding: 12px 20px !important;
   font-size: 15px !important;
   transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
 }
@@ -2693,7 +2876,7 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   padding: 12px 24px !important;
   font-size: 15px !important;
   font-weight: 600 !important;
-  border-radius: 12px !important;
+  border-radius: var(--rasamala-radius-button) !important;
   cursor: pointer !important;
   transition: background-color 0.2s ease, transform 0.1s ease !important;
   width: 100% !important;
@@ -2772,7 +2955,7 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 #member_sidebar .btn-primary {
   background-color: var(--rasamala-accent) !important;
   border-color: var(--rasamala-accent) !important;
-  border-radius: 12px !important;
+  border-radius: var(--rasamala-radius-button) !important;
   padding: 12px 16px !important;
   font-weight: 600 !important;
   font-size: 14px !important;
@@ -2785,7 +2968,7 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 }
 
 #member_sidebar .btn-danger {
-  border-radius: 12px !important;
+  border-radius: var(--rasamala-radius-button) !important;
   padding: 12px 16px !important;
   font-weight: 600 !important;
   font-size: 14px !important;
@@ -2898,7 +3081,7 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 .member-area .btn-outline-primary {
   color: var(--rasamala-accent) !important;
   border-color: var(--rasamala-accent) !important;
-  border-radius: 8px !important;
+  border-radius: var(--rasamala-radius-button) !important;
   font-weight: 500 !important;
   padding: 6px 12px !important;
   font-size: 13px !important;
@@ -2928,7 +3111,7 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   border-color: var(--rasamala-accent) !important;
   color: var(--theme-on-primary) !important;
   font-weight: 600 !important;
-  border-radius: 8px !important;
+  border-radius: var(--rasamala-radius-button) !important;
   padding: 8px 20px !important;
   font-size: 13px !important;
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease !important;
@@ -2992,14 +3175,14 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 }
 
 .news-list-card .news-card-title a {
-  color: inherit !important;
-  text-decoration: none !important;
+  color: inherit;
+  text-decoration: none;
 }
 
 .news-list-card .news-card-title a:hover,
 .news-list-card .news-card-title a:focus {
-  color: var(--rasamala-accent) !important;
-  text-decoration: none !important;
+  color: var(--rasamala-accent);
+  text-decoration: none;
 }
 
 .news-list-summary {
@@ -3707,15 +3890,15 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   align-items: center !important;
   gap: 6px !important;
   padding: 8px 14px !important;
-  background: rgba(var(--theme-accent-rgb), 0.06) !important;
-  border: 1px solid rgba(var(--theme-accent-rgb), 0.16) !important;
-  border-radius: 20px !important;
+  background: color-mix(in srgb, var(--theme-surface) 84%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--theme-accent) 24%, var(--theme-muted) 12%, transparent) !important;
+  border-radius: var(--rasamala-radius-button) !important;
   color: var(--rasamala-text-primary) !important;
   font-size: 12px !important;
   font-weight: 500 !important;
   text-decoration: none !important;
   transition: background-color 0.25s cubic-bezier(0.165, 0.84, 0.44, 1), border-color 0.25s cubic-bezier(0.165, 0.84, 0.44, 1), color 0.25s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.25s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.25s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
-  box-shadow: 0 4px 12px rgba(var(--theme-accent-rgb), 0.03) !important;
+  box-shadow: none !important;
   max-width: min(320px, 86vw) !important;
   overflow: visible !important;
   white-space: normal !important;
@@ -3730,11 +3913,11 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 
 #search-wraper .latest-content-link:hover,
 #search-wraper .latest-content-link:focus {
-  background: var(--rasamala-accent) !important;
-  border-color: var(--rasamala-accent) !important;
-  color: var(--theme-on-primary) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 8px 20px rgba(var(--theme-accent-rgb), 0.24) !important;
+  background: color-mix(in srgb, var(--theme-accent) 14%, var(--theme-surface) 86%) !important;
+  border-color: color-mix(in srgb, var(--theme-accent) 42%, var(--theme-primary) 18%, transparent) !important;
+  color: var(--theme-on-surface) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--theme-primary) 9%, transparent) !important;
 }
 
 #search-wraper .latest-content-ticker {
@@ -3746,8 +3929,8 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   width: 100% !important;
   max-width: 100% !important;
   border-radius: 30px !important;
-  border: 1px solid rgba(var(--theme-accent-rgb), 0.16) !important;
-  background: rgba(var(--theme-accent-rgb), 0.04) !important;
+  border: 1px solid color-mix(in srgb, var(--theme-accent) 24%, var(--theme-muted) 12%, transparent) !important;
+  background: color-mix(in srgb, var(--theme-surface) 84%, transparent) !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
@@ -3776,7 +3959,7 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 }
 
 .latest-content-link:hover .latest-content-icon {
-  color: var(--theme-on-primary) !important;
+  color: color-mix(in srgb, var(--theme-primary) 74%, var(--theme-accent) 26%) !important;
 }
 
 /* Inline Ticker under Searchbox */
@@ -3809,12 +3992,15 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 }
 
 
-#loginForm input.login_input {
+#loginForm input.login_input,
+#loginForm input[type="text"],
+#loginForm input[type="password"],
+.login_input input {
   display: block !important;
   width: 100% !important;
-  border-radius: 12px !important;
+  border-radius: 999px !important;
   border: 1px solid var(--rasamala-border) !important;
-  padding: 12px 16px !important;
+  padding: 12px 20px !important;
   font-size: 15px !important;
   background-color: #ffffff !important;
   color: #424242 !important;
@@ -3867,7 +4053,7 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   padding: 12px 24px !important;
   font-size: 15px !important;
   font-weight: 700 !important;
-  border-radius: 12px !important;
+  border-radius: var(--rasamala-radius-button) !important;
   cursor: pointer !important;
   transition: background-color 0.2s ease, transform 0.1s ease !important;
   width: 100% !important;
@@ -3892,7 +4078,7 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   padding: 11px 24px !important;
   font-size: 15px !important;
   font-weight: 700 !important;
-  border-radius: 12px !important;
+  border-radius: var(--rasamala-radius-button) !important;
   cursor: pointer !important;
   transition: background-color 0.2s ease, color 0.2s ease !important;
   width: 100% !important;
@@ -3919,10 +4105,11 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   align-items: center !important;
   justify-content: center !important;
   border-radius: 50% !important;
-  background-color: var(--rasamala-accent) !important;
-  color: var(--theme-on-primary) !important;
-  box-shadow: 0 4px 12px rgba(var(--theme-accent-rgb), 0.25) !important;
-  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+  background-color: var(--theme-accent) !important;
+  border: 1px solid color-mix(in srgb, var(--theme-accent) 74%, var(--theme-primary) 26%) !important;
+  color: var(--theme-on-accent) !important;
+  box-shadow: none !important;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
   cursor: pointer !important;
 }
 
@@ -3933,8 +4120,8 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 }
 
 #search-wraper.search-size-medium #search-form button[type="submit"] {
-  width: 38px !important;
-  height: 38px !important;
+  width: 42px !important;
+  height: 42px !important;
 }
 
 #search-wraper.search-size-large #search-form button[type="submit"] {
@@ -3944,9 +4131,11 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 
 
 #search-wraper #search-form button[type="submit"]:hover {
-  transform: scale(1.08) !important;
-  box-shadow: 0 6px 16px rgba(var(--theme-accent-rgb), 0.35) !important;
-  filter: brightness(1.1) !important;
+  background-color: color-mix(in srgb, var(--theme-accent) 82%, var(--theme-primary) 18%) !important;
+  border-color: color-mix(in srgb, var(--theme-accent) 60%, var(--theme-primary) 40%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--theme-accent) 24%, transparent) !important;
+  filter: none !important;
 }
 
 
@@ -3972,20 +4161,26 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  color: var(--rasamala-text-secondary) !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: color-mix(in srgb, var(--theme-primary) 8%, transparent) !important;
+  color: var(--theme-primary) !important;
   font-size: 16px !important;
+  text-decoration: none !important;
   transition: color 0.2s ease, transform 0.2s ease !important;
 }
 
 
 #search-wraper #search-form a[data-bs-target="#adv-modal"]:hover {
-  color: var(--rasamala-accent) !important;
-  transform: rotate(30deg) !important;
+  background: color-mix(in srgb, var(--theme-primary) 12%, var(--theme-surface) 88%) !important;
+  color: var(--theme-primary-hover) !important;
+  transform: none !important;
 }
 
 
 #search-wraper .card-body {
-  padding: 8px 12px 8px 20px !important;
+  padding: 9px 11px 9px 22px !important;
 }
 
 
@@ -4905,7 +5100,7 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   width: 100% !important;
   padding: 7px 10px !important;
   border: 1px solid rgba(var(--theme-accent-rgb), 0.35) !important;
-  border-radius: 9px !important;
+  border-radius: var(--rasamala-radius-button) !important;
   background: transparent !important;
   color: var(--rasamala-accent) !important;
   font-family: var(--rasamala-font-stack) !important;
@@ -4999,10 +5194,10 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 
 /* Homepage search and latest content refinement */
 #search-wraper .latest-content-strip {
-  width: min(100%, 760px) !important;
-  max-width: 760px !important;
-  margin: 16px auto 0 !important;
-  padding: 0 4px !important;
+  width: min(100%, 780px) !important;
+  max-width: 780px !important;
+  margin: 18px auto 0 !important;
+  padding: 0 10px !important;
 }
 
 
@@ -5030,10 +5225,10 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   gap: 8px !important;
   padding: 8px 12px !important;
   border-radius: 999px !important;
-  background: rgba(255, 255, 255, 0.72) !important;
-  border-color: rgba(var(--theme-accent-rgb), 0.18) !important;
-  color: var(--rasamala-text-primary) !important;
-  box-shadow: var(--rasamala-shadow-sm) !important;
+  background: color-mix(in srgb, var(--theme-surface) 84%, transparent) !important;
+  border-color: color-mix(in srgb, var(--theme-accent) 24%, var(--theme-muted) 12%, transparent) !important;
+  color: var(--theme-on-surface) !important;
+  box-shadow: none !important;
 }
 
 
@@ -5046,8 +5241,8 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   height: 20px !important;
   margin: 0 !important;
   border-radius: 50% !important;
-  background: rgba(var(--theme-accent-rgb), 0.12) !important;
-  color: var(--rasamala-accent) !important;
+  background: color-mix(in srgb, var(--theme-accent) 14%, var(--theme-surface) 86%) !important;
+  color: color-mix(in srgb, var(--theme-primary) 74%, var(--theme-accent) 26%) !important;
   font-size: 9px !important;
 }
 
@@ -5066,10 +5261,11 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 
 #search-wraper .latest-content-link:hover,
 #search-wraper .latest-content-link:focus {
-  background: var(--rasamala-accent) !important;
-  border-color: var(--rasamala-accent) !important;
-  color: var(--theme-on-primary) !important;
+  background: color-mix(in srgb, var(--theme-accent) 14%, var(--theme-surface) 86%) !important;
+  border-color: color-mix(in srgb, var(--theme-accent) 42%, var(--theme-primary) 18%, transparent) !important;
+  color: var(--theme-on-surface) !important;
   transform: translateY(-1px) !important;
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--theme-primary) 9%, transparent) !important;
 }
 
 
@@ -5301,10 +5497,13 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
   margin-bottom: 6px !important;
 }
 
-#adv-modal .form-control {
-  border-radius: var(--rasamala-radius-control) !important;
+#adv-modal .form-control,
+#adv-modal .form-select,
+#adv-modal select,
+#adv-modal input {
+  border-radius: 999px !important;
   border: 1px solid var(--rasamala-border) !important;
-  padding: 8px 14px !important;
+  padding: 10px 18px !important;
   font-size: 13.5px !important;
   color: var(--rasamala-text-primary) !important;
   background-color: var(--rasamala-light-bg) !important;
@@ -5322,7 +5521,7 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
 }
 
 #adv-modal .modal-footer .btn-primary {
-  border-radius: var(--rasamala-radius-control) !important;
+  border-radius: var(--rasamala-radius-button) !important;
   padding: 8px 20px !important;
   font-weight: 600 !important;
   font-size: 13.5px !important;
@@ -5711,12 +5910,14 @@ body.rasamala-search-panels-transparent .result-search .grid-item .list-group-it
 
   body.mobile-bottom-nav-hidden #mobileFilterModal,
   body.mobile-bottom-nav-hidden #mobileSortModal,
+  body.mobile-bottom-nav-hidden #mobileViewModal,
   body.mobile-bottom-nav-hidden #adv-modal {
     --rasamala-mobile-modal-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
   }
 
   #mobileFilterModal .modal-dialog,
   #mobileSortModal .modal-dialog,
+  #mobileViewModal .modal-dialog,
   #adv-modal .modal-dialog {
     width: calc(100% - 24px) !important;
     max-width: calc(100% - 24px) !important;
@@ -5731,6 +5932,7 @@ body.rasamala-search-panels-transparent .result-search .grid-item .list-group-it
 
     #mobileFilterModal .modal-dialog,
     #mobileSortModal .modal-dialog,
+    #mobileViewModal .modal-dialog,
     #adv-modal .modal-dialog {
       height: calc(100vh - var(--rasamala-mobile-modal-top) - var(--rasamala-mobile-modal-bottom)) !important;
       max-height: calc(100vh - var(--rasamala-mobile-modal-top) - var(--rasamala-mobile-modal-bottom)) !important;
@@ -5739,6 +5941,7 @@ body.rasamala-search-panels-transparent .result-search .grid-item .list-group-it
 
   #mobileFilterModal .modal-content,
   #mobileSortModal .modal-content,
+  #mobileViewModal .modal-content,
   #adv-modal .modal-content {
     width: 100% !important;
     height: 100% !important;
@@ -5751,6 +5954,7 @@ body.rasamala-search-panels-transparent .result-search .grid-item .list-group-it
 
   #mobileFilterModal .modal-body,
   #mobileSortModal .modal-body,
+  #mobileViewModal .modal-body,
   #adv-modal .modal-body {
     flex: 1 1 auto !important;
     min-height: 0 !important;
@@ -5810,17 +6014,77 @@ body.rasamala-search-panels-transparent .result-search .grid-item .list-group-it
   color: var(--theme-on-surface) !important;
 }
 
-.rasamala-theme .topic-icon-fa,
-.rasamala-theme .topic li i.topic-icon-fa,
-.rasamala-theme #slims-home .topic-icon-fa {
+/* Palette-Driven Variations for Topic Icons (Strictly using Active Theme Palette Tokens) */
+.topic li:nth-child(6n+1) .topic-icon-fa,
+.topic li:nth-child(6n+1) i.topic-icon-fa {
   background: color-mix(in srgb, var(--theme-accent) 14%, var(--theme-surface) 86%) !important;
   color: var(--rasamala-readable-accent) !important;
 }
 
-.rasamala-theme .topic li:hover .topic-icon-fa,
-.rasamala-theme #slims-home .topic li:hover .topic-icon-fa {
+.topic li:nth-child(6n+1):hover .topic-icon-fa,
+.topic li:nth-child(6n+1):hover i.topic-icon-fa {
   background: var(--theme-accent) !important;
-  color: var(--theme-on-accent) !important;
+  color: var(--theme-on-accent, #ffffff) !important;
+}
+
+.topic li:nth-child(6n+2) .topic-icon-fa,
+.topic li:nth-child(6n+2) i.topic-icon-fa {
+  background: color-mix(in srgb, var(--theme-primary) 14%, var(--theme-surface) 86%) !important;
+  color: color-mix(in srgb, var(--theme-primary) 85%, var(--theme-text) 15%) !important;
+}
+
+.topic li:nth-child(6n+2):hover .topic-icon-fa,
+.topic li:nth-child(6n+2):hover i.topic-icon-fa {
+  background: var(--theme-primary) !important;
+  color: var(--theme-on-primary, #ffffff) !important;
+}
+
+.topic li:nth-child(6n+3) .topic-icon-fa,
+.topic li:nth-child(6n+3) i.topic-icon-fa {
+  background: color-mix(in srgb, var(--theme-secondary) 14%, var(--theme-surface) 86%) !important;
+  color: color-mix(in srgb, var(--theme-secondary) 88%, var(--theme-text) 12%) !important;
+}
+
+.topic li:nth-child(6n+3):hover .topic-icon-fa,
+.topic li:nth-child(6n+3):hover i.topic-icon-fa {
+  background: var(--theme-secondary) !important;
+  color: var(--theme-on-secondary, #ffffff) !important;
+}
+
+.topic li:nth-child(6n+4) .topic-icon-fa,
+.topic li:nth-child(6n+4) i.topic-icon-fa {
+  background: color-mix(in srgb, var(--rasamala-accent-hover, var(--theme-accent)) 16%, var(--theme-surface) 84%) !important;
+  color: color-mix(in srgb, var(--rasamala-accent-hover, var(--theme-accent)) 90%, var(--theme-text) 10%) !important;
+}
+
+.topic li:nth-child(6n+4):hover .topic-icon-fa,
+.topic li:nth-child(6n+4):hover i.topic-icon-fa {
+  background: var(--rasamala-accent-hover, var(--theme-accent)) !important;
+  color: var(--theme-on-accent, #ffffff) !important;
+}
+
+.topic li:nth-child(6n+5) .topic-icon-fa,
+.topic li:nth-child(6n+5) i.topic-icon-fa {
+  background: color-mix(in srgb, var(--theme-primary-hover, var(--theme-primary)) 16%, var(--theme-surface) 84%) !important;
+  color: color-mix(in srgb, var(--theme-primary-hover, var(--theme-primary)) 90%, var(--theme-text) 10%) !important;
+}
+
+.topic li:nth-child(6n+5):hover .topic-icon-fa,
+.topic li:nth-child(6n+5):hover i.topic-icon-fa {
+  background: var(--theme-primary-hover, var(--theme-primary)) !important;
+  color: var(--theme-on-primary, #ffffff) !important;
+}
+
+.topic li:nth-child(6n+6) .topic-icon-fa,
+.topic li:nth-child(6n+6) i.topic-icon-fa {
+  background: color-mix(in srgb, color-mix(in srgb, var(--theme-primary) 50%, var(--theme-accent) 50%) 15%, var(--theme-surface) 85%) !important;
+  color: color-mix(in srgb, var(--theme-primary) 50%, var(--theme-accent) 50%) !important;
+}
+
+.topic li:nth-child(6n+6):hover .topic-icon-fa,
+.topic li:nth-child(6n+6):hover i.topic-icon-fa {
+  background: color-mix(in srgb, var(--theme-primary) 50%, var(--theme-accent) 50%) !important;
+  color: #ffffff !important;
 }
 
 .rasamala-theme #slims-home .member-card .card-title,
@@ -5847,11 +6111,11 @@ body.rasamala-search-panels-transparent .result-search .grid-item .list-group-it
 .rasamala-page-news .news-list-card .news-card-title a,
 .rasamala-page-news .news-list-card .news-list-thumbnail,
 .rasamala-page-news .news-list-footer .btn-news-readmore {
-  text-decoration: none !important;
-  text-decoration-line: none !important;
-  border-bottom: 0 !important;
-  box-shadow: none !important;
-  background-image: none !important;
+  text-decoration: none;
+  text-decoration-line: none;
+  border-bottom: 0;
+  box-shadow: none;
+  background-image: none;
 }
 
 .rasamala-page-news .news-list-card .news-card-title a:hover,
@@ -5859,11 +6123,11 @@ body.rasamala-search-panels-transparent .result-search .grid-item .list-group-it
 .rasamala-page-news .news-list-card .news-card-title a:focus-visible,
 .rasamala-page-news .news-list-card .news-card-title a:active,
 .rasamala-page-news .news-list-card .news-card-title a:visited {
-  text-decoration: none !important;
-  text-decoration-line: none !important;
-  border-bottom: 0 !important;
-  box-shadow: none !important;
-  background-image: none !important;
+  text-decoration: none;
+  text-decoration-line: none;
+  border-bottom: 0;
+  box-shadow: none;
+  background-image: none;
 }
 
 body.rasamala-theme.rasamala-page-news:not(.rasamala-dark) .news-list-summary,
@@ -6160,6 +6424,7 @@ body.rasamala-theme.rasamala-page-news:not(.rasamala-dark) .news-list-card .news
   margin-left: 0.5rem !important;
   padding: 0.375rem 0.75rem !important;
   font-size: 1rem !important;
+  border-radius: var(--rasamala-radius-button);
 }
 
 /* Native login button styling */
@@ -6171,7 +6436,7 @@ body.rasamala-theme.rasamala-page-news:not(.rasamala-dark) .news-list-card .news
   color: #fff !important;
   background-color: var(--bs-primary, #0d6efd) !important;
   border: 1px solid var(--bs-primary, #0d6efd) !important;
-  border-radius: 0.375rem !important;
+  border-radius: var(--rasamala-radius-button) !important;
   transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out !important;
   cursor: pointer !important;
   margin-top: 1.5rem !important;

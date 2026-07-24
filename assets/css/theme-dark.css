@@ -216,16 +216,6 @@ body.rasamala-dark .background-animation-layer.hero-animation-layer {
   opacity: 0.86 !important;
 }
 
-body.rasamala-dark .background-animation-layer::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(circle 240px at var(--mouse-x, -9999px) var(--mouse-y, -9999px), rgba(var(--theme-accent-rgb), 0.08), transparent 75%) !important;
-  z-index: 5;
-}
-
-
 body.rasamala-dark .background-animation-layer.hero-animation-particles,
 body.rasamala-dark .background-animation-layer.hero-animation-constellation,
 body.rasamala-dark .background-animation-layer.hero-animation-rain,
@@ -1168,6 +1158,47 @@ body.rasamala-dark #mobile-sort-options .list-group-item.active {
   color: #ffffff !important;
 }
 
+body.rasamala-dark .result-search .search-sort-bar {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(22, 26, 34, 0.78);
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.24);
+}
+
+body.rasamala-dark .result-search .search-sort-label {
+  color: var(--theme-muted-on-surface);
+}
+
+body.rasamala-dark .result-search .search-sort-chip,
+body.rasamala-dark .result-search .search-view-toggle {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--theme-on-surface);
+}
+
+body.rasamala-dark .result-search .search-sort-chip:hover,
+body.rasamala-dark .result-search .search-sort-chip:focus,
+body.rasamala-dark .result-search .search-view-toggle:hover,
+body.rasamala-dark .result-search .search-view-toggle:focus,
+body.rasamala-dark .result-search .show>.search-view-toggle.dropdown-toggle {
+  border-color: rgba(var(--theme-accent-rgb), 0.42);
+  background: rgba(var(--theme-accent-rgb), 0.16);
+  color: var(--theme-on-surface);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
+}
+
+body.rasamala-dark .result-search .search-sort-chip.active {
+  border-color: transparent;
+  background: var(--theme-accent);
+  color: var(--theme-on-accent);
+  box-shadow: 0 10px 24px rgba(var(--theme-accent-rgb), 0.24);
+}
+
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .search-sort-bar {
+  border-color: rgba(var(--theme-accent-rgb), 0.18);
+  background: rgba(22, 26, 34, 0.52);
+  box-shadow: none;
+}
+
 
 body.rasamala-dark #mobileFilterModal .modal-footer,
 body.rasamala-dark #mobileSortModal .modal-body {
@@ -1238,6 +1269,12 @@ body.rasamala-dark #search-wraper .latest-content-ticker-item .latest-content-ic
 body.rasamala-dark .mobile-bottom-nav {
   background-color: rgba(12, 15, 20, 0.92) !important;
   border-top-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+body.rasamala-dark .palette-switcher-ai-hint {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #e2e8f0 !important;
 }
 
 
@@ -1862,7 +1899,6 @@ body.rasamala-dark #section1 #search-wraper .card,
 body.rasamala-dark .advanced-wraper,
 body.rasamala-dark .latest-content-strip,
 body.rasamala-dark .latest-content-ticker,
-body.rasamala-dark #search-wraper .latest-content-ticker,
 body.rasamala-dark #mobileFilterModal .modal-footer,
 body.rasamala-dark #mobileSortModal .modal-body,
 body.rasamala-dark .select2-dropdown,
@@ -2186,9 +2222,9 @@ body.rasamala-dark .comments .btn {
 
 
 body.rasamala-dark #search-wraper .card {
-  background: rgba(20, 24, 32, 0.9) !important;
-  border-color: rgba(255, 255, 255, 0.14) !important;
-  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.28) !important;
+  background: color-mix(in srgb, var(--theme-surface) 92%, transparent) !important;
+  border-color: color-mix(in srgb, var(--theme-muted) 28%, transparent) !important;
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.22) !important;
 }
 
 
@@ -2203,47 +2239,49 @@ body.rasamala-dark #search-wraper #search-input::placeholder {
 
 
 body.rasamala-dark #search-wraper #search-form button[type="submit"] {
-  background: var(--rasamala-accent) !important;
-  color: #ffffff !important;
-  box-shadow: 0 8px 22px rgba(var(--theme-accent-rgb), 0.18) !important;
+  background: var(--theme-accent) !important;
+  color: var(--theme-on-accent) !important;
+  box-shadow: none !important;
 }
 
-body.rasamala-dark #search-wraper #search-form button[type="submit"] .fa-search {
-  color: #ffffff !important;
+body.rasamala-dark #search-wraper #search-form button[type="submit"] .fa-search,
+body.rasamala-dark #search-wraper #search-form button[type="submit"] .fa-spinner {
+  color: var(--theme-on-accent) !important;
 }
 
 body.rasamala-dark #search-wraper #search-form button[type="submit"]:hover {
-  background: var(--rasamala-accent-hover) !important;
-  box-shadow: 0 10px 26px rgba(var(--theme-accent-rgb), 0.26) !important;
+  background: color-mix(in srgb, var(--theme-accent) 82%, #ffffff 8%) !important;
+  color: var(--theme-on-accent) !important;
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--theme-accent) 24%, transparent) !important;
 }
 
 
 body.rasamala-dark #search-wraper .latest-content-link {
-  background: rgba(255, 255, 255, 0.075) !important;
-  border-color: rgba(255, 255, 255, 0.16) !important;
-  color: #eef2f6 !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18) !important;
+  background: color-mix(in srgb, var(--theme-surface) 82%, transparent) !important;
+  border-color: color-mix(in srgb, var(--theme-accent) 22%, var(--theme-muted) 16%, transparent) !important;
+  color: var(--theme-on-surface) !important;
+  box-shadow: none !important;
 }
 
 
 body.rasamala-dark #search-wraper .latest-content-link .latest-content-icon {
-  background: rgba(242, 215, 166, 0.14) !important;
-  color: var(--rasamala-dark-accent-text-strong) !important;
+  background: color-mix(in srgb, var(--theme-accent) 16%, transparent) !important;
+  color: var(--theme-accent) !important;
 }
 
 
 body.rasamala-dark #search-wraper .latest-content-link:hover,
 body.rasamala-dark #search-wraper .latest-content-link:focus {
-  background: rgba(var(--theme-accent-rgb), 0.38) !important;
-  border-color: rgba(242, 215, 166, 0.48) !important;
-  color: #ffffff !important;
+  background: color-mix(in srgb, var(--theme-accent) 18%, var(--theme-surface) 82%) !important;
+  border-color: color-mix(in srgb, var(--theme-accent) 44%, transparent) !important;
+  color: var(--theme-on-surface) !important;
 }
 
 
 body.rasamala-dark #search-wraper .latest-content-link:hover .latest-content-icon,
 body.rasamala-dark #search-wraper .latest-content-link:focus .latest-content-icon {
-  background: rgba(255, 255, 255, 0.16) !important;
-  color: #fff0c9 !important;
+  background: var(--theme-accent) !important;
+  color: var(--theme-on-accent) !important;
 }
 
 
@@ -2456,7 +2494,13 @@ body.rasamala-dark #adv-modal .modal-title {
   color: #f4f6f8 !important;
 }
 
-body.rasamala-dark #adv-modal .form-control {
+body.rasamala-dark #adv-modal .form-control,
+body.rasamala-dark #adv-modal .form-select,
+body.rasamala-dark #adv-modal select,
+body.rasamala-dark #adv-modal input,
+body.rasamala-dark #loginForm input.login_input,
+body.rasamala-dark .page-member-area .login_input input.form-control {
+  border-radius: 999px !important;
   background-color: rgba(255, 255, 255, 0.04) !important;
   border-color: rgba(255, 255, 255, 0.1) !important;
   color: #f4f6f8 !important;
@@ -2730,7 +2774,6 @@ body.rasamala-dark .footer-powered-link code,
 body.rasamala-dark .prayer-reminder-icon,
 body.rasamala-dark .prayer-reminder-close,
 body.rasamala-dark .prayer-reminder-countdown,
-body.rasamala-dark #search-wraper .latest-content-link .latest-content-icon,
 body.rasamala-dark #search-wraper #search-form a[data-bs-target="#adv-modal"]:hover,
 body.rasamala-dark .biblio-list-availability-label,
 body.rasamala-dark .biblio-list-availability strong,
@@ -2743,8 +2786,7 @@ body.rasamala-dark .biblio-simple-availability-count,
 body.rasamala-dark .topic-icon-fa,
 body.rasamala-dark .topic li i,
 body.rasamala-dark .rasamala-subpage-wrapper .librarian.row-fluid .span8 .row-fluid .span3.key,
-body.rasamala-dark .latest-content-ticker-item .latest-content-icon,
-body.rasamala-dark #search-wraper .latest-content-ticker-item .latest-content-icon {
+body.rasamala-dark .latest-content-ticker-item .latest-content-icon {
   color: var(--rasamala-dark-link) !important;
 }
 
@@ -2787,7 +2829,6 @@ body.rasamala-dark .search-type-btn.btn-primary,
 body.rasamala-dark .btn-news-readmore,
 body.rasamala-dark .btn-modal-action,
 body.rasamala-dark .libinfo-modal-btn,
-body.rasamala-dark #search-wraper #search-form button[type="submit"],
 body.rasamala-dark .footer-social-btn:hover,
 body.rasamala-dark .pagingList b,
 body.rasamala-dark .pagination .page-item.active .page-link,
@@ -2801,9 +2842,7 @@ body.rasamala-dark #mobile-filter-container input[type="radio"]:checked + label,
 body.rasamala-dark .biblio-list-basket:hover,
 body.rasamala-dark .biblio-list-basket:focus,
 body.rasamala-dark .biblio-list-action-link:hover,
-body.rasamala-dark .biblio-list-action-link:focus,
-body.rasamala-dark #search-wraper .latest-content-link:hover,
-body.rasamala-dark #search-wraper .latest-content-link:focus {
+body.rasamala-dark .biblio-list-action-link:focus {
   background: var(--rasamala-dark-action-bg) !important;
   background-color: var(--rasamala-dark-action-bg) !important;
   border-color: var(--rasamala-dark-action-border) !important;
@@ -2825,8 +2864,7 @@ body.rasamala-dark .btn-news-readmore:focus,
 body.rasamala-dark .btn-modal-action:hover,
 body.rasamala-dark .btn-modal-action:focus,
 body.rasamala-dark .libinfo-modal-btn:hover,
-body.rasamala-dark .libinfo-modal-btn:focus,
-body.rasamala-dark #search-wraper #search-form button[type="submit"]:hover {
+body.rasamala-dark .libinfo-modal-btn:focus {
   background: var(--rasamala-dark-action-hover-bg) !important;
   background-color: var(--rasamala-dark-action-hover-bg) !important;
   border-color: var(--rasamala-dark-link) !important;
@@ -3298,17 +3336,41 @@ body.rasamala-dark #slims-home .topic li span {
   color: var(--theme-on-surface) !important;
 }
 
-body.rasamala-dark .topic-icon-fa,
-body.rasamala-dark .topic li i.topic-icon-fa,
-body.rasamala-dark #slims-home .topic-icon-fa {
-  background: color-mix(in srgb, var(--theme-accent) 18%, var(--theme-surface) 82%) !important;
-  color: var(--rasamala-readable-accent) !important;
+/* Dark Mode Palette-Driven Variations for Topic Icons (Strictly using Active Theme Palette Tokens) */
+body.rasamala-dark .topic li:nth-child(6n+1) .topic-icon-fa,
+body.rasamala-dark .topic li:nth-child(6n+1) i.topic-icon-fa {
+  background: color-mix(in srgb, var(--theme-dark-accent, #3b82f6) 18%, var(--theme-dark-surface, #1e293b) 82%) !important;
+  color: color-mix(in srgb, var(--theme-dark-accent, #3b82f6) 88%, #ffffff 12%) !important;
 }
 
-body.rasamala-dark .topic li:hover .topic-icon-fa,
-body.rasamala-dark #slims-home .topic li:hover .topic-icon-fa {
-  background: var(--theme-accent) !important;
-  color: var(--theme-on-accent) !important;
+body.rasamala-dark .topic li:nth-child(6n+2) .topic-icon-fa,
+body.rasamala-dark .topic li:nth-child(6n+2) i.topic-icon-fa {
+  background: color-mix(in srgb, var(--theme-dark-primary, #60a5fa) 18%, var(--theme-dark-surface, #1e293b) 82%) !important;
+  color: color-mix(in srgb, var(--theme-dark-primary, #60a5fa) 88%, #ffffff 12%) !important;
+}
+
+body.rasamala-dark .topic li:nth-child(6n+3) .topic-icon-fa,
+body.rasamala-dark .topic li:nth-child(6n+3) i.topic-icon-fa {
+  background: color-mix(in srgb, var(--theme-dark-secondary, #94a3b8) 18%, var(--theme-dark-surface, #1e293b) 82%) !important;
+  color: color-mix(in srgb, var(--theme-dark-secondary, #94a3b8) 88%, #ffffff 12%) !important;
+}
+
+body.rasamala-dark .topic li:nth-child(6n+4) .topic-icon-fa,
+body.rasamala-dark .topic li:nth-child(6n+4) i.topic-icon-fa {
+  background: color-mix(in srgb, var(--theme-dark-accent, #3b82f6) 24%, var(--theme-dark-surface, #1e293b) 76%) !important;
+  color: color-mix(in srgb, var(--theme-dark-accent, #3b82f6) 95%, #ffffff 5%) !important;
+}
+
+body.rasamala-dark .topic li:nth-child(6n+5) .topic-icon-fa,
+body.rasamala-dark .topic li:nth-child(6n+5) i.topic-icon-fa {
+  background: color-mix(in srgb, var(--theme-dark-primary-hover, var(--theme-dark-primary)) 24%, var(--theme-dark-surface, #1e293b) 76%) !important;
+  color: color-mix(in srgb, var(--theme-dark-primary-hover, var(--theme-dark-primary)) 95%, #ffffff 5%) !important;
+}
+
+body.rasamala-dark .topic li:nth-child(6n+6) .topic-icon-fa,
+body.rasamala-dark .topic li:nth-child(6n+6) i.topic-icon-fa {
+  background: color-mix(in srgb, color-mix(in srgb, var(--theme-dark-primary) 50%, var(--theme-dark-accent) 50%) 20%, var(--theme-dark-surface) 80%) !important;
+  color: color-mix(in srgb, var(--theme-dark-primary) 50%, var(--theme-dark-accent) 50%) !important;
 }
 
 body.rasamala-dark #slims-home .member-card .card-title,
@@ -3598,4 +3660,94 @@ body.rasamala-dark .detail-avail-row:focus-within {
   border: 0 !important;
   border-bottom: 1px solid var(--rasamala-dark-accent-border, rgba(var(--theme-accent-rgb), 0.42)) !important;
   border-radius: 8px !important;
+}
+
+/* Dark Mode Skeleton Loading System */
+body.rasamala-dark .theme-skeleton-card,
+body.rasamala-dark .theme-skeleton-item {
+  background: #1e293b !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+body.rasamala-dark .theme-skeleton-block,
+body.rasamala-dark .theme-skeleton-badge-pill {
+  background: #334155 !important;
+}
+
+body.rasamala-dark .theme-skeleton-card::after,
+body.rasamala-dark .theme-skeleton-badge::after,
+body.rasamala-dark .theme-skeleton-item::after {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent) !important;
+}
+
+/* Dark Mode Keyboard Shortcut Badge */
+body.rasamala-dark .search-kbd-badge {
+  background-color: #334155 !important;
+  color: #cbd5e1 !important;
+  border-color: #475569 !important;
+}
+
+body.rasamala-dark .search-kbd-badge:hover {
+  background-color: #475569 !important;
+  color: #f8fafc !important;
+}
+
+/* Dark Mode Loading Overlay & Progress Bar */
+body.rasamala-dark .rasamala-page-progress-bar {
+  background: linear-gradient(90deg, var(--rasamala-dark-accent-border, #3b82f6), #60a5fa) !important;
+  box-shadow: 0 0 12px rgba(96, 165, 250, 0.8), 0 0 6px rgba(96, 165, 250, 0.6) !important;
+}
+
+body.rasamala-dark .result-search .wrapper.is-loading::before {
+  background: rgba(15, 23, 42, 0.72) !important;
+}
+
+body.rasamala-dark .result-search .wrapper.is-loading::after {
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  border-top-color: #60a5fa !important;
+}
+
+/* Dark Mode Choice Card Modals (View Mode, Sort, Filter) */
+body.rasamala-dark .search-view-modal-options .list-group-item,
+body.rasamala-dark .search-sort-modal-options .list-group-item {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+body.rasamala-dark .search-view-modal-options .list-group-item:hover,
+body.rasamala-dark .search-sort-modal-options .list-group-item:hover {
+  background-color: #334155 !important;
+}
+
+body.rasamala-dark .search-view-modal-options .list-group-item.active,
+body.rasamala-dark .search-sort-modal-options .list-group-item.active {
+  background-color: rgba(59, 130, 246, 0.16) !important;
+  border-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+body.rasamala-dark .rasamala-sticky-toolbar {
+  background-color: rgba(15, 23, 42, 0.92) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.rasamala-dark .search-result-summary-card {
+  background-color: #1e293b !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+body.rasamala-dark .summary-icon-box {
+  background-color: rgba(59, 130, 246, 0.18) !important;
+  color: #60a5fa !important;
+}
+
+body.rasamala-dark .search-found-info {
+  color: #f8fafc !important;
+}
+
+body.rasamala-dark .search-keyword-badge {
+  background-color: #334155 !important;
+  color: #f8fafc !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
 }

@@ -130,21 +130,23 @@ if (empty($top_subjects)) {
     ];
 }
 
+$effective_palette_key = $current_palette_key ?: strtolower((string)themeEffectiveAccentColorKey($sysconf));
+
 $palette_switcher_config = [
     'topSubjects' => $top_subjects,
 
     'enabled' => true,
-    'currentPreset' => function_exists('themePresetKey') ? themePresetKey($sysconf) : 'simple_homepage',
+    'currentPreset' => function_exists('themePresetKey') ? themePresetKey($sysconf) : 'custom',
     'presets' => [
-        'simple_homepage' => __('Simple - Search + Running Text'),
-        'office' => __('Simple + Topics'),
-        'all_show' => __('Full - Topics + News + Collections + Top Reader + Map + Running Text'),
-        'custom' => __('Custom (Fully Unlocked)')
+        'simple_homepage' => themeTranslate('Simple - Search + Running Text'),
+        'office' => themeTranslate('Simple + Topics'),
+        'all_show' => themeTranslate('Full - Topics + News + Collections + Top Reader + Map + Running Text'),
+        'custom' => themeTranslate('Custom (Fully Unlocked)')
     ],
-    'currentKey' => $effective_palette_key ?? 'warmgray',
+    'currentKey' => $effective_palette_key ?: 'custom',
     'customValue' => $custom_palette_value,
     'fontFamily' => themeEffectiveTemplateValue('classic_font_family', 'system', $sysconf),
-    'backgroundAnimation' => themeEffectiveTemplateValue('classic_background_animation', 'none', $sysconf),
+    'backgroundAnimation' => themeEffectiveTemplateValue('classic_hero_background_animation', 'neural-network', $sysconf),
     'backgroundAnimationSpeed' => themeEffectiveTemplateValue('classic_background_animation_speed', 'normal', $sysconf),
     'cursorParticles' => themeEffectiveTemplateValue('classic_cursor_particles', 'auto', $sysconf),
     'cursorIcon' => themeEffectiveTemplateValue('classic_cursor_custom_icon', 'default', $sysconf),
@@ -166,10 +168,13 @@ $palette_switcher_config = [
 
 <template id="rasamala-palette-switcher-config"><?= themeEscape(json_encode($palette_switcher_config, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT)); ?></template>
 
+<?php
+$has_ticker_active = !empty($latest_content_ticker_items) || (function_exists('themeEffectiveTemplateValue') && themeEffectiveTemplateValue('classic_ticker_show', 0, $sysconf) === 'bottom');
+?>
 <div class="rasamala-palette-switcher" id="rasamala-palette-switcher">
     <button type="button"
             id="palette-switcher-toggle"
-            class="btn-palette-switcher shadow-lg <?= !empty($latest_content_ticker_items ?? []) ? 'has-latest-content-ticker' : '' ?>"
+            class="btn-palette-switcher shadow-lg <?= $has_ticker_active ? 'has-latest-content-ticker' : '' ?>"
             aria-label="<?= themeEscape(__('Open theme palette menu')); ?>"
             aria-expanded="false"
             aria-controls="palette-switcher-panel">
@@ -182,37 +187,37 @@ $palette_switcher_config = [
                 <button type="button" class="palette-switcher-close" data-palette-close aria-label="<?= themeEscape(__('Close')); ?>">&times;</button>
             </div>
         </div>
-        <label class="palette-switcher-label" for="theme-preset-select"><?= themeEscape(__('Pilihan Keseluruhan Tema')); ?></label>
+        <label class="palette-switcher-label" for="theme-preset-select"><?= themeEscape(themeTranslate('Overall Theme Preset')); ?></label>
         <select id="theme-preset-select" class="form-control palette-switcher-select"></select>
         <div class="palette-switcher-grid">
             <div class="palette-switcher-field">
-                <label class="palette-switcher-label" for="palette-switcher-select"><?= themeEscape(__('Palette')); ?></label>
+                <label class="palette-switcher-label" for="palette-switcher-select"><?= themeEscape(themeTranslate('Palette')); ?></label>
                 <select id="palette-switcher-select" class="form-control palette-switcher-select"></select>
             </div>
             <div class="palette-switcher-field">
-                <label class="palette-switcher-label" for="theme-viewer-animation-select"><?= themeEscape(__('Animasi Background')); ?></label>
-                <select id="theme-viewer-animation-select" class="form-control palette-switcher-select"></select>
-            </div>
-            <div class="palette-switcher-field">
-                <label class="palette-switcher-label" for="theme-viewer-animation-speed-select"><?= themeEscape(__('Kecepatan Animasi Background')); ?></label>
-                <select id="theme-viewer-animation-speed-select" class="form-control palette-switcher-select"></select>
-            </div>
-            <div class="palette-switcher-field">
-                <label class="palette-switcher-label" for="theme-viewer-cursor-particles-select"><?= themeEscape(__('Efek Partikel Cursor')); ?></label>
-                <select id="theme-viewer-cursor-particles-select" class="form-control palette-switcher-select"></select>
-            </div>
-            <div class="palette-switcher-field">
-                <label class="palette-switcher-label" for="theme-viewer-font-select"><?= themeEscape(__('Font Tema')); ?></label>
+                <label class="palette-switcher-label" for="theme-viewer-font-select"><?= themeEscape(themeTranslate('Theme Font')); ?></label>
                 <select id="theme-viewer-font-select" class="form-control palette-switcher-select"></select>
             </div>
             <div class="palette-switcher-field">
-                <label class="palette-switcher-label" for="theme-viewer-cursor-icon-select"><?= themeEscape(__('Ikon Cursor')); ?></label>
+                <label class="palette-switcher-label" for="theme-viewer-animation-select"><?= themeEscape(themeTranslate('Background Animation')); ?></label>
+                <select id="theme-viewer-animation-select" class="form-control palette-switcher-select"></select>
+            </div>
+            <div class="palette-switcher-field">
+                <label class="palette-switcher-label" for="theme-viewer-animation-speed-select"><?= themeEscape(themeTranslate('Animation Speed')); ?></label>
+                <select id="theme-viewer-animation-speed-select" class="form-control palette-switcher-select"></select>
+            </div>
+            <div class="palette-switcher-field">
+                <label class="palette-switcher-label" for="theme-viewer-cursor-particles-select"><?= themeEscape(themeTranslate('Cursor Particles')); ?></label>
+                <select id="theme-viewer-cursor-particles-select" class="form-control palette-switcher-select"></select>
+            </div>
+            <div class="palette-switcher-field">
+                <label class="palette-switcher-label" for="theme-viewer-cursor-icon-select"><?= themeEscape(themeTranslate('Cursor Icon')); ?></label>
                 <select id="theme-viewer-cursor-icon-select" class="form-control palette-switcher-select"></select>
             </div>
         </div>
-        <div class="palette-switcher-section-tools" aria-label="<?= themeEscape(__('Section Beranda')); ?>">
+        <div class="palette-switcher-section-tools" aria-label="<?= themeEscape(themeTranslate('Home Section')); ?>">
             <div class="d-flex justify-content-between align-items-center mb-1 palette-switcher-section-head">
-                <span class="palette-switcher-label palette-switcher-section-label palette-switcher-label-flush"><?= themeEscape(__('Section Beranda')); ?></span>
+                <span class="palette-switcher-label palette-switcher-section-label palette-switcher-label-flush"><?= themeEscape(themeTranslate('Home Section')); ?></span>
                 <div class="palette-switcher-section-actions">
                     <button type="button" 
                             class="palette-switcher-tool-btn palette-switcher-tool-btn-compact" 
@@ -233,16 +238,8 @@ $palette_switcher_config = [
             <div class="palette-switcher-section-list" id="theme-viewer-section-list"></div>
         </div>
         <div class="palette-switcher-custom" id="palette-switcher-custom" hidden>
-            <div class="palette-switcher-custom-head">
+            <div class="palette-switcher-custom-head mb-1">
                 <label class="palette-switcher-label palette-switcher-label-flush" for="palette-switcher-custom-input"><?= themeEscape(__('Custom Palette Colors')); ?></label>
-                <button type="button"
-                        id="palette-switcher-apply"
-                        class="btn btn-primary btn-sm palette-switcher-apply-btn"
-                        title="<?= themeEscape(__('Apply')); ?>"
-                        aria-label="<?= themeEscape(__('Apply')); ?>">
-                    <i class="fas fa-check palette-switcher-apply-icon" aria-hidden="true"></i>
-                    <span><?= themeEscape(__('Apply')); ?></span>
-                </button>
             </div>
             <textarea id="palette-switcher-custom-input"
                       class="form-control palette-switcher-custom-input palette-switcher-custom-textarea"
@@ -250,10 +247,32 @@ $palette_switcher_config = [
                       maxlength="320"
                       autocomplete="off"
                       spellcheck="false"></textarea>
-            <div class="palette-switcher-help palette-switcher-format-help">
-                <?= themeEscape(__('Klik tombol Copy Prompt di bawah untuk generate kode warna via ChatGPT/AI, atau isi manual dengan format:')); ?>
-                <br>
-                <code class="palette-switcher-format-code">#1e3a8a;#3b82f6;#10b981;#f3f4f6;#ffffff;#1f2937;#4b5563 | #0f172a;#1e293b;#10b981;#0f172a;#1e293b;#f9fafb;#94a3b8</code>
+            <div class="palette-switcher-help palette-switcher-format-help mt-2">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
+                    <span class="fw-bold text-xs"><i class="fas fa-magic text-primary me-1" aria-hidden="true"></i><?= themeEscape(__('Generate Warna via AI (ChatGPT/Gemini/AI Lainnya):')); ?></span>
+                    <div class="palette-switcher-custom-actions d-inline-flex align-items-center gap-1">
+                        <button type="button"
+                                id="palette-switcher-copy-prompt"
+                                class="palette-switcher-tool-btn btn-prompt-action"
+                                title="<?= themeEscape(__('Copy Prompt')); ?>"
+                                aria-label="<?= themeEscape(__('Copy Prompt')); ?>">
+                            <i class="fas fa-copy" aria-hidden="true"></i><?= themeEscape(__('Copy Prompt')); ?>
+                        </button>
+                        <button type="button"
+                                id="palette-switcher-paste-palette"
+                                class="palette-switcher-tool-btn btn-prompt-action"
+                                title="<?= themeEscape(__('Paste Palette')); ?>"
+                                aria-label="<?= themeEscape(__('Paste Palette')); ?>">
+                            <i class="fas fa-paste" aria-hidden="true"></i><?= themeEscape(__('Paste Palette')); ?>
+                        </button>
+                    </div>
+                </div>
+                <div class="palette-switcher-ai-hint text-xs mb-2 p-2 rounded bg-light border">
+                    <i class="fas fa-lightbulb text-warning me-1" aria-hidden="true"></i>
+                    <span><strong>Langkah Singkat:</strong> Klik <u>Copy Prompt</u> ➔ Paste di ChatGPT/Gemini ➔ Salin balasan AI ➔ Klik <u>Paste Palette</u>.</span>
+                </div>
+                <div class="text-muted text-xs mb-1"><?= themeEscape(__('Atau isi manual dengan format:')); ?></div>
+                <code class="palette-switcher-format-code d-block">#1e3a8a;#3b82f6;#10b981;#f3f4f6;#ffffff;#1f2937;#4b5563 | #0f172a;#1e293b;#10b981;#0f172a;#1e293b;#f9fafb;#94a3b8</code>
             </div>
         </div>
         <div class="palette-switcher-actions-compact">
@@ -266,20 +285,6 @@ $palette_switcher_config = [
                     aria-label="<?= themeEscape(__('Toggle dark/light mode')); ?>"
                     aria-pressed="false">
                 <i class="fas fa-moon" aria-hidden="true"></i>
-            </button>
-            <button type="button"
-                    id="palette-switcher-copy-prompt"
-                    class="palette-switcher-tool-btn"
-                    title="<?= themeEscape(__('Copy Prompt')); ?>"
-                    aria-label="<?= themeEscape(__('Copy Prompt')); ?>">
-                <i class="fas fa-copy" aria-hidden="true"></i>
-            </button>
-            <button type="button"
-                    id="palette-switcher-paste-palette"
-                    class="palette-switcher-tool-btn"
-                    title="<?= themeEscape(__('Paste Palette')); ?>"
-                    aria-label="<?= themeEscape(__('Paste Palette')); ?>">
-                <i class="fas fa-paste" aria-hidden="true"></i>
             </button>
             <button type="button"
                     id="palette-switcher-reset"

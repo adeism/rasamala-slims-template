@@ -9,7 +9,12 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
 if (!function_exists('rasamalaTinfoTopicIconOptions')) {
   function rasamalaTinfoTopicIconOptions()
   {
-    return [
+    static $options = null;
+    if ($options !== null) {
+      return $options;
+    }
+
+    $options = [
       ['value' => 'fas fa-book', 'label' => 'Book'],
       ['value' => 'fas fa-bookmark', 'label' => 'Bookmark'],
       ['value' => 'fas fa-users', 'label' => 'Users'],
@@ -90,12 +95,19 @@ if (!function_exists('rasamalaTinfoTopicIconOptions')) {
       ['value' => 'fab fa-linkedin', 'label' => 'LinkedIn'],
       ['value' => 'fas fa-ellipsis-h', 'label' => 'More'],
     ];
+
+    return $options;
   }
 }
 
 if (!function_exists('rasamalaTinfoLanguageOptions')) {
   function rasamalaTinfoLanguageOptions()
   {
+    static $language_options = null;
+    if ($language_options !== null) {
+      return $language_options;
+    }
+
     $language_names = [
       'ar_SA' => ['Arabic', 'العربية'],
       'bn_BD' => ['Bengali', 'বাংলা'],
@@ -113,20 +125,22 @@ if (!function_exists('rasamalaTinfoLanguageOptions')) {
       'ur_PK' => ['Urdu', 'اردو'],
     ];
     $languages = [];
-    $locale_dir = defined('SB') ? SB . 'lib/lang/locale' : realpath(__DIR__ . '/../../../lib/lang/locale');
+    $locale_dir = defined('LANG') ? LANG . 'locale' : (defined('SB') ? SB . 'lib/lang/locale' : realpath(__DIR__ . '/../../../lib/lang/locale'));
 
     if ($locale_dir && is_dir($locale_dir)) {
       $locale_codes = glob($locale_dir . '/*', GLOB_ONLYDIR);
-      sort($locale_codes);
-      foreach ($locale_codes as $locale_path) {
-        $lang_code = basename($locale_path);
-        if (!preg_match('/^[a-z]{2}_[A-Z]{2}$/', $lang_code)) {
-          continue;
-        }
+      if (is_array($locale_codes)) {
+        sort($locale_codes);
+        foreach ($locale_codes as $locale_path) {
+          $lang_code = basename($locale_path);
+          if (!preg_match('/^[a-z]{2}_[A-Z]{2}$/', $lang_code)) {
+            continue;
+          }
 
-        $lang_name = $language_names[$lang_code][0] ?? str_replace('_', '-', $lang_code);
-        $native_name = $language_names[$lang_code][1] ?? '';
-        $languages[] = [$lang_code, $lang_name, $native_name];
+          $lang_name = $language_names[$lang_code][0] ?? str_replace('_', '-', $lang_code);
+          $native_name = $language_names[$lang_code][1] ?? '';
+          $languages[] = [$lang_code, $lang_name, $native_name];
+        }
       }
     }
 

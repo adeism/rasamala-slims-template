@@ -68,7 +68,7 @@ body.rasamala-dark .visitor-input {
 }
 
 .btn-visitor-checkin {
-  border-radius: 12px !important;
+  border-radius: var(--rasamala-radius-button) !important;
   font-weight: 700 !important;
   padding: 14px !important;
   font-size: 16px !important;

@@ -119,24 +119,94 @@ const renderAsyncMessage = function (h, type, message) {
 const renderSkeleton = function (h, type, count) {
     const items = [];
     for (let i = 0; i < count; i++) {
-        items.push(h('div', {
-            key: `skeleton-${type}-${i}`,
-            class: `theme-skeleton-item theme-skeleton-item-${type}`
-        }, [
-            h('span', {
-                class: 'theme-skeleton-block'
-            })
-        ]));
+        if (type === 'collection') {
+            items.push(h('div', {
+                key: `skeleton-col-${i}`,
+                class: 'col-6 col-sm-4 col-md-3 col-lg-2 pb-4'
+            }, [
+                h('div', {
+                    class: 'card border-0 shadow-sm h-full theme-skeleton-card theme-skeleton-book-card'
+                }, [
+                    h('div', {
+                        class: 'card-body p-2'
+                    }, [
+                        h('div', {
+                            class: 'card-image fit-height theme-skeleton-cover-box'
+                        }, [
+                            h('div', { class: 'theme-skeleton-block theme-skeleton-cover' })
+                        ]),
+                        h('div', {
+                            class: 'card-text mt-2'
+                        }, [
+                            h('div', { class: 'theme-skeleton-block theme-skeleton-line theme-skeleton-line-title mb-1' }),
+                            h('div', { class: 'theme-skeleton-block theme-skeleton-line theme-skeleton-line-sub' })
+                        ])
+                    ])
+                ])
+            ]));
+        } else if (type === 'member') {
+            items.push(h('div', {
+                key: `skeleton-mem-${i}`,
+                class: 'col-12 col-md-4 mb-4'
+            }, [
+                h('div', {
+                    class: 'card member-card theme-skeleton-card theme-skeleton-member-card'
+                }, [
+                    h('div', {
+                        class: 'card-body text-center p-4'
+                    }, [
+                        h('div', {
+                            class: 'card-image-rounded mx-auto theme-skeleton-avatar-box'
+                        }, [
+                            h('div', { class: 'theme-skeleton-block theme-skeleton-avatar rounded-circle' })
+                        ]),
+                        h('div', {
+                            class: 'mt-3 text-center d-flex flex-column align-items-center gap-2'
+                        }, [
+                            h('div', { class: 'theme-skeleton-block theme-skeleton-line theme-skeleton-line-name mx-auto' }),
+                            h('div', { class: 'theme-skeleton-block theme-skeleton-line theme-skeleton-line-sub mx-auto mt-1' })
+                        ]),
+                        h('div', {
+                            class: 'mt-3 d-flex justify-content-center gap-3'
+                        }, [
+                            h('div', { class: 'theme-skeleton-block theme-skeleton-line theme-skeleton-line-stat' }),
+                            h('div', { class: 'theme-skeleton-block theme-skeleton-line theme-skeleton-line-stat' })
+                        ])
+                    ])
+                ])
+            ]));
+        } else if (type === 'subject') {
+            items.push(h('div', {
+                key: `skeleton-sub-${i}`,
+                class: 'theme-skeleton-badge mr-2 mb-2'
+            }, [
+                h('div', { class: 'theme-skeleton-block theme-skeleton-badge-pill' })
+            ]));
+        } else {
+            items.push(h('div', {
+                key: `skeleton-${type}-${i}`,
+                class: `theme-skeleton-item theme-skeleton-item-${type}`
+            }, [
+                h('div', { class: 'theme-skeleton-block' })
+            ]));
+        }
+    }
+
+    let wrapperClass = `theme-skeleton-list theme-skeleton-list-${type}`;
+    if (type === 'collection') {
+        wrapperClass = 'row mt-4 collection justify-content-center theme-skeleton-list theme-skeleton-list-collection';
+    } else if (type === 'member') {
+        wrapperClass = 'row justify-content-center theme-skeleton-list theme-skeleton-list-member';
+    } else if (type === 'subject') {
+        wrapperClass = 'd-flex flex-row flex-wrap justify-content-center mb-3 rasamala-group-subject theme-skeleton-list theme-skeleton-list-subject';
     }
 
     return h('div', {
-        class: `theme-skeleton-list theme-skeleton-list-${type}`,
+        class: wrapperClass,
         role: 'status',
         'aria-live': 'polite'
     }, [
-        h('span', {
-            class: 'sr-only'
-        }, 'Loading...'),
+        h('span', { class: 'sr-only' }, 'Loading...'),
         ...items
     ]);
 };
@@ -775,4 +845,60 @@ if (document.getElementById('slims-home')) {
     slimsHomeApp.component('slims-group-subject', SlimsGroupSubject);
     slimsHomeApp.component('slims-group-member', SlimsGroupMember);
     slimsHomeApp.mount('#slims-home');
+}
+
+// Global Keyboard Shortcut (Ctrl+K / Cmd+K) for Search
+(function () {
+    const isMac = typeof navigator !== 'undefined' && /mac/i.test(navigator.platform || navigator.userAgent || '');
+    
+    document.addEventListener('DOMContentLoaded', function () {
+        const kbdModifier = document.getElementById('search-kbd-modifier');
+        if (kbdModifier) {
+            kbdModifier.textContent = isMac ? '⌘' : 'Ctrl';
+        }
+    });
+
+    document.addEventListener('keydown', function (e) {
+        const isKbdShortcut = (e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K');
+        if (isKbdShortcut) {
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                e.preventDefault();
+
+                if (document.activeElement === searchInput) {
+                    searchInput.select();
+                    return;
+                }
+
+                const searchWrapper = document.getElementById('search-wraper') || document.getElementById('search-form');
+                if (searchWrapper) {
+                    const rect = searchWrapper.getBoundingClientRect();
+                    const isVisible = rect.top >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight);
+                    if (!isVisible) {
+                        searchWrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+
+                searchInput.focus();
+                if (searchInput.value) {
+                    searchInput.select();
+                }
+            }
+        }
+
+        if (e.key === 'Escape') {
+            const searchInput = document.getElementById('search-input');
+            if (searchInput && document.activeElement === searchInput) {
+                searchInput.blur();
+            }
+        }
+    });
+})();
+
+// PWA Service Worker Registration
+if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
+    window.addEventListener('load', function () {
+        const swPath = 'template/rasamala/assets/js/sw.js';
+        navigator.serviceWorker.register(swPath).catch(function () {});
+    });
 }

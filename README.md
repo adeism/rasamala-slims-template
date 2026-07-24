@@ -60,6 +60,8 @@ Ingin meningkatkan keterikatan (*user engagement*) pemustaka dengan perpustakaan
   - [11. 💬 Floating Action & WhatsApp Service Widget](#11--floating-action--whatsapp-service-widget)
   - [12. 📊 Search Result, Detail Buku & Sitasi](#12--search-result-detail-buku--sitasi)
 - [🪪 Fitur Kartu Anggota Digital (Member Area)](#-fitur-kartu-anggota-digital-member-area)
+- [📱 Progressive Web App (PWA) & Dukungan Mobile Native](#-progressive-web-app-pwa--dukungan-mobile-native)
+- [⚡ Sistem Loading & Interaktivitas UI](#-sistem-loading--interaktivitas-ui)
 - [🧺 Keranjang Buku (Shopping Basket) & AJAX Real-Time](#-keranjang-buku-shopping-basket--ajax-real-time)
 - [🤖 Panduan Pembuat Custom Palette Berbasis AI](#-panduan-pembuat-custom-palette-berbasis-ai)
 - [📁 Arsitektur Direktori & Struktur File](#-arsitektur-direktori--struktur-file)
@@ -72,9 +74,14 @@ Ingin meningkatkan keterikatan (*user engagement*) pemustaka dengan perpustakaan
 ## ⚡ Sorotan Utama
 
 - 🎨 **Kustomisasi Visual Lengkap via Tinfo:** Seluruh komponen tampilan dapat dikonfigurasi melalui panel admin tanpa perlu mengubah kode sumber.
-- 📱 **Mobile-First Experience:** Dilengkapi *Mobile Bottom Navigation Bar 5-tombol*, sheet menu *"Lainnya"*, serta modal Filter & Sort bergaya aplikasi modern (Tokopedia/Shopee).
+- 📱 **Mobile-First & Progressive Web App (PWA):** Dilengkapi *Mobile Bottom Nav 5-tombol*, PWA `manifest.json.php`, `sw.js` (Service Worker) caching aset statis, mode *standalone fullscreen*, dan dukungan `apple-touch-icon`.
+- 🔍 **Full-Width Responsive Search Results & Sticky Action Bar:** Layout hasil pencarian 100% *full-width* responsif dengan *Floating Sticky Toolbar* (Filter, Sort, View Mode) yang tetap melayang di atas layar saat digulir (*sticky on scroll*), serta banner ringkasan hasil pencarian terpisah di atasnya.
+- ⚡ **Navigation Progress Bar & Search Loading Overlay:** Top progress bar NProgress-style di bagian atas layar + *backdrop blur overlay & spinner* pada container hasil pencarian saat navigasi halaman/pagination.
+- 💀 **Realistic Skeleton Loading System:** Skeleton loading presisi sesuai grid komponen (sampul buku 1:1.35, avatar anggota, pill topik) dengan animasi shimmer serta dukungan penuh Dark Mode.
+- ⌨️ **Global Keyboard Shortcut (`Ctrl+K` / `⌘K`):** Pintasan keyboard instan untuk memfokuskan pencarian, dilengkapi badge visual `<kbd>` interaktif yang mendeteksi OS pengguna (`⌘K` di Mac, `Ctrl K` di Windows/Linux).
 - 🪪 **Kartu Anggota Digital Cerdas:** Mendukung format QR Code & Barcode, generator inisial nama jika foto tidak ada, serta indikator visual **border merah melingkar** otomatis untuk status expired/non-aktif.
 - 🧺 **Permanent Shopping Basket:** Tombol keranjang buku (`fas fa-shopping-basket`) selalu tampil di navbar atas & posisi tengah navigasi mobile, lengkap dengan *badge counter AJAX real-time*.
+- 🖼️ **Smart Cover Verification & SLiMS Storage API:** Verifikasi gambar sampul buku fisik via `\SLiMS\Filesystems\Storage::images()` & root path SLiMS sehingga gambar asli selalu tampil akurat tanpa tertimpa generator placeholder.
 - 🕌 **Widget Waktu Sholat Indonesia:** Menampilkan waktu sholat berikutnya di footer serta *floating reminder countdown* menjelang azan untuk kota-kota di Indonesia.
 - 🤖 **Interactive Theme Viewer & AI Palette Generator:** Pengunjung dapat melakukan preview palette, font, animasi, dan partikel cursor via floating menu OPAC, lengkap dengan generator prompt AI.
 - 🏛️ **Visitor Log Kiosk / Split Mode:** Buku tamu mendukung format institusi `kode(label)`, opsi ketik manual (`other`), serta kartu petunjuk HTML yang disanitasi.
@@ -264,6 +271,25 @@ Akses melalui halaman `index.php?p=member&sec=my_card`:
   box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.4), 0 4px 10px rgba(220, 53, 69, 0.25) !important;
 }
 ```
+
+---
+
+## 📱 Progressive Web App (PWA) & Dukungan Mobile Native
+
+Templat Rasamala dilengkapi integrasi **PWA (Progressive Web App)** penuh:
+
+1. 📲 **Instalasi Aplikasi Tanpa App Store:** Pemustaka dapat menginstal OPAC langsung dari Chrome / Safari ke *Home Screen* perangkat mobile mereka sebagai aplikasi berdiri sendiri (*Standalone App*).
+2. ⚙️ **Service Worker (`assets/js/sw.js`):** Menggunakan strategi *Network-First* untuk halaman pencarian/buku dan *Cache-First* untuk seluruh aset statis (CSS, JS, Font Google lokal, FontAwesome).
+3. 🎨 **Web App Manifest Dinamis (`assets/manifest.json.php`):** Otomatis menyinkronkan nama perpustakaan (`$sysconf['library_name']`), subnama, warna tema, serta ikon favicon bawaan SLiMS (`$sysconf['webicon']`).
+
+---
+
+## ⚡ Sistem Loading & Interaktivitas UI
+
+1. 💀 **Realistic Skeleton Loading:** Menampilkan indikator memuat presisi tinggi sesuai dimensi komponen asli (buku rasio 1:1.35, avatar anggota 90px, pill topik) dengan efek *shimmering* serta dukungan Dark Mode.
+2. 🚀 **Top Navigation Progress Bar (`#rasamala-page-progress-bar`):** Indikator progres NProgress-style di bagian paling atas layar saat navigasi link, pagination, filter, atau pencarian.
+3. ⏳ **Search Result Loading Overlay:** Efek *backdrop blur* dan spinner melingkar pada container hasil pencarian saat berpindah halaman (pagination), disertai *smooth scroll* otomatis ke toolbar hasil.
+4. ⌨️ **Pintasan Keyboard Global (`Ctrl+K` / `⌘K`):** Menekan `Ctrl+K` atau `Cmd+K` akan memfokuskan kursor pada kotak pencarian utama secara instan. Dilengkapi badge visual `<kbd>` yang mendeteksi OS pengguna.
 
 ---
 

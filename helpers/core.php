@@ -6,6 +6,8 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
 }
 
+require_once __DIR__ . '/language.php';
+
 if (!defined('CURRENT_TEMPLATE_DIR')) {
   global $sysconf;
   $tpl_dir = $sysconf['template']['dir'] ?? 'template';

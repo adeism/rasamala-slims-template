@@ -9,16 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const reducedMotionMedia = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
     const prefersReducedMotion = () => reducedMotionMedia && reducedMotionMedia.matches;
 
-    // Global cursor spotlight tracking
-    window.addEventListener('mousemove', (e) => {
-        if (prefersReducedMotion()) return;
-        const layer = query('#background-animation-layer') || query('#hero-animation-layer');
-        if (layer) {
-            layer.style.setProperty('--mouse-x', `${e.clientX}px`);
-            layer.style.setProperty('--mouse-y', `${e.clientY}px`);
-        }
-    }, { passive: true });
-
     const initializeHeroAnimation = () => {
         const layer = query('#background-animation-layer') || query('#hero-animation-layer');
 
@@ -117,27 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const started = startCanvasStage(() => {
                 let nodes = [];
                 const maxDistance = liteMode ? 108 : 136;
-                const mouse = { x: null, y: null, max: 180 };
-                
-                const mouseMove = (e) => {
-                    mouse.x = e.clientX;
-                    mouse.y = e.clientY;
-                };
-                
-                const mouseLeave = () => {
-                    mouse.x = null;
-                    mouse.y = null;
-                };
-                
-                window.addEventListener('mousemove', mouseMove, { passive: true });
-                window.addEventListener('mouseleave', mouseLeave, { passive: true });
-                
-                const parentCleanup = layer._rasamalaAnimationCleanup;
-                layer._rasamalaAnimationCleanup = () => {
-                    if (typeof parentCleanup === 'function') parentCleanup();
-                    window.removeEventListener('mousemove', mouseMove);
-                    window.removeEventListener('mouseleave', mouseLeave);
-                };
 
                 const resize = (width, height) => {
                     const nodeCount = liteMode
@@ -191,20 +160,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                         }
 
-                        // Draw connections to mouse pointer for interactive glow lines
-                        if (mouse.x !== null && mouse.y !== null) {
-                            const mDist = Math.hypot(node.x - mouse.x, node.y - mouse.y);
-                            if (mDist < mouse.max) {
-                                const mRatio = 1 - mDist / mouse.max;
-                                context.beginPath();
-                                context.moveTo(node.x, node.y);
-                                context.lineTo(mouse.x, mouse.y);
-                                context.strokeStyle = accentAlpha(mRatio * 0.85);
-                                context.lineWidth = mRatio * 2.0 + 0.6;
-                                context.stroke();
-                            }
-                        }
-
                         // Draw nodes with smooth pulse effect
                         node.pulse += 0.04;
                         const pulseRadius = node.r + Math.sin(node.pulse) * 0.8;
@@ -223,28 +178,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (animation === 'starfield-warp') {
             const started = startCanvasStage(() => {
                 let stars = [];
-                let mouseX = null;
-                let mouseY = null;
-                
-                const mouseMove = (e) => {
-                    mouseX = e.clientX;
-                    mouseY = e.clientY;
-                };
-                
-                const mouseLeave = () => {
-                    mouseX = null;
-                    mouseY = null;
-                };
-                
-                window.addEventListener('mousemove', mouseMove, { passive: true });
-                window.addEventListener('mouseleave', mouseLeave, { passive: true });
-                
-                const parentCleanup = layer._rasamalaAnimationCleanup;
-                layer._rasamalaAnimationCleanup = () => {
-                    if (typeof parentCleanup === 'function') parentCleanup();
-                    window.removeEventListener('mousemove', mouseMove);
-                    window.removeEventListener('mouseleave', mouseLeave);
-                };
 
                 const resize = (width, height) => {
                     const count = liteMode ? 80 : 160;
@@ -262,10 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     const cx = width / 2;
                     const cy = height / 2;
-                    
-                    // Mouse Y controls speed throttle (no center shift = zero dizziness)
-                    const speedThrottle = mouseY !== null ? 0.35 + (mouseY / height) * 2.3 : 1.2;
-                    const speed = (speedThrottle * 2.0) / speedMult;
+                    const speed = 2.4 / speedMult;
 
                     for (let i = 0; i < stars.length; i += 1) {
                         const star = stars[i];
@@ -291,20 +221,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         context.arc(px, py, size, 0, Math.PI * 2);
                         context.fillStyle = accentColor;
                         context.fill();
-
-                        // Glowing link line when a star flies close to mouse coordinates
-                        if (mouseX !== null && mouseY !== null) {
-                            const dist = Math.hypot(px - mouseX, py - mouseY);
-                            if (dist < 140) {
-                                const ratio = 1 - dist / 140;
-                                context.beginPath();
-                                context.moveTo(px, py);
-                                context.lineTo(mouseX, mouseY);
-                                context.strokeStyle = accentAlpha(ratio * 0.45);
-                                context.lineWidth = ratio * 1.1;
-                                context.stroke();
-                            }
-                        }
                     }
                 };
 
@@ -317,34 +233,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const started = startCanvasStage(() => {
                 let ripples = [];
                 const maxRadius = liteMode ? 180 : 260;
-                let lastMouseX = null;
-                let lastMouseY = null;
-                let rippleIndex = 0;
-                
-                const mouseMove = (e) => {
-                    const mx = e.clientX;
-                    const my = e.clientY;
-                    if (lastMouseX === null || Math.hypot(mx - lastMouseX, my - lastMouseY) > 35) {
-                        if (ripples.length > 0) {
-                            const ripple = ripples[rippleIndex];
-                            ripple.x = mx;
-                            ripple.y = my;
-                            ripple.r = 0;
-                            ripple.alpha = 1;
-                            rippleIndex = (rippleIndex + 1) % ripples.length;
-                        }
-                        lastMouseX = mx;
-                        lastMouseY = my;
-                    }
-                };
-                
-                window.addEventListener('mousemove', mouseMove, { passive: true });
-                
-                const parentCleanup = layer._rasamalaAnimationCleanup;
-                layer._rasamalaAnimationCleanup = () => {
-                    if (typeof parentCleanup === 'function') parentCleanup();
-                    window.removeEventListener('mousemove', mouseMove);
-                };
 
                 const resize = (width, height) => {
                     ripples = Array.from({length: liteMode ? 5 : 8}, (_, index) => ({

@@ -445,3 +445,85 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     simplifyPagination();
 });
+
+// Top Page Progress Bar Manager
+(function () {
+    const RasamalaProgressBar = {
+        bar: null,
+        timer: null,
+        progress: 0,
+        init() {
+            if (this.bar) return;
+            const el = document.createElement('div');
+            el.id = 'rasamala-page-progress-bar';
+            el.className = 'rasamala-page-progress-bar';
+            el.setAttribute('role', 'progressbar');
+            el.setAttribute('aria-hidden', 'true');
+            document.body.appendChild(el);
+            this.bar = el;
+        },
+        start() {
+            this.init();
+            if (!this.bar) return;
+            clearTimeout(this.timer);
+            this.progress = 15;
+            this.bar.style.width = '15%';
+            this.bar.classList.add('active');
+
+            const trickle = () => {
+                if (this.progress < 88) {
+                    this.progress += Math.floor(Math.random() * 8) + 3;
+                    this.bar.style.width = Math.min(this.progress, 88) + '%';
+                    this.timer = setTimeout(trickle, 200);
+                }
+            };
+            this.timer = setTimeout(trickle, 120);
+        },
+        done() {
+            if (!this.bar) return;
+            clearTimeout(this.timer);
+            this.bar.style.width = '100%';
+            this.timer = setTimeout(() => {
+                this.bar.classList.remove('active');
+                setTimeout(() => {
+                    this.bar.style.width = '0%';
+                }, 300);
+            }, 200);
+        }
+    };
+
+    window.RasamalaProgressBar = RasamalaProgressBar;
+
+    document.addEventListener('click', (event) => {
+        const link = event.target && event.target.closest ? event.target.closest('a') : null;
+        if (!link) return;
+
+        const href = link.getAttribute('href');
+        const target = link.getAttribute('target');
+        const hasModal = link.hasAttribute('data-bs-toggle') || link.hasAttribute('data-toggle');
+
+        if (!href || href === '#' || href.startsWith('javascript:') || href.startsWith('mailto:') || href.startsWith('tel:') || target === '_blank' || hasModal) {
+            return;
+        }
+
+        RasamalaProgressBar.start();
+
+        const isPaging = link.closest('.pagingList') || link.closest('.pagination') || link.classList.contains('page-link');
+        const isBiblioLink = link.closest('.biblioResult') || link.closest('.biblio-item') || link.classList.contains('biblio-title-link');
+
+        if (isPaging || isBiblioLink) {
+            const wrapper = document.querySelector('.result-search .wrapper');
+            if (wrapper) {
+                wrapper.classList.add('is-loading');
+                const toolbar = document.querySelector('.search-result-toolbar') || document.querySelector('.result-search');
+                if (toolbar) {
+                    toolbar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+        }
+    });
+
+    window.addEventListener('beforeunload', () => {
+        RasamalaProgressBar.start();
+    });
+})();

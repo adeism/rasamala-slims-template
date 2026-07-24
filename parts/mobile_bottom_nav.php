@@ -105,7 +105,7 @@ if ($current_p === 'member' && $is_logged_in_member) {
     $primary_bottom_nav = [
         [
             'key' => 'home_back',
-            'text' => __('Beranda'),
+            'text' => __('Home'),
             'url' => 'index.php',
             'icon' => 'fas fa-home'
         ],
@@ -162,19 +162,21 @@ if ($current_p === 'member' && $is_logged_in_member) {
         ]
     ];
 } else {
-    // OPAC / Visitor View
-    // Primary bottom keys: 1. home, 2. news, 3. basket (Center replacing member area), 4. help
-    $primary_keys = ['home', 'news', 'basket', 'help'];
+    // OPAC / Visitor View (Logged out)
+    // Primary bottom keys: 1. home, 2. news, 3. member (Area Anggota), 4. help
+    $primary_keys = ['home', 'news', 'member', 'help'];
 
     foreach ($primary_keys as $pkey) {
         if ($pkey === 'basket') {
-            $primary_bottom_nav[] = [
-                'key' => 'basket',
-                'text' => __('Basket'),
-                'url' => 'index.php?p=member&sec=title_basket',
-                'icon' => 'fas fa-shopping-basket',
-                'badge' => $basket_count
-            ];
+            if ($is_logged_in_member) {
+                $primary_bottom_nav[] = [
+                    'key' => 'basket',
+                    'text' => __('Basket'),
+                    'url' => 'index.php?p=member&sec=title_basket',
+                    'icon' => 'fas fa-shopping-basket',
+                    'badge' => $basket_count
+                ];
+            }
         } else {
             $found = false;
             foreach ($bottom_items as $item) {
@@ -186,9 +188,11 @@ if ($current_p === 'member' && $is_logged_in_member) {
             }
             if (!$found) {
                 if ($pkey === 'home') {
-                    $primary_bottom_nav[] = ['key' => 'home', 'text' => __('Beranda'), 'url' => 'index.php', 'icon' => 'fas fa-home'];
+                    $primary_bottom_nav[] = ['key' => 'home', 'text' => __('Home'), 'url' => 'index.php', 'icon' => 'fas fa-home'];
                 } elseif ($pkey === 'news') {
                     $primary_bottom_nav[] = ['key' => 'news', 'text' => __('News'), 'url' => 'index.php?p=news', 'icon' => 'fas fa-newspaper'];
+                } elseif ($pkey === 'member') {
+                    $primary_bottom_nav[] = ['key' => 'member', 'text' => __('Member Area'), 'url' => 'index.php?p=member', 'icon' => 'fas fa-user'];
                 } elseif ($pkey === 'help') {
                     $primary_bottom_nav[] = ['key' => 'help', 'text' => __('Help'), 'url' => 'index.php?p=help', 'icon' => 'fas fa-question-circle'];
                 }
@@ -204,10 +208,13 @@ if ($current_p === 'member' && $is_logged_in_member) {
         'icon' => 'fas fa-ellipsis-h'
     ];
 
-    // Put remaining menu items in the sheet bottom nav (including 'member' if not in primary_keys)
+    // Put remaining menu items in the sheet bottom nav
     $primary_keys_set = array_flip($primary_keys);
     foreach ($bottom_items as $item) {
         if (!isset($primary_keys_set[$item['key']])) {
+            if ($item['key'] === 'basket' && !$is_logged_in_member) {
+                continue;
+            }
             $sheet_bottom_nav[] = $item;
         }
     }

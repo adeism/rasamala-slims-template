@@ -55,7 +55,7 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
     $title_search_html = themeParallelTitleHtml($title, 'search');
     $title_grid_html = themeParallelTitleHtml($title, 'grid');
     $title_attr = themeEscape(str_replace('{title}', substr(strip_tags($title), 0, 50), __('Citation for: {title}')));
-    $current_view = $_POST['view'] ?? $_SESSION['LIST_VIEW'] ?? 'simple';
+    $current_view = $_POST['view'] ?? $_GET['view'] ?? $_SESSION['LIST_VIEW'] ?? 'simple';
     if (!in_array($current_view, ['simple', 'list', 'grid'], true)) {
         $current_view = 'simple';
     }
@@ -268,6 +268,10 @@ function getNotes($dbs, $biblio_id)
     $query = $dbs->query('SELECT notes FROM biblio WHERE biblio_id = ' . $biblio_id);
     $data = $query->fetch_row();
     $notes_text = $data[0] ?? '';
+
+    if (function_exists('themeNormalizeStoredTextEscapes')) {
+        $notes_text = themeNormalizeStoredTextEscapes($notes_text);
+    }
     
     // Remove literal string representations of newlines
     $notes_text = str_replace(['\r\n', '\r', '\n', "\\r\\n", "\\r", "\\n"], ' ', $notes_text);
