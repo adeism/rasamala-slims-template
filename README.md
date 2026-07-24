@@ -330,61 +330,129 @@ Konsep visual yang diminta: [misal: Emerald Forest, Deep Sapphire, Warm Parchmen
 
 ## 📁 Arsitektur Direktori & Struktur File
 
-Repositori templat Rasamala disusun dengan arsitektur yang sangat terstruktur dan mudah dirawat:
+Repositori templat Rasamala disusun dengan arsitektur yang sangat terstruktur, modular, dan mudah dirawat:
 
 ```text
 template/rasamala/
 ├── index_template.inc.php        # 🏁 Entry point utama OPAC publik SLiMS
 ├── tinfo.inc.php                  # 🟢 Single entry point pengelola admin Tinfo
-├── theme_helpers.php             # 🔗 Loader wrapper untuk folder helpers/
-├── classic.php                    # 🔄 Compatibility layer & loader fungsi core
+├── theme_helpers.php             # 🔗 Loader wrapper utama untuk folder helpers/
+├── classic.php                    # 🔄 Compatibility layer & loader fungsi core SLiMS
 ├── biblio_list_template.php     # 📚 Templat daftar katalog (Simple, List, Grid)
 ├── detail_template.php          # 📖 Templat halaman detail bibliografi
 ├── news_template.php            # 📰 Templat berita & pengumuman
 ├── visitor_template.php         # 🏛️ Templat kiosk & split layout buku tamu
 ├── login_template.inc.php       # 🔐 Templat login pustakawan & anggota
-├── preview.png                  # 🖼️ Gambar thumbnail templat SLiMS
-├── .gitignore                   # 🙈 Git ignore rule (mengecualikan /docs/)
+├── custom_frontpage_record.inc.php # 🖼️ Custom frontpage records handler
+├── preview.png                  # 🖼️ Gambar thumbnail preview templat SLiMS
 │
-├── helpers/                       # 📂 SINGLE SOURCE OF TRUTH (Modular PHP Logic)
+├── helpers/                       # 📂 MODULAR PHP LOGIC & OPTIMIZED HELPERS
 │   ├── core.php                 # Library fungsi dasar & resolusi aset
 │   ├── security.php             # Sanitizer HTMLPurifier, XSS escape & CSP
 │   ├── palette.php              # Formula kontras & kalkulasi warna HSL/Hex
 │   ├── preset.php               # Resolver preset tema & skema warna
 │   ├── navigation.php           # Parser menu navbar, topik & breadcrumbs
 │   ├── visitor.php              # Parser institusi & logika buku tamu
-│   ├── ui.php                   # Generator sampul buku, avatar & header context
+│   ├── ui.php                   # Entry point helper UI & generator avatar/cover
+│   ├── detail.php               # Parser ketersediaan eksemplar & detail katalog
+│   ├── member.php               # Logika kartu digital & profil keanggotaan
+│   ├── language.php             # Translation dictionary & helper lokalisasi
 │   ├── tinfo_defaults.php       # Definisi default opsi Tinfo admin
 │   ├── tinfo_options.php        # Form builder Tinfo admin (~50 KB)
 │   ├── tinfo_options_helper.php # Helper opsi ikon & bahasa Tinfo
-│   └── tinfo_customizer.php     # Asset customizer JS & CSS Tinfo
+│   ├── tinfo_customizer.php     # Asset customizer JS & CSS loader Tinfo
+│   │
+│   ├── options/                 # 📂 Modular Tinfo Option Builders
+│   │   ├── tinfo_option_general.php
+│   │   ├── tinfo_option_navbar.php
+│   │   ├── tinfo_option_hero.php
+│   │   ├── tinfo_option_display.php
+│   │   ├── tinfo_option_content.php
+│   │   ├── tinfo_option_footer.php
+│   │   ├── tinfo_option_visitor.php
+│   │   └── tinfo_option_customizer_loader.php
+│   │
+│   ├── presets/                 # 📂 Modular Preset Definitions & Resolvers
+│   │   ├── preset_definitions.php
+│   │   ├── preset_resolvers.php
+│   │   └── preset_display.php
+│   │
+│   └── ui/                      # 📂 Modular UI Component Generators
+│       ├── ui_header.php        # Meta head, favicon, & library logo html
+│       ├── ui_content.php       # Content helper & section generators
+│       ├── ui_text.php          # Text truncator & badge generators
+│       ├── ui_cover.php         # Smart cover verifier & auto-generator
+│       └── ui_librarian.php     # Librarian avatar & staff badge generator
 │
-├── parts/                         # 📂 UI Partials OPAC (Modul Tampilan Ringkas)
+├── parts/                         # 📂 UI PARTIALS OPAC (Modul Tampilan Ringkas)
 │   ├── header.php               # HTML Header & tag meta
 │   ├── footer.php               # HTML Footer & tautan bawah
 │   ├── modals.php               # Konsolidasi dialog modal (Topic, Social, Adv)
 │   ├── _navbar.php              # Bilah navigasi atas desktop & mobile
 │   ├── _search-form.php         # Kotak pencarian utama
-│   ├── _result-search.php       # Layout hasil pencarian katalog
+│   ├── _result-search.php       # Layout hasil pencarian katalog & sticky toolbar
 │   ├── _home.php                # Komponen section beranda
 │   ├── _member.php              # Logika & kartu digital member area
+│   ├── _modal_topic.php         # Modal dialog daftar topik lengkap
+│   ├── _modal_social_media.php  # Modal dialog tautan sosial media
+│   ├── _modal_advanced.php      # Modal dialog pencarian spesifik / advanced
 │   ├── mobile_bottom_nav.php    # Bilah navigasi bawah ponsel 5-tombol
+│   ├── bottom_info_bar.php      # Running text bottom info bar
 │   ├── floating_actions.php     # Widget WhatsApp & tombol floating
 │   ├── chat_widget.php          # Panel obrolan / informasi
-│   ├── palette_switcher.php     # Floating Theme Viewer OPAC
-│   └── waktu_sholat.php         # Modul jadwal waktu sholat Indonesia
+│   ├── palette_switcher.php     # Floating Theme Viewer OPAC & AI Prompt
+│   ├── waktu_sholat.php         # Modul jadwal waktu sholat Indonesia
+│   │
+│   ├── detail/                  # 📂 Detail Page UI Partials
+│   │   ├── detail_fields.php    # Bidang detail bibliografi & sitasi
+│   │   └── detail_sidebar.php   # Sidebar ketersediaan & rekomendasi
+│   │
+│   ├── member/                  # 📂 Member Area UI Partials
+│   │   ├── digital_card.php     # Kartu digital anggota & QR/Barcode
+│   │   └── member_layout.php    # Dashboard & panel keanggotaan
+│   │
+│   └── visitor/                 # 📂 Visitor Log UI Partials
+│       ├── visitor_kiosk.php    # Form buku tamu mode Kiosk
+│       ├── visitor_split.php    # Form buku tamu mode Split Panel
+│       └── visitor_ticker.php   # Running text pengumuman pengunjung
 │
-├── citation/                      # 📂 Modul Sitasi Akademis
+├── citation/                      # 📂 Modul Sitasi Akademis (APA, Chicago, MLA, Turabian)
 │   ├── apa_style_template.php
 │   ├── chicago_style_template.php
 │   ├── mla_style_template.php
 │   └── turabian_style_template.php
 │
-├── assets/                        # 📂 Asset Produksi Lokal
-│   ├── css/                     # Modul Stylesheet CSS (Bootstrap, Theme, Dark, dll)
-│   ├── js/                      # Modul JavaScript (App, jQuery, Vue, ColorMode, dll)
+├── assets/                        # 📂 ASSET PRODUKSI LOKAL (OFFLINE READY)
+│   ├── css/                     # Modul Stylesheet CSS
+│   │   ├── foundation.css       # Token CSS, variabel tema, & gaya dasar
+│   │   ├── opac-pages.css       # Layout katalog, detail, member & modal
+│   │   ├── theme-components.css # Komponen UI, badge, & theme viewer
+│   │   ├── theme-dark.css       # Styling mode gelap (Dark Mode)
+│   │   ├── header-runtime.css   # Dynamic CSS generator runtime
+│   │   ├── visitor.css          # Styling buku tamu kiosk & split
+│   │   └── tinfo-customizer.css # Styling admin customizer Tinfo
+│   │
+│   ├── js/                      # Modul JavaScript
+│   │   ├── app.js               # Core app initialization & progress bar
+│   │   ├── app_jquery.js        # Core jQuery handlers & basket AJAX
+│   │   ├── result_search.js     # Filter, sorting, view mode, & AJAX
+│   │   ├── palette_switcher.js  # Theme Viewer, AI Prompt, & custom palette
+│   │   ├── theme_viewer.js      # Palette switcher preview engine
+│   │   ├── theme_drawer.js      # Offcanvas drawer navigation
+│   │   ├── tinfo-customizer.js  # Admin Tinfo customizer builder
+│   │   ├── color_mode.js        # Dark/Light mode toggle engine
+│   │   ├── cursor-particles.js  # Canvas cursor particle system
+│   │   ├── cursor-icons.js      # Custom neon cursor follower engine
+│   │   ├── hero_animation.js    # Canvas background animation engine
+│   │   ├── member_area.js       # Member dashboard & card engine
+│   │   ├── visitor_counter.js   # Kiosk & split visitor counter
+│   │   ├── sw.js                # Service Worker PWA offline caching
+│   │   └── bootstrap_compat.js  # Bootstrap 5 compatibility bridge
+│   │
 │   ├── fonts/                   # Font Google lokal (Inter, Roboto, Poppins, Playfair)
-│   └── flags/                   # Ikon bendera bahasa SVG
+│   ├── flags/                   # Ikon bendera SVG
+│   ├── manifest.json.php        # PWA Web App Manifest dinamis
+│   └── site.webmanifest         # Static fallback web manifest
 │
 └── docs/                          # 📂 Laporan Audit & Dokumentasi Internal (Git Ignored)
 ```
