@@ -7546,3 +7546,45 @@ body.rasamala-theme:not(.rasamala-dark) .detail-avail-row {
     line-height: 1.2;
   }
 }
+
+/* Detail Page QR Code Card & Mobile Modal */
+.detail-qr-box {
+  background: color-mix(in srgb, var(--theme-surface) 96%, var(--theme-accent) 4%) !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 14%, transparent) !important;
+  border-radius: 16px !important;
+  padding: 16px !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.detail-qr-box:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06) !important;
+}
+
+.detail-qr-img-wrap svg,
+.detail-qr-modal-img svg {
+  width: 100% !important;
+  height: auto !important;
+  max-width: 140px !important;
+  display: block !important;
+  margin: 0 auto !important;
+  border-radius: 8px !important;
+}
+
+.detail-qr-btn-mobile {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  padding: 4px 12px !important;
+  border-radius: 999px !important;
+  background-color: color-mix(in srgb, var(--theme-accent) 10%, transparent) !important;
+  color: var(--rasamala-accent) !important;
+  border: 1px solid color-mix(in srgb, var(--theme-accent) 30%, transparent) !important;
+  transition: background-color 0.2s ease, color 0.2s ease !important;
+}
+
+.detail-qr-btn-mobile:hover,
+.detail-qr-btn-mobile:focus {
+  background-color: var(--rasamala-accent) !important;
+  color: var(--theme-on-primary) !important;
+  border-color: var(--rasamala-accent) !important;
+}

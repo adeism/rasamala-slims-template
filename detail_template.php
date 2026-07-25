@@ -32,6 +32,27 @@ if (themeDetailHasValue($subjects ?? '')) {
     $subject_parts = array_filter(preg_split('/\s*<br\s*\/?>\s*/i', (string) $subjects), 'themeDetailHasValue');
     $subjects_inline_html = implode(' <span class="detail-subject-separator">; </span> ', $subject_parts);
 }
+
+// Generate QR Code for Current Detail Page URL
+$detail_share_url = SWB . 'index.php?p=show_detail&id=' . $biblio_id_safe;
+$qrcode_svg = '';
+if (class_exists('BaconQrCode\Writer')) {
+    try {
+        $renderer = new BaconQrCode\Renderer\ImageRenderer(
+            new BaconQrCode\Renderer\RendererStyle\RendererStyle(160, 1),
+            new BaconQrCode\Renderer\Image\SvgImageBackEnd()
+        );
+        $writer = new BaconQrCode\Writer($renderer);
+        $qrcode_svg = $writer->writeString($detail_share_url);
+        $qrcode_svg = preg_replace('/<\?xml[^>]*\?>/', '', $qrcode_svg);
+    } catch (Exception $e) {
+        $qrcode_svg = '';
+    }
+}
+if (empty($qrcode_svg)) {
+    $qr_api_url = 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=' . rawurlencode($detail_share_url);
+    $qrcode_svg = '<img src="' . themeEscape($qr_api_url) . '" alt="QR Code" class="img-fluid rounded" style="max-width: 140px; height: auto;">';
+}
 ?>
 
 <div class="detail-record">
@@ -39,6 +60,24 @@ if (themeDetailHasValue($subjects ?? '')) {
         <?php include __DIR__ . '/parts/detail/detail_sidebar.php'; ?>
         <?php include __DIR__ . '/parts/detail/detail_fields.php'; ?>
     </div>
+</div>
+
+<!-- Mobile QR Code Pop-up Modal -->
+<div class="modal fade" id="detailQrModal" tabindex="-1" aria-labelledby="detailQrModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content rounded-4 border-0 text-center p-3">
+      <div class="modal-header border-0 pb-0 justify-content-between">
+        <h6 class="modal-title fw-bold" id="detailQrModalLabel"><i class="fas fa-qrcode text-primary me-2"></i>QR Code Link</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body py-4">
+        <div class="detail-qr-modal-img mx-auto mb-3" style="max-width: 180px;">
+          <?= $qrcode_svg; ?>
+        </div>
+        <p class="small text-muted mb-0 fw-bold"><?= themeEscape(strip_tags($title ?? '')); ?></p>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
