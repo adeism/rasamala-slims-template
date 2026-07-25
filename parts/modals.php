@@ -10,84 +10,84 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
 
 <!-- Advanced Search Modal -->
 <div class="modal fade" id="adv-modal" tabindex="-1" aria-labelledby="advancedSearchModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <form class="modal-content" action="index.php" method="get">
-            <div class="modal-header">
-                <h2 class="modal-title" id="advancedSearchModalLabel"><?=__('Advanced Search'); ?></h2>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <form class="modal-content border-0 rounded-4 shadow-lg" action="index.php" method="get">
+            <div class="modal-header border-0 pb-0 px-4 pt-4 justify-content-between align-items-center">
+                <h5 class="modal-title fw-bold text-dark d-flex align-items-center" id="advancedSearchModalLabel">
+                    <i class="fas fa-sliders-h text-primary me-2" aria-hidden="true"></i><?= __('Advanced Search'); ?>
+                </h5>
+                <button type="button" class="close btn-close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close" style="font-size: 1.5rem; line-height: 1; background: none; border: 0; outline: none; opacity: 0.7;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="modal-body">
-                <div class="row g-2">
+            <div class="modal-body p-4">
+                <div class="row g-3">
                     <div class="col-12 col-md-6">
-                        <div class="mb-2">
-                            <label for="adv-titles" class="visually-hidden"><?=__('Title'); ?></label>
+                        <div class="form-group mb-0">
+                            <label for="adv-titles" class="form-label text-muted small fw-bold mb-1"><?= __('Title'); ?></label>
                             <input type="text" name="title" class="form-control" id="adv-titles"
-                                   aria-label="<?=__('Title'); ?>"
-                                   placeholder="<?=__('Title'); ?>">
+                                   aria-label="<?= __('Title'); ?>"
+                                   placeholder="<?= __('Title'); ?>">
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
-                        <div class="mb-2">
-                            <label for="adv-author" class="visually-hidden"><?=__('Author(s)');?></label>
+                        <div class="form-group mb-0">
+                            <label for="adv-author" class="form-label text-muted small fw-bold mb-1"><?= __('Author(s)'); ?></label>
                             <input type="text" name="author" class="form-control" id="adv-author"
-                                   aria-label="<?=__('Author(s)');?>"
-                                   placeholder="<?=__('Author(s)'); ?>">
+                                   aria-label="<?= __('Author(s)'); ?>"
+                                   placeholder="<?= __('Author(s)'); ?>">
                         </div>
                     </div>
-                </div>
-                <div class="row g-2">
                     <div class="col-12 col-md-6">
-                        <div class="mb-2">
-                            <label for="adv-subject" class="visually-hidden"><?=__('Subject(s)');?></label>
+                        <div class="form-group mb-0">
+                            <label for="adv-subject" class="form-label text-muted small fw-bold mb-1"><?= __('Subject(s)'); ?></label>
                             <input type="text" name="subject" class="form-control" id="adv-subject"
-                                   aria-label="<?=__('Subject(s)');?>"
-                                   placeholder="<?=__('Subject(s)'); ?>">
+                                   aria-label="<?= __('Subject(s)'); ?>"
+                                   placeholder="<?= __('Subject(s)'); ?>">
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
-                        <div class="mb-2">
-                            <label for="adv-isbn" class="visually-hidden"><?=__('ISBN/ISSN');?></label>
+                        <div class="form-group mb-0">
+                            <label for="adv-isbn" class="form-label text-muted small fw-bold mb-1"><?= __('ISBN/ISSN'); ?></label>
                             <input type="text" name="isbn" class="form-control" id="adv-isbn"
-                                   aria-label="<?=__('ISBN/ISSN');?>"
-                                   placeholder="<?=__('ISBN/ISSN'); ?>">
+                                   aria-label="<?= __('ISBN/ISSN'); ?>"
+                                   placeholder="<?= __('ISBN/ISSN'); ?>">
                         </div>
                     </div>
-                </div>
-                <div class="row g-2">
                     <div class="col-12 col-md-6">
-                        <div class="mb-2">
-                            <label for="adv-publishyear" class="visually-hidden"><?=__('Publish Year');?></label>
+                        <div class="form-group mb-0">
+                            <label for="adv-publishyear" class="form-label text-muted small fw-bold mb-1"><?= __('Publish Year'); ?></label>
                             <input type="text" name="publishyear" class="form-control" id="adv-publishyear"
-                                   aria-label="<?=__('Publish Year');?>"
-                                   placeholder="<?=__('Publish Year'); ?>">
+                                   aria-label="<?= __('Publish Year'); ?>"
+                                   placeholder="<?= __('Publish Year'); ?>">
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
-                        <div class="mb-2">
-                            <label for="adv-location" class="visually-hidden"><?=__('Location');?></label>
+                        <div class="form-group mb-0">
+                            <label for="adv-location" class="form-label text-muted small fw-bold mb-1"><?= __('Location'); ?></label>
                             <select id="adv-location" name="location"
-                                    class="form-select" aria-label="<?=__('Location');?>"> <?= commonList('location'); ?></select>
-                        </div>
-                    </div>
-                </div>
-                <div class="row g-2">
-                    <div class="col-12 col-md-6">
-                        <div class="mb-2 mb-md-0">
-                            <label for="adv-gmd" class="visually-hidden"><?=__('GMD');?></label>
-                            <select id="adv-gmd" name="gmd" class="form-select" aria-label="<?=__('GMD');?>"><?= commonList('gmd'); ?></select>
+                                    class="form-select" aria-label="<?= __('Location'); ?>"><?= commonList('location'); ?></select>
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
-                        <div class="mb-0">
-                            <label for="adv-coll-type" class="visually-hidden"><?=__('Collection Type');?></label>
+                        <div class="form-group mb-0">
+                            <label for="adv-gmd" class="form-label text-muted small fw-bold mb-1"><?= __('GMD / Media'); ?></label>
+                            <select id="adv-gmd" name="gmd" class="form-select" aria-label="<?= __('GMD / Media'); ?>"><?= commonList('gmd'); ?></select>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group mb-0">
+                            <label for="adv-coll-type" class="form-label text-muted small fw-bold mb-1"><?= __('Collection Type'); ?></label>
                             <select name="colltype" class="form-select"
-                                    id="adv-coll-type" aria-label="<?=__('Collection Type');?>"><?= commonList('collection'); ?></select>
+                                    id="adv-coll-type" aria-label="<?= __('Collection Type'); ?>"><?= commonList('collection'); ?></select>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="submit" name="search" value="search" class="btn btn-primary"><?=__('Find Collection');?></button>
+            <div class="modal-footer border-0 px-4 pb-4 pt-0 justify-content-end">
+                <button type="submit" name="search" value="search" class="btn btn-primary rounded-pill px-4 py-2 fw-bold d-inline-flex align-items-center">
+                    <i class="fas fa-search me-2" aria-hidden="true"></i><?= __('Find Collection'); ?>
+                </button>
             </div>
         </form>
     </div>
