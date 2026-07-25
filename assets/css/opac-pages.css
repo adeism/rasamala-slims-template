@@ -5987,6 +5987,9 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
 /* Clean & Transparent Action Buttons (Share, QR Code, & Bookmark across all pages) */
 .btn-theme-share,
 .btn-content-share,
+.btn-theme-action,
+.btn-theme-share,
+.btn-content-share,
 .btn-news-share,
 .detail-share-btn,
 .btn-theme-qr,
@@ -5994,7 +5997,9 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
 .btn-news-qr,
 .detail-qr-btn-mobile,
 .btn-theme-bookmark,
-.bookMarkBook.btn-theme-bookmark {
+.bookMarkBook.btn-theme-bookmark,
+.btn-theme-basket,
+.btn-theme-cite {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -6014,6 +6019,7 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
   box-shadow: none !important;
 }
 
+.btn-theme-action:hover,
 .btn-theme-share:hover,
 .btn-content-share:hover,
 .btn-news-share:hover,
@@ -6023,7 +6029,9 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
 .btn-news-qr:hover,
 .detail-qr-btn-mobile:hover,
 .btn-theme-bookmark:hover,
-.bookMarkBook.btn-theme-bookmark:hover {
+.bookMarkBook.btn-theme-bookmark:hover,
+.btn-theme-basket:hover,
+.btn-theme-cite:hover {
   color: var(--theme-text) !important;
   background-color: color-mix(in srgb, var(--theme-muted-on-surface) 10%, transparent) !important;
   border-color: color-mix(in srgb, var(--theme-muted-on-surface) 45%, transparent) !important;
@@ -6031,6 +6039,7 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
 }
 
+.btn-theme-action i,
 .btn-theme-share i,
 .btn-content-share i,
 .btn-news-share i,
@@ -6040,7 +6049,9 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
 .btn-news-qr i,
 .detail-qr-btn-mobile i,
 .btn-theme-bookmark i,
-.bookMarkBook.btn-theme-bookmark i {
+.bookMarkBook.btn-theme-bookmark i,
+.btn-theme-basket i,
+.btn-theme-cite i {
   font-size: 13px !important;
   flex-shrink: 0 !important;
   color: var(--theme-text) !important;
