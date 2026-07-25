@@ -6095,6 +6095,93 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
   display: none !important;
 }
 
+/* ==========================================================================
+   NO. 3: BREATHING STATUS PULSE & SHOPPING BASKET BADGE RIPPLE
+   ========================================================================== */
+
+/* Breathing Pulse Keyframes for Status Badges & Dots */
+@keyframes breathingPulseGreen {
+  0% {
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 7px rgba(40, 167, 69, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+  }
+}
+
+@keyframes breathingPulseDanger {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 7px rgba(220, 53, 69, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+  }
+}
+
+/* Available Status Badge & Breathing Indicator */
+.detail-avail-badge-available,
+.badge-success,
+.bg-success.badge,
+.status-dot-available {
+  animation: breathingPulseGreen 2.2s infinite ease-in-out !important;
+  border-radius: 999px;
+}
+
+/* Expired / Unavailable Status Breathing Indicator */
+.status-dot-danger,
+.rasamala-digital-card-avatar.is-expired,
+.rasamala-digital-card-initials.is-expired {
+  animation: breathingPulseDanger 2.2s infinite ease-in-out !important;
+}
+
+/* Basket Badge Bounce & Ripple Effect on Update */
+@keyframes basketBadgeBounce {
+  0% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.4);
+  }
+  60% {
+    transform: scale(0.85);
+  }
+  80% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.count-basket.basket-updated,
+#count-basket.basket-updated,
+#count-basket-mobile.basket-updated,
+.basket-badge-mobile.basket-updated {
+  animation: basketBadgeBounce 0.48s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+  display: inline-block !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .detail-avail-badge-available,
+  .badge-success,
+  .bg-success.badge,
+  .status-dot-available,
+  .status-dot-danger,
+  .rasamala-digital-card-avatar.is-expired,
+  .count-basket.basket-updated,
+  #count-basket.basket-updated,
+  #count-basket-mobile.basket-updated,
+  .basket-badge-mobile.basket-updated {
+    animation: none !important;
+  }
+}
+
 
 /* Grid Item Layout Enhancements - Clean & Minimalist */
 .grid-item .card {

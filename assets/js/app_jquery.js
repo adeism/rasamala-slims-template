@@ -148,6 +148,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     const newCount = typeof data.count !== 'undefined' ? data.count : 0;
                     queryAll('#count-basket, .count-basket, #count-basket-mobile, .basket-badge-mobile').forEach((basketCounter) => {
                         basketCounter.textContent = newCount;
+                        basketCounter.classList.remove('basket-updated');
+                        void basketCounter.offsetWidth;
+                        basketCounter.classList.add('basket-updated');
+                        setTimeout(() => basketCounter.classList.remove('basket-updated'), 500);
                     });
                 })
                 .catch((error) => {
