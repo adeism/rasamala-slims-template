@@ -247,8 +247,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const qrLink = document.getElementById('contentQrModalLink');
 
             if (qrImgWrap) {
-                const apiQr = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(url);
-                qrImgWrap.innerHTML = `<img src="${apiQr}" alt="QR Code" class="img-fluid rounded" style="max-width:160px; height:auto;">`;
+                const qrSvg = qrBtn.getAttribute('data-qr-svg');
+                if (qrSvg && qrSvg.trim() !== '') {
+                    qrImgWrap.innerHTML = qrSvg;
+                } else {
+                    const apiQr = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(url);
+                    qrImgWrap.innerHTML = `<img src="${apiQr}" alt="QR Code" class="img-fluid rounded" style="max-width:160px; height:auto;">`;
+                }
             }
             if (qrTitle) qrTitle.textContent = title;
             if (qrInput) qrInput.value = url;

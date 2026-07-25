@@ -73,6 +73,7 @@
             $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
             $request_uri = $_SERVER['REQUEST_URI'] ?? '';
             $current_page_url = $scheme . $host . $request_uri;
+            $current_qr_svg = function_exists('themeGenerateUrlQrSvg') ? themeGenerateUrlQrSvg($current_page_url, 180) : '';
 
             $content_actions = '
             <div class="content-detail-action-bar d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4 pb-3 border-bottom">
@@ -80,7 +81,7 @@
                     <button type="button" class="btn btn-content-share" data-url="' . themeEscape($current_page_url) . '" data-title="' . themeEscape($display_page_title) . '" title="' . themeEscape(__('Share')) . '">
                         <i class="fas fa-share-alt" aria-hidden="true"></i> <span>' . themeEscape(__('Share')) . '</span>
                     </button>
-                    <button type="button" class="btn btn-content-qr" data-url="' . themeEscape($current_page_url) . '" data-title="' . themeEscape($display_page_title) . '" title="Scan for Link">
+                    <button type="button" class="btn btn-content-qr" data-url="' . themeEscape($current_page_url) . '" data-title="' . themeEscape($display_page_title) . '" data-qr-svg="' . themeEscape($current_qr_svg) . '" title="Scan for Link">
                         <i class="fas fa-qrcode" aria-hidden="true"></i> <span>Scan for Link</span>
                     </button>
                 </div>

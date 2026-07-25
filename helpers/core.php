@@ -369,3 +369,29 @@ if (!function_exists('getQuery')) {
     return isset($_GET[$key]) ? utility::filterData($key, 'get', true, true, true) : $optional;
   }
 }
+
+if (!function_exists('themeGenerateUrlQrSvg')) {
+  function themeGenerateUrlQrSvg($url = '', $size = 180)
+  {
+    $url = trim((string)$url);
+    if ($url === '') {
+      return '';
+    }
+
+    if (class_exists('BaconQrCode\Writer')) {
+      try {
+        $renderer = new \BaconQrCode\Renderer\ImageRenderer(
+          new \BaconQrCode\Renderer\RendererStyle\RendererStyle((int)$size, 1),
+          new \BaconQrCode\Renderer\Image\SvgImageBackEnd()
+        );
+        $writer = new \BaconQrCode\Writer($renderer);
+        $qrcode_svg = $writer->writeString($url);
+        return preg_replace('/<\?xml[^>]*\?>/', '', $qrcode_svg);
+      } catch (\Exception $e) {
+        // Fallback
+      }
+    }
+
+    return '';
+  }
+}
