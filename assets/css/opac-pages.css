@@ -6046,6 +6046,24 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
   color: var(--theme-text) !important;
 }
 
+/* Modal Stacking & Backdrop Fix - Guarantees Modal is ALWAYS above Backdrop Overlay */
+.modal {
+  z-index: 1060 !important;
+}
+
+.modal-dialog {
+  z-index: 1061 !important;
+  position: relative !important;
+}
+
+.modal-backdrop {
+  z-index: 1050 !important;
+}
+
+.modal-backdrop + .modal-backdrop {
+  display: none !important;
+}
+
 
 /* Grid Item Layout Enhancements - Clean & Minimalist */
 .grid-item .card {

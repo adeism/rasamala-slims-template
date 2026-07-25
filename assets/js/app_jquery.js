@@ -314,6 +314,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function forceShowModal(modalEl) {
         if (!modalEl) return;
+        if (modalEl.parentNode !== document.body) {
+            document.body.appendChild(modalEl);
+        }
+        document.querySelectorAll('.modal-backdrop').forEach((el) => el.remove());
         modalEl.style.removeProperty('display');
         if (window.bootstrap && window.bootstrap.Modal) {
             const modalObj = window.bootstrap.Modal.getOrCreateInstance(modalEl);
