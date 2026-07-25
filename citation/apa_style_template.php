@@ -16,6 +16,62 @@
  *
  */
 
+if (!defined('RASAMALA_CITE_STYLES_LOADED')) {
+    define('RASAMALA_CITE_STYLES_LOADED', true);
+    include_once SB . 'template' . DS . $sysconf['template']['theme'] . DS . 'helpers' . DS . 'core.php';
+    include_once SB . 'template' . DS . $sysconf['template']['theme'] . DS . 'helpers' . DS . 'palette.php';
+    $dynamic_css = themeGenerateHeaderRuntimeCss($sysconf);
+    echo '<style>' . $dynamic_css . '
+    html, body {
+        background-color: var(--theme-background) !important;
+        color: var(--theme-text) !important;
+        font-family: var(--theme-font-family), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+        padding: 20px 16px !important;
+        margin: 0 !important;
+        line-height: 1.6 !important;
+    }
+    .citation-card {
+        background-color: var(--theme-surface) !important;
+        border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 22%, transparent) !important;
+        border-radius: 12px !important;
+        padding: 16px 20px !important;
+        margin-bottom: 16px !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04) !important;
+    }
+    .citation-card h3 {
+        color: var(--theme-primary) !important;
+        font-size: 1.05rem !important;
+        font-weight: 700 !important;
+        margin-bottom: 8px !important;
+        font-family: var(--theme-font-family), inherit !important;
+    }
+    .citation {
+        color: var(--theme-text) !important;
+        font-size: 0.92rem !important;
+        line-height: 1.65 !important;
+        font-family: var(--theme-font-family), inherit !important;
+        margin-bottom: 0 !important;
+    }
+    body.rasamala-dark .citation-card {
+        background-color: var(--theme-surface) !important;
+        border-color: rgba(255, 255, 255, 0.12) !important;
+    }
+    </style>
+    <script>
+    (function() {
+        var savedMode = localStorage.getItem("rasamala_color_mode");
+        if (!savedMode || savedMode === "auto") {
+            savedMode = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        if (savedMode === "dark") {
+            document.documentElement.classList.add("rasamala-dark");
+            if (document.body) document.body.classList.add("rasamala-dark");
+            else document.addEventListener("DOMContentLoaded", function() { document.body.classList.add("rasamala-dark"); });
+        }
+    })();
+    </script>';
+}
+
 //  set pre-processor variable
 $author_list = [];
 $authors_string = '';
@@ -50,14 +106,16 @@ foreach ($authors as $order => $data) {
 $authors_string = implode(', ', $author_list) . (count($authors) > 2 ? ' et al' : '');
 
 ?>
-<p class="citation text-justify">
+<div class="citation-card">
   <h3><?php echo __('APA Style'); ?></h3>
-  <?php if ($authors_string) : ?>
-    <span class="authors"><?php print $authors_string ?></span> <span class="year">(<?php print $publish_year ?>).</span>
-    <span class="title"><em><?php print $title ?></em> <?php if ($edition) : ?>(<span class="edition"><?php print $edition ?>)</span><?php endif; ?>.</span>
-  <?php else : ?>
-    <span class="title"><em><?php print $title ?></em>.</span> <span class="year">(<?php print $publish_year ?>).</span>
-  <?php endif; ?>
-  <span class="publish_place"><?php print $publish_place ?>:</span>
-  <span class="publisher"><?php print $publisher_name ?>.</span>
-</p>
+  <p class="citation text-justify">
+    <?php if ($authors_string) : ?>
+      <span class="authors"><?php print $authors_string ?></span> <span class="year">(<?php print $publish_year ?>).</span>
+      <span class="title"><em><?php print $title ?></em> <?php if ($edition) : ?>(<span class="edition"><?php print $edition ?>)</span><?php endif; ?>.</span>
+    <?php else : ?>
+      <span class="title"><em><?php print $title ?></em>.</span> <span class="year">(<?php print $publish_year ?>).</span>
+    <?php endif; ?>
+    <span class="publish_place"><?php print $publish_place ?>:</span>
+    <span class="publisher"><?php print $publisher_name ?>.</span>
+  </p>
+</div>

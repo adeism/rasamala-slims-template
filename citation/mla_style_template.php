@@ -50,18 +50,20 @@ foreach ($authors as $order => $data) {
 $authors_string = implode(', ', $author_list) . (count($authors) > 2 ? ' et al.' : '');
 
 ?>
-<p class="citation text-justify">
+<div class="citation-card">
   <h3><?php echo __('MLA Style'); ?></h3>
-  <?php if ($authors_string) : ?>
-    <span class="authors"><?php print $authors_string ?></span>
-    <span class="title">"<?php print $title ?>".</span>
-    <span class="edition"><em><?php print $edition ?></em></span>
-  <?php else : ?>
-    <span class="title"><em><?php print $title ?></em>.</span>
-    <span class="edition"><?php print $edition ?>.</span>
-  <?php endif; ?>
-  <span class="publish_place"><?php print $publish_place ?>:</span>
-  <span class="publisher"><?php print $publisher_name ?>,</span>
-  <span class="year"><?php print $publish_year ?>.</span>
-  <span class="gmd_name"><?php print $gmd_name ?>.</span>
-</p>
+  <p class="citation text-justify">
+    <?php if ($authors_string) : ?>
+      <span class="authors"><?php print $authors_string ?></span>
+      <span class="title">"<?php print $title ?>".</span>
+      <span class="edition"><em><?php print $edition ?></em></span>
+    <?php else : ?>
+      <span class="title"><em><?php print $title ?></em>.</span>
+      <span class="edition"><?php print $edition ?>.</span>
+    <?php endif; ?>
+    <span class="publish_place"><?php print $publish_place ?>:</span>
+    <span class="publisher"><?php print $publisher_name ?>,</span>
+    <span class="year"><?php print $publish_year ?>.</span>
+    <span class="gmd_name"><?php print $gmd_name ?>.</span>
+  </p>
+</div>

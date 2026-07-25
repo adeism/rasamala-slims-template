@@ -6003,10 +6003,11 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 7px !important;
-  padding: 6px 14px !important;
-  font-size: 13px !important;
+  gap: 6px !important;
+  padding: 4px 12px !important;
+  font-size: 12.5px !important;
   font-weight: 600 !important;
+  font-family: var(--theme-font-family), inherit !important;
   line-height: 1.4 !important;
   border-radius: 999px !important;
   color: var(--theme-text) !important;
@@ -6052,9 +6053,14 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
 .bookMarkBook.btn-theme-bookmark i,
 .btn-theme-basket i,
 .btn-theme-cite i {
-  font-size: 13px !important;
+  font-size: 12px !important;
   flex-shrink: 0 !important;
   color: var(--theme-text) !important;
+}
+
+.detail-gmd-label {
+  font-size: 0.88rem !important;
+  font-family: var(--theme-font-family), inherit !important;
 }
 
 /* Hide Scan for Link QR Code buttons on Mobile View (< 768px) */

@@ -16,18 +16,20 @@
  */
 
 ?>
-<p class="citation">
+<div class="citation-card">
   <h3><?php echo __('Chicago Style'); ?></h3>
-  <?php if ($authors_string) : ?>
-    <span class="authors"><?php print $authors_string ?>.</span>
-    <span class="title"><em><?php print $title ?></em>.</span>
-    <span class="edition"><?php print $edition ?></span>
-  <?php else : ?>
-    <span class="title"><em><?php print $title ?></em>.</span>
-    <span class="edition"><?php print $edition ?>.</span>
-  <?php endif; ?>
-  <span class="publish_place"><?php print $publish_place ?>:</span>
-  <span class="publisher"><?php print $publisher_name ?>,</span>
-  <span class="year"><?php print $publish_year ?>.</span>
-  <span class="gmd_name"><?php print $gmd_name ?>.</span>
-</p>
+  <p class="citation">
+    <?php if ($authors_string) : ?>
+      <span class="authors"><?php print $authors_string ?>.</span>
+      <span class="title"><em><?php print $title ?></em>.</span>
+      <span class="edition"><?php print $edition ?></span>
+    <?php else : ?>
+      <span class="title"><em><?php print $title ?></em>.</span>
+      <span class="edition"><?php print $edition ?>.</span>
+    <?php endif; ?>
+    <span class="publish_place"><?php print $publish_place ?>:</span>
+    <span class="publisher"><?php print $publisher_name ?>,</span>
+    <span class="year"><?php print $publish_year ?>.</span>
+    <span class="gmd_name"><?php print $gmd_name ?>.</span>
+  </p>
+</div>
