@@ -34,9 +34,9 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
                 <i class="<?= in_array($biblio_id_safe, $_SESSION['bookmark']??[]) ? 'fas' : 'far' ?> fa-bookmark" aria-hidden="true"></i>
                 <?= themeEscape(in_array($biblio_id_safe, $_SESSION['bookmark']??[]) ? __('Bookmarked') : __('Bookmark')) ?>
             </a>
-            <a href="index.php?p=sharelink&id=<?= $biblio_id_safe ?>" data-bs-toggle="modal" data-id="<?= $biblio_id_safe ?>" data-title="<?= $title_attr ?>" data-bs-target="#mediaSocialModal" class="text-decoration-none fw-bold detail-link-btn">
+            <a href="index.php?p=sharelink&id=<?= $biblio_id_safe ?>" data-bs-toggle="modal" data-id="<?= $biblio_id_safe ?>" data-title="<?= $title_attr ?>" data-bs-target="#mediaSocialModal" class="btn-theme-share detail-share-btn">
                 <i class="fas fa-share-alt" aria-hidden="true"></i>
-                <?= themeEscape(__('Share')) ?>
+                <span><?= themeEscape(__('Share')) ?></span>
             </a>
         </div>
     </div>
