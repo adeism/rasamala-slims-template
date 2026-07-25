@@ -212,6 +212,60 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    document.addEventListener('click', (e) => {
+        const shareBtn = e.target.closest('.btn-news-share, .btn-content-share');
+        if (shareBtn) {
+            e.preventDefault();
+            const url = shareBtn.getAttribute('data-url') || window.location.href;
+            const title = shareBtn.getAttribute('data-title') || document.title;
+
+            if (navigator.share) {
+                navigator.share({ title: title, url: url }).catch(() => {});
+            } else {
+                const modalTarget = document.querySelector('a[data-bs-target="#mediaSocialModal"], button[data-bs-target="#mediaSocialModal"]');
+                if (modalTarget) {
+                    modalTarget.setAttribute('data-url', url);
+                    modalTarget.setAttribute('data-title', title);
+                    modalTarget.click();
+                } else if (navigator.clipboard) {
+                    navigator.clipboard.writeText(url).then(() => {
+                        alert('Link berhasil disalin!');
+                    });
+                }
+            }
+        }
+
+        const qrBtn = e.target.closest('.btn-news-qr, .btn-content-qr');
+        if (qrBtn) {
+            e.preventDefault();
+            const url = qrBtn.getAttribute('data-url') || window.location.href;
+            const title = qrBtn.getAttribute('data-title') || document.title;
+
+            const qrImgWrap = document.getElementById('contentQrModalImage');
+            const qrTitle = document.getElementById('contentQrModalTitle');
+            const qrInput = document.getElementById('contentQrModalInput');
+            const qrLink = document.getElementById('contentQrModalLink');
+
+            if (qrImgWrap) {
+                const apiQr = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(url);
+                qrImgWrap.innerHTML = `<img src="${apiQr}" alt="QR Code" class="img-fluid rounded" style="max-width:160px; height:auto;">`;
+            }
+            if (qrTitle) qrTitle.textContent = title;
+            if (qrInput) qrInput.value = url;
+            if (qrLink) qrLink.href = url;
+
+            const modalEl = document.getElementById('contentQrModal');
+            if (modalEl) {
+                if (window.bootstrap && window.bootstrap.Modal) {
+                    const modalObj = window.bootstrap.Modal.getOrCreateInstance(modalEl);
+                    modalObj.show();
+                } else if (window.jQuery && window.jQuery.fn.modal) {
+                    window.jQuery(modalEl).modal('show');
+                }
+            }
+        }
+    });
+
     queryAll('oembed').forEach((element) => {
         const rawUrl = String(element.getAttribute('url') || '').replace('watch?v=', 'embed/');
 

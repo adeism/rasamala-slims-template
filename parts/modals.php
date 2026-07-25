@@ -180,3 +180,28 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
         </div>
     </div>
 </div>
+
+<!-- Content / News QR Code Modal -->
+<div class="modal fade" id="contentQrModal" tabindex="-1" aria-labelledby="contentQrModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content rounded-4 border-0 text-center p-3 shadow-lg">
+            <div class="modal-header border-0 pb-0 justify-content-between align-items-center">
+                <h6 class="modal-title fw-bold" id="contentQrModalLabel">
+                    <i class="fas fa-qrcode me-2" style="color: var(--rasamala-accent);" aria-hidden="true"></i>Scan for Link
+                </h6>
+                <button type="button" class="btn-close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-3">
+                <div id="contentQrModalImage" class="detail-qr-modal-img mx-auto mb-3 p-2 bg-white rounded border d-flex justify-content-center align-items-center" style="max-width: 180px; min-height: 180px;">
+                </div>
+                <p id="contentQrModalTitle" class="small fw-bold mb-2 text-truncate px-2"></p>
+                <div class="input-group input-group-sm">
+                    <input type="text" id="contentQrModalInput" class="form-control form-control-sm text-muted small" readonly onclick="this.select();">
+                    <a href="#" id="contentQrModalLink" target="_blank" class="btn btn-outline-primary btn-sm" title="Buka Link">
+                        <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

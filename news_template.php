@@ -128,13 +128,21 @@ function news_list_tpl($title, $path, $date, $summary) {
               <?php if ($show_excerpt) : ?>
               <p class="content-summary mb-3 detail-description news-list-summary"><?= $escape($excerpt) ?></p>
               <?php endif; ?>
-              <div class="news-list-footer">
+              <div class="news-list-footer d-flex align-items-center justify-content-between flex-wrap gap-2">
                   <?php if ($date_html !== '') : ?>
                   <div class="content-date news-list-date"><i class="far fa-clock me-2" aria-hidden="true"></i><?= $escape($date_html) ?></div>
                   <?php endif; ?>
-                  <?php if ($show_readmore) : ?>
-                  <a class="btn btn-primary btn-sm btn-news-readmore" href="<?= $escape($news_url) ?>"><?php echo __('Read More') ?></a>
-                  <?php endif; ?>
+                  <div class="news-action-buttons d-inline-flex align-items-center gap-2">
+                      <button type="button" class="btn btn-outline-primary btn-sm rounded-pill btn-news-share d-inline-flex align-items-center" data-url="<?= $escape($news_url) ?>" data-title="<?= $escape($display_title) ?>" title="<?= themeEscape(__('Share')); ?>">
+                          <i class="fas fa-share-alt me-1" aria-hidden="true"></i><?= themeEscape(__('Share')); ?>
+                      </button>
+                      <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill btn-news-qr d-inline-flex align-items-center" data-url="<?= $escape($news_url) ?>" data-title="<?= $escape($display_title) ?>" title="Scan for Link">
+                          <i class="fas fa-qrcode me-1" aria-hidden="true"></i>Scan for Link
+                      </button>
+                      <?php if ($show_readmore) : ?>
+                      <a class="btn btn-primary btn-sm btn-news-readmore rounded-pill" href="<?= $escape($news_url) ?>"><?php echo __('Read More') ?></a>
+                      <?php endif; ?>
+                  </div>
               </div>
           </div>
       </div>

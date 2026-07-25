@@ -58,7 +58,24 @@
           } elseif ($_GET['p'] === 'news') {
             echo '<div class="d-flex flex-column">' . $main_content . '</div>';
           } else {
-            echo '<div class="rasamala-main-content-card p-4 shadow-sm">' . $main_content . '</div>';
+            $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
+            $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+            $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+            $current_page_url = $scheme . $host . $request_uri;
+
+            $content_actions = '
+            <div class="content-detail-action-bar d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3 pb-3 border-bottom">
+                <div class="d-inline-flex align-items-center gap-2">
+                    <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3 btn-content-share d-inline-flex align-items-center" data-url="' . themeEscape($current_page_url) . '" data-title="' . themeEscape($display_page_title) . '" title="' . themeEscape(__('Share')) . '">
+                        <i class="fas fa-share-alt me-1_5" aria-hidden="true"></i>' . themeEscape(__('Share')) . '
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-3 btn-content-qr d-inline-flex align-items-center" data-url="' . themeEscape($current_page_url) . '" data-title="' . themeEscape($display_page_title) . '" title="Scan for Link">
+                        <i class="fas fa-qrcode me-1_5" aria-hidden="true"></i>Scan for Link
+                    </button>
+                </div>
+            </div>';
+
+            echo '<div class="rasamala-main-content-card p-4 shadow-sm">' . $content_actions . $main_content . '</div>';
           }
         }
       } else {
