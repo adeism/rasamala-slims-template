@@ -189,9 +189,7 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
                 <h6 class="modal-title fw-bold" id="contentQrModalLabel">
                     <i class="fas fa-qrcode me-2" style="color: var(--rasamala-accent);" aria-hidden="true"></i>Scan for Link
                 </h6>
-                <button type="button" class="btn-close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
-                    <i class="fas fa-times" aria-hidden="true"></i>
-                </button>
+                <button type="button" class="btn-close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body py-3">
                 <div id="contentQrModalImage" class="detail-qr-modal-img mx-auto mb-3 p-2 bg-white rounded border d-flex justify-content-center align-items-center" style="max-width: 180px; min-height: 180px;">
