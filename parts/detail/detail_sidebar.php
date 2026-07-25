@@ -33,7 +33,7 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
                     <?= $qrcode_svg ?? ''; ?>
                 </div>
                 <span class="detail-qr-label text-muted d-block small fw-bold">
-                    <i class="fas fa-qrcode me-1 text-primary"></i> QR Code Link
+                    <i class="fas fa-qrcode me-1 text-primary"></i> Scan for Link
                 </span>
             </div>
         </div>
