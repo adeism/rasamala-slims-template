@@ -7,6 +7,11 @@
  * @Last modified time  : 2026-07-20T15:45:01+07:00
  */
 
+if (!defined('INDEX_AUTH') && !defined('DIRECT_AUTH')) {
+  define('INDEX_AUTH', 1);
+}
+include_once __DIR__ . '/classic.php';
+
 if (!function_exists('rasamalaNewsFirstImageSrc')) {
   function rasamalaNewsFirstImageSrc($html)
   {
@@ -133,8 +138,8 @@ function news_list_tpl($title, $path, $date, $summary) {
                   <div class="content-date news-list-date"><i class="far fa-clock me-2" aria-hidden="true"></i><?= $escape($date_html) ?></div>
                   <?php endif; ?>
                   <div class="news-action-buttons d-inline-flex align-items-center gap-2">
-                      <button type="button" class="btn btn-news-share" data-url="<?= $escape($news_url) ?>" data-title="<?= $escape($display_title) ?>" title="<?= themeEscape(__('Share')); ?>">
-                          <i class="fas fa-share-alt" aria-hidden="true"></i> <span><?= themeEscape(__('Share')); ?></span>
+                      <button type="button" class="btn btn-news-share" data-url="<?= $escape($news_url) ?>" data-title="<?= $escape($display_title) ?>" title="<?= $escape(__('Share')); ?>">
+                          <i class="fas fa-share-alt" aria-hidden="true"></i> <span><?= $escape(__('Share')); ?></span>
                       </button>
                       <button type="button" class="btn btn-news-qr" data-url="<?= $escape($news_url) ?>" data-title="<?= $escape($display_title) ?>" title="Scan for Link">
                           <i class="fas fa-qrcode" aria-hidden="true"></i> <span>Scan for Link</span>
