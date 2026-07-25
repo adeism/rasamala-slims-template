@@ -5896,20 +5896,42 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
 /* Premium Advanced Search Modal Styling */
 #adv-modal .modal-content {
   font-family: var(--rasamala-font-stack) !important;
-  border-radius: var(--rasamala-radius-panel) !important;
-  border: 1px solid rgba(66, 66, 66, 0.08) !important;
-  box-shadow: var(--rasamala-shadow-lg) !important;
+  border-radius: 20px !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 18%, transparent) !important;
+  background-color: var(--theme-surface) !important;
+  color: var(--theme-text) !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.22) !important;
 }
 
 #adv-modal .modal-header {
-  border-bottom: 1px solid rgba(66, 66, 66, 0.06) !important;
-  padding: 18px 24px !important;
+  border-bottom: none !important;
+  padding: 20px 24px 0 24px !important;
 }
 
 #adv-modal .modal-title {
-  font-size: 16px !important;
+  font-size: 17px !important;
   font-weight: 700 !important;
-  color: var(--rasamala-text-primary) !important;
+  color: var(--theme-text) !important;
+}
+
+#adv-modal .modal-close-btn,
+#adv-modal .btn-close,
+#adv-modal button.close {
+  font-size: 1.5rem !important;
+  line-height: 1 !important;
+  background: none !important;
+  border: 0 !important;
+  outline: none !important;
+  opacity: 0.75 !important;
+  color: var(--theme-text) !important;
+  transition: opacity 0.2s ease, transform 0.2s ease !important;
+}
+
+#adv-modal .modal-close-btn:hover,
+#adv-modal .btn-close:hover,
+#adv-modal button.close:hover {
+  opacity: 1 !important;
+  transform: scale(1.1) !important;
 }
 
 #adv-modal .modal-body {

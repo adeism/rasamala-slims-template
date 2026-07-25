@@ -13,10 +13,10 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <form class="modal-content border-0 rounded-4 shadow-lg" action="index.php" method="get">
             <div class="modal-header border-0 pb-0 px-4 pt-4 justify-content-between align-items-center">
-                <h5 class="modal-title fw-bold text-dark d-flex align-items-center" id="advancedSearchModalLabel">
-                    <i class="fas fa-sliders-h text-primary me-2" aria-hidden="true"></i><?= __('Advanced Search'); ?>
+                <h5 class="modal-title fw-bold d-flex align-items-center" id="advancedSearchModalLabel">
+                    <i class="fas fa-sliders-h me-2" style="color: var(--rasamala-accent);" aria-hidden="true"></i><?= __('Advanced Search'); ?>
                 </h5>
-                <button type="button" class="close btn-close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close" style="font-size: 1.5rem; line-height: 1; background: none; border: 0; outline: none; opacity: 0.7;">
+                <button type="button" class="close btn-close modal-close-btn" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>

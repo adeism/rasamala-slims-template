@@ -2498,17 +2498,30 @@ body.rasamala-dark .detail-notes-box {
 
 /* Dark Mode Advanced Search Modal */
 body.rasamala-dark #adv-modal .modal-content {
-  background-color: #1a1f26 !important;
-  border-color: var(--rasamala-dark-border) !important;
+  background-color: var(--theme-surface) !important;
+  border-color: color-mix(in srgb, var(--theme-muted-on-surface) 18%, transparent) !important;
+  color: var(--theme-text) !important;
 }
 
 body.rasamala-dark #adv-modal .modal-header,
 body.rasamala-dark #adv-modal .modal-footer {
-  border-color: var(--rasamala-dark-border) !important;
+  border-color: transparent !important;
 }
 
 body.rasamala-dark #adv-modal .modal-title {
-  color: #f4f6f8 !important;
+  color: var(--theme-text) !important;
+}
+
+body.rasamala-dark #adv-modal label {
+  color: var(--theme-muted) !important;
+}
+
+body.rasamala-dark #adv-modal .modal-close-btn,
+body.rasamala-dark #adv-modal .btn-close,
+body.rasamala-dark #adv-modal button.close {
+  color: #ffffff !important;
+  filter: invert(1) grayscale(100%) brightness(200%) !important;
+  opacity: 0.9 !important;
 }
 
 body.rasamala-dark #adv-modal .form-control,
@@ -2518,13 +2531,22 @@ body.rasamala-dark #adv-modal input,
 body.rasamala-dark #loginForm input.login_input,
 body.rasamala-dark .page-member-area .login_input input.form-control {
   border-radius: 999px !important;
-  background-color: rgba(255, 255, 255, 0.04) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
-  color: #f4f6f8 !important;
+  background-color: color-mix(in srgb, var(--theme-surface) 88%, var(--theme-background) 12%) !important;
+  border-color: color-mix(in srgb, var(--theme-muted-on-surface) 22%, transparent) !important;
+  color: var(--theme-text) !important;
 }
 
-body.rasamala-dark #adv-modal .form-control:focus {
+body.rasamala-dark #adv-modal select option {
+  background-color: var(--theme-surface) !important;
+  color: var(--theme-text) !important;
+}
+
+body.rasamala-dark #adv-modal .form-control:focus,
+body.rasamala-dark #adv-modal .form-select:focus,
+body.rasamala-dark #adv-modal select:focus,
+body.rasamala-dark #adv-modal input:focus {
   border-color: var(--rasamala-accent) !important;
+  box-shadow: 0 0 0 3px rgba(var(--theme-accent-rgb), 0.2) !important;
 }
 
 body.rasamala-dark .btn-color-mode-toggle-nav,
