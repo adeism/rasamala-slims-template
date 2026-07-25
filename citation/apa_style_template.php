@@ -18,10 +18,12 @@
 
 if (!defined('RASAMALA_CITE_STYLES_LOADED')) {
     define('RASAMALA_CITE_STYLES_LOADED', true);
-    include_once SB . 'template' . DS . $sysconf['template']['theme'] . DS . 'helpers' . DS . 'core.php';
-    include_once SB . 'template' . DS . $sysconf['template']['theme'] . DS . 'helpers' . DS . 'palette.php';
-    $dynamic_css = themeGenerateHeaderRuntimeCss($sysconf);
-    echo '<style>' . $dynamic_css . '
+    $theme_dir = 'template/' . ($sysconf['template']['theme'] ?? 'rasamala');
+    echo '<link rel="stylesheet" href="' . $theme_dir . '/assets/css/foundation.css">';
+    echo '<link rel="stylesheet" href="' . $theme_dir . '/assets/css/header-runtime.css">';
+    echo '<link rel="stylesheet" href="' . $theme_dir . '/assets/css/opac-pages.css">';
+    echo '<link rel="stylesheet" href="' . $theme_dir . '/assets/css/theme-dark.css">';
+    echo '<style>
     html, body {
         background-color: var(--theme-background) !important;
         color: var(--theme-text) !important;

@@ -28,26 +28,22 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
             }
         }
         ?>
-        <div class="detail-meta-header d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+        <div class="detail-meta-header d-flex align-items-center justify-content-between gap-2 mb-3">
             <span class="detail-gmd-label text-muted small fw-bold d-inline-flex align-items-center gap-1">
                 <i class="fas fa-bookmark text-success me-1" aria-hidden="true"></i> <?= themeEscape($display_label); ?>
             </span>
-            <div class="detail-actions d-flex align-items-center flex-wrap gap-2">
-                <a href="index.php?p=member&sec=bookmark" data-id="<?= $biblio_id_safe ?>" data-detail="true" class="bookMarkBook btn-theme-action btn-theme-bookmark <?= themeEscape($setBookmarked) ?>" title="<?= themeEscape(in_array($biblio_id_safe, $_SESSION['bookmark']??[]) ? __('Bookmarked') : __('Bookmark')) ?>">
+            <div class="detail-actions-icon-group d-inline-flex align-items-center gap-2 ms-auto">
+                <a href="index.php?p=member&sec=bookmark" data-id="<?= $biblio_id_safe ?>" data-detail="true" class="bookMarkBook btn-icon-action btn-theme-bookmark <?= themeEscape($setBookmarked) ?>" title="<?= themeEscape(in_array($biblio_id_safe, $_SESSION['bookmark']??[]) ? __('Bookmarked') : __('Bookmark')) ?>" aria-label="<?= themeEscape(__('Bookmark')) ?>">
                     <i class="<?= in_array($biblio_id_safe, $_SESSION['bookmark']??[]) ? 'fas' : 'far' ?> fa-bookmark" aria-hidden="true"></i>
-                    <span id="label-<?= $biblio_id_safe ?>"><?= themeEscape(in_array($biblio_id_safe, $_SESSION['bookmark']??[]) ? __('Bookmarked') : __('Bookmark')) ?></span>
                 </a>
-                <button type="button" class="btn btn-theme-action btn-theme-basket addToBasket add-to-chart-button" data-biblio="<?= $biblio_id_safe ?>" title="<?= themeEscape(__('Add to Basket')) ?>">
+                <button type="button" class="btn btn-icon-action btn-theme-basket addToBasket add-to-chart-button" data-biblio="<?= $biblio_id_safe ?>" title="<?= themeEscape(__('Add to Basket')) ?>" aria-label="<?= themeEscape(__('Add to Basket')) ?>">
                     <i class="fas fa-shopping-basket" aria-hidden="true"></i>
-                    <span><?= themeEscape(__('Add to Basket')) ?></span>
                 </button>
-                <a href="index.php?p=cite&id=<?= $biblio_id_safe ?>" data-title="<?= $title_attr ?>" class="btn btn-theme-action btn-theme-cite openPopUp citationLink" title="<?= themeEscape(__('Cite')) ?>">
+                <a href="index.php?p=cite&id=<?= $biblio_id_safe ?>" data-title="<?= $title_attr ?>" class="btn btn-icon-action btn-theme-cite openPopUp citationLink" title="<?= themeEscape(__('Cite')) ?>" aria-label="<?= themeEscape(__('Cite')) ?>">
                     <i class="fas fa-quote-right" aria-hidden="true"></i>
-                    <span><?= themeEscape(__('Cite')) ?></span>
                 </a>
-                <button type="button" class="btn btn-theme-action btn-theme-share detail-share-btn" data-url="<?= themeEscape($detail_share_url ?? '') ?>" data-id="<?= $biblio_id_safe ?>" data-title="<?= $title_attr ?>" title="<?= themeEscape(__('Share')) ?>">
+                <button type="button" class="btn btn-icon-action btn-theme-share detail-share-btn" data-url="<?= themeEscape($detail_share_url ?? '') ?>" data-id="<?= $biblio_id_safe ?>" data-title="<?= $title_attr ?>" title="<?= themeEscape(__('Share')) ?>" aria-label="<?= themeEscape(__('Share')) ?>">
                     <i class="fas fa-share-alt" aria-hidden="true"></i>
-                    <span><?= themeEscape(__('Share')) ?></span>
                 </button>
             </div>
         </div>
