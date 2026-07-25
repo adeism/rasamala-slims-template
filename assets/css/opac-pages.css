@@ -6046,6 +6046,16 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
   color: var(--theme-text) !important;
 }
 
+/* Hide Scan for Link QR Code buttons on Mobile View (< 768px) */
+@media (max-width: 767.98px) {
+  .btn-theme-qr,
+  .btn-content-qr,
+  .btn-news-qr,
+  .detail-qr-btn-mobile {
+    display: none !important;
+  }
+}
+
 /* Modal Stacking & Backdrop Fix - Guarantees Modal is ALWAYS above Backdrop Overlay */
 .modal {
   z-index: 1060 !important;

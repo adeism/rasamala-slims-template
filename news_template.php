@@ -142,7 +142,7 @@ function news_list_tpl($title, $path, $date, $summary) {
                       <button type="button" class="btn btn-news-share" data-url="<?= $escape($news_url) ?>" data-title="<?= $escape($display_title) ?>" title="<?= $escape(__('Share')); ?>">
                           <i class="fas fa-share-alt" aria-hidden="true"></i> <span><?= $escape(__('Share')); ?></span>
                       </button>
-                      <button type="button" class="btn btn-news-qr" data-url="<?= $escape($news_url) ?>" data-title="<?= $escape($display_title) ?>" data-qr-svg="<?= $escape($news_qr_svg) ?>" title="Scan for Link">
+                      <button type="button" class="btn btn-news-qr d-none d-md-inline-flex" data-url="<?= $escape($news_url) ?>" data-title="<?= $escape($display_title) ?>" data-qr-svg="<?= $escape($news_qr_svg) ?>" title="Scan for Link">
                           <i class="fas fa-qrcode" aria-hidden="true"></i> <span>Scan for Link</span>
                       </button>
                       <?php if ($show_readmore) : ?>

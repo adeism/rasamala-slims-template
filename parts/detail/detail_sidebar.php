@@ -16,10 +16,6 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
     <div class="detail-side-availability">
         <div class="detail-avail-heading-row d-flex align-items-center justify-content-between mb-2">
             <h5 class="detail-side-heading mb-0"><?= __('Availability'); ?></h5>
-            <!-- Mobile QR Code Button -->
-            <button type="button" class="btn btn-theme-qr detail-qr-btn-mobile d-md-none" data-toggle="modal" data-target="#detailQrModal" data-bs-toggle="modal" data-bs-target="#detailQrModal" title="Scan for Link">
-                <i class="fas fa-qrcode" aria-hidden="true"></i> <span>Scan for Link</span>
-            </button>
         </div>
         <?php
         $availability_output = themeDetailAvailabilityHtml($dbs ?? null, $biblio_id_safe, $availability_html);

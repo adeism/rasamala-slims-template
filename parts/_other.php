@@ -81,7 +81,7 @@
                     <button type="button" class="btn btn-content-share" data-url="' . themeEscape($current_page_url) . '" data-title="' . themeEscape($display_page_title) . '" title="' . themeEscape(__('Share')) . '">
                         <i class="fas fa-share-alt" aria-hidden="true"></i> <span>' . themeEscape(__('Share')) . '</span>
                     </button>
-                    <button type="button" class="btn btn-content-qr" data-url="' . themeEscape($current_page_url) . '" data-title="' . themeEscape($display_page_title) . '" data-qr-svg="' . themeEscape($current_qr_svg) . '" title="Scan for Link">
+                    <button type="button" class="btn btn-content-qr d-none d-md-inline-flex" data-url="' . themeEscape($current_page_url) . '" data-title="' . themeEscape($display_page_title) . '" data-qr-svg="' . themeEscape($current_qr_svg) . '" title="Scan for Link">
                         <i class="fas fa-qrcode" aria-hidden="true"></i> <span>Scan for Link</span>
                     </button>
                 </div>
