@@ -6,7 +6,7 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
 }
 ?>
-<div class="col-md-9 px-3 px-md-4">
+<div class="col-md-9 px-3 px-md-4 detail-content-col">
     <div class="detail-meta-row">
         <?php
         $label_type = themeEffectiveTemplateValue('classic_detail_label_type', 'gmd', $sysconf);
@@ -40,13 +40,13 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
             </a>
         </div>
     </div>
-    <blockquote class="blockquote border-0 p-0 m-0 mb-3">
+    <blockquote class="detail-title-block">
         <h3 class="mb-2 fw-bold detail-title"><?= $detail_title_html; ?></h3>
         <?php
         $show_author_role = themeEffectiveTemplateValue('classic_show_author_role', 1, $sysconf) ? true : false;
         $formatted_authors = themeFormatDetailAuthors($authors ?? '', $show_author_role);
         ?>
-        <div class="blockquote-footer bg-transparent border-0 p-0 m-0 mt-2 detail-author-footer"><?= themeSanitizeHtml($formatted_authors); ?></div>
+        <div class="detail-author-footer"><?= themeSanitizeHtml($formatted_authors); ?></div>
     </blockquote>
     <?php if (themeDetailHasValue($notes ?? '')): ?>
     <div class="detail-notes-box mb-4">
@@ -63,8 +63,8 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
     </p>
     <?php endif; ?>
 
-    <h5 class="mt-4 mb-1"><?= __('Detail Information'); ?></h5>
-    <dl class="row">
+    <h5 class="detail-section-heading detail-section-heading-info"><?= __('Detail Information'); ?></h5>
+    <dl class="row detail-info-list">
         <?php
         themeDetailRow(__('Series Title'), '<div itemprop="alternativeHeadline" property="alternativeHeadline">' . themeEscape($series_title ?? '') . '</div>', $series_title ?? '');
         themeDetailRow(__('Publisher'), $publisher_html, implode(' ', [$publish_place ?? '', $publisher_name ?? '', $publish_year ?? '']));
@@ -88,8 +88,8 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
     });
     if (count($visible_custom_fields) > 0) {
       ; ?>
-        <h5 class="mt-4 mb-1"><?= __('Other Information'); ?></h5>
-        <dl class="row">
+        <h5 class="detail-section-heading detail-section-heading-other"><?= __('Other Information'); ?></h5>
+        <dl class="row detail-info-list">
           <?php foreach ($visible_custom_fields as $item) { ?>
               <dt class="col-sm-3"><?= themeEscape($item['label']); ?></dt>
               <dd class="col-sm-9">
@@ -101,20 +101,20 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
     <?php }; ?>
 
     <?php if (themeDetailHasValue($related ?? '')) : ?>
-        <h5 class="mt-4 mb-1"><?= __('Other version/related'); ?></h5>
+        <h5 class="detail-section-heading detail-section-heading-related"><?= __('Other version/related'); ?></h5>
         <div>
           <?php echo themeSanitizeHtml($related); ?>
         </div>
     <?php endif; ?>
 
     <?php if (themeDetailHasValue($file_att ?? '')) : ?>
-        <h5 id="attachment" class="mt-4 mb-1"><?= __('File Attachment'); ?></h5>
+        <h5 id="attachment" class="detail-section-heading detail-section-heading-attachment"><?= __('File Attachment'); ?></h5>
         <div itemprop="associatedMedia">
           <?= themeSanitizeHtml($file_att); ?>
         </div>
     <?php endif; ?>
 
-    <h5 id="comment" class="mt-4 mb-1"><?= __('Comments'); ?></h5>
+    <h5 id="comment" class="detail-section-heading detail-section-heading-comment"><?= __('Comments'); ?></h5>
     <?php echo showComment($biblio_id_safe); ?>
     <?php if(!isset($_SESSION['mid']) && $sysconf['comment']['enable']) : ?>
         <hr class="rasamala-divider">

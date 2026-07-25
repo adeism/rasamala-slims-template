@@ -11,7 +11,7 @@ body.rasamala-dark .detail-author-footer a:focus {
   background-color: var(--rasamala-accent) !important;
   color: var(--theme-on-primary) !important;
   border-color: var(--rasamala-accent) !important;
-  box-shadow: 0 4px 12px rgba(var(--theme-accent-rgb), 0.3) !important;
+  box-shadow: none !important;
 }
 
 /* Dark Mode Overrides */
@@ -727,7 +727,7 @@ body.rasamala-dark .desktop-sort-bar,
 body.rasamala-dark .slims-book-card,
 body.rasamala-dark .visitor-info-card {
   background: rgba(22, 26, 34, 0.94) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
+  border-color: transparent !important;
   color: #e7ebef !important;
   box-shadow: 0 18px 46px rgba(0, 0, 0, 0.28) !important;
 }
@@ -757,8 +757,9 @@ body.rasamala-dark .member-card:hover {
 body.rasamala-dark .detail-cover-wrapper,
 body.rasamala-dark .slims-book-card .card-image,
 body.rasamala-dark .member-card .card-image-rounded {
-  background: rgba(255, 255, 255, 0.06) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+  background-color: rgba(255, 255, 255, 0.045) !important;
+  border-color: transparent !important;
 }
 
 
@@ -789,26 +790,40 @@ body.rasamala-dark .availability-summary-statuses {
 
 body.rasamala-dark .detail-callnumber-label,
 body.rasamala-dark .detail-avail-more-btn {
-  color: #aeb7c2 !important;
+  color: var(--theme-muted-on-surface) !important;
+}
+
+body.rasamala-dark .detail-callnumber-tag {
+  background: color-mix(in srgb, var(--theme-accent) 86%, var(--theme-surface) 14%) !important;
+  border-color: color-mix(in srgb, var(--theme-accent) 54%, transparent) !important;
+  color: var(--theme-on-accent) !important;
 }
 
 
 body.rasamala-dark .detail-avail-row {
-  border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+  background: color-mix(in srgb, var(--theme-surface) 88%, var(--theme-accent) 12%) !important;
+  border-color: color-mix(in srgb, var(--theme-muted-on-surface) 18%, transparent) !important;
+  border-radius: 999px !important;
+  padding: 10px 18px 10px 20px !important;
+}
+
+body.rasamala-dark .detail-avail-row::before {
+  display: none !important;
+  content: none !important;
 }
 
 
 body.rasamala-dark .detail-avail-row:hover,
 body.rasamala-dark .detail-avail-row:focus-within {
-  background: rgba(var(--theme-accent-rgb), 0.18) !important;
-  border-color: rgba(var(--theme-accent-rgb), 0.32) !important;
+  background: color-mix(in srgb, var(--theme-surface) 82%, var(--theme-accent) 18%) !important;
+  border-color: color-mix(in srgb, var(--theme-accent) 38%, transparent) !important;
 }
 
 
 body.rasamala-dark .detail-avail-popover {
   background: #171c25 !important;
   border-color: rgba(255, 255, 255, 0.12) !important;
-  box-shadow: 0 20px 46px rgba(0, 0, 0, 0.42) !important;
+  box-shadow: none !important;
 }
 
 
@@ -1665,7 +1680,7 @@ body.rasamala-dark #search-wraper #search-form button[type="submit"]:hover {
 body.rasamala-dark .detail-record {
   background: #151921 !important;
   border-color: rgba(255, 255, 255, 0.08) !important;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25) !important;
+  box-shadow: none !important;
 }
 
 
@@ -1870,7 +1885,6 @@ body.rasamala-dark .bg-light,
 body.rasamala-dark .bg-white,
 body.rasamala-dark .bg-rasamala-light,
 body.rasamala-dark .rasamala-main-content-card,
-body.rasamala-dark .detail-record,
 body.rasamala-dark .card.item.border-0,
 body.rasamala-dark .desktop-sort-bar,
 body.rasamala-dark .slims-book-card,
@@ -2288,11 +2302,13 @@ body.rasamala-dark #search-wraper .latest-content-link:focus .latest-content-ico
 body.rasamala-dark.rasamala-search-panels-transparent .result-search .col-md-3 > .card,
 body.rasamala-dark.rasamala-search-panels-transparent .result-search .desktop-sort-bar,
 body.rasamala-dark.rasamala-search-panels-transparent .result-search .btn-modern-filter,
+body.rasamala-dark.rasamala-search-panels-transparent .result-search .search-toolbar-action,
 body.rasamala-dark.rasamala-search-panels-transparent .result-search .biblio-list-card,
 body.rasamala-dark.rasamala-search-panels-transparent .result-search .grid-item > .card,
 body.rasamala-dark.rasamala-search-panels-transparent .result-search .card.item.border-0,
 body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal .modal-content,
-body.rasamala-dark.rasamala-search-panels-transparent #mobileSortModal .modal-content {
+body.rasamala-dark.rasamala-search-panels-transparent #mobileSortModal .modal-content,
+body.rasamala-dark.rasamala-search-panels-transparent #mobileViewModal .modal-content {
   background: rgba(22, 26, 34, 0.32) !important;
   background-color: rgba(22, 26, 34, 0.32) !important;
   border-color: rgba(255, 255, 255, 0.12) !important;
@@ -2475,8 +2491,9 @@ body.rasamala-dark .whatsapp-send-button:focus {
 
 /* Premium Dark Mode Description Box */
 body.rasamala-dark .detail-notes-box {
-  background: rgba(255, 255, 255, 0.02) !important;
-  border-color: rgba(255, 255, 255, 0.08) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  border-color: transparent !important;
 }
 
 /* Dark Mode Advanced Search Modal */
@@ -2558,6 +2575,24 @@ body.rasamala-dark .prayer-reminder-close:hover {
 body.rasamala-dark .detail-record dl.row dt,
 body.rasamala-dark .detail-record dl.row dd {
   border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+body.rasamala-dark .detail-title-block {
+  border-bottom-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+body.rasamala-dark .detail-record dl.row.detail-info-list,
+body.rasamala-dark .detail-record dl.row.detail-info-list > dt,
+body.rasamala-dark .detail-record dl.row.detail-info-list > dd {
+  border: 0 !important;
+}
+
+body.rasamala-dark .detail-record dl.row.detail-info-list > dt {
+  color: #b6bec8 !important;
+}
+
+body.rasamala-dark .detail-record dl.row.detail-info-list > dd {
+  color: #f4f6f8 !important;
 }
 
 /* Dark Mode Grid Item Enhancements */
@@ -2970,7 +3005,8 @@ body.rasamala-dark.rasamala-search-panels-transparent .result-search .grid-item 
 body.rasamala-dark.rasamala-search-panels-transparent .result-search .grid-item .list-group,
 body.rasamala-dark.rasamala-search-panels-transparent .result-search .grid-item .list-group-item,
 body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal .modal-content,
-body.rasamala-dark.rasamala-search-panels-transparent #mobileSortModal .modal-content {
+body.rasamala-dark.rasamala-search-panels-transparent #mobileSortModal .modal-content,
+body.rasamala-dark.rasamala-search-panels-transparent #mobileViewModal .modal-content {
   background: transparent !important;
   background-color: transparent !important;
   box-shadow: none !important;
@@ -2994,12 +3030,16 @@ body.rasamala-dark.rasamala-search-panels-transparent .result-search .grid-item 
 @media (max-width: 767.98px) {
   body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal .modal-content,
   body.rasamala-dark.rasamala-search-panels-transparent #mobileSortModal .modal-content,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileViewModal .modal-content,
   body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal .modal-header,
   body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal .modal-body,
   body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal .modal-footer,
   body.rasamala-dark.rasamala-search-panels-transparent #mobileSortModal .modal-header,
   body.rasamala-dark.rasamala-search-panels-transparent #mobileSortModal .modal-body,
-  body.rasamala-dark.rasamala-search-panels-transparent #mobileSortModal .modal-footer {
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileSortModal .modal-footer,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileViewModal .modal-header,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileViewModal .modal-body,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileViewModal .modal-footer {
     background: var(--rasamala-dark-surface) !important;
     background-color: var(--rasamala-dark-surface) !important;
     color: var(--rasamala-dark-text) !important;
@@ -3016,7 +3056,9 @@ body.rasamala-dark.rasamala-search-panels-transparent .result-search .grid-item 
   body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal #mobile-filter-container .list-group,
   body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal #mobile-filter-container .list-group-item,
   body.rasamala-dark.rasamala-search-panels-transparent #mobileSortModal #mobile-sort-options,
-  body.rasamala-dark.rasamala-search-panels-transparent #mobileSortModal #mobile-sort-options .list-group-item {
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileSortModal #mobile-sort-options .list-group-item,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileViewModal .search-view-modal-options,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileViewModal .search-view-modal-options .list-group-item {
     background: var(--rasamala-dark-surface) !important;
     background-color: var(--rasamala-dark-surface) !important;
     color: var(--rasamala-dark-text) !important;
@@ -3027,7 +3069,8 @@ body.rasamala-dark.rasamala-search-panels-transparent .result-search .grid-item 
   body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal #mobile-filter-container label,
   body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal #search-filter .custom-control-label,
   body.rasamala-dark.rasamala-search-panels-transparent #mobileFilterModal #search-filter .form-check-label,
-  body.rasamala-dark.rasamala-search-panels-transparent #mobileSortModal #mobile-sort-options .list-group-item {
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileSortModal #mobile-sort-options .list-group-item,
+  body.rasamala-dark.rasamala-search-panels-transparent #mobileViewModal .search-view-modal-options .list-group-item {
     background: var(--rasamala-dark-surface-strong) !important;
     background-color: var(--rasamala-dark-surface-strong) !important;
     color: var(--rasamala-dark-text) !important;
@@ -3649,17 +3692,21 @@ body.rasamala-dark .availability-panel {
 }
 
 body.rasamala-dark .detail-avail-row {
-  border: 0 !important;
-  border-bottom: 1px solid color-mix(in srgb, var(--rasamala-dark-muted, #b6bec8) 14%, transparent) !important;
-  border-radius: 0 !important;
+  background: color-mix(in srgb, var(--theme-surface) 88%, var(--theme-accent) 12%) !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 18%, transparent) !important;
+  border-radius: 14px !important;
   box-shadow: none !important;
 }
 
 body.rasamala-dark .detail-avail-row:hover,
 body.rasamala-dark .detail-avail-row:focus-within {
-  border: 0 !important;
-  border-bottom: 1px solid var(--rasamala-dark-accent-border, rgba(var(--theme-accent-rgb), 0.42)) !important;
-  border-radius: 8px !important;
+  background: color-mix(in srgb, var(--theme-surface) 82%, var(--theme-accent) 18%) !important;
+  border: 1px solid color-mix(in srgb, var(--theme-accent) 38%, transparent) !important;
+  border-radius: 14px !important;
+}
+
+body.rasamala-dark .avail-loc-name {
+  color: var(--theme-on-surface) !important;
 }
 
 /* Dark Mode Skeleton Loading System */
@@ -3710,26 +3757,30 @@ body.rasamala-dark .result-search .wrapper.is-loading::after {
 /* Dark Mode Choice Card Modals (View Mode, Sort, Filter) */
 body.rasamala-dark .search-view-modal-options .list-group-item,
 body.rasamala-dark .search-sort-modal-options .list-group-item {
-  background-color: #1e293b !important;
-  color: #f8fafc !important;
-  border-color: rgba(255, 255, 255, 0.08) !important;
+  background: var(--theme-surface) !important;
+  background-color: var(--theme-surface) !important;
+  color: var(--theme-on-surface) !important;
+  border-color: color-mix(in srgb, var(--theme-muted-on-surface) 14%, transparent) !important;
 }
 
 body.rasamala-dark .search-view-modal-options .list-group-item:hover,
 body.rasamala-dark .search-sort-modal-options .list-group-item:hover {
-  background-color: #334155 !important;
+  background: color-mix(in srgb, var(--theme-surface) 92%, var(--theme-accent) 8%) !important;
+  background-color: color-mix(in srgb, var(--theme-surface) 92%, var(--theme-accent) 8%) !important;
 }
 
 body.rasamala-dark .search-view-modal-options .list-group-item.active,
 body.rasamala-dark .search-sort-modal-options .list-group-item.active {
-  background-color: rgba(59, 130, 246, 0.16) !important;
-  border-color: rgba(59, 130, 246, 0.3) !important;
+  background: color-mix(in srgb, var(--theme-surface) 86%, var(--theme-accent) 14%) !important;
+  background-color: color-mix(in srgb, var(--theme-surface) 86%, var(--theme-accent) 14%) !important;
+  border-color: color-mix(in srgb, var(--theme-accent) 30%, transparent) !important;
 }
 
 body.rasamala-dark .rasamala-sticky-toolbar {
-  background-color: rgba(15, 23, 42, 0.92) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+  background: color-mix(in srgb, var(--theme-surface) 94%, transparent) !important;
+  background-color: color-mix(in srgb, var(--theme-surface) 94%, transparent) !important;
+  border-color: color-mix(in srgb, var(--theme-muted-on-surface) 22%, transparent) !important;
+  box-shadow: none !important;
 }
 
 body.rasamala-dark .search-result-summary-card {
@@ -3743,11 +3794,12 @@ body.rasamala-dark .summary-icon-box {
 }
 
 body.rasamala-dark .search-found-info {
-  color: #f8fafc !important;
+  color: var(--theme-on-surface) !important;
 }
 
 body.rasamala-dark .search-keyword-badge {
-  background-color: #334155 !important;
-  color: #f8fafc !important;
-  border-color: rgba(255, 255, 255, 0.12) !important;
+  background: color-mix(in srgb, var(--theme-surface) 88%, var(--theme-accent) 12%) !important;
+  background-color: color-mix(in srgb, var(--theme-surface) 88%, var(--theme-accent) 12%) !important;
+  color: var(--theme-on-surface) !important;
+  border-color: color-mix(in srgb, var(--theme-muted-on-surface) 24%, transparent) !important;
 }

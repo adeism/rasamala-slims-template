@@ -88,17 +88,17 @@ if (!function_exists('rasamalaSearchFilterHtml')) {
 
                 <!-- Unified Sticky Search Info & Action Toolbar (Always Sticky on Scroll) -->
                 <div class="rasamala-sticky-action-wrapper mb-4">
-                    <div class="card border-0 shadow-sm p-3 rounded-3 rasamala-search-action-bar rasamala-sticky-toolbar">
-                        <div class="row g-3 align-items-center">
+                    <div class="search-result-toolbar-card rasamala-search-action-bar rasamala-sticky-toolbar">
+                        <div class="search-result-toolbar-grid">
                             <!-- Left: Found Count & Optional Keyword Badge -->
-                            <div class="col-12 col-md-6 col-lg-7">
-                                <div class="search-found-info text-dark fw-bold fs-6 d-flex align-items-center flex-wrap gap-1">
+                            <div class="search-result-toolbar-summary">
+                                <div class="search-found-info search-result-summary">
                                     <span><?= __('Found') ?></span>
-                                    <span class="badge bg-primary rounded-pill px-2.5 py-1 fs-6 mx-1 shadow-xs"><?= number_format($num_rows_val, 0, ',', '.') ?></span>
+                                    <span class="search-result-count-number"><?= number_format($num_rows_val, 0, ',', '.') ?></span>
                                     <?php if ($has_active_keyword) : ?>
                                         <span><?= __('for') ?>:</span>
-                                        <span class="badge bg-light text-dark border px-2.5 py-1 rounded-pill ms-1 font-monospace fw-semibold search-keyword-badge shadow-xs">
-                                            <i class="fas fa-quote-left me-1 text-primary text-xs" aria-hidden="true"></i><?= themeEscape($keywords_text) ?><i class="fas fa-quote-right ms-1 text-primary text-xs" aria-hidden="true"></i>
+                                        <span class="search-keyword-badge">
+                                            <i class="fas fa-quote-left" aria-hidden="true"></i><?= themeEscape($keywords_text) ?><i class="fas fa-quote-right" aria-hidden="true"></i>
                                         </span>
                                     <?php else : ?>
                                         <span><?= __('titles') ?></span>
@@ -107,33 +107,22 @@ if (!function_exists('rasamalaSearchFilterHtml')) {
                             </div>
 
                             <!-- Right: Action Controls (Filter, Sort, View Mode) -->
-                            <div class="col-12 col-md-6 col-lg-5">
-                                <div class="row g-2 align-items-center justify-content-end">
-                                    <!-- Filter Button -->
-                                    <div class="col-4">
-                                        <button type="button" class="btn btn-light btn-modern-filter w-100 shadow-sm border d-flex align-items-center justify-content-center py-2 px-1 text-truncate" data-bs-toggle="modal" data-bs-target="#mobileFilterModal" id="btn-open-filter-modal" aria-label="<?= themeEscape(__('Open filter options')) ?>">
-                                            <i class="fas fa-filter me-1 text-primary text-xs" aria-hidden="true"></i>
-                                            <span class="fw-bold fs-6 text-truncate"><?= __('Filter') ?></span>
-                                            <span class="badge bg-primary rounded-pill ms-1 d-none" id="active-filter-count">0</span>
-                                        </button>
-                                    </div>
+                            <div class="search-result-toolbar-actions">
+                                <button type="button" class="btn search-toolbar-action" data-bs-toggle="modal" data-bs-target="#mobileFilterModal" id="btn-open-filter-modal" aria-label="<?= themeEscape(__('Open filter options')) ?>">
+                                    <i class="fas fa-filter search-toolbar-action-icon" aria-hidden="true"></i>
+                                    <span class="search-toolbar-action-label"><?= __('Filter') ?></span>
+                                    <span class="search-toolbar-badge d-none" id="active-filter-count">0</span>
+                                </button>
 
-                                    <!-- Sort Button -->
-                                    <div class="col-4">
-                                        <button type="button" class="btn btn-light btn-modern-filter w-100 shadow-sm border d-flex align-items-center justify-content-center py-2 px-1 text-truncate" data-bs-toggle="modal" data-bs-target="#mobileSortModal" id="btn-open-sort-modal" aria-label="<?= themeEscape(__('Open sort options')) ?>">
-                                            <i class="fas fa-sort me-1 text-primary text-xs" aria-hidden="true"></i>
-                                            <span id="current-sort-label" class="fw-bold fs-6 text-truncate"><?= __('Sort by') ?></span>
-                                        </button>
-                                    </div>
+                                <button type="button" class="btn search-toolbar-action" data-bs-toggle="modal" data-bs-target="#mobileSortModal" id="btn-open-sort-modal" aria-label="<?= themeEscape(__('Open sort options')) ?>">
+                                    <i class="fas fa-sort search-toolbar-action-icon" aria-hidden="true"></i>
+                                    <span id="current-sort-label" class="search-toolbar-action-label"><?= __('Sort by') ?></span>
+                                </button>
 
-                                    <!-- View Mode Button -->
-                                    <div class="col-4">
-                                        <button type="button" class="btn btn-light btn-modern-filter w-100 shadow-sm border d-flex align-items-center justify-content-center py-2 px-1 text-truncate" data-bs-toggle="modal" data-bs-target="#mobileViewModal" id="btn-open-view-modal" aria-label="<?= themeEscape(__('Change result view')) ?>">
-                                            <i class="<?= themeEscape($view_options[$current_view]['icon']) ?> me-1 text-primary text-xs" aria-hidden="true"></i>
-                                            <span class="fw-bold fs-6 text-truncate"><?= themeEscape($view_options[$current_view]['label']) ?></span>
-                                        </button>
-                                    </div>
-                                </div>
+                                <button type="button" class="btn search-toolbar-action" data-bs-toggle="modal" data-bs-target="#mobileViewModal" id="btn-open-view-modal" aria-label="<?= themeEscape(__('Change result view')) ?>">
+                                    <i class="<?= themeEscape($view_options[$current_view]['icon']) ?> search-toolbar-action-icon" aria-hidden="true"></i>
+                                    <span class="search-toolbar-action-label"><?= themeEscape($view_options[$current_view]['label']) ?></span>
+                                </button>
                             </div>
                         </div>
                         <!-- Hidden SLiMS Sort Select for JS binding -->
@@ -163,11 +152,11 @@ if (!function_exists('rasamalaSearchFilterHtml')) {
 <!-- Unified Filter Pop-up Modal (Slideout Drawer) -->
 <div class="modal fade" id="mobileFilterModal" tabindex="-1" role="dialog" aria-labelledby="mobileFilterModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-slideout" role="document">
-        <div class="modal-content border-0 h-100 shadow-lg">
-            <div class="modal-header border-bottom py-3 px-4">
+        <div class="modal-content border-0 h-100 search-control-modal-content">
+            <div class="modal-header search-control-modal-header">
                 <div>
-                    <h5 class="modal-title fw-bold" id="mobileFilterModalLabel"><i class="fas fa-filter me-2 text-primary" aria-hidden="true"></i><?= __('Filter by') ?></h5>
-                    <small class="text-muted d-block text-sm mt-1"><?= __('Refine search results by criteria') ?></small>
+                    <h5 class="modal-title search-control-modal-title" id="mobileFilterModalLabel"><i class="fas fa-filter search-control-modal-title-icon" aria-hidden="true"></i><?= __('Filter by') ?></h5>
+                    <small class="search-control-modal-subtitle"><?= __('Refine search results by criteria') ?></small>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -176,7 +165,7 @@ if (!function_exists('rasamalaSearchFilterHtml')) {
                     <?= rasamalaSearchFilterHtml($engine->getFilter($opac, true)) ?>
                 </div>
             </div>
-            <div class="modal-footer border-top p-3 bg-light">
+            <div class="modal-footer search-control-modal-footer">
                 <div class="row w-100 g-2">
                     <div class="col-6">
                         <button type="button" class="btn btn-outline-secondary w-100 py-2.5 fw-bold rounded-pill btn-modal-action" id="reset-mobile-filter">
@@ -197,15 +186,15 @@ if (!function_exists('rasamalaSearchFilterHtml')) {
 <!-- Unified Sort Pop-up Modal -->
 <div class="modal fade" id="mobileSortModal" tabindex="-1" role="dialog" aria-labelledby="mobileSortModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content border-0 rounded-3 shadow-lg">
-            <div class="modal-header border-bottom py-3 px-4">
+        <div class="modal-content border-0 rounded-3 search-control-modal-content">
+            <div class="modal-header search-control-modal-header">
                 <div>
-                    <h5 class="modal-title fw-bold" id="mobileSortModalLabel"><i class="fas fa-sort me-2 text-primary" aria-hidden="true"></i><?= __('Sort by') ?></h5>
-                    <small class="text-muted d-block text-sm mt-1"><?= __('Choose sorting order for search results') ?></small>
+                    <h5 class="modal-title search-control-modal-title" id="mobileSortModalLabel"><i class="fas fa-sort search-control-modal-title-icon" aria-hidden="true"></i><?= __('Sort by') ?></h5>
+                    <small class="search-control-modal-subtitle"><?= __('Choose sorting order for search results') ?></small>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body p-0">
+            <div class="modal-body search-control-modal-body">
                 <div class="list-group list-group-flush search-sort-modal-options" id="mobile-sort-options"></div>
             </div>
         </div>
@@ -215,15 +204,15 @@ if (!function_exists('rasamalaSearchFilterHtml')) {
 <!-- Unified View Mode Pop-up Modal (Simple, List, Grid) -->
 <div class="modal fade" id="mobileViewModal" tabindex="-1" role="dialog" aria-labelledby="mobileViewModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content border-0 rounded-3 shadow-lg">
-            <div class="modal-header border-bottom py-3 px-4">
+        <div class="modal-content border-0 rounded-3 search-control-modal-content">
+            <div class="modal-header search-control-modal-header">
                 <div>
-                    <h5 class="modal-title fw-bold" id="mobileViewModalLabel"><i class="fas fa-th-large me-2 text-primary" aria-hidden="true"></i><?= __('View Mode') ?></h5>
-                    <small class="text-muted d-block text-sm mt-1"><?= __('Choose display layout style') ?></small>
+                    <h5 class="modal-title search-control-modal-title" id="mobileViewModalLabel"><i class="fas fa-th-large search-control-modal-title-icon" aria-hidden="true"></i><?= __('View Mode') ?></h5>
+                    <small class="search-control-modal-subtitle"><?= __('Choose display layout style') ?></small>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body p-0">
+            <div class="modal-body search-control-modal-body">
                 <form method="POST" action="<?= themeEscape($view_action) ?>" class="m-0" id="search-view-mode-form">
                     <input type="hidden" name="csrf_token" value="<?= themeEscape($view_csrf) ?>"/>
                     <input type="hidden" name="view" id="search-view-input-value" value=""/>
@@ -240,20 +229,20 @@ if (!function_exists('rasamalaSearchFilterHtml')) {
                             $url_params = array_merge($_GET, ['view' => $view_key, 'csrf_token' => $view_csrf]);
                             $direct_url = $_SERVER['PHP_SELF'] . '?' . http_build_query($url_params);
                         ?>
-                        <a href="<?= themeEscape($direct_url) ?>" data-view-value="<?= themeEscape($view_key) ?>" class="list-group-item list-group-item-action d-flex align-items-center justify-content-between p-3 border-bottom search-view-option-item <?= $is_active ? 'active bg-light text-dark' : '' ?>" role="button">
-                            <div class="d-flex align-items-center">
-                                <div class="view-option-icon-box rounded-circle me-3 d-flex align-items-center justify-content-center <?= $is_active ? 'bg-primary text-white' : 'bg-light text-primary' ?>" style="width: 42px; height: 42px; min-width: 42px;">
-                                    <i class="<?= themeEscape($view_option['icon']) ?> fs-5" aria-hidden="true"></i>
+                        <a href="<?= themeEscape($direct_url) ?>" data-view-value="<?= themeEscape($view_key) ?>" class="list-group-item list-group-item-action search-control-option search-view-option-item <?= $is_active ? 'active' : '' ?>" role="button">
+                            <div class="search-control-option-main">
+                                <div class="search-control-option-icon view-option-icon-box">
+                                    <i class="<?= themeEscape($view_option['icon']) ?>" aria-hidden="true"></i>
                                 </div>
-                                <div class="text-start">
-                                    <div class="fw-bold fs-6 <?= $is_active ? 'text-primary' : 'text-dark' ?>"><?= themeEscape($view_option['label']) ?></div>
+                                <div class="search-control-option-text">
+                                    <div class="search-control-option-title"><?= themeEscape($view_option['label']) ?></div>
                                     <?php if ($view_desc) : ?>
-                                    <small class="text-muted d-block mt-1"><?= themeEscape($view_desc) ?></small>
+                                    <small class="search-control-option-desc"><?= themeEscape($view_desc) ?></small>
                                     <?php endif; ?>
                                 </div>
                             </div>
                             <?php if ($is_active) : ?>
-                            <i class="fas fa-check-circle text-primary fs-5 ms-2" aria-hidden="true"></i>
+                            <i class="fas fa-check-circle search-control-option-check" aria-hidden="true"></i>
                             <?php endif; ?>
                         </a>
                         <?php endforeach; ?>

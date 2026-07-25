@@ -180,26 +180,25 @@
 
         const $item = $('<a>', {
             href: '#',
-            class: `list-group-item list-group-item-action d-flex align-items-center justify-content-between p-3 border-bottom search-sort-option-item ${selected ? 'active bg-light text-dark' : ''}`,
+            class: `list-group-item list-group-item-action search-control-option search-sort-option-item ${selected ? 'active' : ''}`,
             'data-value': value,
             'role': 'button'
         });
 
-        const $left = $('<div>', { class: 'd-flex align-items-center' });
+        const $left = $('<div>', { class: 'search-control-option-main' });
         const $iconBox = $('<div>', {
-            class: `sort-option-icon-box rounded-circle me-3 d-flex align-items-center justify-content-center ${selected ? 'bg-primary text-white' : 'bg-light text-primary'}`,
-            style: 'width: 42px; height: 42px; min-width: 42px;'
-        }).append($('<i>', { class: `${iconClass} fs-5`, 'aria-hidden': 'true' }));
+            class: 'search-control-option-icon sort-option-icon-box'
+        }).append($('<i>', { class: iconClass, 'aria-hidden': 'true' }));
 
-        const $textWrap = $('<div>', { class: 'text-start' });
-        const $title = $('<div>', { class: `fw-bold fs-6 ${selected ? 'text-primary' : 'text-dark'}` }).text(text);
+        const $textWrap = $('<div>', { class: 'search-control-option-text' });
+        const $title = $('<div>', { class: 'search-control-option-title' }).text(text);
         $textWrap.append($title);
         $left.append($iconBox).append($textWrap);
 
         $item.append($left);
 
         if (selected) {
-            $item.append($('<i>', { class: 'fas fa-check-circle text-primary fs-5 ms-2', 'aria-hidden': 'true' }));
+            $item.append($('<i>', { class: 'fas fa-check-circle search-control-option-check', 'aria-hidden': 'true' }));
         }
 
         return $item;
@@ -224,10 +223,10 @@
 
         if (count > 0) {
             $badge.text(count).removeClass('d-none');
-            $('#btn-open-filter-modal').addClass('btn-primary text-white').removeClass('btn-light');
+            $('#btn-open-filter-modal').addClass('is-active').attr('aria-pressed', 'true');
         } else {
             $badge.addClass('d-none');
-            $('#btn-open-filter-modal').addClass('btn-light').removeClass('btn-primary text-white');
+            $('#btn-open-filter-modal').removeClass('is-active').attr('aria-pressed', 'false');
         }
     };
 
@@ -251,14 +250,10 @@
             const val = $(this).data('value');
             $select.val(val).trigger('change');
 
-            $('#mobile-sort-options a').removeClass('active bg-light text-dark').find('i.fa-check-circle').remove();
-            $('#mobile-sort-options a .sort-option-icon-box').removeClass('bg-primary text-white').addClass('bg-light text-primary');
-            $('#mobile-sort-options a .fw-bold').removeClass('text-primary').addClass('text-dark');
+            $('#mobile-sort-options a').removeClass('active').find('.search-control-option-check').remove();
 
-            $(this).addClass('active bg-light text-dark');
-            $(this).find('.sort-option-icon-box').addClass('bg-primary text-white').removeClass('bg-light text-primary');
-            $(this).find('.fw-bold').addClass('text-primary').removeClass('text-dark');
-            $('<i>', { class: 'fas fa-check-circle text-primary fs-5 ms-2', 'aria-hidden': 'true' }).appendTo($(this));
+            $(this).addClass('active');
+            $('<i>', { class: 'fas fa-check-circle search-control-option-check', 'aria-hidden': 'true' }).appendTo($(this));
 
             updateSortLabel();
             hideModal('mobileSortModal');

@@ -940,11 +940,12 @@ body.rasamala-header-fixed .rasamala-sticky-action-wrapper {
 .rasamala-sticky-toolbar {
   position: relative !important;
   overflow: visible !important;
-  background-color: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  border: 1px solid rgba(0, 0, 0, 0.08) !important;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08) !important;
+  background: color-mix(in srgb, var(--theme-surface) 96%, transparent) !important;
+  background-color: color-mix(in srgb, var(--theme-surface) 96%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 22%, transparent) !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
 }
 
 .search-result-summary-card {
@@ -2255,11 +2256,6 @@ body.rasamala-theme:not(.rasamala-dark) .biblio-list-card,
 body.rasamala-theme:not(.rasamala-dark) .biblio-simple-item,
 body.rasamala-theme:not(.rasamala-dark) .grid-item>.card,
 body.rasamala-theme:not(.rasamala-dark) .card.item.border-0,
-body.rasamala-theme:not(.rasamala-dark) .detail-record,
-body.rasamala-theme:not(.rasamala-dark) .detail-cover-wrapper,
-body.rasamala-theme:not(.rasamala-dark) .detail-notes-box,
-body.rasamala-theme:not(.rasamala-dark) .detail-side-availability,
-body.rasamala-theme:not(.rasamala-dark) .detail-avail-row,
 body.rasamala-theme:not(.rasamala-dark) .availability-panel,
 body.rasamala-theme:not(.rasamala-dark) .news-list-card,
 body.rasamala-theme:not(.rasamala-dark) .librarian-card,
@@ -2305,9 +2301,6 @@ body.rasamala-theme:not(.rasamala-dark) .search-type-btn.btn-light {
   border-color: var(--rasamala-border-soft) !important;
 }
 
-body.rasamala-theme:not(.rasamala-dark) .detail-record dl.row,
-body.rasamala-theme:not(.rasamala-dark) .detail-record dl.row dt,
-body.rasamala-theme:not(.rasamala-dark) .detail-record dl.row dd,
 body.rasamala-theme:not(.rasamala-dark) .detail-record table th,
 body.rasamala-theme:not(.rasamala-dark) .detail-record table td,
 body.rasamala-theme:not(.rasamala-dark) .news-list-footer,

@@ -6,9 +6,9 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
 }
 ?>
-<div class="col-md-3 mb-4 text-center text-md-left">
-    <div class="p-4 bg-rasamala-light rounded mb-3 detail-cover-wrapper">
-        <div class="shadow-sm detail-cover mb-3">
+<div class="col-md-3 mb-4 text-center text-md-left detail-sidebar-col">
+    <div class="detail-cover-wrapper">
+        <div class="detail-cover">
           <?= themeSanitizeHtml($image); ?>
         </div>
         <?= themeDetailCallNumberTags($dbs ?? null, $biblio_id_safe, $call_number ?? ''); ?>

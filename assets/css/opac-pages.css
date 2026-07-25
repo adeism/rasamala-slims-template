@@ -509,6 +509,23 @@
   cursor: pointer;
 }
 
+.detail-cover-wrapper {
+  border: none !important;
+  background-color: transparent !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: none !important;
+  transition: transform 0.3s ease !important;
+  max-width: 200px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  overflow: visible !important;
+}
+
 .add-to-chart {
   display: flex !important;
   flex-direction: column !important;
@@ -834,54 +851,56 @@ body.rasamala-search-panels-transparent .result-search .search-view-toggle {
    7. Detail Page (show_detail) Styling
    ---------------------------------------------------- */
 .detail-record {
-  background: #ffffff !important;
-  border-radius: 18px !important;
-  border: 1px solid rgba(66, 66, 66, 0.05) !important;
-  box-shadow: var(--rasamala-shadow-md) !important;
-  padding: 30px !important;
-  font-family: var(--rasamala-font-stack) !important;
+  position: relative;
+  overflow: hidden;
+  background: var(--theme-surface);
+  background-color: var(--theme-surface);
+  border: 1px solid color-mix(in srgb, var(--theme-muted) 24%, transparent);
+  border-radius: 22px;
+  box-shadow: none;
+  padding: clamp(24px, 3vw, 38px);
+  font-family: var(--rasamala-font-stack);
 }
 
 /* Modernized Detail Tables */
 .detail-record table {
-  width: 100% !important;
-  border-collapse: separate !important;
-  border-spacing: 0 !important;
-  margin-top: 15px !important;
-  margin-bottom: 25px !important;
-  border-radius: 12px !important;
-  border: 1px solid var(--rasamala-border) !important;
-  overflow: hidden !important;
-  background-color: #ffffff !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02) !important;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 15px;
+  margin-bottom: 25px;
+  border: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  background-color: color-mix(in srgb, var(--theme-surface) 94%, var(--theme-accent) 6%);
+  box-shadow: none;
 }
 
 .detail-record table th {
-  background-color: var(--rasamala-light-bg) !important;
-  color: var(--rasamala-text-secondary) !important;
-  font-weight: 600 !important;
-  font-size: 12px !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
-  padding: 14px 16px !important;
-  border-bottom: 1px solid var(--rasamala-border) !important;
-  border-top: none !important;
+  background-color: transparent;
+  color: var(--rasamala-text-secondary);
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 14px 16px;
+  border: 0;
 }
 
 .detail-record table td {
-  padding: 14px 16px !important;
-  border-bottom: 1px solid rgba(66, 66, 66, 0.05) !important;
-  font-size: 13px !important;
-  color: var(--rasamala-text-primary) !important;
-  vertical-align: middle !important;
+  padding: 14px 16px;
+  border: 0;
+  font-size: 13px;
+  color: var(--rasamala-text-primary);
+  vertical-align: middle;
 }
 
 .detail-record table tr:last-child td {
-  border-bottom: none !important;
+  border-bottom: none;
 }
 
 .detail-record table tr:hover td {
-  background-color: rgba(66, 66, 66, 0.01) !important;
+  background-color: color-mix(in srgb, var(--theme-accent) 5%, transparent);
 }
 
 /* Responsive Table scroll on Mobile screen sizes */
@@ -896,33 +915,33 @@ body.rasamala-search-panels-transparent .result-search .search-view-toggle {
 
 /* Detail definition list specs style */
 .detail-record dl.row {
-  border-top: 1px solid var(--rasamala-border) !important;
-  padding-top: 10px !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
+  border: 0;
+  padding-top: 4px;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .detail-record dl.row dt {
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  color: var(--rasamala-text-secondary) !important;
-  border-bottom: 1px solid rgba(66, 66, 66, 0.04) !important;
-  padding-top: 8px !important;
-  padding-bottom: 8px !important;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--rasamala-text-secondary);
+  border: 0;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 
 .detail-record dl.row dd {
-  font-size: 14px !important;
-  color: var(--rasamala-text-primary) !important;
-  border-bottom: 1px solid rgba(66, 66, 66, 0.04) !important;
-  padding-top: 8px !important;
-  padding-bottom: 8px !important;
-  margin-bottom: 0 !important;
+  font-size: 14px;
+  color: var(--rasamala-text-primary);
+  border: 0;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  margin-bottom: 0;
 }
 
 .detail-record dl.row dt:last-of-type,
 .detail-record dl.row dd:last-of-type {
-  border-bottom: none !important;
+  border-bottom: none;
 }
 
 /* Comment section bubbles formatting */
@@ -1273,63 +1292,66 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
 }
 
 .detail-side-availability {
-  max-width: 260px !important;
-  margin: 14px auto 0 !important;
-  text-align: left !important;
+  max-width: 260px;
+  margin: 16px auto 0;
+  text-align: left;
 }
 
 .detail-side-heading {
-  display: flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-  margin: 0 0 8px !important;
-  color: var(--rasamala-text-primary) !important;
-  font-size: 14px !important;
-  font-weight: 800 !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+  color: var(--rasamala-text-primary);
+  font-size: 14px;
+  font-weight: 800;
 }
 
 .detail-side-heading::before {
-  content: "\f058" !important;
-  color: var(--rasamala-accent) !important;
-  font-family: "Font Awesome 5 Free" !important;
-  font-size: 13px !important;
-  font-weight: 900 !important;
+  content: "\f058";
+  color: var(--rasamala-accent);
+  font-family: "Font Awesome 5 Free";
+  font-size: 13px;
+  font-weight: 900;
 }
 
 .detail-callnumber-strip {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  justify-content: center !important;
-  gap: 6px !important;
-  margin-top: 12px !important;
-  margin-bottom: 0 !important;
-  text-align: center !important;
-  width: 100% !important;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 15px;
+  margin-bottom: 0;
+  text-align: center;
+  width: 100%;
 }
 
 .detail-callnumber-label {
-  width: 100% !important;
-  color: var(--rasamala-text-secondary) !important;
-  font-size: 10px !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.08em !important;
-  line-height: 1.2 !important;
-  text-transform: uppercase !important;
+  width: 100%;
+  color: var(--rasamala-text-secondary);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
 }
 
 .detail-callnumber-tag {
-  display: inline-block !important;
-  background: var(--rasamala-accent) !important;
-  color: var(--theme-on-primary) !important;
-  border-radius: 6px !important;
-  box-shadow: 0 5px 14px rgba(var(--theme-accent-rgb), 0.22) !important;
-  font-size: 12px !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.02em !important;
-  line-height: 1.2 !important;
-  padding: 5px 10px !important;
-  max-width: 100% !important;
-  overflow-wrap: anywhere !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--theme-accent) 92%, var(--theme-surface) 8%);
+  color: var(--theme-on-accent);
+  border: 1px solid color-mix(in srgb, var(--theme-accent) 72%, transparent);
+  border-radius: 999px;
+  box-shadow: none;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  padding: 6px 10px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .detail-avail-rows {
@@ -1337,27 +1359,32 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
 }
 
 .detail-avail-row {
-  position: relative !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 8px !important;
-  min-height: 38px !important;
-  margin-bottom: 4px !important;
-  padding: 8px 10px !important;
-  border: 1px solid transparent !important;
-  border-bottom-color: rgba(var(--theme-accent-rgb), 0.12) !important;
-  border-radius: 8px !important;
-  cursor: pointer !important;
-  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease !important;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+  margin-bottom: 9px;
+  padding: 10px 16px 10px 20px !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 14%, transparent);
+  border-radius: 999px !important;
+  background: color-mix(in srgb, var(--theme-surface) 96%, var(--theme-accent) 4%);
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease;
+}
+
+.detail-avail-row::before {
+  display: none !important;
+  content: none !important;
 }
 
 .detail-avail-row:hover,
 .detail-avail-row:focus-within {
-  background: rgba(var(--theme-accent-rgb), 0.09) !important;
-  border-color: rgba(var(--theme-accent-rgb), 0.18) !important;
-  box-shadow: 0 6px 16px rgba(var(--theme-accent-rgb), 0.1) !important;
-  outline: none !important;
+  border-color: color-mix(in srgb, var(--theme-accent) 34%, transparent);
+  background: color-mix(in srgb, var(--theme-surface) 90%, var(--theme-accent) 10%);
+  box-shadow: none;
+  outline: none;
 }
 
 .avail-loc-callno {
@@ -1367,10 +1394,10 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
 
 .avail-loc-name {
   display: block !important;
-  color: var(--rasamala-accent) !important;
-  font-size: 12px !important;
+  color: var(--theme-on-surface) !important;
+  font-size: 12.5px !important;
   font-weight: 800 !important;
-  line-height: 1.25 !important;
+  line-height: 1.3 !important;
   overflow-wrap: anywhere !important;
 }
 
@@ -1379,6 +1406,10 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
   display: inline-flex !important;
   align-items: center !important;
   gap: 4px !important;
+  min-height: 24px !important;
+  padding: 0 9px !important;
+  border-radius: 999px !important;
+  background: color-mix(in srgb, currentColor 11%, transparent) !important;
   font-size: 12px !important;
   font-weight: 900 !important;
   line-height: 1 !important;
@@ -1426,7 +1457,7 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
   background: #ffffff !important;
   border: 1px solid var(--rasamala-border) !important;
   border-radius: 10px !important;
-  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.16) !important;
+  box-shadow: none !important;
   opacity: 0 !important;
   pointer-events: none !important;
   transform: translateY(4px) !important;
@@ -1591,23 +1622,50 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
 
   .detail-side-availability {
     max-width: 100% !important;
+    margin-top: 14px !important;
   }
 
   .detail-actions {
+    align-items: flex-start !important;
+    gap: 5px !important;
     justify-content: flex-end !important;
   }
 
   .detail-meta-row {
-    gap: 8px !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+    margin: 14px 0 11px !important;
   }
 
   .detail-meta-row .detail-gmd-label {
-    font-size: 12px !important;
+    padding-top: 5px !important;
+    color: var(--theme-accent) !important;
+    font-size: 12.5px !important;
+    font-weight: 800 !important;
+  }
+
+  .detail-meta-row .detail-gmd-label i {
+    color: var(--theme-accent) !important;
+    margin-right: 6px !important;
   }
 
   .detail-actions .detail-link-btn {
-    padding: 4px 8px !important;
-    font-size: 11px !important;
+    min-height: 28px !important;
+    padding: 5px 9px !important;
+    border-color: color-mix(in srgb, var(--theme-accent) 34%, transparent) !important;
+    background-color: color-mix(in srgb, var(--theme-surface) 94%, var(--theme-accent) 6%) !important;
+    color: var(--theme-on-surface) !important;
+    font-size: 11.5px !important;
+  }
+
+  .detail-actions .detail-link-btn i,
+  .detail-actions .detail-link-btn svg {
+    color: var(--theme-accent) !important;
+  }
+
+  .detail-actions .detail-link-btn.bg-success i,
+  .detail-actions .detail-link-btn.bg-success svg {
+    color: #ffffff !important;
   }
 
   .detail-avail-popover {
@@ -1678,50 +1736,65 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
 
 /* Book Detail Page styles */
 .detail-cover-wrapper {
-  border: 1px solid rgba(66, 66, 66, 0.05) !important;
-  background-color: var(--rasamala-light-bg) !important;
-  border-radius: 14px !important;
-  padding: 14px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.02) !important;
-  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
-  max-width: 200px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  overflow: hidden !important;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 210px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 16px 14px 18px;
+  border: 0;
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--theme-surface) 96%, var(--theme-accent) 4%);
+  background-color: color-mix(in srgb, var(--theme-surface) 96%, var(--theme-accent) 4%);
+  box-shadow: none;
+  transition: background-color 0.2s ease;
+  overflow: hidden;
+}
+
+.detail-cover-wrapper::after {
+  content: none;
 }
 
 .detail-cover-wrapper:hover {
-  transform: translateY(-4px) !important;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08) !important;
+  background: color-mix(in srgb, var(--theme-surface) 94%, var(--theme-accent) 6%);
+  background-color: color-mix(in srgb, var(--theme-surface) 94%, var(--theme-accent) 6%);
+  box-shadow: none;
 }
 
 .detail-cover {
-  width: 100% !important;
-  display: flex !important;
-  justify-content: center !important;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 14px;
 }
 
 .detail-cover img {
-  width: 100% !important;
-  max-width: 145px !important;
-  max-height: 215px !important;
-  object-fit: contain !important;
-  height: auto !important;
-  border-radius: 6px !important;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12) !important;
-  display: block !important;
+  display: block;
+  width: 100%;
+  max-width: 145px;
+  max-height: 215px;
+  height: auto;
+  object-fit: contain;
+  border-radius: 7px;
+  box-shadow: none;
 }
 
 .detail-cover .book-cover-placeholder {
-  width: 145px !important;
-  height: 215px !important;
-  min-height: 215px !important;
-  border-radius: 6px !important;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12) !important;
+  --book-cover-width: 145px;
+  --book-cover-height: 215px;
+  --book-cover-min-height: 215px;
+  --book-cover-aspect-ratio: 145 / 215;
+  --book-cover-background: var(--theme-primary);
+  --book-cover-shadow: none;
+  flex: 0 0 auto;
+  max-width: 145px;
+  max-height: 215px;
+  border-radius: 7px;
 }
 
 .detail-cover .book-cover-content {
@@ -1754,54 +1827,56 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
 
 @media (max-width: 767.98px) {
   .detail-cover-wrapper {
-    max-width: 150px !important;
-    padding: 10px !important;
+    max-width: min(184px, 56vw) !important;
+    padding: 12px 12px 14px !important;
     margin-bottom: 12px !important;
-    border-radius: 12px !important;
+    border-radius: 16px !important;
   }
 
   .detail-cover img {
-    max-width: 115px !important;
-    max-height: 170px !important;
+    max-width: min(145px, 44vw) !important;
+    max-height: min(215px, 65vw) !important;
     object-fit: contain !important;
   }
 
   .detail-cover .book-cover-placeholder {
-    width: 115px !important;
-    height: 170px !important;
-    min-height: 170px !important;
+    --book-cover-width: min(145px, 44vw);
+    --book-cover-height: min(215px, 65vw);
+    --book-cover-min-height: min(200px, 60vw);
+    --book-cover-aspect-ratio: 145 / 215;
+    max-width: min(145px, 44vw) !important;
+    max-height: min(215px, 65vw) !important;
   }
 
   .detail-cover .book-cover-title-text {
-    font-size: 0.72rem !important;
-    line-height: 1.3 !important;
+    font-size: 0.78rem !important;
+    line-height: 1.34 !important;
     -webkit-line-clamp: 4 !important;
     line-clamp: 4 !important;
   }
 }
 
 .detail-link-btn {
-  display: inline-flex !important;
-  align-items: center !important;
-  padding: 8px 16px !important;
-  border-radius: var(--rasamala-radius-button) !important;
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  background-color: #ffffff !important;
-  border: 1px solid var(--rasamala-border) !important;
-  color: var(--rasamala-text-primary) !important;
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02) !important;
-  margin-bottom: 6px !important;
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: var(--rasamala-radius-button);
+  font-size: 13px;
+  font-weight: 700;
+  background-color: color-mix(in srgb, var(--theme-accent) 8%, #ffffff);
+  border: 1px solid color-mix(in srgb, var(--theme-accent) 30%, transparent);
+  color: var(--rasamala-text-primary);
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  box-shadow: none;
+  margin-bottom: 6px;
 }
 
 .detail-link-btn:hover {
-  background-color: var(--rasamala-accent) !important;
-  border-color: var(--rasamala-accent) !important;
-  color: var(--theme-on-primary) !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 4px 10px rgba(var(--theme-accent-rgb), 0.15) !important;
-  text-decoration: none !important;
+  background-color: var(--rasamala-accent);
+  color: var(--theme-on-primary);
+  border-color: var(--rasamala-accent);
+  box-shadow: none;
+  text-decoration: none;
 }
 
 .detail-link-btn.bg-success {
@@ -1824,45 +1899,39 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
 .detail-title {
   color: var(--rasamala-text-primary) !important;
   font-family: var(--rasamala-font-stack) !important;
-  font-size: 28px !important;
+  font-size: clamp(24px, calc(1.28rem + 0.7vw), 28px) !important;
+  line-height: 1.1 !important;
   letter-spacing: -0.015em !important;
 }
 
 .detail-author-footer {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 8px !important;
-  margin-top: 10px !important;
-}
-
-/* Hide Bootstrap's blockquote-footer prefix em-dash */
-.detail-author-footer::before {
-  display: none !important;
-  content: "" !important;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 .detail-author-footer a {
-  display: inline-flex !important;
-  align-items: center !important;
-  padding: 6px 14px !important;
-  border-radius: var(--rasamala-radius-button) !important;
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  text-decoration: none !important;
-  background-color: rgba(var(--theme-accent-rgb), 0.08) !important;
-  color: var(--rasamala-accent) !important;
-  border: 1.5px solid rgba(var(--theme-accent-rgb), 0.16) !important;
-  transition: background-color 0.25s cubic-bezier(0.25, 0.8, 0.25, 1), border-color 0.25s cubic-bezier(0.25, 0.8, 0.25, 1), color 0.25s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.25s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02) !important;
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 14px;
+  border-radius: var(--rasamala-radius-button);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  background-color: color-mix(in srgb, var(--theme-accent) 10%, transparent);
+  color: var(--rasamala-accent);
+  border: 1px solid color-mix(in srgb, var(--theme-accent) 30%, transparent);
+  transition: background-color 0.25s cubic-bezier(0.25, 0.8, 0.25, 1), border-color 0.25s cubic-bezier(0.25, 0.8, 0.25, 1), color 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: none;
 }
 
 .detail-author-footer a:hover,
 .detail-author-footer a:focus {
-  background-color: var(--rasamala-accent) !important;
-  color: var(--theme-on-primary) !important;
-  border-color: var(--rasamala-accent) !important;
-  box-shadow: 0 4px 12px rgba(var(--theme-accent-rgb), 0.22) !important;
-  transform: translateY(-1.5px) !important;
+  background-color: var(--rasamala-accent);
+  color: var(--theme-on-primary);
+  border-color: var(--rasamala-accent);
+  box-shadow: none;
 }
 
 .detail-author-role-text {
@@ -1885,6 +1954,146 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
 }
 
 /* Search results & Filters */
+.search-result-toolbar-card {
+  padding: 11px 13px;
+  border-radius: 14px;
+}
+
+.search-result-toolbar-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px 14px;
+}
+
+.search-result-toolbar-summary,
+.search-result-toolbar-actions {
+  min-width: 0;
+}
+
+.search-result-summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  color: var(--theme-on-surface);
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.25;
+}
+
+.search-result-count-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 21px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--theme-accent);
+  color: var(--theme-on-accent);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.search-keyword-badge {
+  display: inline-flex;
+  align-items: center;
+  max-width: min(100%, 260px);
+  min-height: 22px;
+  gap: 5px;
+  padding: 0 9px;
+  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 22%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--theme-surface) 94%, var(--theme-accent) 6%);
+  color: var(--theme-on-surface);
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1;
+}
+
+.search-keyword-badge i {
+  color: var(--theme-accent);
+  font-size: 10px;
+}
+
+.search-result-toolbar-actions {
+  display: flex;
+  justify-content: end;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.search-toolbar-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 30px;
+  max-width: 124px;
+  gap: 5px;
+  padding: 0 10px;
+  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 20%, transparent);
+  border-radius: var(--rasamala-radius-button);
+  background: color-mix(in srgb, var(--theme-surface) 98%, var(--theme-accent) 2%);
+  color: var(--theme-on-surface);
+  box-shadow: none;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1;
+  letter-spacing: 0;
+  text-decoration: none;
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.search-toolbar-action:hover,
+.search-toolbar-action:focus {
+  border-color: color-mix(in srgb, var(--theme-accent) 44%, transparent);
+  background: color-mix(in srgb, var(--theme-accent) 10%, var(--theme-surface));
+  color: var(--theme-on-surface);
+  box-shadow: none;
+}
+
+.search-toolbar-action.is-active {
+  border-color: transparent;
+  background: var(--theme-accent);
+  color: var(--theme-on-accent);
+}
+
+.search-toolbar-action.is-active .search-toolbar-action-icon,
+.search-toolbar-action.is-active .search-toolbar-badge {
+  color: var(--theme-on-accent);
+}
+
+.search-toolbar-action-icon {
+  flex: 0 0 auto;
+  color: var(--theme-accent);
+  font-size: 11px;
+}
+
+.search-toolbar-action-label {
+  min-width: 0;
+  max-width: 94px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-toolbar-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  min-height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--theme-on-accent) 18%, transparent);
+  color: var(--theme-on-accent);
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+}
+
 .search-result-toolbar {
   gap: 12px !important;
 }
@@ -1901,6 +2110,162 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
   border-radius: var(--rasamala-radius-button) !important;
   font-weight: 600 !important;
   font-size: 13px !important;
+}
+
+@media (max-width: 767.98px) {
+  .search-result-toolbar-card {
+    padding: 10px 12px;
+  }
+
+  .search-result-toolbar-grid {
+    grid-template-columns: 1fr;
+    gap: 9px;
+  }
+
+  .search-result-summary {
+    font-size: 12.5px;
+  }
+
+  .search-result-toolbar-actions {
+    justify-content: stretch;
+    flex-wrap: nowrap;
+    gap: 6px;
+  }
+
+  .search-toolbar-action {
+    flex: 1 1 0;
+    max-width: none;
+    min-height: 30px;
+    padding: 0 7px;
+    font-size: 11.5px;
+  }
+}
+
+.search-control-modal-content {
+  background: var(--theme-surface);
+  background-color: var(--theme-surface);
+  color: var(--theme-on-surface);
+  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 18%, transparent);
+  border-radius: 16px;
+  box-shadow: none;
+}
+
+.search-control-modal-header {
+  align-items: center;
+  padding: 13px 16px;
+  border-bottom: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 14%, transparent);
+  background: color-mix(in srgb, var(--theme-surface) 97%, var(--theme-accent) 3%);
+}
+
+.search-control-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--theme-on-surface);
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.search-control-modal-title-icon {
+  color: var(--theme-accent);
+  font-size: 13px;
+}
+
+.search-control-modal-subtitle {
+  display: block;
+  margin-top: 3px;
+  color: var(--theme-muted-on-surface);
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.search-control-modal-body {
+  padding: 0;
+}
+
+.search-control-modal-footer {
+  padding: 12px;
+  border-top: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 14%, transparent);
+  background: color-mix(in srgb, var(--theme-surface) 97%, var(--theme-accent) 3%);
+}
+
+.search-control-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 12%, transparent);
+  background: var(--theme-surface);
+  color: var(--theme-on-surface);
+  transition: background-color 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+}
+
+.search-control-option:hover,
+.search-control-option:focus {
+  background: color-mix(in srgb, var(--theme-surface) 94%, var(--theme-accent) 6%);
+  color: var(--theme-on-surface);
+}
+
+.search-control-option.active {
+  background: color-mix(in srgb, var(--theme-surface) 90%, var(--theme-accent) 10%);
+  color: var(--theme-on-surface);
+}
+
+.search-control-option-main {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 10px;
+}
+
+.search-control-option-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--theme-accent) 10%, var(--theme-surface));
+  color: var(--theme-accent);
+  font-size: 13px;
+}
+
+.search-control-option.active .search-control-option-icon {
+  background: var(--theme-accent);
+  color: var(--theme-on-accent);
+}
+
+.search-control-option-text {
+  min-width: 0;
+  text-align: left;
+}
+
+.search-control-option-title {
+  color: var(--theme-on-surface);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.search-control-option-desc {
+  display: block;
+  margin-top: 2px;
+  color: var(--theme-muted-on-surface);
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.search-control-option-check {
+  flex: 0 0 auto;
+  color: var(--theme-accent);
+  font-size: 14px;
 }
 
 .search-view-menu {
@@ -3607,20 +3972,27 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   --book-cover-a: var(--theme-primary);
   --book-cover-b: color-mix(in srgb, var(--theme-primary) 58%, var(--theme-secondary) 42%);
   --book-cover-c: color-mix(in srgb, var(--theme-accent) 42%, var(--theme-surface) 58%);
+  --book-cover-width: 100%;
+  --book-cover-height: 100%;
+  --book-cover-min-height: 185px;
+  --book-cover-aspect-ratio: auto;
+  --book-cover-background:
+    radial-gradient(circle at 22% 16%, color-mix(in srgb, var(--book-cover-c) 45%, transparent), transparent 33%),
+    linear-gradient(145deg, var(--book-cover-a), var(--book-cover-b));
+  --book-cover-shadow: var(--rasamala-shadow-md);
   --book-cover-text: var(--theme-on-primary);
   position: relative !important;
-  width: 100% !important;
-  height: 100% !important;
-  min-height: 185px !important;
+  width: var(--book-cover-width) !important;
+  height: var(--book-cover-height) !important;
+  min-height: var(--book-cover-min-height) !important;
+  aspect-ratio: var(--book-cover-aspect-ratio) !important;
   display: flex !important;
   color: var(--book-cover-text) !important;
   font-family: var(--rasamala-font-stack) !important;
   overflow: hidden !important;
   border-radius: 6px !important;
-  box-shadow: var(--rasamala-shadow-md) !important;
-  background:
-    radial-gradient(circle at 22% 16%, color-mix(in srgb, var(--book-cover-c) 45%, transparent), transparent 33%),
-    linear-gradient(145deg, var(--book-cover-a), var(--book-cover-b)) !important;
+  box-shadow: var(--book-cover-shadow) !important;
+  background: var(--book-cover-background) !important;
   background-color: var(--book-cover-a) !important;
   transition: transform 0.3s ease, box-shadow 0.3s ease !important;
   border: 1px solid color-mix(in srgb, var(--theme-primary) 36%, var(--theme-surface) 64%) !important;
@@ -4222,25 +4594,26 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 
 /* Theme Clean-up & Dynamic Book Detail Page Spacing */
 .detail-record {
-  box-shadow: var(--rasamala-shadow-sm) !important;
-  border: 1px solid rgba(0, 0, 0, 0.06) !important;
-  background: #ffffff !important;
-  border-radius: 16px !important;
+  background: var(--theme-surface);
+  background-color: var(--theme-surface);
+  border: 1px solid color-mix(in srgb, var(--theme-muted) 24%, transparent);
+  border-radius: 22px;
+  box-shadow: none;
 }
 
 
 /* Premium Compact Vertical Metadata styling inside Book Detail page */
-.detail-record dl.row {
-  display: flex !important;
-  flex-direction: column !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-  gap: 0 !important;
+.detail-record dl.row.detail-info-list {
+  display: flex;
+  flex-direction: column;
+  margin-left: 0;
+  margin-right: 0;
+  gap: 0;
 }
 
 /* Responsive Detail Information (Grid on Desktop, Stacked on Mobile) */
 @media (max-width: 767.98px) {
-  .detail-record dl.row dt {
+  .detail-record dl.row.detail-info-list > dt {
     display: block !important;
     width: 100% !important;
     max-width: 100% !important;
@@ -4257,7 +4630,7 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
     text-align: left !important;
   }
 
-  .detail-record dl.row dd {
+  .detail-record dl.row.detail-info-list > dd {
     display: block !important;
     width: 100% !important;
     max-width: 100% !important;
@@ -4272,7 +4645,7 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
     text-align: left !important;
   }
 
-  .detail-record dl.row dd:last-of-type {
+  .detail-record dl.row.detail-info-list > dd:last-of-type {
     border-bottom: none !important;
     padding-bottom: 0 !important;
     margin-bottom: 0 !important;
@@ -4280,80 +4653,105 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 }
 
 @media (min-width: 768px) {
-  .detail-record dl.row {
-    display: grid !important;
-    grid-template-columns: 180px 1fr !important;
-    gap: 4px 16px !important;
-    border-bottom: none !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    padding: 4px 0 !important;
+  .detail-record dl.row.detail-info-list {
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 10px 22px;
+    border-bottom: none;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 6px 0;
   }
 
-  .detail-record dl.row dt {
-    grid-column: 1 !important;
-    font-size: 11px !important;
-    font-weight: 600 !important;
-    color: var(--rasamala-text-secondary) !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.05em !important;
-    padding: 4px 0 !important;
-    margin: 0 !important;
-    border-bottom: none !important;
-    text-align: left !important;
-    white-space: nowrap !important;
+  .detail-record dl.row.detail-info-list > dt {
+    grid-column: 1;
+    align-self: start;
+    width: auto;
+    max-width: none;
+    min-width: 0;
+    flex: none;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--rasamala-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 0 0;
+    margin: 0;
+    border-bottom: none;
+    text-align: left;
+    white-space: normal;
+    line-height: 1.55;
   }
 
-  .detail-record dl.row dd {
-    grid-column: 2 !important;
-    font-size: 13.5px !important;
-    font-weight: 500 !important;
-    color: var(--rasamala-text-primary) !important;
-    padding: 4px 0 !important;
-    margin: 0 !important;
-    border-bottom: none !important;
-    text-align: left !important;
+  .detail-record dl.row.detail-info-list > dd {
+    grid-column: 2;
+    align-self: start;
+    width: auto;
+    max-width: none;
+    min-width: 0;
+    flex: none;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--rasamala-text-primary);
+    padding: 0;
+    margin: 0;
+    border-bottom: none;
+    text-align: left;
+    line-height: 1.6;
+  }
+
+  .detail-record dl.row.detail-info-list > dd > div {
+    max-width: 74ch;
   }
 }
 
 /* Style for Detail Page Headings with clean icons */
-.detail-record h5 {
-  font-size: 15px !important;
-  font-weight: 700 !important;
-  color: var(--rasamala-text-primary) !important;
-  display: flex !important;
-  align-items: center !important;
-  margin-top: 24px !important;
-  margin-bottom: 14px !important;
-  border-bottom: none !important;
+.detail-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 28px 0 14px;
+  color: var(--rasamala-text-primary);
+  font-size: 15px;
+  font-weight: 800;
+  border-bottom: none;
 }
 
-.detail-record h5::before {
-  font-family: "Font Awesome 5 Free" !important;
-  font-weight: 900 !important;
-  margin-right: 8px !important;
-  color: var(--rasamala-accent) !important;
+.detail-title-block {
+  margin: 0 0 22px;
+  padding: 0 0 17px;
+  border-bottom: 1px solid color-mix(in srgb, var(--theme-muted) 20%, transparent);
 }
 
-/* Specific icons for each heading based on content */
-.detail-record h5:nth-of-type(1)::before {
-  content: "\f05a" !important;
-  /* info-circle */
+.detail-section-heading::before {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--theme-accent) 12%, transparent);
+  color: var(--rasamala-accent);
+  font-family: "Font Awesome 5 Free";
+  font-size: 11px;
+  font-weight: 900;
 }
 
-.detail-record h5:nth-of-type(2)::before {
-  content: "\f0c9" !important;
-  /* list-ul (Other Info) */
+.detail-section-heading-info::before {
+  content: "\f05a";
 }
 
-.detail-record h5#attachment::before {
-  content: "\f0c6" !important;
-  /* paperclip */
+.detail-section-heading-other::before,
+.detail-section-heading-related::before {
+  content: "\f0c9";
 }
 
-.detail-record h5#comment::before {
-  content: "\f086" !important;
-  /* comments */
+.detail-section-heading-attachment::before {
+  content: "\f0c6";
+}
+
+.detail-section-heading-comment::before {
+  content: "\f086";
 }
 
 
@@ -5330,11 +5728,13 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 body.rasamala-search-panels-transparent .result-search .col-md-3>.card,
 body.rasamala-search-panels-transparent .result-search .desktop-sort-bar,
 body.rasamala-search-panels-transparent .result-search .btn-modern-filter,
+body.rasamala-search-panels-transparent .result-search .search-toolbar-action,
 body.rasamala-search-panels-transparent .result-search .biblio-list-card,
 body.rasamala-search-panels-transparent .result-search .grid-item>.card,
 body.rasamala-search-panels-transparent .result-search .card.item.border-0,
 body.rasamala-search-panels-transparent #mobileFilterModal .modal-content,
-body.rasamala-search-panels-transparent #mobileSortModal .modal-content {
+body.rasamala-search-panels-transparent #mobileSortModal .modal-content,
+body.rasamala-search-panels-transparent #mobileViewModal .modal-content {
   background: rgba(255, 255, 255, 0.18) !important;
   background-color: rgba(255, 255, 255, 0.18) !important;
   border-color: rgba(var(--theme-accent-rgb), 0.14) !important;
@@ -5428,48 +5828,56 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
 
 
 
-/* Premium Description Box for Book Detail Page */
+/* Clean Description Section for Book Detail Page */
 .detail-notes-box {
-  background: var(--rasamala-light-bg) !important;
-  border-radius: 12px !important;
-  border: 1px solid var(--rasamala-border) !important;
-  padding: 18px 20px !important;
-  box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.01) !important;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease !important;
-  font-family: var(--rasamala-font-stack) !important;
+  position: relative;
+  overflow: visible;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  margin-bottom: 24px !important;
+  font-family: var(--rasamala-font-stack);
+}
+
+.detail-notes-box::before {
+  display: none !important;
+  content: none !important;
 }
 
 .detail-notes-header {
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  color: var(--rasamala-text-secondary) !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
-  margin-bottom: 8px !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 6px !important;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 10px;
+  color: var(--rasamala-text-secondary);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .detail-notes-content {
-  font-size: 13.5px !important;
-  color: var(--rasamala-text-primary) !important;
-  line-height: 1.6 !important;
-  overflow-wrap: break-word !important;
-  word-break: normal !important;
-  white-space: normal !important;
+  color: var(--rasamala-text-primary);
+  font-size: 13.5px;
+  line-height: 1.68;
+  overflow-wrap: break-word;
+  word-break: normal;
+  white-space: normal;
 }
 
 .detail-notes-content p {
-  margin: 0 0 0.8rem !important;
+  margin: 0 0 0.8rem;
 }
 
 .detail-notes-content p:last-child {
-  margin-bottom: 0 !important;
+  margin-bottom: 0;
 }
 
 .detail-notes-content br {
-  line-height: 1.8 !important;
+  line-height: 1.8;
 }
 
 .detail-notes-empty {
@@ -5858,7 +6266,8 @@ body.rasamala-search-panels-transparent .result-search .grid-item .bg-rasamala-l
 body.rasamala-search-panels-transparent .result-search .grid-item .list-group,
 body.rasamala-search-panels-transparent .result-search .grid-item .list-group-item,
 body.rasamala-search-panels-transparent #mobileFilterModal .modal-content,
-body.rasamala-search-panels-transparent #mobileSortModal .modal-content {
+body.rasamala-search-panels-transparent #mobileSortModal .modal-content,
+body.rasamala-search-panels-transparent #mobileViewModal .modal-content {
   background: transparent !important;
   background-color: transparent !important;
   box-shadow: none !important;
@@ -5883,12 +6292,16 @@ body.rasamala-search-panels-transparent .result-search .grid-item .list-group-it
 
   body.rasamala-search-panels-transparent #mobileFilterModal .modal-content,
   body.rasamala-search-panels-transparent #mobileSortModal .modal-content,
+  body.rasamala-search-panels-transparent #mobileViewModal .modal-content,
   body.rasamala-search-panels-transparent #mobileFilterModal .modal-header,
   body.rasamala-search-panels-transparent #mobileFilterModal .modal-body,
   body.rasamala-search-panels-transparent #mobileFilterModal .modal-footer,
   body.rasamala-search-panels-transparent #mobileSortModal .modal-header,
   body.rasamala-search-panels-transparent #mobileSortModal .modal-body,
-  body.rasamala-search-panels-transparent #mobileSortModal .modal-footer {
+  body.rasamala-search-panels-transparent #mobileSortModal .modal-footer,
+  body.rasamala-search-panels-transparent #mobileViewModal .modal-header,
+  body.rasamala-search-panels-transparent #mobileViewModal .modal-body,
+  body.rasamala-search-panels-transparent #mobileViewModal .modal-footer {
     background: var(--theme-surface) !important;
     background-color: var(--theme-surface) !important;
     color: var(--theme-text) !important;
@@ -5905,7 +6318,9 @@ body.rasamala-search-panels-transparent .result-search .grid-item .list-group-it
   body.rasamala-search-panels-transparent #mobileFilterModal #mobile-filter-container .list-group,
   body.rasamala-search-panels-transparent #mobileFilterModal #mobile-filter-container .list-group-item,
   body.rasamala-search-panels-transparent #mobileSortModal #mobile-sort-options,
-  body.rasamala-search-panels-transparent #mobileSortModal #mobile-sort-options .list-group-item {
+  body.rasamala-search-panels-transparent #mobileSortModal #mobile-sort-options .list-group-item,
+  body.rasamala-search-panels-transparent #mobileViewModal .search-view-modal-options,
+  body.rasamala-search-panels-transparent #mobileViewModal .search-view-modal-options .list-group-item {
     background: var(--theme-surface) !important;
     background-color: var(--theme-surface) !important;
     color: var(--theme-text) !important;
@@ -5916,7 +6331,8 @@ body.rasamala-search-panels-transparent .result-search .grid-item .list-group-it
   body.rasamala-search-panels-transparent #mobileFilterModal #mobile-filter-container label,
   body.rasamala-search-panels-transparent #mobileFilterModal #search-filter .custom-control-label,
   body.rasamala-search-panels-transparent #mobileFilterModal #search-filter .form-check-label,
-  body.rasamala-search-panels-transparent #mobileSortModal #mobile-sort-options .list-group-item {
+  body.rasamala-search-panels-transparent #mobileSortModal #mobile-sort-options .list-group-item,
+  body.rasamala-search-panels-transparent #mobileViewModal .search-view-modal-options .list-group-item {
     background: color-mix(in srgb, var(--theme-surface) 90%, var(--theme-background) 10%) !important;
     background-color: color-mix(in srgb, var(--theme-surface) 90%, var(--theme-background) 10%) !important;
     color: var(--theme-text) !important;
@@ -7033,16 +7449,16 @@ body.rasamala-theme:not(.rasamala-dark) .detail-side-availability,
 body.rasamala-theme:not(.rasamala-dark) .availability-panel,
 body.rasamala-theme:not(.rasamala-dark) .detail-side-availability .availability-summary-card,
 body.rasamala-theme:not(.rasamala-dark) .detail-side-availability .availability-summary-list {
-  border: 0 !important;
-  box-shadow: none !important;
+  border: 0;
+  box-shadow: none;
 }
 
 body.rasamala-theme:not(.rasamala-dark) .detail-avail-row {
-  border-left: 0 !important;
-  border-right: 0 !important;
-  border-top: 0 !important;
-  border-bottom: 1px solid var(--rasamala-border) !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 14%, transparent) !important;
+  background: color-mix(in srgb, var(--theme-surface) 96%, var(--theme-accent) 4%) !important;
   box-shadow: none !important;
+  border-radius: 999px !important;
+  padding: 10px 18px 10px 20px !important;
 }
 
 .detail-side-availability {
@@ -7058,10 +7474,15 @@ body.rasamala-theme:not(.rasamala-dark) .detail-avail-row {
 }
 
 .detail-avail-row {
-  border: 0 !important;
-  border-bottom: 1px solid color-mix(in srgb, var(--theme-muted) 14%, transparent) !important;
-  border-radius: 0 !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 14%, transparent) !important;
+  border-radius: 999px !important;
+  padding: 10px 18px 10px 20px !important;
   box-shadow: none !important;
+}
+
+.detail-avail-row::before {
+  display: none !important;
+  content: none !important;
 }
 
 .detail-avail-row-hidden {
@@ -7070,7 +7491,81 @@ body.rasamala-theme:not(.rasamala-dark) .detail-avail-row {
 
 .detail-avail-row:hover,
 .detail-avail-row:focus-within {
-  border: 0 !important;
-  border-bottom: 1px solid color-mix(in srgb, var(--theme-accent) 28%, transparent) !important;
-  border-radius: 8px !important;
+  border-color: color-mix(in srgb, var(--theme-accent) 34%, transparent) !important;
+  border-radius: 999px !important;
+}
+
+@media (max-width: 575.98px) {
+  .detail-side-heading {
+    gap: 7px;
+    margin: 0 0 10px;
+    font-size: 14px;
+  }
+
+  .detail-side-heading::before {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 18px;
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--theme-accent) 14%, transparent);
+    font-size: 10px;
+  }
+
+  .detail-callnumber-strip {
+    gap: 8px;
+    margin-top: 16px;
+    padding-top: 13px;
+    border-top: 1px solid color-mix(in srgb, var(--theme-muted) 18%, transparent);
+  }
+
+  .detail-callnumber-label {
+    color: var(--theme-on-surface);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+  }
+
+  .detail-callnumber-tag {
+    min-height: 32px;
+    padding: 8px 14px;
+    font-size: 13px;
+    letter-spacing: 0.01em;
+  }
+
+  .detail-avail-row {
+    min-height: 44px !important;
+    margin-bottom: 9px !important;
+    padding: 10px 18px 10px 20px !important;
+    border-radius: 999px !important;
+    background: color-mix(in srgb, var(--theme-surface) 96%, var(--theme-accent) 4%) !important;
+  }
+
+  .detail-avail-row::before {
+    display: none !important;
+    content: none !important;
+  }
+
+  .detail-avail-row:hover,
+  .detail-avail-row:focus-within {
+    border-radius: 999px !important;
+  }
+
+  .detail-title-block {
+    margin: 0 0 18px;
+    padding-bottom: 15px;
+  }
+
+  .detail-author-footer {
+    gap: 7px;
+    margin-top: 12px;
+  }
+
+  .detail-author-footer a {
+    min-height: 31px;
+    padding: 6px 11px;
+    font-size: 12px;
+    line-height: 1.2;
+  }
 }

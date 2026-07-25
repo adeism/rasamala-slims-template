@@ -34,8 +34,8 @@ if (themeDetailHasValue($subjects ?? '')) {
 }
 ?>
 
-<div class="detail-record p-4 p-md-5">
-    <div class="row">
+<div class="detail-record">
+    <div class="row detail-main-row">
         <?php include __DIR__ . '/parts/detail/detail_sidebar.php'; ?>
         <?php include __DIR__ . '/parts/detail/detail_fields.php'; ?>
     </div>
