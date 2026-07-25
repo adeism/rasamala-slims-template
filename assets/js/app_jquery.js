@@ -213,24 +213,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.addEventListener('click', (e) => {
-        const shareBtn = e.target.closest('.btn-news-share, .btn-content-share');
+        const shareBtn = e.target.closest('.btn-news-share, .btn-content-share, .detail-share-btn, .btn-theme-share');
         if (shareBtn) {
-            e.preventDefault();
             const url = shareBtn.getAttribute('data-url') || window.location.href;
             const title = shareBtn.getAttribute('data-title') || document.title;
 
             if (navigator.share) {
+                e.preventDefault();
                 navigator.share({ title: title, url: url }).catch(() => {});
             } else {
-                const modalTarget = document.querySelector('a[data-bs-target="#mediaSocialModal"], button[data-bs-target="#mediaSocialModal"]');
-                if (modalTarget) {
-                    modalTarget.setAttribute('data-url', url);
-                    modalTarget.setAttribute('data-title', title);
-                    modalTarget.click();
-                } else if (navigator.clipboard) {
-                    navigator.clipboard.writeText(url).then(() => {
-                        alert('Link berhasil disalin!');
-                    });
+                const modalEl = document.getElementById('mediaSocialModal');
+                if (modalEl) {
+                    forceShowModal(modalEl);
                 }
             }
         }
