@@ -275,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const modalEl = closeBtn.closest('.modal');
             if (modalEl) {
                 if (window.bootstrap && window.bootstrap.Modal) {
-                    const modalObj = window.bootstrap.Modal.getInstance(modalEl);
+                    const modalObj = window.bootstrap.Modal.getInstance(modalEl) || window.bootstrap.Modal.getOrCreateInstance(modalEl);
                     if (modalObj) {
                         modalObj.hide();
                     }
@@ -285,11 +285,45 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 modalEl.classList.remove('show');
                 modalEl.style.display = 'none';
+                modalEl.setAttribute('aria-hidden', 'true');
                 document.body.classList.remove('modal-open');
                 document.body.style.overflow = '';
                 document.body.style.paddingRight = '';
-                const backdrop = document.querySelector('.modal-backdrop');
-                if (backdrop) backdrop.remove();
+                document.querySelectorAll('.modal-backdrop').forEach((el) => el.remove());
+            }
+        }
+
+        if (e.target.classList && e.target.classList.contains('modal')) {
+            const modalEl = e.target;
+            if (window.bootstrap && window.bootstrap.Modal) {
+                const modalObj = window.bootstrap.Modal.getInstance(modalEl);
+                if (modalObj) modalObj.hide();
+            }
+            if (window.jQuery && window.jQuery.fn.modal) {
+                window.jQuery(modalEl).modal('hide');
+            }
+            modalEl.classList.remove('show');
+            modalEl.style.display = 'none';
+            modalEl.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+            document.querySelectorAll('.modal-backdrop').forEach((el) => el.remove());
+        }
+
+        const detailQrBtnMobile = e.target.closest('.detail-qr-btn-mobile');
+        if (detailQrBtnMobile) {
+            e.preventDefault();
+            const modalEl = document.getElementById('detailQrModal');
+            if (modalEl) {
+                if (window.bootstrap && window.bootstrap.Modal) {
+                    const modalObj = window.bootstrap.Modal.getOrCreateInstance(modalEl);
+                    modalObj.show();
+                } else if (window.jQuery && window.jQuery.fn.modal) {
+                    window.jQuery(modalEl).modal('show');
+                }
+                modalEl.classList.add('show');
+                modalEl.style.display = 'block';
             }
         }
     });

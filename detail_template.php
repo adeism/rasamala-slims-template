@@ -75,18 +75,21 @@ if (empty($qrcode_svg)) {
   <div class="modal-dialog modal-dialog-centered modal-sm">
     <div class="modal-content rounded-4 border-0 text-center p-3">
       <div class="modal-header border-0 pb-0 justify-content-between align-items-center">
-        <h6 class="modal-title fw-bold" id="detailQrModalLabel"><i class="fas fa-qrcode text-primary me-2"></i>Scan for Link</h6>
-        <button type="button" class="btn-close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h6 class="modal-title fw-bold" id="detailQrModalLabel"><i class="fas fa-qrcode me-2" style="color: var(--rasamala-accent);" aria-hidden="true"></i>Scan for Link</h6>
+        <button type="button" class="btn-close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+          <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
       </div>
       <div class="modal-body py-3">
         <div class="detail-qr-modal-img mx-auto mb-3" style="max-width: 180px;">
           <?= $qrcode_svg; ?>
         </div>
         <p class="small text-dark fw-bold mb-2"><?= themeEscape(strip_tags($title ?? '')); ?></p>
-        <div class="input-group input-group-sm">
+        <div class="input-group input-group-sm mb-3">
           <input type="text" class="form-control form-control-sm text-muted small" value="<?= themeEscape($detail_share_url); ?>" readonly onclick="this.select();">
-          <a href="<?= themeEscape($detail_share_url); ?>" target="_blank" class="btn btn-outline-primary btn-sm" title="Buka Link"><i class="fas fa-external-link-alt"></i></a>
+          <a href="<?= themeEscape($detail_share_url); ?>" target="_blank" class="btn btn-outline-primary btn-sm" title="Buka Link"><i class="fas fa-external-link-alt" aria-hidden="true"></i></a>
         </div>
+        <button type="button" class="btn btn-secondary btn-sm w-100 rounded-pill" data-bs-dismiss="modal" data-dismiss="modal">Tutup</button>
       </div>
     </div>
   </div>
