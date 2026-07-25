@@ -7574,12 +7574,12 @@ body.rasamala-theme:not(.rasamala-dark) .detail-avail-row {
 .detail-qr-btn-mobile {
   font-size: 12px !important;
   font-weight: 600 !important;
-  padding: 4px 12px !important;
+  padding: 4px 13px !important;
   border-radius: 999px !important;
-  background-color: color-mix(in srgb, var(--theme-accent) 10%, transparent) !important;
-  color: var(--rasamala-accent) !important;
-  border: 1px solid color-mix(in srgb, var(--theme-accent) 30%, transparent) !important;
-  transition: background-color 0.2s ease, color 0.2s ease !important;
+  background-color: color-mix(in srgb, var(--theme-on-surface) 6%, transparent) !important;
+  color: var(--rasamala-text-primary) !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 18%, transparent) !important;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease !important;
 }
 
 .detail-qr-btn-mobile:hover,
