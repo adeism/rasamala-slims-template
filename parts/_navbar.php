@@ -6,6 +6,12 @@
 # @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
 # @Last modified time: 2026-07-20T11:19:18+07:00
 
+if (!isset($is_login)) {
+    $is_login = class_exists('utility') && method_exists('utility', 'isMemberLogin')
+        ? (bool)utility::isMemberLogin()
+        : (isset($_SESSION['m_login']) && (bool)$_SESSION['m_login']);
+}
+
 $is_homepage = themeIsHomepage();
 $is_hero_only = $is_homepage && themeHomepageOnlyHero($sysconf);
 

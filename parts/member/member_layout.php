@@ -5,6 +5,11 @@
 if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
 }
+if (!isset($is_login)) {
+  $is_login = class_exists('utility') && method_exists('utility', 'isMemberLogin')
+    ? (bool)utility::isMemberLogin()
+    : (isset($_SESSION['m_login']) && (bool)$_SESSION['m_login']);
+}
 ?>
 
 <?php if ($is_login) : ?>
