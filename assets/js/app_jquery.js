@@ -269,6 +269,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         }
+
+        const closeBtn = e.target.closest('[data-bs-dismiss="modal"], [data-dismiss="modal"], .btn-close');
+        if (closeBtn) {
+            const modalEl = closeBtn.closest('.modal');
+            if (modalEl) {
+                if (window.bootstrap && window.bootstrap.Modal) {
+                    const modalObj = window.bootstrap.Modal.getInstance(modalEl);
+                    if (modalObj) {
+                        modalObj.hide();
+                    }
+                }
+                if (window.jQuery && window.jQuery.fn.modal) {
+                    window.jQuery(modalEl).modal('hide');
+                }
+                modalEl.classList.remove('show');
+                modalEl.style.display = 'none';
+                document.body.classList.remove('modal-open');
+                document.body.style.overflow = '';
+                document.body.style.paddingRight = '';
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) backdrop.remove();
+            }
+        }
     });
 
     queryAll('oembed').forEach((element) => {

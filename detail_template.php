@@ -76,9 +76,7 @@ if (empty($qrcode_svg)) {
     <div class="modal-content rounded-4 border-0 text-center p-3">
       <div class="modal-header border-0 pb-0 justify-content-between align-items-center">
         <h6 class="modal-title fw-bold" id="detailQrModalLabel"><i class="fas fa-qrcode text-primary me-2"></i>Scan for Link</h6>
-        <button type="button" class="close btn-close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close" style="font-size: 1.5rem; line-height: 1; background: none; border: 0; outline: none; opacity: 0.7;">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body py-3">
         <div class="detail-qr-modal-img mx-auto mb-3" style="max-width: 180px;">

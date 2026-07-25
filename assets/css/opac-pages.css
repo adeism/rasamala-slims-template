@@ -5984,43 +5984,17 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
   box-shadow: 0 6px 16px rgba(var(--theme-accent-rgb), 0.35) !important;
 }
 
-/* Clean & Consistent Action Buttons (Share & QR Code across all pages) */
+/* Clean & Consistent Action Buttons (Share, QR Code, & Bookmark across all pages) */
 .btn-theme-share,
 .btn-content-share,
 .btn-news-share,
-.detail-share-btn {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 7px !important;
-  padding: 7px 16px !important;
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  line-height: 1.4 !important;
-  border-radius: 999px !important;
-  color: var(--rasamala-accent) !important;
-  background-color: color-mix(in srgb, var(--theme-accent) 10%, transparent) !important;
-  border: 1px solid color-mix(in srgb, var(--theme-accent) 30%, transparent) !important;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  cursor: pointer !important;
-  text-decoration: none !important;
-}
-
-.btn-theme-share:hover,
-.btn-content-share:hover,
-.btn-news-share:hover,
-.detail-share-btn:hover {
-  color: var(--theme-on-accent) !important;
-  background-color: var(--rasamala-accent) !important;
-  border-color: var(--rasamala-accent) !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 4px 12px rgba(var(--theme-accent-rgb), 0.28) !important;
-}
-
+.detail-share-btn,
 .btn-theme-qr,
 .btn-content-qr,
 .btn-news-qr,
-.detail-qr-btn-mobile {
+.detail-qr-btn-mobile,
+.btn-theme-bookmark,
+.bookMarkBook.btn-theme-bookmark {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -6038,14 +6012,21 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
   text-decoration: none !important;
 }
 
+.btn-theme-share:hover,
+.btn-content-share:hover,
+.btn-news-share:hover,
+.detail-share-btn:hover,
 .btn-theme-qr:hover,
 .btn-content-qr:hover,
 .btn-news-qr:hover,
-.detail-qr-btn-mobile:hover {
+.detail-qr-btn-mobile:hover,
+.btn-theme-bookmark:hover,
+.bookMarkBook.btn-theme-bookmark:hover {
   color: var(--theme-text) !important;
   background-color: color-mix(in srgb, var(--theme-muted-on-surface) 20%, transparent) !important;
   border-color: color-mix(in srgb, var(--theme-muted-on-surface) 40%, transparent) !important;
   transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
 }
 
 .btn-theme-share i,
@@ -6055,9 +6036,12 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
 .btn-theme-qr i,
 .btn-content-qr i,
 .btn-news-qr i,
-.detail-qr-btn-mobile i {
+.detail-qr-btn-mobile i,
+.btn-theme-bookmark i,
+.bookMarkBook.btn-theme-bookmark i {
   font-size: 13px !important;
   flex-shrink: 0 !important;
+  color: var(--theme-text) !important;
 }
 
 

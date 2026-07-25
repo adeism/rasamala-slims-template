@@ -30,9 +30,9 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
         ?>
         <p class="lead mb-0 detail-gmd-label"><i class="fas fa-bookmark text-success me-2"></i> <?= themeEscape($display_label); ?></p>
         <div class="detail-actions">
-            <a href="index.php?p=member&sec=bookmark" data-id="<?= $biblio_id_safe ?>" data-detail="true" class="bookMarkBook text-decoration-none <?= themeEscape($setBookmarked) ?> fw-bolder detail-link-btn">
+            <a href="index.php?p=member&sec=bookmark" data-id="<?= $biblio_id_safe ?>" data-detail="true" class="bookMarkBook btn-theme-bookmark <?= themeEscape($setBookmarked) ?>">
                 <i class="<?= in_array($biblio_id_safe, $_SESSION['bookmark']??[]) ? 'fas' : 'far' ?> fa-bookmark" aria-hidden="true"></i>
-                <?= themeEscape(in_array($biblio_id_safe, $_SESSION['bookmark']??[]) ? __('Bookmarked') : __('Bookmark')) ?>
+                <span id="label-<?= $biblio_id_safe ?>"><?= themeEscape(in_array($biblio_id_safe, $_SESSION['bookmark']??[]) ? __('Bookmarked') : __('Bookmark')) ?></span>
             </a>
             <a href="index.php?p=sharelink&id=<?= $biblio_id_safe ?>" data-bs-toggle="modal" data-id="<?= $biblio_id_safe ?>" data-title="<?= $title_attr ?>" data-bs-target="#mediaSocialModal" class="btn-theme-share detail-share-btn">
                 <i class="fas fa-share-alt" aria-hidden="true"></i>
