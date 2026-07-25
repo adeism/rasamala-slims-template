@@ -5984,6 +5984,64 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
   box-shadow: 0 6px 16px rgba(var(--theme-accent-rgb), 0.35) !important;
 }
 
+/* Clean Action Buttons (Share & QR Code) */
+.btn-content-share,
+.btn-news-share,
+.btn-content-qr,
+.btn-news-qr {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  padding: 7px 16px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  border-radius: 999px !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+}
+
+.btn-content-share,
+.btn-news-share {
+  color: var(--rasamala-accent) !important;
+  background-color: color-mix(in srgb, var(--theme-accent) 10%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--theme-accent) 30%, transparent) !important;
+}
+
+.btn-content-share:hover,
+.btn-news-share:hover {
+  color: var(--theme-on-accent) !important;
+  background-color: var(--rasamala-accent) !important;
+  border-color: var(--rasamala-accent) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(var(--theme-accent-rgb), 0.28) !important;
+}
+
+.btn-content-qr,
+.btn-news-qr {
+  color: var(--theme-text) !important;
+  background-color: color-mix(in srgb, var(--theme-muted-on-surface) 10%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 24%, transparent) !important;
+}
+
+.btn-content-qr:hover,
+.btn-news-qr:hover {
+  color: var(--theme-text) !important;
+  background-color: color-mix(in srgb, var(--theme-muted-on-surface) 20%, transparent) !important;
+  border-color: color-mix(in srgb, var(--theme-muted-on-surface) 40%, transparent) !important;
+  transform: translateY(-1px) !important;
+}
+
+.btn-content-share i,
+.btn-news-share i,
+.btn-content-qr i,
+.btn-news-qr i {
+  font-size: 13px !important;
+  flex-shrink: 0 !important;
+}
+
 
 /* Grid Item Layout Enhancements - Clean & Minimalist */
 .grid-item .card {

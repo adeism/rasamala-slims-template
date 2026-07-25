@@ -133,11 +133,11 @@ function news_list_tpl($title, $path, $date, $summary) {
                   <div class="content-date news-list-date"><i class="far fa-clock me-2" aria-hidden="true"></i><?= $escape($date_html) ?></div>
                   <?php endif; ?>
                   <div class="news-action-buttons d-inline-flex align-items-center gap-2">
-                      <button type="button" class="btn btn-outline-primary btn-sm rounded-pill btn-news-share d-inline-flex align-items-center" data-url="<?= $escape($news_url) ?>" data-title="<?= $escape($display_title) ?>" title="<?= themeEscape(__('Share')); ?>">
-                          <i class="fas fa-share-alt me-1" aria-hidden="true"></i><?= themeEscape(__('Share')); ?>
+                      <button type="button" class="btn btn-news-share" data-url="<?= $escape($news_url) ?>" data-title="<?= $escape($display_title) ?>" title="<?= themeEscape(__('Share')); ?>">
+                          <i class="fas fa-share-alt" aria-hidden="true"></i> <span><?= themeEscape(__('Share')); ?></span>
                       </button>
-                      <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill btn-news-qr d-inline-flex align-items-center" data-url="<?= $escape($news_url) ?>" data-title="<?= $escape($display_title) ?>" title="Scan for Link">
-                          <i class="fas fa-qrcode me-1" aria-hidden="true"></i>Scan for Link
+                      <button type="button" class="btn btn-news-qr" data-url="<?= $escape($news_url) ?>" data-title="<?= $escape($display_title) ?>" title="Scan for Link">
+                          <i class="fas fa-qrcode" aria-hidden="true"></i> <span>Scan for Link</span>
                       </button>
                       <?php if ($show_readmore) : ?>
                       <a class="btn btn-primary btn-sm btn-news-readmore rounded-pill" href="<?= $escape($news_url) ?>"><?php echo __('Read More') ?></a>

@@ -33,12 +33,23 @@
       }
 
       $breadcrumb_label = $display_page_title;
-      if (($_GET['p'] ?? '') === 'show_detail') {
+      $breadcrumb_parents = [];
+      $current_p = (string)($_GET['p'] ?? '');
+
+      if ($current_p === 'show_detail') {
         $breadcrumb_label = !empty($display_page_title) ? $display_page_title : __('Detail');
-      } elseif (($_GET['p'] ?? '') === 'login') {
+      } elseif ($current_p === 'login') {
         $breadcrumb_label = __('Staff Area');
+      } elseif ($current_p === 'news') {
+        $breadcrumb_label = __('Library News');
+      } elseif (strpos($current_p, 'news') === 0 || strpos($current_p, 'news/') === 0 || (isset($_GET['p']) && strpos($_GET['p'], 'news') !== false)) {
+        $breadcrumb_parents[] = [
+          'label' => __('Library News'),
+          'url' => 'index.php?p=news'
+        ];
       }
-      echo themeBreadcrumbsHtml($breadcrumb_label);
+
+      echo themeBreadcrumbsHtml($breadcrumb_label, $breadcrumb_parents);
 
       if ($_GET['p'] !== 'show_detail') {
         if ($_GET['p'] === 'login') {
@@ -64,13 +75,13 @@
             $current_page_url = $scheme . $host . $request_uri;
 
             $content_actions = '
-            <div class="content-detail-action-bar d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3 pb-3 border-bottom">
+            <div class="content-detail-action-bar d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4 pb-3 border-bottom">
                 <div class="d-inline-flex align-items-center gap-2">
-                    <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3 btn-content-share d-inline-flex align-items-center" data-url="' . themeEscape($current_page_url) . '" data-title="' . themeEscape($display_page_title) . '" title="' . themeEscape(__('Share')) . '">
-                        <i class="fas fa-share-alt me-1_5" aria-hidden="true"></i>' . themeEscape(__('Share')) . '
+                    <button type="button" class="btn btn-content-share" data-url="' . themeEscape($current_page_url) . '" data-title="' . themeEscape($display_page_title) . '" title="' . themeEscape(__('Share')) . '">
+                        <i class="fas fa-share-alt" aria-hidden="true"></i> <span>' . themeEscape(__('Share')) . '</span>
                     </button>
-                    <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-3 btn-content-qr d-inline-flex align-items-center" data-url="' . themeEscape($current_page_url) . '" data-title="' . themeEscape($display_page_title) . '" title="Scan for Link">
-                        <i class="fas fa-qrcode me-1_5" aria-hidden="true"></i>Scan for Link
+                    <button type="button" class="btn btn-content-qr" data-url="' . themeEscape($current_page_url) . '" data-title="' . themeEscape($display_page_title) . '" title="Scan for Link">
+                        <i class="fas fa-qrcode" aria-hidden="true"></i> <span>Scan for Link</span>
                     </button>
                 </div>
             </div>';
