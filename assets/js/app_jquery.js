@@ -215,16 +215,21 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', (e) => {
         const shareBtn = e.target.closest('.btn-news-share, .btn-content-share, .detail-share-btn, .btn-theme-share');
         if (shareBtn) {
+            e.preventDefault();
+            e.stopPropagation();
             const url = shareBtn.getAttribute('data-url') || window.location.href;
             const title = shareBtn.getAttribute('data-title') || document.title;
 
             if (navigator.share) {
-                e.preventDefault();
                 navigator.share({ title: title, url: url }).catch(() => {});
             } else {
                 const modalEl = document.getElementById('mediaSocialModal');
                 if (modalEl) {
                     forceShowModal(modalEl);
+                } else if (navigator.clipboard) {
+                    navigator.clipboard.writeText(url).then(() => {
+                        alert('Link berhasil disalin!');
+                    });
                 }
             }
         }

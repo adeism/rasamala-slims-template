@@ -373,10 +373,10 @@ function createButton(int $biblio_id, string $title)
             <i class="far fa-bookmark" aria-hidden="true"></i>
             <span id="label-{$biblio_id}">{$bookmark}</span>
         </a>
-        <a href="index.php?p=sharelink&id={$biblio_id}" data-id="{$biblio_id}" data-title="{$title_attr}" data-bs-toggle="modal" data-bs-target="#mediaSocialModal" class="biblio-list-quick-action">
+        <button type="button" class="btn btn-theme-share detail-share-btn biblio-list-quick-action" data-id="{$biblio_id}" data-title="{$title_attr}" title="{$share}">
             <i class="fas fa-share-alt" aria-hidden="true"></i>
             <span>{$share}</span>
-        </a>
+        </button>
     </div>
     HTML;
 }
