@@ -261,54 +261,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const modalEl = document.getElementById('contentQrModal');
             if (modalEl) {
-                if (window.bootstrap && window.bootstrap.Modal) {
-                    const modalObj = window.bootstrap.Modal.getOrCreateInstance(modalEl);
-                    modalObj.show();
-                } else if (window.jQuery && window.jQuery.fn.modal) {
-                    window.jQuery(modalEl).modal('show');
-                }
+                forceShowModal(modalEl);
             }
-        }
-
-        const closeBtn = e.target.closest('[data-bs-dismiss="modal"], [data-dismiss="modal"], .btn-close');
-        if (closeBtn) {
-            const modalEl = closeBtn.closest('.modal');
-            if (modalEl) {
-                if (window.bootstrap && window.bootstrap.Modal) {
-                    const modalObj = window.bootstrap.Modal.getInstance(modalEl) || window.bootstrap.Modal.getOrCreateInstance(modalEl);
-                    if (modalObj) {
-                        modalObj.hide();
-                    }
-                }
-                if (window.jQuery && window.jQuery.fn.modal) {
-                    window.jQuery(modalEl).modal('hide');
-                }
-                modalEl.classList.remove('show');
-                modalEl.style.display = 'none';
-                modalEl.setAttribute('aria-hidden', 'true');
-                document.body.classList.remove('modal-open');
-                document.body.style.overflow = '';
-                document.body.style.paddingRight = '';
-                document.querySelectorAll('.modal-backdrop').forEach((el) => el.remove());
-            }
-        }
-
-        if (e.target.classList && e.target.classList.contains('modal')) {
-            const modalEl = e.target;
-            if (window.bootstrap && window.bootstrap.Modal) {
-                const modalObj = window.bootstrap.Modal.getInstance(modalEl);
-                if (modalObj) modalObj.hide();
-            }
-            if (window.jQuery && window.jQuery.fn.modal) {
-                window.jQuery(modalEl).modal('hide');
-            }
-            modalEl.classList.remove('show');
-            modalEl.style.display = 'none';
-            modalEl.setAttribute('aria-hidden', 'true');
-            document.body.classList.remove('modal-open');
-            document.body.style.overflow = '';
-            document.body.style.paddingRight = '';
-            document.querySelectorAll('.modal-backdrop').forEach((el) => el.remove());
         }
 
         const detailQrBtnMobile = e.target.closest('.detail-qr-btn-mobile');
@@ -316,17 +270,63 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const modalEl = document.getElementById('detailQrModal');
             if (modalEl) {
-                if (window.bootstrap && window.bootstrap.Modal) {
-                    const modalObj = window.bootstrap.Modal.getOrCreateInstance(modalEl);
-                    modalObj.show();
-                } else if (window.jQuery && window.jQuery.fn.modal) {
-                    window.jQuery(modalEl).modal('show');
-                }
-                modalEl.classList.add('show');
-                modalEl.style.display = 'block';
+                forceShowModal(modalEl);
             }
         }
     });
+
+    ['click', 'touchend'].forEach((eventType) => {
+        document.addEventListener(eventType, (e) => {
+            const closeBtn = e.target.closest('[data-bs-dismiss="modal"], [data-dismiss="modal"], .btn-close');
+            if (closeBtn) {
+                const modalEl = closeBtn.closest('.modal');
+                if (modalEl) {
+                    e.preventDefault();
+                    forceHideModal(modalEl);
+                }
+            } else if (e.target.classList && e.target.classList.contains('modal')) {
+                e.preventDefault();
+                forceHideModal(e.target);
+            }
+        });
+    });
+
+    function forceHideModal(modalEl) {
+        if (!modalEl) return;
+        if (window.bootstrap && window.bootstrap.Modal) {
+            const modalObj = window.bootstrap.Modal.getInstance(modalEl) || window.bootstrap.Modal.getOrCreateInstance(modalEl);
+            if (modalObj) {
+                try { modalObj.hide(); } catch (err) {}
+            }
+        }
+        if (window.jQuery && window.jQuery.fn.modal) {
+            try { window.jQuery(modalEl).modal('hide'); } catch (err) {}
+        }
+        modalEl.classList.remove('show');
+        modalEl.style.removeProperty('display');
+        modalEl.style.display = 'none';
+        modalEl.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('modal-open');
+        document.body.style.removeProperty('overflow');
+        document.body.style.removeProperty('padding-right');
+        document.querySelectorAll('.modal-backdrop').forEach((el) => el.remove());
+    }
+
+    function forceShowModal(modalEl) {
+        if (!modalEl) return;
+        modalEl.style.removeProperty('display');
+        if (window.bootstrap && window.bootstrap.Modal) {
+            const modalObj = window.bootstrap.Modal.getOrCreateInstance(modalEl);
+            if (modalObj) {
+                try { modalObj.show(); } catch (err) {}
+            }
+        } else if (window.jQuery && window.jQuery.fn.modal) {
+            try { window.jQuery(modalEl).modal('show'); } catch (err) {}
+        } else {
+            modalEl.classList.add('show');
+            modalEl.style.display = 'block';
+        }
+    }
 
     queryAll('oembed').forEach((element) => {
         const rawUrl = String(element.getAttribute('url') || '').replace('watch?v=', 'embed/');
