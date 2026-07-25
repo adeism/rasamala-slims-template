@@ -6066,6 +6066,27 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
   position: relative !important;
 }
 
+/* Modal Spring Scale-Up Entrance Animation (Lightweight GPU-Accelerated) */
+.modal.fade .modal-dialog {
+  transform: scale(0.92) translateY(12px) !important;
+  opacity: 0 !important;
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease-out !important;
+  will-change: transform, opacity;
+}
+
+.modal.show .modal-dialog,
+.modal.fade.show .modal-dialog {
+  transform: scale(1) translateY(0) !important;
+  opacity: 1 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal.fade .modal-dialog {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
 .modal-backdrop {
   z-index: 1050 !important;
 }
