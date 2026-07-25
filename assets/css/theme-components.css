@@ -180,15 +180,33 @@ body.rasamala-floating-info-hide .btn-color-mode-toggle {
   right: 24px !important;
   bottom: 84px !important;
   z-index: var(--z-floating-panel) !important;
-  width: min(420px, calc(100vw - 32px)) !important;
-  padding: 16px !important;
+  width: min(430px, calc(100vw - 32px)) !important;
+  max-height: min(85vh, calc(100vh - 100px)) !important;
+  overflow-y: auto !important;
+  padding: 16px 16px 20px 16px !important;
   border: 1px solid color-mix(in srgb, var(--theme-muted) 28%, transparent) !important;
-  border-radius: 12px !important;
-  background: color-mix(in srgb, var(--theme-surface) 94%, transparent) !important;
+  border-radius: 14px !important;
+  background: color-mix(in srgb, var(--theme-surface) 96%, transparent) !important;
   color: var(--theme-text) !important;
-  box-shadow: 0 24px 72px rgba(0, 0, 0, 0.2) !important;
-  backdrop-filter: blur(22px) !important;
-  -webkit-backdrop-filter: blur(22px) !important;
+  box-shadow: 0 24px 72px rgba(0, 0, 0, 0.22) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  overscroll-behavior: contain !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: color-mix(in srgb, var(--theme-muted) 35%, transparent) transparent !important;
+}
+
+.palette-switcher-panel::-webkit-scrollbar {
+  width: 5px !important;
+}
+
+.palette-switcher-panel::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.palette-switcher-panel::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--theme-muted) 35%, transparent) !important;
+  border-radius: 999px !important;
 }
 
 .btn-palette-switcher.has-latest-content-ticker+.palette-switcher-panel {
@@ -412,9 +430,10 @@ body.rasamala-floating-info-hide .btn-color-mode-toggle {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 8px !important;
-  margin-top: 18px !important;
-  padding-top: 12px !important;
+  gap: 12px !important;
+  margin-top: 16px !important;
+  padding-top: 14px !important;
+  padding-bottom: 8px !important;
   border-top: 1px solid color-mix(in srgb, var(--theme-muted) 16%, transparent) !important;
   width: 100% !important;
 }
@@ -1724,14 +1743,16 @@ body.rasamala-floating-info-hide .btn-color-mode-toggle {
 
   .palette-switcher-panel {
     right: 12px !important;
-    bottom: calc(128px + env(safe-area-inset-bottom)) !important;
-    width: calc(100vw - 24px) !important;
-    max-height: calc(100vh - 168px) !important;
+    left: 12px !important;
+    bottom: calc(76px + env(safe-area-inset-bottom)) !important;
+    width: auto !important;
+    max-height: min(84vh, calc(100vh - 90px)) !important;
     overflow-y: auto !important;
+    padding-bottom: 24px !important;
   }
 
   .btn-palette-switcher.has-latest-content-ticker+.palette-switcher-panel {
-    bottom: calc(164px + env(safe-area-inset-bottom)) !important;
+    bottom: calc(112px + env(safe-area-inset-bottom)) !important;
   }
 
   /* Reduce subpage container padding on mobile to maximize content width */
