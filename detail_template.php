@@ -33,8 +33,16 @@ if (themeDetailHasValue($subjects ?? '')) {
     $subjects_inline_html = implode(' <span class="detail-subject-separator">; </span> ', $subject_parts);
 }
 
-// Generate QR Code for Current Detail Page URL
-$detail_share_url = SWB . 'index.php?p=show_detail&id=' . $biblio_id_safe;
+// Generate Full Absolute Canonical URL for QR Code Scanning
+$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['SERVER_PORT'] ?? 80) == 443) ? 'https://' : 'http://';
+$host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? 'localhost';
+if (preg_match('/^https?:\/\//i', SWB)) {
+    $detail_share_url = SWB . 'index.php?p=show_detail&id=' . $biblio_id_safe;
+} else {
+    $swb_clean = '/' . ltrim(SWB, '/');
+    $detail_share_url = $scheme . $host . $swb_clean . 'index.php?p=show_detail&id=' . $biblio_id_safe;
+}
+
 $qrcode_svg = '';
 if (class_exists('BaconQrCode\Writer')) {
     try {
@@ -72,11 +80,15 @@ if (empty($qrcode_svg)) {
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body py-4">
+      <div class="modal-body py-3">
         <div class="detail-qr-modal-img mx-auto mb-3" style="max-width: 180px;">
           <?= $qrcode_svg; ?>
         </div>
-        <p class="small text-muted mb-0 fw-bold"><?= themeEscape(strip_tags($title ?? '')); ?></p>
+        <p class="small text-dark fw-bold mb-2"><?= themeEscape(strip_tags($title ?? '')); ?></p>
+        <div class="input-group input-group-sm">
+          <input type="text" class="form-control form-control-sm text-muted small" value="<?= themeEscape($detail_share_url); ?>" readonly onclick="this.select();">
+          <a href="<?= themeEscape($detail_share_url); ?>" target="_blank" class="btn btn-outline-primary btn-sm" title="Buka Link"><i class="fas fa-external-link-alt"></i></a>
+        </div>
       </div>
     </div>
   </div>
