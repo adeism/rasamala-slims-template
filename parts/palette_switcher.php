@@ -233,6 +233,23 @@ $has_ticker_active = !empty($latest_content_ticker_items) || (function_exists('t
                             aria-label="<?= themeEscape(__('Hide all sections')); ?>">
                         <i class="fas fa-eye-slash palette-switcher-tool-icon-small" aria-hidden="true"></i>
                     </button>
+                    <button type="button"
+                            id="palette-color-mode-toggle"
+                            class="palette-switcher-tool-btn palette-switcher-tool-btn-compact"
+                            title="<?= themeEscape(__('Toggle dark/light mode')); ?>"
+                            data-dark-title="<?= themeEscape(__('Dark mode')); ?>"
+                            data-light-title="<?= themeEscape(__('Light mode')); ?>"
+                            aria-label="<?= themeEscape(__('Toggle dark/light mode')); ?>"
+                            aria-pressed="false">
+                        <i class="fas fa-moon palette-switcher-tool-icon-small" aria-hidden="true"></i>
+                    </button>
+                    <button type="button"
+                            id="palette-switcher-reset"
+                            class="palette-switcher-tool-btn palette-switcher-tool-btn-compact"
+                            title="<?= themeEscape(__('Reset')); ?>"
+                            aria-label="<?= themeEscape(__('Reset')); ?>">
+                        <i class="fas fa-undo palette-switcher-tool-icon-small" aria-hidden="true"></i>
+                    </button>
                 </div>
             </div>
             <div class="palette-switcher-section-list" id="theme-viewer-section-list"></div>
@@ -274,25 +291,6 @@ $has_ticker_active = !empty($latest_content_ticker_items) || (function_exists('t
                 <div class="text-muted text-xs mb-1"><?= themeEscape(__('Atau isi manual dengan format:')); ?></div>
                 <code class="palette-switcher-format-code d-block">#1e3a8a;#3b82f6;#10b981;#f3f4f6;#ffffff;#1f2937;#4b5563 | #0f172a;#1e293b;#10b981;#0f172a;#1e293b;#f9fafb;#94a3b8</code>
             </div>
-        </div>
-        <div class="palette-switcher-actions-compact">
-            <button type="button"
-                    id="palette-color-mode-toggle"
-                    class="palette-switcher-tool-btn"
-                    title="<?= themeEscape(__('Toggle dark/light mode')); ?>"
-                    data-dark-title="<?= themeEscape(__('Dark mode')); ?>"
-                    data-light-title="<?= themeEscape(__('Light mode')); ?>"
-                    aria-label="<?= themeEscape(__('Toggle dark/light mode')); ?>"
-                    aria-pressed="false">
-                <i class="fas fa-moon" aria-hidden="true"></i>
-            </button>
-            <button type="button"
-                    id="palette-switcher-reset"
-                    class="palette-switcher-tool-btn"
-                    title="<?= themeEscape(__('Reset')); ?>"
-                    aria-label="<?= themeEscape(__('Reset')); ?>">
-                <i class="fas fa-undo" aria-hidden="true"></i>
-            </button>
         </div>
 
     </div>
