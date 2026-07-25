@@ -1891,7 +1891,7 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
 }
 
 .detail-gmd-label {
-  font-size: 13px !important;
+  font-size: 12px !important;
   font-weight: 600 !important;
   font-family: var(--rasamala-font-stack) !important;
 }
@@ -1899,9 +1899,10 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
 .detail-title {
   color: var(--rasamala-text-primary) !important;
   font-family: var(--rasamala-font-stack) !important;
-  font-size: clamp(24px, calc(1.28rem + 0.7vw), 28px) !important;
-  line-height: 1.1 !important;
-  letter-spacing: -0.015em !important;
+  font-size: clamp(20px, calc(1.15rem + 0.5vw), 24px) !important;
+  line-height: 1.35 !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
 }
 
 .detail-author-footer {
@@ -1914,15 +1915,15 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
 .detail-author-footer a {
   display: inline-flex;
   align-items: center;
-  padding: 7px 14px;
+  padding: 5px 14px;
   border-radius: var(--rasamala-radius-button);
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 500;
   text-decoration: none;
-  background-color: color-mix(in srgb, var(--theme-accent) 10%, transparent);
-  color: var(--rasamala-accent);
-  border: 1px solid color-mix(in srgb, var(--theme-accent) 30%, transparent);
-  transition: background-color 0.25s cubic-bezier(0.25, 0.8, 0.25, 1), border-color 0.25s cubic-bezier(0.25, 0.8, 0.25, 1), color 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+  background-color: color-mix(in srgb, var(--theme-on-surface) 6%, transparent);
+  color: var(--theme-on-surface);
+  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 18%, transparent);
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   box-shadow: none;
 }
 
@@ -4670,11 +4671,11 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
     max-width: none;
     min-width: 0;
     flex: none;
-    font-size: 11px;
-    font-weight: 700;
+    font-size: 12px;
+    font-weight: 600;
     color: var(--rasamala-text-secondary);
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     padding: 2px 0 0;
     margin: 0;
     border-bottom: none;
@@ -4690,8 +4691,8 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
     max-width: none;
     min-width: 0;
     flex: none;
-    font-size: 13.5px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 400;
     color: var(--rasamala-text-primary);
     padding: 0;
     margin: 0;
@@ -4705,15 +4706,17 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   }
 }
 
-/* Style for Detail Page Headings with clean icons */
+/* Style for Detail Page Headings */
 .detail-section-heading {
   display: flex;
   align-items: center;
-  gap: 9px;
-  margin: 28px 0 14px;
+  gap: 8px;
+  margin: 24px 0 12px;
   color: var(--rasamala-text-primary);
-  font-size: 15px;
-  font-weight: 800;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em !important;
+  text-transform: uppercase !important;
   border-bottom: none;
 }
 
@@ -4724,34 +4727,8 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 }
 
 .detail-section-heading::before {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--theme-accent) 12%, transparent);
-  color: var(--rasamala-accent);
-  font-family: "Font Awesome 5 Free";
-  font-size: 11px;
-  font-weight: 900;
-}
-
-.detail-section-heading-info::before {
-  content: "\f05a";
-}
-
-.detail-section-heading-other::before,
-.detail-section-heading-related::before {
-  content: "\f0c9";
-}
-
-.detail-section-heading-attachment::before {
-  content: "\f0c6";
-}
-
-.detail-section-heading-comment::before {
-  content: "\f086";
+  display: none !important;
+  content: none !important;
 }
 
 
