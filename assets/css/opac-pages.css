@@ -1329,11 +1329,11 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
 .detail-callnumber-label {
   width: 100%;
   color: var(--rasamala-text-secondary);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   line-height: 1.2;
-  text-transform: uppercase;
+  text-transform: none !important;
 }
 
 .detail-callnumber-tag {
@@ -4619,11 +4619,11 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
     width: 100% !important;
     max-width: 100% !important;
     flex: none !important;
-    font-size: 11px !important;
+    font-size: 12px !important;
     font-weight: 600 !important;
     color: var(--rasamala-text-secondary) !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.05em !important;
+    text-transform: none !important;
+    letter-spacing: 0.02em !important;
     margin-top: 8px !important;
     margin-bottom: 2px !important;
     padding: 0 !important;
@@ -4636,8 +4636,8 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
     width: 100% !important;
     max-width: 100% !important;
     flex: none !important;
-    font-size: 13.5px !important;
-    font-weight: 500 !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
     color: var(--rasamala-text-primary) !important;
     margin-bottom: 12px !important;
     padding: 0 !important;
@@ -4671,11 +4671,11 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
     max-width: none;
     min-width: 0;
     flex: none;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--rasamala-text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: var(--rasamala-text-secondary) !important;
+    text-transform: none !important;
+    letter-spacing: 0.01em !important;
     padding: 2px 0 0;
     margin: 0;
     border-bottom: none;
@@ -4691,9 +4691,9 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
     max-width: none;
     min-width: 0;
     flex: none;
-    font-size: 14px;
-    font-weight: 400;
-    color: var(--rasamala-text-primary);
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    color: var(--rasamala-text-primary) !important;
     padding: 0;
     margin: 0;
     border-bottom: none;
@@ -4715,8 +4715,8 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   color: var(--rasamala-text-primary);
   font-size: 15px !important;
   font-weight: 700 !important;
-  letter-spacing: 0.02em !important;
-  text-transform: uppercase !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
   border-bottom: none;
 }
 
@@ -5827,13 +5827,13 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
 .detail-notes-header {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   margin-bottom: 10px;
-  color: var(--rasamala-text-secondary);
-  font-size: 11px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  color: var(--rasamala-text-primary) !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
 }
 
 .detail-notes-content {
