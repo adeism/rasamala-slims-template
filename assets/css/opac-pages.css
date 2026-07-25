@@ -5984,7 +5984,7 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
   box-shadow: 0 6px 16px rgba(var(--theme-accent-rgb), 0.35) !important;
 }
 
-/* Clean & Consistent Action Buttons (Share, QR Code, & Bookmark across all pages) */
+/* Clean & Transparent Action Buttons (Share, QR Code, & Bookmark across all pages) */
 .btn-theme-share,
 .btn-content-share,
 .btn-news-share,
@@ -5999,17 +5999,19 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
   align-items: center !important;
   justify-content: center !important;
   gap: 7px !important;
-  padding: 7px 16px !important;
+  padding: 6px 14px !important;
   font-size: 13px !important;
   font-weight: 600 !important;
   line-height: 1.4 !important;
   border-radius: 999px !important;
   color: var(--theme-text) !important;
-  background-color: color-mix(in srgb, var(--theme-muted-on-surface) 10%, transparent) !important;
-  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 24%, transparent) !important;
+  background-color: transparent !important;
+  background: transparent !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 28%, transparent) !important;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
   cursor: pointer !important;
   text-decoration: none !important;
+  box-shadow: none !important;
 }
 
 .btn-theme-share:hover,
@@ -6023,10 +6025,10 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
 .btn-theme-bookmark:hover,
 .bookMarkBook.btn-theme-bookmark:hover {
   color: var(--theme-text) !important;
-  background-color: color-mix(in srgb, var(--theme-muted-on-surface) 20%, transparent) !important;
-  border-color: color-mix(in srgb, var(--theme-muted-on-surface) 40%, transparent) !important;
+  background-color: color-mix(in srgb, var(--theme-muted-on-surface) 10%, transparent) !important;
+  border-color: color-mix(in srgb, var(--theme-muted-on-surface) 45%, transparent) !important;
   transform: translateY(-1px) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
 }
 
 .btn-theme-share i,
