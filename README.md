@@ -75,6 +75,10 @@ Ingin meningkatkan keterikatan (*user engagement*) pemustaka dengan perpustakaan
 
 - 🎨 **Kustomisasi Visual Lengkap via Tinfo:** Seluruh komponen tampilan dapat dikonfigurasi melalui panel admin tanpa perlu mengubah kode sumber.
 - 📱 **Mobile-First & Progressive Web App (PWA):** Dilengkapi *Mobile Bottom Nav 5-tombol*, PWA `manifest.json.php`, `sw.js` (Service Worker) caching aset statis, mode *standalone fullscreen*, dan dukungan `apple-touch-icon`.
+- 🔗 **Smart QR Code & Share Action Buttons (Offline Vector SVG):** Tombol *Share* & *Scan for Link* terpadu di seluruh halaman (Detail Buku, Berita, & Konten Kustom). Menggunakan generator **Kode QR Vektor SVG 100% Offline** (`BaconQrCode\Writer`) tanpa ketergantungan API pihak ketiga, serta integrasi **Native Mobile Web Share Sheet (`navigator.share`)**.
+- ✨ **Clean & Transparent Action Button Design System:** Desain tombol aksi (*Share*, *Scan for Link*, *Bookmark*) bergaya kapsul transparan (*Clean & Transparent Outline*) dengan warna teks & ikon mengikuti tema (`var(--theme-text)`), tajam dan kontras di Light Mode maupun Dark Mode.
+- 📍 **Smart Breadcrumb Hierarchy:** Logika penelusuran Breadcrumbs otomatis yang intuitif untuk detail berita dan konten kustom: **`Home` ➔ `Library News` ➔ `[Judul Artikel]`**.
+- 🛡️ **Robust Stacking Context & Mobile Modal Engine:** Relokasi otomatis elemen modal ke `document.body` dan manajemen Z-Index (`1060`) untuk mencegah penutupan terhalang *backdrop overlay* gelap, serta penanganan event sentuhan ganda (`click` & `touchend`).
 - 🔍 **Full-Width Responsive Search Results & Sticky Action Bar:** Layout hasil pencarian 100% *full-width* responsif dengan *Floating Sticky Toolbar* (Filter, Sort, View Mode) yang tetap melayang di atas layar saat digulir (*sticky on scroll*), serta banner ringkasan hasil pencarian terpisah di atasnya.
 - ⚡ **Navigation Progress Bar & Search Loading Overlay:** Top progress bar NProgress-style di bagian atas layar + *backdrop blur overlay & spinner* pada container hasil pencarian saat navigasi halaman/pagination.
 - 💀 **Realistic Skeleton Loading System:** Skeleton loading presisi sesuai grid komponen (sampul buku 1:1.35, avatar anggota, pill topik) dengan animasi shimmer serta dukungan penuh Dark Mode.
@@ -242,7 +246,7 @@ Pengaturan tema Rasamala dapat diakses melalui admin SLiMS pada menu **System > 
 
 ---
 
-### 12. 📊 Search Result, Detail Buku & Sitasi
+### 12. 📊 Search Result, Detail Buku, Sitasi & Tombol Aksi
 
 - **Default Layout Hasil Pencarian (`classic_search_result_layout`):**
   - 📄 `Simple View`: Judul, pengarang, dan badge ketersediaan ringkas.
@@ -251,6 +255,10 @@ Pengaturan tema Rasamala dapat diakses melalui admin SLiMS pada menu **System > 
 - **Latar Belakang Panel Pencarian (`classic_search_result_panel_style`):** `Transparent` atau `Solid`.
 - **Auto Generate Cover (`classic_auto_cover_mode`):** Generate sampul buku otomatis berbasis warna tema jika file gambar tidak ditemukan.
 - **Modul Sitasi Kategori Akademis:** Mendukung pembuat sitasi otomatis format **APA**, **Chicago**, **MLA**, dan **Turabian** pada halaman detail buku.
+- **Tombol Aksi Terpadu (*Share*, *Scan for Link QR*, *Bookmark*):**
+  - 🌐 **Sistem Tombol Aksi Kapsul Transparan:** Menggunakan skema desain transparan (*Clean Outline*) dengan warna teks & ikon `var(--theme-text)` yang otomatis menyesuaikan mode terang / malam.
+  - 📲 **Native Web Share Sheet & Dynamic Modal:** Pada mobile, menekan *Share* otomatis memicu aplikasi berbagi bawaan ponsel (`navigator.share`). Pada desktop, membuka modal berbagi `#mediaSocialModal`.
+  - 📱 **Offline Vector QR Code Generator:** Menggunakan generator `BaconQrCode\Writer` bawaan SLiMS 9 untuk membuat Kode QR Vektor SVG 100% offline tanpa perlu koneksi internet atau API eksternal.
 
 ---
 
