@@ -16,9 +16,7 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
                 <h5 class="modal-title fw-bold d-flex align-items-center" id="advancedSearchModalLabel">
                     <i class="fas fa-sliders-h me-2" style="color: var(--rasamala-accent);" aria-hidden="true"></i><?= __('Advanced Search'); ?>
                 </h5>
-                <button type="button" class="close btn-close modal-close-btn" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
                 <div class="row g-3">
