@@ -362,6 +362,8 @@ body.rasamala-floating-info-hide .btn-color-mode-toggle {
   display: flex !important;
   gap: 4px !important;
   align-items: center !important;
+  flex-wrap: wrap !important;
+  justify-content: flex-end !important;
 }
 
 .palette-switcher-tool-btn-compact {
@@ -389,6 +391,16 @@ body.rasamala-floating-info-hide .btn-color-mode-toggle {
   font-size: 11px !important;
 }
 
+.rasamala-clipboard-fallback {
+  position: fixed !important;
+  top: -1000px !important;
+  left: -1000px !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
 .palette-switcher-tool-icon-small {
   font-size: 11px !important;
 }
@@ -412,6 +424,108 @@ body.rasamala-floating-info-hide .btn-color-mode-toggle {
   line-height: 1.35 !important;
   margin-top: 6px !important;
   opacity: 0.95 !important;
+}
+
+.palette-switcher-subgroup {
+  margin-bottom: 8px !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted) 18%, transparent) !important;
+  border-radius: var(--rasamala-radius-button) !important;
+  padding: 6px 10px !important;
+  background: color-mix(in srgb, var(--theme-surface) 95%, transparent) !important;
+}
+
+.palette-switcher-subgroup summary {
+  cursor: pointer !important;
+  user-select: none !important;
+  list-style: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  font-size: 12px !important;
+}
+
+.palette-switcher-subgroup summary::-webkit-details-marker {
+  display: none !important;
+}
+
+.palette-switcher-builder-row-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+}
+
+.palette-switcher-save-wrap {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+.palette-switcher-save-wrap[hidden],
+.palette-switcher-save-btn[hidden] {
+  display: none !important;
+}
+
+.palette-switcher-save-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  min-height: 36px !important;
+  padding: 8px 13px !important;
+  border: 1px solid color-mix(in srgb, var(--theme-accent) 52%, transparent) !important;
+  border-radius: var(--rasamala-radius-button) !important;
+  background: var(--theme-accent) !important;
+  color: var(--theme-on-accent) !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+  cursor: pointer !important;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease !important;
+}
+
+.palette-switcher-save-btn:hover,
+.palette-switcher-save-btn:focus {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--theme-accent) 26%, transparent) !important;
+}
+
+.palette-switcher-save-btn:disabled {
+  cursor: wait !important;
+  opacity: 0.68 !important;
+  transform: none !important;
+}
+
+.palette-switcher-save-status {
+  min-height: 16px !important;
+  color: var(--theme-muted-on-surface) !important;
+  font-size: 10px !important;
+  line-height: 1.35 !important;
+}
+
+.palette-switcher-save-status[data-state="success"] {
+  color: var(--theme-accent) !important;
+}
+
+.palette-switcher-save-status[data-state="error"],
+.palette-switcher-save-status[data-state="unauthorized"] {
+  color: #b42318 !important;
+}
+
+.palette-switcher-image-options-head {
+  display: flex !important;
+  align-items: baseline !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+}
+
+.palette-switcher-help-inline {
+  color: var(--theme-muted) !important;
+  font-size: 10px !important;
+  line-height: 1.35 !important;
 }
 
 .palette-switcher-format-code {
@@ -678,7 +792,6 @@ body.rasamala-floating-info-hide .btn-color-mode-toggle {
   opacity: 0.78;
   mix-blend-mode: normal;
   contain: strict;
-  will-change: opacity;
 }
 
 .background-animation-layer.hero-animation-particles,
@@ -760,7 +873,6 @@ body.rasamala-floating-info-hide .btn-color-mode-toggle {
   position: absolute;
   display: block;
   pointer-events: none;
-  will-change: transform, opacity;
 }
 
 .hero-token {
@@ -832,11 +944,24 @@ body.rasamala-floating-info-hide .btn-color-mode-toggle {
 }
 
 .hero-animation-grid {
+  position: relative;
   background-image:
     linear-gradient(rgba(var(--theme-accent-rgb), 0.24) 1px, transparent 1px),
     linear-gradient(90deg, rgba(var(--theme-accent-rgb), 0.24) 1px, transparent 1px);
   background-size: 72px 72px;
-  animation: heroGridShift 18s linear infinite;
+  animation: none;
+}
+
+.hero-animation-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(var(--theme-accent-rgb), 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--theme-accent-rgb), 0.16) 1px, transparent 1px);
+  background-size: 72px 72px;
+  animation: heroGridShiftTransform 18s linear infinite;
 }
 
 .hero-animation-grid::after {
@@ -853,6 +978,58 @@ body.rasamala-floating-info-hide .btn-color-mode-toggle {
 .hero-animation-layer.is-static::before,
 .hero-animation-layer.is-static::after {
   animation: none !important;
+}
+
+/* Decorative CSS motion must stop while the document is hidden. The canvas
+   loop has its own JS lifecycle, while this rule covers DOM/pseudo-element
+   animations in the same layer. */
+html.rasamala-page-hidden .hero-animation-layer,
+html.rasamala-page-hidden .hero-animation-layer *,
+html.rasamala-page-hidden .hero-animation-layer::before,
+html.rasamala-page-hidden .hero-animation-layer::after,
+.latest-content-ticker-track.is-page-hidden {
+  animation-play-state: paused !important;
+}
+
+/* Prefer opaque surfaces over large blur regions when the browser reports a
+   data-saving connection. This keeps text readable while avoiding expensive
+   backdrop rasterization on constrained devices. */
+html.rasamala-save-data .mobile-bottom-nav,
+html.rasamala-save-data .btn-floating-info,
+html.rasamala-save-data .btn-back-to-top,
+html.rasamala-save-data .btn-color-mode-toggle,
+html.rasamala-save-data .btn-palette-switcher,
+html.rasamala-save-data .palette-switcher-panel,
+html.rasamala-save-data .prayer-reminder-toast,
+html.rasamala-save-data .mobile-more-menu-overlay,
+html.rasamala-save-data .mobile-more-menu-sheet,
+html.rasamala-save-data .search-suggestion-dropdown,
+html.rasamala-save-data .detail-floating-quick-actions,
+html.rasamala-save-data .detail-floating-quick-actions .btn-floating-action-icon,
+html.rasamala-save-data .modal-content,
+html.rasamala-save-data .visitor-kiosk-card,
+html.rasamala-save-data .left-form-section,
+html.rasamala-save-data .right-instruction-section {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto !important;
+  }
+
+  .rasamala-main,
+  .latest-content-fade-item,
+  .skeleton-card,
+  .theme-skeleton-card::after,
+  .theme-skeleton-badge::after,
+  .theme-skeleton-item::after,
+  .rasamala-page-progress-bar,
+  .search-suggestion-dropdown {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
 @keyframes heroTokenFloat {
@@ -933,13 +1110,13 @@ body.rasamala-floating-info-hide .btn-color-mode-toggle {
   }
 }
 
-@keyframes heroGridShift {
+@keyframes heroGridShiftTransform {
   from {
-    background-position: 0 0, 0 0;
+    transform: translate3d(0, 0, 0);
   }
 
   to {
-    background-position: 72px 72px, 72px 72px;
+    transform: translate3d(72px, 72px, 0);
   }
 }
 
@@ -1259,12 +1436,21 @@ body.rasamala-floating-info-hide .btn-color-mode-toggle {
 
 .hero-search-heading h1 {
   margin: 0;
-  color: var(--theme-on-background);
+  display: inline-block;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--theme-on-surface);
   font-family: var(--rasamala-font-stack);
   font-weight: 800;
   line-height: 1.08;
   letter-spacing: 0;
-  text-shadow: none;
+  text-shadow: 0 2px 4px rgba(255, 255, 255, 0.9);
+  box-shadow: none;
 }
 
 .hero-search-heading-small h1 {
@@ -1365,8 +1551,15 @@ body.rasamala-floating-info-hide .btn-color-mode-toggle {
     max-width: 86vw;
   }
 
-  .latest-content-ticker {
+  /* The ticker reserves the mobile bottom menu only while that menu is
+     actually visible. When the menu is hidden, return the ticker to the
+     physical bottom edge of the viewport. */
+  body.mobile-bottom-nav-enabled .latest-content-ticker {
     bottom: calc(56px + env(safe-area-inset-bottom)) !important;
+  }
+
+  body.mobile-bottom-nav-hidden .latest-content-ticker {
+    bottom: env(safe-area-inset-bottom) !important;
   }
 }
 
@@ -1402,6 +1595,13 @@ body.rasamala-floating-info-hide .btn-color-mode-toggle {
   #rasamala-cursor-particles-canvas,
   .hero-animation-canvas {
     display: none !important;
+  }
+
+  /* An explicit Theme Viewer choice is an intentional opt-in, even when the
+     operating system requests reduced motion. Server/default settings still
+     follow the accessibility preference above. */
+  body[data-cursor-particles-explicit="1"] #rasamala-cursor-particles-canvas {
+    display: block !important;
   }
 
   .latest-content-ticker {
@@ -1844,76 +2044,30 @@ body.rasamala-floating-info-hide .btn-color-mode-toggle {
 
 /* Flat WhatsApp modal */
 .whatsapp-modal-content {
-  border: 1px solid color-mix(in srgb, #128c7e 22%, var(--theme-muted) 18%) !important;
-  border-radius: var(--rasamala-radius-panel) !important;
+  border: 1px solid color-mix(in srgb, #00a884 25%, var(--theme-muted) 15%) !important;
+  border-radius: 20px !important;
   overflow: hidden !important;
-  box-shadow: 0 14px 34px rgba(17, 27, 33, 0.14) !important;
+  box-shadow: 0 16px 40px rgba(11, 20, 26, 0.22) !important;
   font-family: var(--rasamala-font-stack) !important;
 }
 
 .whatsapp-modal-header {
-  background: #075e54 !important;
-  padding: 14px 18px !important;
+  background: #005c4b !important;
+  padding: 16px 20px !important;
   border: none !important;
   color: #ffffff !important;
 }
 
-.whatsapp-avatar-wrapper {
-  width: 42px;
-  height: 42px;
-}
-
-.whatsapp-avatar-img {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-}
-
-.whatsapp-status-indicator {
-  position: absolute;
-  bottom: 1px;
-  right: 1px;
-  width: 10px;
-  height: 10px;
-  background-color: #25d366;
-  border: 2px solid #128c7e;
-  border-radius: 50%;
-  animation: pulse-green 2s infinite;
-}
-
-@keyframes pulse-green {
-  0% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
-  }
-
-  70% {
-    transform: scale(1);
-    box-shadow: 0 0 0 5px rgba(37, 211, 102, 0);
-  }
-
-  100% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
-  }
-}
-
 .whatsapp-modal-name {
-  font-size: 15px !important;
+  font-size: 16px !important;
   font-weight: 700 !important;
   color: #ffffff !important;
   line-height: 1.2 !important;
 }
 
 .whatsapp-modal-status {
-  font-size: 11px !important;
-  color: rgba(255, 255, 255, 0.8) !important;
+  font-size: 11.5px !important;
+  color: rgba(255, 255, 255, 0.85) !important;
   font-weight: 500 !important;
 }
 
@@ -1922,9 +2076,8 @@ body.rasamala-floating-info-hide .btn-color-mode-toggle {
 }
 
 .whatsapp-modal-body {
-  padding: 18px !important;
+  padding: 20px !important;
   background-color: var(--theme-surface) !important;
-  background-image: none !important;
 }
 
 /* Chat bubble styles */
@@ -1932,13 +2085,13 @@ body.rasamala-floating-info-hide .btn-color-mode-toggle {
   position: relative !important;
   align-self: stretch !important;
   max-width: 100% !important;
-  background-color: color-mix(in srgb, #128c7e 7%, var(--theme-surface)) !important;
+  background-color: color-mix(in srgb, #00a884 8%, var(--theme-surface)) !important;
   color: var(--theme-on-surface) !important;
-  padding: 12px 13px !important;
-  border: 1px solid color-mix(in srgb, #128c7e 18%, var(--theme-muted) 14%) !important;
-  border-radius: var(--rasamala-radius-control) !important;
-  box-shadow: none !important;
-  margin-bottom: 14px !important;
+  padding: 14px 16px !important;
+  border: 1px solid color-mix(in srgb, #00a884 20%, var(--theme-muted) 12%) !important;
+  border-radius: 16px 16px 16px 4px !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+  margin-bottom: 8px !important;
   text-align: left !important;
 }
 
@@ -1949,103 +2102,16 @@ body.rasamala-floating-info-hide .btn-color-mode-toggle {
 .chat-bubble-author {
   font-size: 11px !important;
   font-weight: 700 !important;
-  color: #075e54 !important;
+  color: #00a884 !important;
   margin-bottom: 4px !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.5px !important;
+  letter-spacing: 0.6px !important;
 }
 
 .chat-bubble-text {
   font-size: 13.5px !important;
   line-height: 1.5 !important;
   color: var(--theme-on-surface) !important;
-}
-
-.chat-bubble-hours-badge {
-  display: inline-flex !important;
-  align-items: center !important;
-  background: rgba(18, 140, 126, 0.08) !important;
-  color: #128c7e !important;
-  padding: 6px 10px !important;
-  border-radius: 6px !important;
-  font-size: 11.5px !important;
-  font-weight: 600 !important;
-}
-
-.whatsapp-quick-reply-label {
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  color: #667781 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.5px !important;
-  margin-top: 5px !important;
-}
-
-/* User Message Quick Replies */
-.chat-bubble-outgoing.whatsapp-quick-reply {
-  position: relative !important;
-  align-self: flex-end !important;
-  width: 100% !important;
-  max-width: 90% !important;
-  margin-left: auto !important;
-  background-color: #d9fdd3 !important;
-  /* WhatsApp Sent Bubble color */
-  color: #111b21 !important;
-  padding: 12px 18px !important;
-  border-radius: 14px 0 14px 14px !important;
-  box-shadow: var(--rasamala-shadow-sm) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  text-decoration: none !important;
-  font-weight: 600 !important;
-  font-size: 13.5px !important;
-  transition: background-color 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), border-color 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.2s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
-  border: 1px solid rgba(37, 211, 102, 0.1) !important;
-  margin-bottom: 10px !important;
-}
-
-.chat-bubble-outgoing.whatsapp-quick-reply::before {
-  content: "" !important;
-  position: absolute !important;
-  top: 0 !important;
-  right: -8px !important;
-  width: 0 !important;
-  height: 0 !important;
-  border-style: solid !important;
-  border-width: 8px 8px 0 0 !important;
-  border-color: #d9fdd3 transparent transparent transparent !important;
-}
-
-.chat-bubble-outgoing.whatsapp-quick-reply span {
-  color: #111b21 !important;
-  transition: color 0.2s ease !important;
-}
-
-.chat-bubble-outgoing.whatsapp-quick-reply i {
-  color: #25d366 !important;
-  font-size: 18px !important;
-  transition: transform 0.25s ease, color 0.2s ease !important;
-}
-
-.chat-bubble-outgoing.whatsapp-quick-reply:hover {
-  background-color: #25d366 !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2) !important;
-  border-color: transparent !important;
-}
-
-.chat-bubble-outgoing.whatsapp-quick-reply:hover::before {
-  border-color: #25d366 transparent transparent transparent !important;
-}
-
-.chat-bubble-outgoing.whatsapp-quick-reply:hover span,
-.chat-bubble-outgoing.whatsapp-quick-reply:hover i {
-  color: #ffffff !important;
-}
-
-.chat-bubble-outgoing.whatsapp-quick-reply:hover i {
-  transform: scale(1.15) rotate(5deg) !important;
 }
 
 .whatsapp-message-form {
@@ -2062,24 +2128,25 @@ body.rasamala-floating-info-hide .btn-color-mode-toggle {
   line-height: 1.2 !important;
   letter-spacing: 0.06em !important;
   text-transform: uppercase !important;
-  color: #667781 !important;
+  color: #00a884 !important;
 }
 
 .whatsapp-message-input {
   min-height: 124px !important;
   resize: vertical !important;
-  border-radius: var(--rasamala-radius-control) !important;
-  border: 1px solid rgba(17, 27, 33, 0.16) !important;
-  background: #ffffff !important;
-  color: #111b21 !important;
+  border-radius: 14px !important;
+  border: 1px solid color-mix(in srgb, #00a884 25%, var(--theme-muted-on-surface) 20%) !important;
+  background: var(--theme-surface) !important;
+  color: var(--theme-on-surface) !important;
   box-shadow: none !important;
   font-size: 13.5px !important;
   line-height: 1.55 !important;
+  padding: 12px 14px !important;
 }
 
 .whatsapp-message-input:focus {
-  border-color: #128c7e !important;
-  box-shadow: 0 0 0 3px rgba(18, 140, 126, 0.16) !important;
+  border-color: #00a884 !important;
+  box-shadow: 0 0 0 3px rgba(0, 168, 132, 0.18) !important;
 }
 
 .whatsapp-message-input.is-invalid {
@@ -2093,23 +2160,23 @@ body.rasamala-floating-info-hide .btn-color-mode-toggle {
   justify-content: center !important;
   gap: 8px !important;
   width: 100% !important;
-  min-height: 42px !important;
-  border-radius: var(--rasamala-radius-search) !important;
+  min-height: 44px !important;
+  border-radius: 999px !important;
   border: 0 !important;
-  background: #128c7e !important;
+  background: #00a884 !important;
   color: #ffffff !important;
-  font-size: 13.5px !important;
-  font-weight: 800 !important;
-  box-shadow: none !important;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 14px rgba(0, 168, 132, 0.3) !important;
+  transition: background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease !important;
 }
 
 .whatsapp-send-button:hover,
 .whatsapp-send-button:focus {
   color: #ffffff !important;
-  filter: saturate(1.06) brightness(1.02) !important;
-  transform: none !important;
-  box-shadow: none !important;
+  background: #008f70 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 18px rgba(0, 168, 132, 0.4) !important;
 }
 
 .whatsapp-send-button:disabled {
@@ -2184,7 +2251,7 @@ body.rasamala-floating-info-hide .btn-color-mode-toggle {
 /* Skip to content link for accessibility */
 .skip-to-content {
   position: absolute;
-  top: -100px;
+  top: 10px;
   left: 10px;
   background: var(--theme-accent-color);
   color: #fff;
@@ -2193,11 +2260,12 @@ body.rasamala-floating-info-hide .btn-color-mode-toggle {
   z-index: 99999;
   text-decoration: none;
   font-weight: bold;
-  transition: top 0.2s ease;
+  transform: translateY(-120px);
+  transition: transform 0.2s ease;
 }
 
 .skip-to-content:focus {
-  top: 10px;
+  transform: translateY(0);
   outline: 2px solid #fff;
   outline-offset: -4px;
 }
@@ -2330,4 +2398,1028 @@ body.rasamala-theme {
 .rasamala-theme .palette-switcher-select,
 .rasamala-theme .palette-switcher-custom-input {
   color: var(--theme-on-surface) !important;
+}
+
+/* ==========================================================================
+   UI/UX Enhancements (UX-01 - UX-10)
+   ========================================================================== */
+
+/* UX-01: Skeleton Shimmer Loading */
+.skeleton-loader {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.25rem;
+  padding: 1rem 0;
+}
+
+.skeleton-card {
+  height: 280px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, rgba(200,200,200,0.15) 25%, rgba(200,200,200,0.3) 50%, rgba(200,200,200,0.15) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite ease-in-out;
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* UX-03: Mobile Bottom Nav Touch Ripple & Min Target */
+.mobile-bottom-nav .nav-item {
+  min-width: 48px;
+  min-height: 48px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.mobile-bottom-nav .nav-item:active::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  background: rgba(var(--theme-accent-rgb), 0.25);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(1.2);
+  animation: touch-ripple 0.3s ease-out;
+}
+
+@keyframes touch-ripple {
+  from { opacity: 1; transform: translate(-50%, -50%) scale(0); }
+  to { opacity: 0; transform: translate(-50%, -50%) scale(1.4); }
+}
+
+/* Fix search toolbar action clickability and modal triggering */
+.search-toolbar-action {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+.search-toolbar-action > * {
+  pointer-events: none !important;
+}
+
+/* Guarantee Search Modals (Filter, Sort, View) sit 100% ON TOP of sticky header & toolbar */
+body.modal-open .rasamala-sticky-action-wrapper,
+body.modal-open .rasamala-sticky-toolbar,
+body:has(.modal.show) .rasamala-sticky-action-wrapper,
+body:has(.modal.show) .rasamala-sticky-toolbar {
+  z-index: 1 !important;
+}
+
+.modal {
+  z-index: 100000 !important;
+}
+
+.modal-backdrop,
+.modal-backdrop.show {
+  z-index: 99990 !important;
+}
+
+#mobileFilterModal,
+#mobileSortModal,
+#mobileViewModal,
+#adv-modal,
+#whatsappModal {
+  z-index: 100000 !important;
+}
+
+#mobileFilterModal.show,
+#mobileSortModal.show,
+#mobileViewModal.show,
+#adv-modal.show,
+#whatsappModal.show {
+  z-index: 100000 !important;
+  display: block !important;
+}
+
+#mobileFilterModal .modal-dialog,
+#mobileSortModal .modal-dialog,
+#mobileViewModal .modal-dialog,
+#adv-modal .modal-dialog,
+#whatsappModal .modal-dialog,
+#mobileFilterModal .modal-content,
+#mobileSortModal .modal-content,
+#mobileViewModal .modal-content,
+#adv-modal .modal-content,
+#whatsappModal .modal-content {
+  z-index: 100001 !important;
+  position: relative !important;
+  pointer-events: auto !important;
+}
+
+#mobileFilterModal *,
+#mobileSortModal *,
+#mobileViewModal *,
+#adv-modal *,
+#whatsappModal * {
+  pointer-events: auto !important;
+}
+
+@media (max-width: 767.98px) {
+  #mobileFilterModal,
+  #mobileSortModal,
+  #mobileViewModal {
+    padding-top: calc(16px + env(safe-area-inset-top, 0px)) !important;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  #mobileFilterModal .modal-dialog,
+  #mobileSortModal .modal-dialog,
+  #mobileViewModal .modal-dialog {
+    height: auto !important;
+    max-height: calc(100dvh - 32px) !important;
+    margin: auto !important;
+  }
+}
+
+#mobileSortModal a,
+#mobileSortModal .list-group-item,
+#mobileViewModal a,
+#mobileViewModal .list-group-item,
+#mobileViewModal .search-view-option-item,
+#mobileFilterModal button,
+#mobileFilterModal input,
+#mobileFilterModal label,
+#mobileFilterModal a {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+#mobile-filter-container,
+#mobile-filter-container *,
+#search-filter,
+#search-filter * {
+  pointer-events: auto !important;
+}
+
+#mobile-filter-container label,
+#mobile-filter-container .rasamala-filter-facet,
+#mobile-filter-container .custom-control-label,
+#mobile-filter-container .form-check-label,
+#mobile-filter-container .badge,
+#mobile-filter-container input[type="checkbox"],
+#mobile-filter-container input[type="radio"] {
+  cursor: pointer !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+#mobile-filter-container label.active,
+#mobile-filter-container label.checked,
+#mobile-filter-container label.is-selected,
+#mobile-filter-container .rasamala-filter-facet.active,
+#mobile-filter-container .rasamala-filter-facet.checked,
+#mobile-filter-container .custom-control-input:checked ~ .custom-control-label,
+#mobile-filter-container input:checked + label {
+  background-color: var(--theme-accent, #6f5b43) !important;
+  color: #ffffff !important;
+  border-color: var(--theme-accent, #6f5b43) !important;
+}
+
+/* UX-04: Mobile Floating Capsule Pill Quick Actions (Icon Only - Bottom Left) */
+@media (max-width: 767.98px) {
+  .detail-floating-quick-actions {
+    position: fixed;
+    left: 14px !important;
+    right: auto !important;
+    bottom: calc(56px + 14px + env(safe-area-inset-bottom));
+    z-index: 1045 !important;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--theme-primary, rgba(var(--theme-accent-rgb, 37, 99, 235), 0.94)) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    padding: 6px 10px !important;
+    border-radius: 50px !important;
+    border: 1px solid rgba(255, 255, 255, 0.32) !important;
+    box-shadow: 0 10px 28px -6px rgba(0, 0, 0, 0.35), 0 3px 8px rgba(0, 0, 0, 0.15) !important;
+    transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    pointer-events: auto !important;
+  }
+
+  /* Shift floating action pill above running text ticker when ticker is active */
+  .detail-floating-quick-actions.has-ticker-above,
+  body:has(.latest-content-ticker) .detail-floating-quick-actions {
+    bottom: calc(56px + 36px + 14px + env(safe-area-inset-bottom)) !important;
+  }
+
+  body.mobile-bottom-nav-hidden .detail-floating-quick-actions {
+    bottom: calc(14px + env(safe-area-inset-bottom)) !important;
+  }
+
+  body.mobile-bottom-nav-hidden .detail-floating-quick-actions.has-ticker-above {
+    bottom: calc(36px + 14px + env(safe-area-inset-bottom)) !important;
+  }
+
+  .detail-floating-quick-actions .btn-floating-action-icon,
+  .detail-floating-quick-actions button.btn-floating-action-icon,
+  .detail-floating-quick-actions a.btn-floating-action-icon {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    min-height: 38px !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.22) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.38) !important;
+    color: #ffffff !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 15px !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12) !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    touch-action: manipulation !important;
+  }
+
+  .detail-floating-quick-actions .btn-floating-action-icon i,
+  .detail-floating-quick-actions button.btn-floating-action-icon i,
+  .detail-floating-quick-actions a.btn-floating-action-icon i {
+    color: #ffffff !important;
+    font-size: 15px !important;
+  }
+
+  .detail-floating-quick-actions .btn-floating-action-icon:hover,
+  .detail-floating-quick-actions .btn-floating-action-icon:focus,
+  .detail-floating-quick-actions .btn-floating-action-icon:active {
+    background: rgba(255, 255, 255, 0.42) !important;
+    border-color: rgba(255, 255, 255, 0.7) !important;
+    color: #ffffff !important;
+    transform: translateY(-2px) scale(1.1) !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .detail-floating-quick-actions .btn-floating-action-icon:hover i,
+  .detail-floating-quick-actions .btn-floating-action-icon:focus i,
+  .detail-floating-quick-actions .btn-floating-action-icon:active i {
+    color: #ffffff !important;
+  }
+
+  /* Dark Mode Styling: match theme-primary accent color of right-side buttons */
+  body.rasamala-dark .detail-floating-quick-actions,
+  html.rasamala-dark .detail-floating-quick-actions {
+    background: var(--theme-primary, rgba(var(--theme-accent-rgb, 37, 99, 235), 0.95)) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 0 10px 28px -6px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  body.rasamala-dark .detail-floating-quick-actions .btn-floating-action-icon,
+  html.rasamala-dark .detail-floating-quick-actions .btn-floating-action-icon,
+  body.rasamala-dark .detail-floating-quick-actions button.btn-floating-action-icon,
+  html.rasamala-dark .detail-floating-quick-actions button.btn-floating-action-icon,
+  body.rasamala-dark .detail-floating-quick-actions a.btn-floating-action-icon,
+  html.rasamala-dark .detail-floating-quick-actions a.btn-floating-action-icon {
+    background: rgba(255, 255, 255, 0.22) !important;
+    border: 1px solid rgba(255, 255, 255, 0.38) !important;
+    color: #ffffff !important;
+  }
+
+  body.rasamala-dark .detail-floating-quick-actions .btn-floating-action-icon i,
+  html.rasamala-dark .detail-floating-quick-actions .btn-floating-action-icon i,
+  body.rasamala-dark .detail-floating-quick-actions button.btn-floating-action-icon i,
+  html.rasamala-dark .detail-floating-quick-actions button.btn-floating-action-icon i,
+  body.rasamala-dark .detail-floating-quick-actions a.btn-floating-action-icon i,
+  html.rasamala-dark .detail-floating-quick-actions a.btn-floating-action-icon i {
+    color: #ffffff !important;
+  }
+
+  body.rasamala-dark .detail-floating-quick-actions .btn-floating-action-icon:hover,
+  html.rasamala-dark .detail-floating-quick-actions .btn-floating-action-icon:hover {
+    background: rgba(255, 255, 255, 0.42) !important;
+    border-color: rgba(255, 255, 255, 0.7) !important;
+    color: #ffffff !important;
+  }
+
+  .detail-floating-quick-actions .btn-floating-action-icon.is-bookmarked {
+    background: #10b981 !important;
+    border-color: #10b981 !important;
+    box-shadow: 0 3px 10px rgba(16, 185, 129, 0.45) !important;
+  }
+
+  .detail-floating-quick-actions .btn-floating-action-icon.is-bookmarked i {
+    color: #ffffff !important;
+  }
+}
+
+/* UX-06: Smooth Page Transition */
+.rasamala-main {
+  animation: pageFadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes pageFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* UX-08: Biblio Availability Badge Cursor & Hover Effect */
+.biblio-avail-badge {
+  cursor: pointer !important;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.biblio-avail-badge:hover {
+  transform: translateY(-1px) scale(1.05);
+}
+
+/* UX-09: Detail Page Scroll Reading Progress Bar */
+.reading-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: var(--rasamala-accent, #c8a24a);
+  z-index: 99999;
+  transition: width 0.1s linear;
+}
+
+/* Bulletproof Flexbox Sticky Footer Layout */
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  margin: 0 !important;
+}
+
+/* Main Content Layer - Expands to fill available vertical viewport height */
+main.rasamala-main,
+.rasamala-main {
+  flex: 1 0 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  position: relative;
+  z-index: 2;
+  overflow: visible;
+}
+
+/* Inner view wrappers expand within main */
+.rasamala-subpage-wrapper,
+.result-search,
+#slims-home,
+#main-content > div {
+  flex: 1 0 auto !important;
+  width: 100% !important;
+}
+
+/* Footer Layer - Always locked to bottom of page/viewport */
+footer {
+  margin-top: auto !important;
+  flex-shrink: 0 !important;
+  position: relative;
+  z-index: 10 !important;
+}
+
+/* The desktop ticker is fixed to the viewport bottom. Reserve its height
+   inside the footer so the copyright and "Powered by SLiMS" row is never
+   hidden underneath it when the page is scrolled to the bottom. */
+@media (min-width: 992px) {
+  body:has(> .latest-content-ticker) footer {
+    padding-bottom: calc(36px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
+
+/* Search Header Section Layer (Level 1050) - Must be higher than sticky toolbar (100) and footer (10) */
+#section1 {
+  position: relative;
+  z-index: 1050 !important;
+  overflow: visible !important;
+}
+
+#search-wraper {
+  position: relative;
+  z-index: 1060 !important;
+  overflow: visible !important;
+}
+
+/* Live Search Suggestion Auto-complete Dropdown (Level 1070) */
+.search-suggestion-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 1070 !important;
+  background: var(--theme-surface, #ffffff);
+  border: 1px solid var(--theme-border, rgba(0, 0, 0, 0.08));
+  border-radius: 16px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18), 0 6px 16px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  overflow: hidden;
+  animation: rasamalaSlideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes rasamalaSlideDown {
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.search-suggestion-group-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--theme-muted, #64748b);
+  padding: 10px 16px 4px 16px;
+  margin: 0;
+}
+
+.search-suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  color: var(--theme-text, #1e293b);
+  text-decoration: none !important;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  border-radius: 10px;
+  margin: 2px 8px;
+}
+
+.search-suggestion-item:hover,
+.search-suggestion-item.is-selected {
+  background-color: rgba(var(--theme-accent-rgb, 37, 99, 235), 0.08);
+  color: var(--theme-accent, #2563eb);
+}
+
+.search-suggestion-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(var(--theme-accent-rgb, 37, 99, 235), 0.1);
+  color: var(--theme-accent, #2563eb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.search-suggestion-content {
+  flex-grow: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-suggestion-text {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.search-suggestion-meta {
+  font-size: 11px;
+  color: var(--theme-muted, #64748b);
+}
+
+body.rasamala-dark .search-suggestion-dropdown {
+  background: var(--theme-surface, #1e293b);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+
+body.rasamala-dark .search-suggestion-item:hover,
+body.rasamala-dark .search-suggestion-item.is-selected {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #60a5fa;
+}
+
+/* PERF-04: Font-Awesome Font-Display Swap */
+@font-face {
+  font-family: 'Font Awesome 5 Free';
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Font Awesome 5 Brands';
+  font-display: swap;
+}
+
+/* UX-07: Mobile Collapsible Footer Accordion */
+@media (max-width: 767.98px) {
+  .footer-section-title[data-bs-toggle="collapse"] {
+    cursor: pointer;
+    user-select: none;
+    padding: 8px 0;
+    margin-bottom: 4px !important;
+  }
+
+  .footer-section-title[data-bs-toggle="collapse"] .transition-icon {
+    transition: transform 0.25s ease;
+  }
+
+  .footer-section-title[data-bs-toggle="collapse"].collapsed .transition-icon {
+    transform: rotate(-90deg);
+  }
+}
+
+/* Clean & Compact Theme Viewer UI Refinements */
+.palette-switcher-panel {
+  width: min(440px, calc(100vw - 32px)) !important;
+  padding: 14px 14px 18px 14px !important;
+}
+
+.palette-switcher-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 8px 10px !important;
+  margin-bottom: 10px !important;
+}
+
+.palette-switcher-select {
+  font-size: 12px !important;
+  padding: 4px 8px !important;
+  height: 32px !important;
+  border-radius: 8px !important;
+  background-color: var(--theme-surface) !important;
+  color: var(--theme-text) !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted) 24%, transparent) !important;
+}
+
+.palette-switcher-label {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  color: var(--theme-muted) !important;
+  margin-bottom: 3px !important;
+}
+
+/* Theme Viewer workspace controls: keep builder remove buttons visible and
+   give administrators a wider or fullscreen editing surface when needed. */
+.palette-switcher-panel {
+  min-width: 320px !important;
+  width: min(680px, calc(100vw - 32px)) !important;
+  max-width: calc(100vw - 24px) !important;
+  resize: both !important;
+  overflow: auto !important;
+}
+.palette-switcher-panel.is-fullscreen {
+  top: 12px !important;
+  right: 12px !important;
+  bottom: 12px !important;
+  left: 12px !important;
+  width: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  min-height: 0 !important;
+  border-radius: 16px !important;
+  resize: none !important;
+}
+.palette-switcher-panel-action {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 30px !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  padding: 0 !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted) 24%, transparent) !important;
+  border-radius: 8px !important;
+  background: color-mix(in srgb, var(--theme-surface) 86%, var(--theme-background) 14%) !important;
+  color: var(--theme-on-surface) !important;
+  cursor: pointer !important;
+}
+.palette-switcher-panel-action:hover,
+.palette-switcher-panel-action:focus {
+  border-color: color-mix(in srgb, var(--theme-accent) 52%, transparent) !important;
+  background: color-mix(in srgb, var(--theme-accent) 14%, var(--theme-surface)) !important;
+  outline: none !important;
+}
+.palette-switcher-panel-action i { font-size: 12px !important; color: var(--rasamala-readable-accent) !important; }
+.palette-switcher-builder-row { min-width: 0 !important; overflow: visible !important; }
+.palette-switcher-builder-row > * { min-width: 0 !important; }
+.palette-switcher-builder-icon-control {
+  position: relative !important;
+  display: block !important;
+  width: 48px !important;
+  min-width: 48px !important;
+}
+.palette-switcher-builder-icon-value {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+.palette-switcher-builder-icon-trigger {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  width: 48px !important;
+  height: 32px !important;
+  min-width: 48px !important;
+  padding: 4px !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted) 28%, transparent) !important;
+  border-radius: 8px !important;
+  background: var(--theme-surface) !important;
+  color: var(--theme-text) !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+}
+.palette-switcher-builder-icon-trigger::after {
+  content: "\f078" !important;
+  flex: 0 0 auto !important;
+  font-family: "Font Awesome 5 Free" !important;
+  font-size: 8px !important;
+  font-weight: 900 !important;
+  opacity: .6 !important;
+}
+.palette-switcher-builder-icon-trigger:hover,
+.palette-switcher-builder-icon-trigger:focus {
+  border-color: var(--theme-accent) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--theme-accent) 22%, transparent) !important;
+}
+.palette-switcher-builder-icon-trigger > i {
+  flex: 0 0 auto !important;
+  color: var(--theme-accent) !important;
+  font-size: 14px !important;
+}
+.palette-switcher-builder-icon-trigger > span {
+  display: none !important;
+}
+.palette-switcher-builder-icon-menu {
+  position: absolute !important;
+  top: calc(100% + 4px) !important;
+  right: 0 !important;
+  width: 200px !important;
+  max-height: 220px !important;
+  z-index: 100 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+  padding: 6px !important;
+  overflow-y: auto !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted) 24%, transparent) !important;
+  border-radius: 8px !important;
+  background: var(--theme-surface) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22) !important;
+}
+.palette-switcher-builder-icon-menu[hidden] { display: none !important; }
+.palette-switcher-builder-icon-option {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  min-width: 0 !important;
+  min-height: 30px !important;
+  padding: 5px 6px !important;
+  border: 1px solid transparent !important;
+  border-radius: 6px !important;
+  background: transparent !important;
+  color: var(--theme-text) !important;
+  font-size: 10px !important;
+  text-align: left !important;
+  cursor: pointer !important;
+}
+.palette-switcher-builder-icon-option:hover,
+.palette-switcher-builder-icon-option:focus {
+  border-color: color-mix(in srgb, var(--theme-accent) 32%, transparent) !important;
+  background: color-mix(in srgb, var(--theme-accent) 12%, var(--theme-surface)) !important;
+  outline: none !important;
+}
+.palette-switcher-builder-icon-option > i { width: 18px !important; flex: 0 0 18px !important; color: var(--theme-accent) !important; text-align: center !important; }
+.palette-switcher-builder-icon-option > span { min-width: 0 !important; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; }
+.palette-switcher-builder-icon-preview { display: none !important; }
+.palette-switcher-builder-icon-control .palette-switcher-select { min-width: 0 !important; }
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 30px !important;
+  height: 30px !important;
+  border: 1px solid color-mix(in srgb, var(--theme-accent) 34%, transparent) !important;
+  border-radius: 7px !important;
+  background: color-mix(in srgb, var(--theme-accent) 10%, var(--theme-surface)) !important;
+  color: var(--theme-accent) !important;
+  font-size: 14px !important;
+}
+.palette-switcher-builder-icon-control .palette-switcher-select { min-width: 0 !important; }
+.palette-switcher-builder-remove {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  padding: 0 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 2 !important;
+  color: #dc3545 !important;
+  border-color: color-mix(in srgb, #dc3545 34%, transparent) !important;
+}
+.palette-switcher-builder-remove:hover,
+.palette-switcher-builder-remove:focus {
+  color: #ffffff !important;
+  background: #dc3545 !important;
+  border-color: #dc3545 !important;
+}
+.palette-switcher-builder-remove i { color: inherit !important; }
+
+@media (max-width: 991.98px) {
+  .palette-switcher-panel { resize: none !important; min-width: 0 !important; }
+  .palette-switcher-panel { width: auto !important; }
+  .palette-switcher-panel.is-fullscreen {
+    top: 6px !important;
+    right: 6px !important;
+    bottom: 6px !important;
+    left: 6px !important;
+  }
+}
+
+/* ================================================================
+   Mobile viewport/safe-area hardening
+
+   Some mobile browsers expose a visual viewport that is narrower than
+   the layout viewport (especially when the browser chrome is visible).
+   Keep the navigation and floating controls anchored to the visual
+   viewport and prevent their hit areas from being pushed outside it.
+   ================================================================ */
+@media (max-width: 767.98px) {
+  :root {
+    --rasamala-mobile-nav-height: 56px;
+    --rasamala-mobile-edge: max(12px, env(safe-area-inset-right, 0px));
+  }
+
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-x: clip;
+  }
+
+  body.mobile-bottom-nav-enabled .mobile-bottom-nav:not([hidden]) {
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: calc(var(--rasamala-mobile-nav-height) + env(safe-area-inset-bottom, 0px)) !important;
+    min-height: calc(var(--rasamala-mobile-nav-height) + env(safe-area-inset-bottom, 0px)) !important;
+    padding: 4px 8px env(safe-area-inset-bottom, 0px) !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    align-items: center !important;
+    justify-content: space-around !important;
+    z-index: var(--z-bottom-nav, 9999) !important;
+  }
+
+  body.mobile-bottom-nav-enabled .mobile-bottom-nav .nav-item {
+    flex: 1 1 0 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: 112px !important;
+    min-height: 48px !important;
+    padding: 3px 4px !important;
+    line-height: 1.1 !important;
+    overflow: hidden !important;
+  }
+
+  body.mobile-bottom-nav-enabled .mobile-bottom-nav .nav-item > span {
+    display: block !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    text-align: center !important;
+  }
+
+  /* The page needs a real reserve below its content so the final card/link
+     remains reachable above the fixed bar, including devices with a home
+     indicator. */
+  body.mobile-bottom-nav-enabled {
+    padding-bottom: calc(var(--rasamala-mobile-nav-height) + 16px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  /* Keep every floating action fully inside the visual viewport.  The
+     previous shared right value let the WhatsApp target be clipped when
+     another action was rendered alongside it by Theme Viewer. */
+  .btn-floating-info,
+  .btn-back-to-top,
+  .btn-color-mode-toggle,
+  .btn-palette-switcher,
+  .btn-floating-whatsapp {
+    box-sizing: border-box !important;
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    right: var(--rasamala-mobile-edge) !important;
+    max-width: calc(100vw - 24px) !important;
+  }
+
+  .btn-floating-whatsapp,
+  .btn-floating-info,
+  .btn-back-to-top,
+  .btn-color-mode-toggle,
+  .btn-palette-switcher {
+    bottom: calc(var(--rasamala-mobile-nav-height) + 20px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  /* Horizontal offsets are applied only to controls that are actually
+     visible. This avoids reserving an invisible button's slot and keeps
+     multiple actions within the viewport. */
+  .btn-palette-switcher:not([hidden]) {
+    right: calc(var(--rasamala-mobile-edge) + 52px) !important;
+  }
+
+  .btn-color-mode-toggle:not([hidden]) {
+    right: calc(var(--rasamala-mobile-edge) + 104px) !important;
+  }
+
+  body:has(.btn-floating-whatsapp:not([hidden])) .btn-floating-info:not([hidden]) {
+    right: calc(var(--rasamala-mobile-edge) + 52px) !important;
+  }
+
+  body:has(.btn-floating-info:not([hidden])) .btn-floating-whatsapp:not([hidden]) {
+    right: var(--rasamala-mobile-edge) !important;
+  }
+
+  .btn-floating-info.has-latest-content-ticker,
+  .btn-color-mode-toggle.has-latest-content-ticker,
+  .btn-palette-switcher.has-latest-content-ticker,
+  .btn-back-to-top.has-latest-content-ticker,
+  .btn-floating-whatsapp.has-latest-content-ticker {
+    bottom: calc(var(--rasamala-mobile-nav-height) + 56px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  /* The nested Bootstrap container/row can retain desktop negative gutters
+     on very narrow screens. Reset them so the search card and its controls
+     always fit between the safe horizontal edges. */
+  #search-wraper,
+  #search-wraper > .container,
+  #search-wraper > .container > .row,
+  #search-wraper > .container > .row > [class*="col-"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  #search-wraper > .container {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  #search-wraper > .container > .row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  #search-wraper > .container > .row > [class*="col-"] {
+    flex: 0 0 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  #search-wraper .card,
+  #search-wraper .card-body,
+  #search-wraper #search-form {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  #search-wraper #search-form #search-input {
+    min-width: 0 !important;
+    width: auto !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  #search-wraper #search-form > .d-flex.align-items-center.ms-2 {
+    flex: 0 0 auto !important;
+    margin-left: 4px !important;
+    gap: 4px !important;
+  }
+
+  #search-wraper #search-form a[data-bs-target="#adv-modal"],
+  #search-wraper #search-form button[type="submit"],
+  #search-wraper[class*="search-size-"] #search-form button[type="submit"] {
+    flex: 0 0 auto;
+    width: auto;
+    height: auto;
+    background: transparent;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+  /* Tablet widths should also keep the fixed bar and actions inside the
+     viewport, while retaining the roomier desktop-like search controls. */
+  body.mobile-bottom-nav-enabled .mobile-bottom-nav:not([hidden]) {
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    z-index: var(--z-bottom-nav, 9999) !important;
+  }
+
+  body.mobile-bottom-nav-enabled {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  .btn-floating-whatsapp,
+  .btn-floating-info,
+  .btn-back-to-top,
+  .btn-color-mode-toggle,
+  .btn-palette-switcher {
+    right: max(16px, env(safe-area-inset-right, 0px)) !important;
+  }
+}
+
+/* Keep the fixed running text aligned with the actual mobile navigation
+   state at every mobile/tablet width, including Theme Viewer live changes. */
+@media (max-width: 991.98px) {
+  body.mobile-bottom-nav-enabled .latest-content-ticker {
+    bottom: calc(var(--rasamala-mobile-nav-height, 56px) + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  body.mobile-bottom-nav-hidden .latest-content-ticker {
+    bottom: env(safe-area-inset-bottom, 0px) !important;
+  }
+}
+
+/* Keep the HTML hidden attribute authoritative when the Theme Viewer or
+   server setting intentionally disables the mobile bar. */
+.mobile-bottom-nav[hidden] {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+.btn-floating-info[hidden],
+.btn-floating-whatsapp[hidden],
+.btn-back-to-top[hidden],
+.btn-color-mode-toggle[hidden],
+.btn-palette-switcher[hidden] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Final contrast guard for hero titles. Some background variants have a
+   more-specific legacy rule that resets the title shadow; keep the readable
+   surface treatment authoritative for gradients, animations, and images. */
+.rasamala-search-banner-section .hero-search-heading h1 {
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--theme-on-surface) !important;
+  text-shadow: 0 2px 4px rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Dark mode uses a black keyline/drop shadow around the light title. */
+body.rasamala-dark .hero-search-heading h1,
+body.rasamala-dark .rasamala-search-banner-section .hero-search-heading h1 {
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.86) !important;
+}
+
+/* The map/contact column should blend into the page without a card outline.
+   Keep the map frame itself unchanged. */
+#slims-home .home-map-contact {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }

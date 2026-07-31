@@ -10,8 +10,8 @@ if (!function_exists('rasamalaSearchFilterHtml')) {
     function rasamalaSearchFilterHtml($html)
     {
         $html = (string)$html;
-        $html = preg_replace('/class="list-group\s+list-group-flush"/i', 'class="rasamala-filter-list"', $html);
-        $html = preg_replace('/class="([^"]*)\blist-group-item\b([^"]*)"/i', 'class="$1rasamala-filter-facet$2"', $html);
+        $html = preg_replace('/class="list-group\s+list-group-flush"/i', 'class="list-group list-group-flush rasamala-filter-list"', $html);
+        $html = preg_replace('/class="([^"]*)\blist-group-item\b([^"]*)"/i', 'class="$1list-group-item rasamala-filter-facet$2"', $html);
         $html = preg_replace('/\s*\bborder-top-0\b/i', '', $html);
         $html = preg_replace('/\s*\bborder-left\b|\s*\bborder-right\b/i', '', $html);
 
@@ -74,6 +74,32 @@ if (!function_exists('rasamalaSearchFilterHtml')) {
                     array_filter($_GET, fn($key) => $key !== 'csrf_token', ARRAY_FILTER_USE_KEY)
                 ));
 
+                if (empty($sort_select)) {
+                    $sorts = [
+                        ['most-relevant', __('Most relevant')],
+                        ['recently-added', __('Recently Added')],
+                        ['last-update', __('Last Update')],
+                        ['most-loaned', __('Most Loaned')],
+                        ['publish-year-newest', __('Publication Year [newest]')],
+                        ['publish-year-oldest', __('Publication Year [oldest]')],
+                        ['title-asc', __('Title Ascending')],
+                        ['title-desc', __('Title Descending')],
+                    ];
+                    $current_sort = '';
+                    if (!empty($_GET['sortby'])) {
+                        $current_sort = (string)$_GET['sortby'];
+                    } elseif (!empty($_GET['filter'])) {
+                        $filterArr = json_decode((string)$_GET['filter'], true);
+                        $current_sort = $filterArr['sort'] ?? '';
+                    }
+                    $sort_select_html = '';
+                    foreach ($sorts as $sort) {
+                        $selected = ($sort[0] === $current_sort) ? 'selected' : '';
+                        $sort_select_html .= '<option value="' . themeEscape($sort[0]) . '" ' . $selected . '>' . themeEscape($sort[1]) . '</option>';
+                    }
+                    $sort_select = $sort_select_html;
+                }
+
                 // Clean up underscores and dashes from sort options
                 $cleaned_sort_select = preg_replace_callback('/(<option[^>]*>)(.*?)(<\/option>)/i', function($matches) {
                     $label = str_replace(array('_', '-'), ' ', $matches[2]);
@@ -108,18 +134,18 @@ if (!function_exists('rasamalaSearchFilterHtml')) {
 
                             <!-- Right: Action Controls (Filter, Sort, View Mode) -->
                             <div class="search-result-toolbar-actions">
-                                <button type="button" class="btn search-toolbar-action" data-bs-toggle="modal" data-bs-target="#mobileFilterModal" id="btn-open-filter-modal" aria-label="<?= themeEscape(__('Open filter options')) ?>">
+                                <button type="button" class="btn search-toolbar-action" data-bs-toggle="modal" data-bs-target="#mobileFilterModal" data-toggle="modal" data-target="#mobileFilterModal" id="btn-open-filter-modal" aria-label="<?= themeEscape(__('Open filter options')) ?>">
                                     <i class="fas fa-filter search-toolbar-action-icon" aria-hidden="true"></i>
                                     <span class="search-toolbar-action-label"><?= __('Filter') ?></span>
                                     <span class="search-toolbar-badge d-none" id="active-filter-count">0</span>
                                 </button>
 
-                                <button type="button" class="btn search-toolbar-action" data-bs-toggle="modal" data-bs-target="#mobileSortModal" id="btn-open-sort-modal" aria-label="<?= themeEscape(__('Open sort options')) ?>">
+                                <button type="button" class="btn search-toolbar-action" data-bs-toggle="modal" data-bs-target="#mobileSortModal" data-toggle="modal" data-target="#mobileSortModal" id="btn-open-sort-modal" aria-label="<?= themeEscape(__('Open sort options')) ?>">
                                     <i class="fas fa-sort search-toolbar-action-icon" aria-hidden="true"></i>
                                     <span id="current-sort-label" class="search-toolbar-action-label"><?= __('Sort by') ?></span>
                                 </button>
 
-                                <button type="button" class="btn search-toolbar-action" data-bs-toggle="modal" data-bs-target="#mobileViewModal" id="btn-open-view-modal" aria-label="<?= themeEscape(__('Change result view')) ?>">
+                                <button type="button" class="btn search-toolbar-action" data-bs-toggle="modal" data-bs-target="#mobileViewModal" data-toggle="modal" data-target="#mobileViewModal" id="btn-open-view-modal" aria-label="<?= themeEscape(__('Change result view')) ?>">
                                     <i class="<?= themeEscape($view_options[$current_view]['icon']) ?> search-toolbar-action-icon" aria-hidden="true"></i>
                                     <span class="search-toolbar-action-label"><?= themeEscape($view_options[$current_view]['label']) ?></span>
                                 </button>
@@ -134,11 +160,18 @@ if (!function_exists('rasamalaSearchFilterHtml')) {
                     <?php
                     if (ENVIRONMENT == 'development' && !empty($engine->getError())) echo '<div class="alert alert-danger mt-2 text-center">' . themeEscape($engine->getError()) . '</div>';
                     // catch empty list
-                    if (trim(strip_tags($main_content)) === '') {
-                        echo '<div class="d-flex justify-content-center border-top pt-4">
-                                <img src="'.assets('images/empty.svg').'" alt="'.themeEscape(__('No result illustration')).'" />
-                              </div>
-                              <div class="text-center text-danger"><strong>'.__('No Result').'.</strong> '.__('Please try again').'</div>';
+                    if ($num_rows_val === 0) {
+                        echo '<div class="search-empty-state text-center py-5 px-3 border-top mt-3 rounded-4 bg-light shadow-sm">
+                                <div class="empty-state-img mb-3">
+                                  <img class="search-empty-state-image" src="'.assets('images/empty.svg').'" alt="'.themeEscape(__('No result illustration')).'" />
+                                </div>
+                                <h4 class="fw-bold mb-2 text-dark">'.__('No Result Found').'</h4>
+                                <p class="text-muted small mb-4">'.__('We could not find any records matching your search query. Please try checking your spelling or using broader keywords.').'</p>
+                                <div class="d-inline-flex flex-wrap justify-content-center gap-2">
+                                  <a href="index.php?search=search" class="btn btn-primary btn-sm rounded-pill px-4"><i class="fas fa-undo me-1" aria-hidden="true"></i> '.__('Reset Search').'</a>
+                                  <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#adv-modal"><i class="fas fa-sliders-h me-1" aria-hidden="true"></i> '.__('Advanced Search').'</button>
+                                </div>
+                              </div>';
                     } else {
                         echo $main_content;
                     }
@@ -252,5 +285,3 @@ if (!function_exists('rasamalaSearchFilterHtml')) {
         </div>
     </div>
 </div>
-
-<script src="<?= themeEscape(assetsVersioned('js/result_search.js')); ?>"></script>

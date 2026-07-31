@@ -10,8 +10,8 @@
 #search-wraper {
   margin-top: -24px !important;
   margin-bottom: 16px;
-  z-index: 30 !important;
-  overflow: visible !important;
+  z-index: 100;
+  overflow: visible;
 }
 
 /* Override negative search box margin on result pages to prevent overlapping/cutoff navbar */
@@ -237,7 +237,7 @@
   align-items: flex-start !important;
   gap: 6px !important;
   margin-top: 4px !important;
-  color: var(--rasamala-text-secondary) !important;
+  color: var(--theme-muted-on-surface) !important;
   font-size: 0.82em !important;
   font-weight: 500 !important;
   line-height: 1.35 !important;
@@ -247,14 +247,15 @@
 .parallel-title-alt i {
   flex: 0 0 auto !important;
   margin-top: 0.15em !important;
-  color: var(--rasamala-accent) !important;
+  color: var(--theme-muted-on-surface) !important;
   font-size: 0.95em !important;
 }
 
 .parallel-title-detail .parallel-title-alt {
-  margin-top: 8px !important;
-  font-size: 0.56em !important;
+  margin-top: 6px !important;
+  font-size: 0.58em !important;
   font-weight: 500 !important;
+  color: var(--theme-muted-on-surface) !important;
 }
 
 .parallel-title-home .parallel-title-alt,
@@ -296,12 +297,14 @@
   font-family: var(--rasamala-font-stack) !important;
   cursor: pointer !important;
   line-height: 1 !important;
+  touch-action: manipulation !important;
+  user-select: none !important;
+  -webkit-tap-highlight-color: transparent !important;
   transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease !important;
 }
 
-.biblio-avail-badge:focus {
-  outline: 0 !important;
-  box-shadow: 0 0 0 3px rgba(var(--theme-accent-rgb), 0.18) !important;
+.biblio-avail-badge * {
+  pointer-events: none !important;
 }
 
 .biblio-avail-ok {
@@ -391,27 +394,33 @@
   color: #c82333 !important;
 }
 
-@media (max-width: 575.98px) {
+@media (max-width: 767.98px) {
   .biblio-simple-item {
     gap: 10px !important;
   }
 
-  .biblio-avail-popover {
+  .biblio-avail-popover,
+  .detail-avail-popover {
     position: fixed !important;
     top: 50% !important;
     left: 50% !important;
     transform: translate(-50%, -50%) !important;
     bottom: auto !important;
     right: auto !important;
-    min-width: 290px !important;
+    z-index: 1080 !important;
+    min-width: min(340px, calc(100vw - 32px)) !important;
     max-width: calc(100vw - 32px) !important;
-    max-height: 70vh !important;
-    overflow: auto !important;
+    max-height: 75vh !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
     margin: 0 !important;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28) !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35) !important;
+    border-radius: 16px !important;
   }
 
-  .biblio-avail-popover::before {
+  .biblio-avail-popover::before,
+  .detail-avail-popover::before {
     display: none !important;
   }
 }
@@ -923,8 +932,8 @@ body.rasamala-search-panels-transparent .result-search .search-view-toggle {
 
 .detail-record dl.row dt {
   font-size: 12px;
-  font-weight: 700;
-  color: var(--rasamala-text-secondary);
+  font-weight: 500;
+  color: var(--theme-on-surface);
   border: 0;
   padding-top: 8px;
   padding-bottom: 8px;
@@ -1123,6 +1132,11 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
   line-height: 1.45 !important;
 }
 
+.palette-switcher-field-help {
+  margin: 4px 0 0 !important;
+  max-width: 64ch !important;
+}
+
 .palette-switcher-swatches {
   display: grid !important;
   grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
@@ -1297,22 +1311,54 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
   text-align: left;
 }
 
+.detail-meta-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 24px !important;
+  margin-bottom: 12px !important;
+  width: 100% !important;
+}
+
+.detail-gmd-label {
+  flex: 0 0 auto !important;
+}
+
+.detail-actions-icon-group {
+  margin-left: auto !important;
+  flex: 0 0 auto !important;
+}
+
+.text-theme-accent {
+  color: var(--rasamala-accent) !important;
+}
+
 .detail-side-heading {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0 0 10px;
-  color: var(--rasamala-text-primary);
-  font-size: 14px;
-  font-weight: 800;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 0 10px !important;
+  color: var(--rasamala-text-primary) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
+
+.detail-side-heading i,
+.detail-section-heading i,
+.detail-notes-header i,
+.detail-callnumber-label i,
+.detail-callnumber-tag i,
+.detail-gmd-label i,
+.detail-qr-label i {
+  display: inline-block !important;
+  font-size: 14px !important;
+  color: var(--rasamala-accent) !important;
+  flex: 0 0 auto !important;
 }
 
 .detail-side-heading::before {
-  content: "\f058";
-  color: var(--rasamala-accent);
-  font-family: "Font Awesome 5 Free";
-  font-size: 13px;
-  font-weight: 900;
+  display: none !important;
+  content: none !important;
 }
 
 .detail-callnumber-strip {
@@ -1320,38 +1366,47 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
   flex-wrap: wrap;
   justify-content: center;
   gap: 7px;
-  margin-top: 15px;
-  margin-bottom: 0;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 12%, transparent) !important;
   text-align: center;
   width: 100%;
 }
 
 .detail-callnumber-label {
   width: 100%;
-  color: var(--rasamala-text-secondary);
+  color: var(--theme-on-surface);
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.02em;
   line-height: 1.2;
   text-transform: none !important;
 }
 
 .detail-callnumber-tag {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: color-mix(in srgb, var(--theme-accent) 92%, var(--theme-surface) 8%);
-  color: var(--theme-on-accent);
-  border: 1px solid color-mix(in srgb, var(--theme-accent) 72%, transparent);
-  border-radius: 999px;
-  box-shadow: none;
-  font-size: 11.5px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  line-height: 1.2;
-  padding: 6px 10px;
-  max-width: 100%;
-  overflow-wrap: anywhere;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  color: var(--theme-on-surface) !important;
+  border: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.03em !important;
+  line-height: 1.2 !important;
+  padding: 4px 0 !important;
+  max-width: 100% !important;
+  overflow-wrap: anywhere !important;
+}
+
+.detail-callnumber-tag i {
+  margin-right: 6px !important;
+  font-size: 12px !important;
+  flex: 0 0 auto !important;
 }
 
 .detail-avail-rows {
@@ -1364,12 +1419,16 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  min-height: 44px;
-  margin-bottom: 9px;
-  padding: 10px 16px 10px 20px !important;
-  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 14%, transparent);
-  border-radius: 999px !important;
-  background: color-mix(in srgb, var(--theme-surface) 96%, var(--theme-accent) 4%);
+  min-height: 38px;
+  margin-bottom: 2px;
+  padding: 8px 2px !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 10%, transparent) !important;
+  border-radius: 0 !important;
+  background: transparent;
+  background-color: transparent;
   cursor: pointer;
   transition: background-color 0.18s ease, border-color 0.18s ease;
 }
@@ -1382,7 +1441,8 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
 .detail-avail-row:hover,
 .detail-avail-row:focus-within {
   border-color: color-mix(in srgb, var(--theme-accent) 34%, transparent);
-  background: color-mix(in srgb, var(--theme-surface) 90%, var(--theme-accent) 10%);
+  background: transparent;
+  background-color: transparent;
   box-shadow: none;
   outline: none;
 }
@@ -1396,7 +1456,7 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
   display: block !important;
   color: var(--theme-on-surface) !important;
   font-size: 12.5px !important;
-  font-weight: 800 !important;
+  font-weight: 500 !important;
   line-height: 1.3 !important;
   overflow-wrap: anywhere !important;
 }
@@ -1409,9 +1469,10 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
   min-height: 24px !important;
   padding: 0 9px !important;
   border-radius: 999px !important;
-  background: color-mix(in srgb, currentColor 11%, transparent) !important;
+  background: transparent;
+  background-color: transparent;
   font-size: 12px !important;
-  font-weight: 900 !important;
+  font-weight: 600 !important;
   line-height: 1 !important;
   white-space: nowrap !important;
 }
@@ -1719,11 +1780,12 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
 
 .rasamala-breadcrumb-current {
   min-width: 0 !important;
+  max-width: 500px !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
-  color: var(--rasamala-accent) !important;
-  font-weight: 700 !important;
+  color: var(--theme-on-surface) !important;
+  font-weight: 600 !important;
 }
 
 /* .rasamala-header-dark is defined in the Navbar Overrides section (Section 12) */
@@ -1747,8 +1809,8 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
   padding: 16px 14px 18px;
   border: 0;
   border-radius: 22px;
-  background: color-mix(in srgb, var(--theme-surface) 96%, var(--theme-accent) 4%);
-  background-color: color-mix(in srgb, var(--theme-surface) 96%, var(--theme-accent) 4%);
+  background: transparent;
+  background-color: transparent;
   box-shadow: none;
   transition: background-color 0.2s ease;
   overflow: hidden;
@@ -1759,8 +1821,8 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
 }
 
 .detail-cover-wrapper:hover {
-  background: color-mix(in srgb, var(--theme-surface) 94%, var(--theme-accent) 6%);
-  background-color: color-mix(in srgb, var(--theme-surface) 94%, var(--theme-accent) 6%);
+  background: transparent;
+  background-color: transparent;
   box-shadow: none;
 }
 
@@ -1776,25 +1838,26 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
 .detail-cover img {
   display: block;
   width: 100%;
-  max-width: 145px;
-  max-height: 215px;
+  max-width: 160px;
+  max-height: 235px;
   height: auto;
   object-fit: contain;
-  border-radius: 7px;
-  box-shadow: none;
+  aspect-ratio: 2 / 3;
+  border-radius: 9px;
+  box-shadow: var(--rasamala-shadow-sm);
 }
 
 .detail-cover .book-cover-placeholder {
-  --book-cover-width: 145px;
-  --book-cover-height: 215px;
-  --book-cover-min-height: 215px;
-  --book-cover-aspect-ratio: 145 / 215;
+  --book-cover-width: 160px;
+  --book-cover-height: 235px;
+  --book-cover-min-height: 235px;
+  --book-cover-aspect-ratio: 2 / 3;
   --book-cover-background: var(--theme-primary);
   --book-cover-shadow: none;
   flex: 0 0 auto;
-  max-width: 145px;
-  max-height: 215px;
-  border-radius: 7px;
+  max-width: 160px;
+  max-height: 235px;
+  border-radius: 9px;
 }
 
 .detail-cover .book-cover-content {
@@ -1920,7 +1983,8 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
   font-size: 13px;
   font-weight: 500;
   text-decoration: none;
-  background-color: color-mix(in srgb, var(--theme-on-surface) 6%, transparent);
+  background: transparent;
+  background-color: transparent;
   color: var(--theme-on-surface);
   border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 18%, transparent);
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
@@ -1929,8 +1993,9 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
 
 .detail-author-footer a:hover,
 .detail-author-footer a:focus {
-  background-color: var(--rasamala-accent);
-  color: var(--theme-on-primary);
+  background: transparent;
+  background-color: transparent;
+  color: var(--rasamala-accent);
   border-color: var(--rasamala-accent);
   box-shadow: none;
 }
@@ -2541,7 +2606,19 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
 
 .social-share-modal {
   position: fixed !important;
-  top: 30% !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  z-index: 1060 !important;
+}
+
+.social-share-modal .modal-dialog {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: calc(100% - 2rem) !important;
+  margin: 1rem auto !important;
 }
 
 .floating-chat-trigger {
@@ -2590,13 +2667,13 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
   color: #424242 !important;
   padding-bottom: 30px !important;
   font-family: var(--rasamala-font-stack) !important;
-  border-bottom: 1px solid rgba(66, 66, 66, 0.05) !important;
+  border-bottom: 0 !important;
 }
 
 .rasamala-search-banner-section {
   background: transparent !important;
   background-color: transparent !important;
-  border-bottom: 1px solid rgba(66, 66, 66, 0.05) !important;
+  border-bottom: 0 !important;
 }
 
 .rasamala-hero-section-only {
@@ -2616,6 +2693,242 @@ body.rasamala-opac-sections-hidden #slims-home .rasamala-home-section {
   padding-bottom: clamp(56px, 12vh, 128px) !important;
   border-bottom: 0 !important;
   background: linear-gradient(145deg, rgba(var(--theme-accent-rgb), 0.16) 0%, #ffffff 42%, rgba(var(--theme-accent-rgb), 0.13) 100%) !important;
+}
+
+/* Lightweight, static background variants. They do not add network or
+   JavaScript work and remain compatible with the selected light/dark palette. */
+body.rasamala-hero-bg-style-soft-gradient .rasamala-search-banner-section.rasamala-search-banner-hero-only {
+  background: linear-gradient(145deg, color-mix(in srgb, var(--theme-primary) 38%, var(--theme-background)) 0%, color-mix(in srgb, var(--theme-secondary) 30%, var(--theme-surface)) 48%, color-mix(in srgb, var(--theme-accent) 34%, var(--theme-background)) 100%) !important;
+}
+
+body.rasamala-hero-bg-style-aurora-glow .rasamala-search-banner-section.rasamala-search-banner-hero-only {
+  background:
+    radial-gradient(circle at 15% 15%, color-mix(in srgb, var(--theme-accent) 48%, transparent), transparent 38%),
+    radial-gradient(circle at 86% 72%, color-mix(in srgb, var(--theme-secondary) 38%, transparent), transparent 42%),
+    linear-gradient(145deg, var(--theme-background), var(--theme-surface)) !important;
+}
+
+body.rasamala-hero-bg-style-mesh-light .rasamala-search-banner-section.rasamala-search-banner-hero-only {
+  background:
+    linear-gradient(120deg, color-mix(in srgb, var(--theme-primary) 30%, transparent) 25%, transparent 25%) 0 0 / 34px 34px,
+    linear-gradient(300deg, color-mix(in srgb, var(--theme-accent) 26%, transparent) 25%, transparent 25%) 0 0 / 34px 34px,
+    linear-gradient(145deg, var(--theme-background), var(--theme-surface)) !important;
+}
+
+body.rasamala-hero-bg-style-glass-surface .rasamala-search-banner-section.rasamala-search-banner-hero-only {
+  background: color-mix(in srgb, var(--theme-primary) 24%, var(--theme-surface) 76%) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+body.rasamala-hero-bg-style-solid-theme .rasamala-search-banner-section.rasamala-search-banner-hero-only {
+  background: var(--theme-background) !important;
+}
+
+body.rasamala-hero-bg-style-minimal-surface .rasamala-search-banner-section.rasamala-search-banner-hero-only {
+  background: linear-gradient(180deg, var(--theme-surface), var(--theme-background)) !important;
+}
+
+/* Background Style applies to the complete page canvas, not only the
+   fullscreen search hero. The fixed animation canvas remains a child layer
+   (z-index 1), while page content stays above it (z-index 2+). */
+.rasamala-background-image-layer {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  display: none !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  background-color: transparent !important;
+  background-repeat: no-repeat !important;
+  contain: paint !important;
+}
+
+body.rasamala-background-image-active .rasamala-background-image-layer {
+  display: block !important;
+}
+
+/* Theme-colored Ocean Waves. The paths mirror bg-ocean-waves.svg, while the
+   fills stay as CSS variables so palette and dark/light changes are reflected
+   instantly without downloading or recoloring another image. */
+.rasamala-theme-wave-layer {
+  position: fixed !important;
+  inset: auto 0 0 !important;
+  z-index: 0 !important;
+  display: none !important;
+  width: 100% !important;
+  height: clamp(190px, 34vh, 360px) !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  contain: paint !important;
+}
+body.rasamala-background-style-image-bg-ocean-waves .rasamala-theme-wave-layer {
+  display: block !important;
+}
+.rasamala-theme-wave-svg {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+.rasamala-theme-wave-back {
+  fill: var(--theme-primary) !important;
+  fill: color-mix(in srgb, var(--theme-primary) 34%, var(--theme-background) 66%) !important;
+  opacity: .94 !important;
+}
+.rasamala-theme-wave-front {
+  fill: var(--theme-accent) !important;
+  fill: color-mix(in srgb, var(--theme-accent) 38%, var(--theme-background) 62%) !important;
+  opacity: .78 !important;
+}
+html body.rasamala-dark .rasamala-theme-wave-back {
+  fill: var(--theme-primary) !important;
+  fill: color-mix(in srgb, var(--theme-primary) 48%, var(--theme-background) 52%) !important;
+}
+html body.rasamala-dark .rasamala-theme-wave-front {
+  fill: var(--theme-accent) !important;
+  fill: color-mix(in srgb, var(--theme-accent) 46%, var(--theme-background) 54%) !important;
+  opacity: .86 !important;
+}
+@media (max-width: 575.98px) {
+  .rasamala-theme-wave-layer { height: 230px !important; }
+}
+
+body.rasamala-background-image-active {
+  background-image: none !important;
+  background-attachment: fixed !important;
+}
+
+body.rasamala-background-style-soft-gradient {
+  background: linear-gradient(145deg,
+    color-mix(in srgb, var(--theme-primary) 38%, var(--theme-background)) 0%,
+    color-mix(in srgb, var(--theme-secondary) 30%, var(--theme-surface)) 48%,
+    color-mix(in srgb, var(--theme-accent) 34%, var(--theme-background)) 100%) !important;
+  background-attachment: fixed !important;
+}
+
+body.rasamala-background-style-aurora-glow {
+  background:
+    radial-gradient(circle at 15% 15%, color-mix(in srgb, var(--theme-accent) 48%, transparent), transparent 38%),
+    radial-gradient(circle at 86% 72%, color-mix(in srgb, var(--theme-secondary) 38%, transparent), transparent 42%),
+    linear-gradient(145deg, var(--theme-background), var(--theme-surface)) !important;
+  background-attachment: fixed !important;
+}
+
+body.rasamala-background-style-mesh-light {
+  background:
+    linear-gradient(120deg, color-mix(in srgb, var(--theme-primary) 30%, transparent) 25%, transparent 25%) 0 0 / 34px 34px,
+    linear-gradient(300deg, color-mix(in srgb, var(--theme-accent) 26%, transparent) 25%, transparent 25%) 0 0 / 34px 34px,
+    linear-gradient(145deg, var(--theme-background), var(--theme-surface)) !important;
+  background-attachment: fixed !important;
+}
+
+body.rasamala-background-style-glass-surface {
+  background: color-mix(in srgb, var(--theme-primary) 24%, var(--theme-surface) 76%) !important;
+  background-attachment: fixed !important;
+}
+
+body.rasamala-background-style-solid-theme {
+  background: var(--theme-background) !important;
+  background-attachment: fixed !important;
+}
+
+body.rasamala-background-style-minimal-surface {
+  background: linear-gradient(180deg, var(--theme-surface), var(--theme-background)) !important;
+  background-attachment: fixed !important;
+}
+
+body.rasamala-background-style-image-bg-ocean-waves {
+  background: var(--theme-background) !important;
+  background-attachment: fixed !important;
+}
+
+body.rasamala-background-style-custom {
+  background: var(--theme-background) !important;
+  background-attachment: fixed !important;
+}
+
+/* Let the selected page canvas show through layout shells. Cards, dialogs,
+   navbars, and footer retain their own surfaces for readability. */
+body[class*="rasamala-background-style-"] .rasamala-hero-section,
+body[class*="rasamala-background-style-"] .rasamala-search-banner-section,
+body[class*="rasamala-background-style-"] #slims-home,
+body[class*="rasamala-background-style-"] .rasamala-subpage-wrapper,
+body[class*="rasamala-background-style-"] .result-search,
+body[class*="rasamala-background-style-"] .member-area {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+body[class*="rasamala-background-style-"] .background-animation-layer {
+  z-index: 1 !important;
+}
+
+.rasamala-hero-scroll-indicator {
+  position: absolute;
+  z-index: 1061;
+  left: 50%;
+  bottom: clamp(14px, 3vh, 30px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  transform: translateX(-50%);
+  color: var(--theme-muted-on-background);
+  font-size: 16px;
+  text-decoration: none;
+  opacity: 0.82;
+  border: 1px solid color-mix(in srgb, var(--theme-muted-on-background) 34%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--theme-surface) 78%, transparent);
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--theme-primary) 18%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: color 160ms ease, opacity 160ms ease, border-color 160ms ease, background-color 160ms ease;
+}
+
+.rasamala-hero-scroll-indicator:hover,
+.rasamala-hero-scroll-indicator:focus-visible {
+  color: var(--theme-accent);
+  opacity: 1;
+  text-decoration: none;
+  border-color: color-mix(in srgb, var(--theme-accent) 58%, transparent);
+  background: color-mix(in srgb, var(--theme-accent) 12%, var(--theme-surface));
+  outline: none;
+}
+
+.rasamala-hero-scroll-indicator i {
+  animation: rasamala-hero-scroll-bounce 1.7s ease-in-out infinite;
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* The bottom running-text ticker is fixed to the viewport. Lift the arrow
+   above its full footprint so it remains visible and never overlaps links. */
+body:has(> .latest-content-ticker) .rasamala-hero-scroll-indicator {
+  bottom: calc(34px + env(safe-area-inset-bottom, 0px) + clamp(14px, 3vh, 30px));
+}
+
+@media (max-width: 991.98px) {
+  body.mobile-bottom-nav-enabled:has(> .latest-content-ticker) .rasamala-hero-scroll-indicator {
+    bottom: calc(56px + 34px + env(safe-area-inset-bottom, 0px) + clamp(14px, 3vh, 30px));
+  }
+
+  body.mobile-bottom-nav-hidden:has(> .latest-content-ticker) .rasamala-hero-scroll-indicator {
+    bottom: calc(34px + env(safe-area-inset-bottom, 0px) + clamp(14px, 3vh, 30px));
+  }
+}
+
+@keyframes rasamala-hero-scroll-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rasamala-hero-scroll-indicator i {
+    animation: none;
+  }
 }
 
 body.rasamala-home-hero-only {
@@ -2741,6 +3054,28 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   position: relative;
   z-index: 2;
   width: 100%;
+  border: 0 !important;
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+}
+
+.rasamala-search-hero-content::before,
+.rasamala-search-hero-content::after,
+.rasamala-search-banner-section::before,
+.rasamala-search-banner-section::after {
+  border: 0 !important;
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+}
+
+.rasamala-search-hero-content .hero-line,
+.rasamala-search-hero-content .hero-neural-line,
+.rasamala-search-banner-section .hero-line,
+.rasamala-search-banner-section .hero-neural-line {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
 }
 
 .rasamala-search-banner-hero-only #search-wraper {
@@ -2947,7 +3282,6 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   display: flex;
   width: max-content;
   animation: latestContentTicker var(--ticker-speed, 32s) linear infinite;
-  will-change: transform;
 }
 
 .latest-content-ticker:hover .latest-content-ticker-track,
@@ -3974,9 +4308,9 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   --book-cover-b: color-mix(in srgb, var(--theme-primary) 58%, var(--theme-secondary) 42%);
   --book-cover-c: color-mix(in srgb, var(--theme-accent) 42%, var(--theme-surface) 58%);
   --book-cover-width: 100%;
-  --book-cover-height: 100%;
-  --book-cover-min-height: 185px;
-  --book-cover-aspect-ratio: auto;
+  --book-cover-height: auto;
+  --book-cover-min-height: 0px;
+  --book-cover-aspect-ratio: 2 / 3;
   --book-cover-background:
     radial-gradient(circle at 22% 16%, color-mix(in srgb, var(--book-cover-c) 45%, transparent), transparent 33%),
     linear-gradient(145deg, var(--book-cover-a), var(--book-cover-b));
@@ -3985,7 +4319,6 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   position: relative !important;
   width: var(--book-cover-width) !important;
   height: var(--book-cover-height) !important;
-  min-height: var(--book-cover-min-height) !important;
   aspect-ratio: var(--book-cover-aspect-ratio) !important;
   display: flex !important;
   color: var(--book-cover-text) !important;
@@ -4510,81 +4843,58 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 
 /* Custom Search Bar Buttons */
 #search-wraper #search-form button[type="submit"] {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  border-radius: 50% !important;
-  background-color: var(--theme-accent) !important;
-  border: 1px solid color-mix(in srgb, var(--theme-accent) 74%, var(--theme-primary) 26%) !important;
-  color: var(--theme-on-accent) !important;
-  box-shadow: none !important;
-  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
-  cursor: pointer !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 4px 8px;
+  margin: 0;
+  color: var(--theme-accent, #3b82f6);
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
-
-
-#search-wraper.search-size-small #search-form button[type="submit"] {
-  width: 30px !important;
-  height: 30px !important;
-}
-
-#search-wraper.search-size-medium #search-form button[type="submit"] {
-  width: 42px !important;
-  height: 42px !important;
-}
-
-#search-wraper.search-size-large #search-form button[type="submit"] {
-  width: 46px !important;
-  height: 46px !important;
-}
-
 
 #search-wraper #search-form button[type="submit"]:hover {
-  background-color: color-mix(in srgb, var(--theme-accent) 82%, var(--theme-primary) 18%) !important;
-  border-color: color-mix(in srgb, var(--theme-accent) 60%, var(--theme-primary) 40%) !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 8px 18px color-mix(in srgb, var(--theme-accent) 24%, transparent) !important;
-  filter: none !important;
+  background: transparent;
+  background-color: transparent;
+  color: var(--theme-primary, #0f172a);
+  transform: scale(1.1);
+  box-shadow: none;
 }
 
-
-#search-wraper #search-form button[type="submit"]:active {
-  transform: scale(0.95) !important;
+#search-wraper #search-form button[type="submit"] > .fa-search,
+#search-wraper #search-form button[type="submit"] > .fa-spinner {
+  color: inherit;
 }
-
-
-#search-wraper.search-size-small #search-form button[type="submit"] .fa-search {
-  font-size: 12px !important;
-}
-
-#search-wraper.search-size-medium #search-form button[type="submit"] .fa-search {
-  font-size: 15px !important;
-}
-
-#search-wraper.search-size-large #search-form button[type="submit"] .fa-search {
-  font-size: 18px !important;
-}
-
 
 #search-wraper #search-form a[data-bs-target="#adv-modal"] {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 36px !important;
-  height: 36px !important;
-  border-radius: 50% !important;
-  background: color-mix(in srgb, var(--theme-primary) 8%, transparent) !important;
-  color: var(--theme-primary) !important;
-  font-size: 16px !important;
-  text-decoration: none !important;
-  transition: color 0.2s ease, transform 0.2s ease !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 4px 8px;
+  margin: 0;
+  color: var(--theme-muted-on-background, #64748b);
+  font-size: 1.15rem;
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
-
 #search-wraper #search-form a[data-bs-target="#adv-modal"]:hover {
-  background: color-mix(in srgb, var(--theme-primary) 12%, var(--theme-surface) 88%) !important;
-  color: var(--theme-primary-hover) !important;
-  transform: none !important;
+  background: transparent;
+  background-color: transparent;
+  color: var(--theme-primary, #0f172a);
+  transform: scale(1.1);
+  box-shadow: none;
 }
 
 
@@ -4620,8 +4930,8 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
     max-width: 100% !important;
     flex: none !important;
     font-size: 12px !important;
-    font-weight: 600 !important;
-    color: var(--rasamala-text-secondary) !important;
+    font-weight: 500 !important;
+    color: var(--theme-on-surface) !important;
     text-transform: none !important;
     letter-spacing: 0.02em !important;
     margin-top: 8px !important;
@@ -4672,8 +4982,8 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
     min-width: 0;
     flex: none;
     font-size: 13px !important;
-    font-weight: 600 !important;
-    color: var(--rasamala-text-secondary) !important;
+    font-weight: 500 !important;
+    color: var(--theme-on-surface) !important;
     text-transform: none !important;
     letter-spacing: 0.01em !important;
     padding: 2px 0 0;
@@ -4711,19 +5021,20 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 24px 0 12px;
+  margin: 28px 0 14px;
+  padding-bottom: 8px;
   color: var(--rasamala-text-primary);
   font-size: 15px !important;
-  font-weight: 700 !important;
+  font-weight: 600 !important;
   letter-spacing: 0 !important;
   text-transform: none !important;
-  border-bottom: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 12%, transparent) !important;
 }
 
 .detail-title-block {
   margin: 0 0 22px;
   padding: 0 0 17px;
-  border-bottom: 1px solid color-mix(in srgb, var(--theme-muted) 20%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 12%, transparent) !important;
 }
 
 .detail-section-heading::before {
@@ -4804,6 +5115,8 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 }
 
 #slims-home .slims-book-card .card-image {
+  aspect-ratio: 65 / 83 !important;
+  width: 100% !important;
   max-width: 135px !important;
   max-height: 190px !important;
   margin: 0 auto 10px auto !important;
@@ -5035,63 +5348,99 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 }
 
 #slims-home .rasamala-home-section-map {
-  margin-top: 32px !important;
-  margin-bottom: 32px !important;
+  margin-top: 32px;
+  margin-bottom: 32px;
+  padding: 24px;
+  border-radius: var(--theme-radius-xl, 16px);
+  background: color-mix(in srgb, var(--theme-surface) 92%, var(--theme-background) 8%);
+  border: 1px solid color-mix(in srgb, var(--theme-muted) 20%, transparent);
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--theme-primary) 6%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#slims-home .rasamala-home-section-map iframe {
+  border-radius: var(--theme-radius-lg, 12px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  width: 100%;
 }
 
 
 #slims-home .home-map-contact {
-  text-align: left !important;
+  text-align: left;
+  padding: 20px;
+  border-radius: var(--theme-radius-lg, 12px);
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 
 #slims-home .home-library-name {
-  margin-bottom: 10px !important;
-  color: var(--rasamala-text-primary) !important;
-  font-size: 20px !important;
-  font-weight: 700 !important;
-  line-height: 1.25 !important;
-  letter-spacing: 0 !important;
+  margin-bottom: 12px;
+  color: var(--theme-on-surface, var(--rasamala-text-primary));
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0;
 }
 
 
 #slims-home .home-map-description,
 #slims-home .home-map-description p,
 #slims-home .home-map-description li {
-  color: var(--theme-muted) !important;
-  font-size: 13px !important;
-  font-weight: 400 !important;
-  line-height: 1.6 !important;
-  letter-spacing: 0 !important;
+  color: var(--theme-muted-on-background, var(--theme-muted));
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0;
 }
 
 
 #slims-home .home-map-description p {
-  margin-bottom: 8px !important;
+  margin-bottom: 8px;
 }
 
 
 #slims-home .home-map-description a {
-  color: var(--theme-link) !important;
-  font-weight: 600 !important;
+  color: var(--theme-link);
+  font-weight: 600;
 }
 
 
 #slims-home .home-map-social-links {
-  gap: 8px !important;
-  margin-bottom: 0 !important;
+  gap: 10px;
+  margin-top: 16px;
+  margin-bottom: 0;
+  padding-top: 12px;
+  border-top: 1px solid color-mix(in srgb, var(--theme-muted) 15%, transparent);
 }
 
 
 #slims-home .home-map-social-links .btn {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 36px !important;
-  height: 36px !important;
-  padding: 0 !important;
-  border-radius: 999px !important;
-  font-size: 14px !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 15px;
+  background-color: var(--theme-primary);
+  border: 1px solid color-mix(in srgb, var(--theme-primary) 80%, var(--theme-accent) 20%);
+  color: var(--theme-on-primary, #ffffff);
+  box-shadow: 0 4px 10px color-mix(in srgb, var(--theme-primary) 25%, transparent);
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#slims-home .home-map-social-links .btn:hover {
+  transform: translateY(-2px);
+  background-color: var(--theme-primary-hover, var(--theme-accent));
+  box-shadow: 0 6px 14px color-mix(in srgb, var(--theme-primary) 35%, transparent);
 }
 
 
@@ -5416,9 +5765,9 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   align-items: center !important;
   gap: 6px !important;
   padding: 2px 0 !important;
-  color: var(--rasamala-accent) !important;
+  color: var(--theme-on-surface) !important;
   font-size: 13px !important;
-  font-weight: 700 !important;
+  font-weight: 600 !important;
   line-height: 1.25 !important;
   text-decoration: none !important;
 }
@@ -5426,7 +5775,7 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 
 .biblio-list-quick-action:hover,
 .biblio-list-quick-action:focus {
-  color: var(--rasamala-accent-hover) !important;
+  color: var(--rasamala-accent) !important;
   text-decoration: none !important;
 }
 
@@ -5435,8 +5784,8 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 .biblio-list-quick-action.is-bookmarked {
   padding: 3px 9px !important;
   border-radius: 999px !important;
-  background: rgba(var(--theme-accent-rgb), 0.12) !important;
-  color: var(--rasamala-accent) !important;
+  background: color-mix(in srgb, var(--theme-muted-on-surface) 12%, transparent) !important;
+  color: var(--theme-on-surface) !important;
 }
 
 
@@ -5472,9 +5821,9 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 
 .biblio-list-availability {
   padding: 11px 10px !important;
-  border: 1px solid rgba(var(--theme-accent-rgb), 0.2) !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 18%, transparent) !important;
   border-radius: 12px !important;
-  background: #ffffff !important;
+  background: transparent !important;
   text-align: center !important;
 }
 
@@ -5485,9 +5834,9 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   justify-content: center !important;
   gap: 5px !important;
   width: 100% !important;
-  color: var(--rasamala-accent) !important;
+  color: #28a745 !important;
   font-size: 10px !important;
-  font-weight: 700 !important;
+  font-weight: 600 !important;
   line-height: 1.2 !important;
   text-transform: uppercase !important;
 }
@@ -5496,7 +5845,7 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 .biblio-list-availability strong {
   display: block !important;
   margin-top: 7px !important;
-  color: var(--rasamala-accent) !important;
+  color: var(--theme-on-surface) !important;
   font-size: 22px !important;
   line-height: 1 !important;
 }
@@ -5504,7 +5853,7 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 
 .biblio-list-availability.is-unavailable .biblio-list-availability-label,
 .biblio-list-availability.is-unavailable strong {
-  color: #b85c5c !important;
+  color: #dc3545 !important;
 }
 
 
@@ -5517,17 +5866,18 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   min-height: 36px !important;
   width: 100% !important;
   padding: 7px 10px !important;
-  border: 1px solid rgba(var(--theme-accent-rgb), 0.35) !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 22%, transparent) !important;
   border-radius: var(--rasamala-radius-button) !important;
   background: transparent !important;
-  color: var(--rasamala-accent) !important;
+  color: var(--theme-on-surface) !important;
   font-family: var(--rasamala-font-stack) !important;
   font-size: 12px !important;
-  font-weight: 700 !important;
+  font-weight: 600 !important;
   line-height: 1.2 !important;
   text-align: center !important;
   text-decoration: none !important;
   cursor: pointer !important;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease !important;
 }
 
 
@@ -5535,15 +5885,15 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 .biblio-list-basket:focus,
 .biblio-list-action-link:hover,
 .biblio-list-action-link:focus {
-  background: var(--rasamala-accent) !important;
-  border-color: var(--rasamala-accent) !important;
-  color: var(--theme-on-primary) !important;
+  background: color-mix(in srgb, var(--theme-on-surface) 6%, transparent) !important;
+  border-color: color-mix(in srgb, var(--theme-muted-on-surface) 45%, transparent) !important;
+  color: var(--theme-on-surface) !important;
   text-decoration: none !important;
 }
 
 
 .biblio-list-card .expand a {
-  color: var(--rasamala-accent) !important;
+  color: var(--theme-on-surface) !important;
 }
 
 
@@ -5639,7 +5989,8 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   width: 100% !important;
   max-width: none !important;
   min-height: 36px !important;
-  justify-content: flex-start !important;
+  justify-content: center !important;
+  text-align: center !important;
   gap: 8px !important;
   padding: 8px 12px !important;
   border-radius: 999px !important;
@@ -5763,9 +6114,10 @@ body.rasamala-search-panels-transparent #mobile-sort-options .list-group-item,
 body.rasamala-search-panels-transparent .result-search .biblio-list-availability,
 body.rasamala-search-panels-transparent .result-search .biblio-list-basket,
 body.rasamala-search-panels-transparent .result-search .biblio-list-action-link {
-  background: rgba(255, 255, 255, 0.34) !important;
-  background-color: rgba(255, 255, 255, 0.34) !important;
-  border-color: rgba(var(--theme-accent-rgb), 0.2) !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border-color: color-mix(in srgb, var(--theme-muted-on-surface) 22%, transparent) !important;
+  color: var(--theme-on-surface) !important;
 }
 
 
@@ -5831,7 +6183,7 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
   margin-bottom: 10px;
   color: var(--rasamala-text-primary) !important;
   font-size: 15px !important;
-  font-weight: 700 !important;
+  font-weight: 600 !important;
   text-transform: none !important;
   letter-spacing: 0 !important;
 }
@@ -5986,36 +6338,35 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
 
 /* Clean & Transparent Action Buttons (Share, QR Code, & Bookmark across all pages) */
 .btn-theme-share,
-.btn-content-share,
 .btn-icon-action {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  width: 36px !important;
-  height: 36px !important;
+  width: 32px !important;
+  height: 32px !important;
   padding: 0 !important;
   border-radius: 50% !important;
-  color: var(--theme-text) !important;
+  color: var(--theme-muted-on-surface) !important;
   background-color: transparent !important;
   background: transparent !important;
-  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 24%, transparent) !important;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  border: none !important;
+  transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease !important;
   cursor: pointer !important;
   text-decoration: none !important;
   box-shadow: none !important;
 }
 
 .btn-icon-action:hover {
-  color: var(--theme-text) !important;
-  background-color: color-mix(in srgb, var(--theme-muted-on-surface) 12%, transparent) !important;
-  border-color: color-mix(in srgb, var(--theme-muted-on-surface) 50%, transparent) !important;
+  color: var(--theme-on-surface) !important;
+  background-color: color-mix(in srgb, var(--theme-on-surface) 8%, transparent) !important;
+  border-color: transparent !important;
   transform: translateY(-1px) scale(1.05) !important;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08) !important;
+  box-shadow: none !important;
 }
 
 .btn-icon-action i {
-  font-size: 14px !important;
-  color: var(--theme-text) !important;
+  font-size: 13.5px !important;
+  color: inherit !important;
 }
 
 .btn-theme-action,
@@ -6035,20 +6386,24 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
   align-items: center !important;
   justify-content: center !important;
   gap: 6px !important;
-  padding: 4px 12px !important;
+  width: auto !important;
+  min-width: 0 !important;
+  height: 34px !important;
+  padding: 4px 14px !important;
   font-size: 12.5px !important;
-  font-weight: 600 !important;
+  font-weight: 500 !important;
   font-family: var(--theme-font-family), inherit !important;
   line-height: 1.4 !important;
   border-radius: 999px !important;
-  color: var(--theme-text) !important;
+  color: var(--theme-on-surface) !important;
   background-color: transparent !important;
   background: transparent !important;
-  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 28%, transparent) !important;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 22%, transparent) !important;
+  transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease !important;
   cursor: pointer !important;
   text-decoration: none !important;
   box-shadow: none !important;
+  white-space: nowrap !important;
 }
 
 .btn-theme-action:hover,
@@ -6064,11 +6419,11 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
 .bookMarkBook.btn-theme-bookmark:hover,
 .btn-theme-basket:hover,
 .btn-theme-cite:hover {
-  color: var(--theme-text) !important;
-  background-color: color-mix(in srgb, var(--theme-muted-on-surface) 10%, transparent) !important;
-  border-color: color-mix(in srgb, var(--theme-muted-on-surface) 45%, transparent) !important;
+  color: var(--rasamala-accent) !important;
+  background-color: color-mix(in srgb, var(--theme-accent) 8%, transparent) !important;
+  border-color: color-mix(in srgb, var(--theme-accent) 45%, transparent) !important;
   transform: translateY(-1px) !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+  box-shadow: none !important;
 }
 
 .btn-theme-action i,
@@ -6088,6 +6443,66 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
   flex-shrink: 0 !important;
   color: var(--theme-text) !important;
 }
+
+.share-platform-item {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease !important;
+  cursor: pointer !important;
+}
+
+.share-platform-item:hover {
+  transform: translateY(-2px) scale(1.04) !important;
+  background-color: color-mix(in srgb, var(--theme-on-surface) 6%, transparent) !important;
+}
+
+/* Keep social-share controls above the globally elevated backdrop. */
+#mediaSocialModal {
+  z-index: 100002 !important;
+}
+
+#mediaSocialModal .modal-dialog,
+#mediaSocialModal .modal-content,
+#mediaSocialModal .modal-body,
+#mediaSocialModal .share-platform-item,
+#mediaSocialModal #shareCopyBtn,
+#mediaSocialModal #shareModalInput {
+  pointer-events: auto !important;
+}
+
+#mediaSocialModal .modal-dialog,
+#mediaSocialModal .modal-content {
+  position: relative !important;
+  z-index: 100003 !important;
+}
+
+#mediaSocialModal .modal-content {
+  z-index: 100004 !important;
+}
+
+.share-icon-box {
+  width: 42px !important;
+  height: 42px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 18px !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12) !important;
+  transition: transform 0.2s ease !important;
+}
+
+.share-platform-label {
+  font-size: 10.5px !important;
+  font-weight: 600 !important;
+  color: var(--theme-on-surface) !important;
+  line-height: 1.2 !important;
+}
+
+.bg-whatsapp { background-color: #25d366 !important; }
+.bg-facebook { background-color: #1877f2 !important; }
+.bg-twitter { background-color: #111111 !important; }
+.bg-telegram { background-color: #229ed9 !important; }
+.bg-linkedin { background-color: #0a66c2 !important; }
+.bg-email { background-color: #ea4335 !important; }
 
 .detail-gmd-label {
   font-size: 0.88rem !important;
@@ -6119,13 +6534,13 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
   transform: scale(0.92) translateY(12px) !important;
   opacity: 0 !important;
   transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease-out !important;
-  will-change: transform, opacity;
 }
 
 .modal.show .modal-dialog,
 .modal.fade.show .modal-dialog {
   transform: scale(1) translateY(0) !important;
   opacity: 1 !important;
+  will-change: transform, opacity;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -6239,21 +6654,39 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
 }
 
 .grid-item .bg-rasamala-light {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
   background-color: rgba(0, 0, 0, 0.02) !important;
   padding: 20px 16px !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.04) !important;
 }
 
+.grid-item .bg-rasamala-light img,
+.grid-item .bg-rasamala-light .book-cover-placeholder {
+  width: 124px !important;
+  height: 184px !important;
+  min-height: 184px !important;
+  max-width: 124px !important;
+  max-height: 184px !important;
+  aspect-ratio: 2 / 3 !important;
+  object-fit: cover !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+  margin: 0 auto !important;
+  flex: 0 0 auto !important;
+}
+
 .grid-item .list-group-item {
   background: transparent !important;
   border: none !important;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+  border-bottom: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 14%, transparent) !important;
   padding: 8px 16px !important;
   font-size: 11px !important;
   display: flex !important;
   justify-content: space-between !important;
   align-items: center !important;
-  color: var(--rasamala-text-secondary) !important;
+  color: var(--theme-on-surface) !important;
 }
 
 .grid-item .list-group-item:last-child {
@@ -6262,9 +6695,10 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
 
 .grid-item .list-group-item label {
   margin-bottom: 0 !important;
-  font-weight: 600 !important;
-  opacity: 0.7 !important;
+  font-weight: 500 !important;
+  opacity: 1 !important;
   font-size: 11px !important;
+  color: var(--theme-on-surface) !important;
 }
 
 .grid-item .list-group-item span {
@@ -6274,6 +6708,7 @@ body.rasamala-search-panels-solid .result-search .biblio-simple-item {
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
+  color: var(--theme-on-surface) !important;
 }
 
 /* Search filter panel contrast normalization.
@@ -6593,17 +7028,75 @@ body.rasamala-search-panels-transparent .result-search .grid-item .list-group-it
   }
 }
 
+@keyframes advModalSlideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0.7;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 /* Mobile modal safe viewport: keep filter/sort/advanced search clear of navbar and bottom nav. */
 @media (max-width: 767.98px) {
-
   #mobileFilterModal,
-  #mobileSortModal,
-  #adv-modal {
+  #mobileSortModal {
     --rasamala-mobile-modal-top: calc(68px + env(safe-area-inset-top, 0px));
     --rasamala-mobile-modal-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
     padding-top: var(--rasamala-mobile-modal-top) !important;
     padding-bottom: var(--rasamala-mobile-modal-bottom) !important;
     z-index: var(--z-modal) !important;
+  }
+
+  /* Fullscreen Advanced Search Modal on Mobile */
+  #adv-modal .modal-dialog {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    min-height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #adv-modal .modal-content {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100dvh !important;
+    max-height: 100dvh !important;
+    border-radius: 0 !important;
+    border: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+
+  #adv-modal.show .modal-content {
+    animation: advModalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  }
+
+  #adv-modal .modal-header {
+    flex: 0 0 auto !important;
+    padding: 16px 20px !important;
+    border-bottom: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 15%, transparent) !important;
+  }
+
+  #adv-modal .modal-body {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 20px !important;
+  }
+
+  #adv-modal .modal-footer {
+    flex: 0 0 auto !important;
+    padding: 14px 20px calc(14px + env(safe-area-inset-bottom, 0px)) !important;
+    border-top: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 15%, transparent) !important;
+    background: var(--theme-surface) !important;
   }
 
   .modal-backdrop {
@@ -6612,15 +7105,13 @@ body.rasamala-search-panels-transparent .result-search .grid-item .list-group-it
 
   body.mobile-bottom-nav-hidden #mobileFilterModal,
   body.mobile-bottom-nav-hidden #mobileSortModal,
-  body.mobile-bottom-nav-hidden #mobileViewModal,
-  body.mobile-bottom-nav-hidden #adv-modal {
+  body.mobile-bottom-nav-hidden #mobileViewModal {
     --rasamala-mobile-modal-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
   }
 
   #mobileFilterModal .modal-dialog,
   #mobileSortModal .modal-dialog,
-  #mobileViewModal .modal-dialog,
-  #adv-modal .modal-dialog {
+  #mobileViewModal .modal-dialog {
     width: calc(100% - 24px) !important;
     max-width: calc(100% - 24px) !important;
     height: calc(100dvh - var(--rasamala-mobile-modal-top) - var(--rasamala-mobile-modal-bottom)) !important;
@@ -6630,21 +7121,9 @@ body.rasamala-search-panels-transparent .result-search .grid-item .list-group-it
     align-items: stretch !important;
   }
 
-  @supports not (height: 100dvh) {
-
-    #mobileFilterModal .modal-dialog,
-    #mobileSortModal .modal-dialog,
-    #mobileViewModal .modal-dialog,
-    #adv-modal .modal-dialog {
-      height: calc(100vh - var(--rasamala-mobile-modal-top) - var(--rasamala-mobile-modal-bottom)) !important;
-      max-height: calc(100vh - var(--rasamala-mobile-modal-top) - var(--rasamala-mobile-modal-bottom)) !important;
-    }
-  }
-
   #mobileFilterModal .modal-content,
   #mobileSortModal .modal-content,
-  #mobileViewModal .modal-content,
-  #adv-modal .modal-content {
+  #mobileViewModal .modal-content {
     width: 100% !important;
     height: 100% !important;
     max-height: 100% !important;
@@ -6656,8 +7135,7 @@ body.rasamala-search-panels-transparent .result-search .grid-item .list-group-it
 
   #mobileFilterModal .modal-body,
   #mobileSortModal .modal-body,
-  #mobileViewModal .modal-body,
-  #adv-modal .modal-body {
+  #mobileViewModal .modal-body {
     flex: 1 1 auto !important;
     min-height: 0 !important;
     overflow-y: auto !important;
@@ -6669,22 +7147,8 @@ body.rasamala-search-panels-transparent .result-search .grid-item .list-group-it
   #mobileFilterModal .modal-header,
   #mobileFilterModal .modal-footer,
   #mobileSortModal .modal-header,
-  #mobileSortModal .modal-footer,
-  #adv-modal .modal-header,
-  #adv-modal .modal-footer {
+  #mobileSortModal .modal-footer {
     flex: 0 0 auto !important;
-  }
-
-  #adv-modal .modal-header {
-    padding: 14px 18px !important;
-  }
-
-  #adv-modal .modal-body {
-    padding: 18px !important;
-  }
-
-  #adv-modal .modal-footer {
-    padding: 12px 18px calc(12px + env(safe-area-inset-bottom, 0px)) !important;
   }
 }
 
@@ -6874,11 +7338,12 @@ body.rasamala-theme.rasamala-page-news:not(.rasamala-dark) .news-list-card .news
 
 /* Final modal layer and mobile safe-area guard. */
 .rasamala-theme .modal {
-  z-index: var(--z-modal) !important;
+  /* Must remain above the later global .modal-backdrop.show (99990). */
+  z-index: 100000 !important;
 }
 
 .rasamala-theme .modal-backdrop {
-  z-index: var(--z-modal-backdrop) !important;
+  z-index: 99990 !important;
 }
 
 .rasamala-theme .modal .modal-dialog,
@@ -6929,76 +7394,6 @@ body.rasamala-theme.rasamala-page-news:not(.rasamala-dark) .news-list-card .news
   touch-action: manipulation !important;
 }
 
-@media (max-width: 767.98px) {
-  #adv-modal {
-    --rasamala-mobile-modal-top: calc(92px + env(safe-area-inset-top, 0px));
-    --rasamala-mobile-modal-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
-    padding: var(--rasamala-mobile-modal-top) 0 var(--rasamala-mobile-modal-bottom) !important;
-  }
-
-  body.mobile-bottom-nav-hidden #adv-modal {
-    --rasamala-mobile-modal-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
-  }
-
-  #adv-modal .modal-dialog {
-    width: calc(100% - 22px) !important;
-    max-width: calc(100% - 22px) !important;
-    height: calc(100dvh - var(--rasamala-mobile-modal-top) - var(--rasamala-mobile-modal-bottom)) !important;
-    max-height: calc(100dvh - var(--rasamala-mobile-modal-top) - var(--rasamala-mobile-modal-bottom)) !important;
-    margin: 0 auto !important;
-    display: flex !important;
-    align-items: stretch !important;
-  }
-
-  @supports not (height: 100dvh) {
-    #adv-modal .modal-dialog {
-      height: calc(100vh - var(--rasamala-mobile-modal-top) - var(--rasamala-mobile-modal-bottom)) !important;
-      max-height: calc(100vh - var(--rasamala-mobile-modal-top) - var(--rasamala-mobile-modal-bottom)) !important;
-    }
-  }
-
-  #adv-modal .modal-content {
-    height: 100% !important;
-    max-height: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-    overflow: hidden !important;
-    border-radius: 14px !important;
-  }
-
-  #adv-modal .modal-header {
-    min-height: 54px !important;
-    padding: 12px 58px 12px 16px !important;
-  }
-
-  #adv-modal .modal-header .btn-close {
-    top: 10px !important;
-    right: 12px !important;
-    width: 38px !important;
-    height: 38px !important;
-    transform: none !important;
-  }
-
-  #adv-modal .modal-title {
-    min-width: 0 !important;
-    overflow-wrap: anywhere !important;
-    font-size: 15px !important;
-    line-height: 1.25 !important;
-  }
-
-  #adv-modal .modal-body {
-    flex: 1 1 auto !important;
-    min-height: 0 !important;
-    overflow-y: auto !important;
-    padding: 14px 16px !important;
-    overscroll-behavior: contain !important;
-    -webkit-overflow-scrolling: touch !important;
-  }
-
-  #adv-modal .modal-footer {
-    flex: 0 0 auto !important;
-    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px)) !important;
-  }
 
   #libinfoModal {
     padding: calc(80px + env(safe-area-inset-top, 0px)) 12px calc(76px + env(safe-area-inset-bottom, 0px)) !important;
@@ -7018,7 +7413,6 @@ body.rasamala-theme.rasamala-page-news:not(.rasamala-dark) .news-list-card .news
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch !important;
   }
-}
 
 /* ===== Member Area responsive (rasamala) ===== */
 @media (max-width: 767.98px) {
@@ -7368,7 +7762,7 @@ body.rasamala-theme.rasamala-page-news:not(.rasamala-dark) .news-list-card .news
   background: #f8fafc !important;
   border-radius: 12px !important;
   border: 1px dashed #e2e8f0 !important;
-  transition: all 0.3s ease !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease, opacity 0.3s ease !important;
 }
 
 .rasamala-digital-card-footer {
@@ -7583,22 +7977,21 @@ body.rasamala-theme.rasamala-page-news:not(.rasamala-dark) .news-list-card .news
     padding: 6px 8px 6px 14px !important;
   }
 
-  /* Make the search button clearly visible — slightly smaller so it fits */
-  #search-wraper #search-form button[type="submit"] {
-    width: 34px !important;
-    height: 34px !important;
-    min-width: 34px !important;
-    flex-shrink: 0 !important;
-  }
-
-  #search-wraper #search-form button[type="submit"] .fa-search {
-    font-size: 14px !important;
-  }
-
-  /* Advanced search icon — prevent overflow/hide */
+  /* Icon-only search action buttons in mobile */
+  #search-wraper #search-form button[type="submit"],
+  #search-wraper[class*="search-size-"] #search-form button[type="submit"],
   #search-wraper #search-form a[data-bs-target="#adv-modal"] {
-    font-size: 15px !important;
-    flex-shrink: 0 !important;
+    width: auto;
+    height: auto;
+    min-width: auto;
+    min-height: auto;
+    background: transparent;
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 4px 6px;
+    flex: 0 0 auto;
   }
 
   /* Ensure the search form icons area doesn't overflow */
@@ -7697,15 +8090,25 @@ body.rasamala-theme:not(.rasamala-dark) .detail-side-availability .availability-
 }
 
 body.rasamala-theme:not(.rasamala-dark) .detail-avail-row {
-  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 14%, transparent) !important;
-  background: color-mix(in srgb, var(--theme-surface) 96%, var(--theme-accent) 4%) !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 10%, transparent) !important;
+  background: transparent !important;
+  background-color: transparent !important;
   box-shadow: none !important;
-  border-radius: 999px !important;
-  padding: 10px 18px 10px 20px !important;
+  border-radius: 0 !important;
+  padding: 8px 2px !important;
+  margin-bottom: 2px !important;
 }
 
 .detail-side-availability {
-  border: 0 !important;
+  margin-top: 18px !important;
+  padding-top: 16px !important;
+  border-top: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 12%, transparent) !important;
+  border-bottom: none !important;
+  border-left: none !important;
+  border-right: none !important;
   box-shadow: none !important;
 }
 
@@ -7717,9 +8120,15 @@ body.rasamala-theme:not(.rasamala-dark) .detail-avail-row {
 }
 
 .detail-avail-row {
-  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 14%, transparent) !important;
-  border-radius: 999px !important;
-  padding: 10px 18px 10px 20px !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 10%, transparent) !important;
+  border-radius: 0 !important;
+  padding: 8px 2px !important;
+  margin-bottom: 2px !important;
+  background: transparent !important;
+  background-color: transparent !important;
   box-shadow: none !important;
 }
 
@@ -7746,15 +8155,8 @@ body.rasamala-theme:not(.rasamala-dark) .detail-avail-row {
   }
 
   .detail-side-heading::before {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 18px;
-    width: 18px;
-    height: 18px;
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--theme-accent) 14%, transparent);
-    font-size: 10px;
+    display: none !important;
+    content: none !important;
   }
 
   .detail-callnumber-strip {
@@ -7782,7 +8184,8 @@ body.rasamala-theme:not(.rasamala-dark) .detail-avail-row {
     margin-bottom: 9px !important;
     padding: 10px 18px 10px 20px !important;
     border-radius: 999px !important;
-    background: color-mix(in srgb, var(--theme-surface) 96%, var(--theme-accent) 4%) !important;
+    background: transparent;
+    background-color: transparent;
   }
 
   .detail-avail-row::before {
@@ -7815,26 +8218,92 @@ body.rasamala-theme:not(.rasamala-dark) .detail-avail-row {
 
 /* Detail Page QR Code Card & Mobile Modal */
 .detail-qr-box {
-  background: color-mix(in srgb, var(--theme-surface) 96%, var(--theme-accent) 4%) !important;
-  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 14%, transparent) !important;
-  border-radius: 16px !important;
-  padding: 16px !important;
+  background: transparent;
+  background-color: transparent;
+  border: none !important;
+  border-color: transparent !important;
+  border-radius: 12px !important;
+  padding: 8px 10px !important;
   transition: transform 0.2s ease, box-shadow 0.2s ease !important;
 }
 
 .detail-qr-box:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06) !important;
+  transform: translateY(-1px) !important;
+  background: transparent;
+  background-color: transparent;
+  box-shadow: none !important;
 }
 
 .detail-qr-img-wrap svg,
 .detail-qr-modal-img svg {
   width: 100% !important;
   height: auto !important;
-  max-width: 140px !important;
+  max-width: 85px !important;
+  max-height: 85px !important;
   display: block !important;
   margin: 0 auto !important;
-  border-radius: 8px !important;
+  border-radius: 6px !important;
+}
+
+.content-qr-icon {
+  color: var(--rasamala-accent) !important;
+}
+
+.search-empty-state-image {
+  max-width: 160px;
+  height: auto;
+}
+
+.detail-qr-fallback-icon {
+  color: var(--rasamala-accent, #6f5b43) !important;
+}
+
+.content-qr-modal-image {
+  max-width: 180px;
+  min-height: 180px;
+}
+
+.content-qr-fallback-image {
+  max-width: 160px;
+  height: auto;
+}
+
+.detail-qr-modal-input {
+  cursor: text;
+}
+
+.native-lightbox-modal {
+  display: block;
+  z-index: 105000;
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.native-lightbox-preview {
+  max-height: 85vh;
+  object-fit: contain;
+}
+
+.detail-subject-tag {
+  display: inline-flex !important;
+  align-items: center !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  padding: 3px 11px !important;
+  color: var(--theme-on-surface) !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 22%, transparent) !important;
+  background: transparent !important;
+  text-decoration: none !important;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease !important;
+}
+
+.detail-subject-tag:hover,
+.detail-subject-tag:focus,
+.detail-author-footer a:hover,
+.detail-author-footer a:focus {
+  background: color-mix(in srgb, var(--theme-accent) 8%, transparent) !important;
+  border-color: color-mix(in srgb, var(--theme-accent) 45%, transparent) !important;
+  color: var(--rasamala-accent) !important;
+  text-decoration: none !important;
 }
 
 .detail-qr-btn-mobile {
@@ -7853,4 +8322,899 @@ body.rasamala-theme:not(.rasamala-dark) .detail-avail-row {
   background-color: var(--rasamala-accent) !important;
   color: var(--theme-on-primary) !important;
   border-color: var(--rasamala-accent) !important;
+}
+
+/* In-page citation dialog. This avoids browser popup blockers and keeps the
+   user on the record detail page while the citation endpoint loads in a
+   same-origin iframe. */
+body.rasamala-citation-modal-open {
+  overflow: hidden !important;
+}
+
+.rasamala-citation-modal[hidden] {
+  display: none !important;
+}
+
+.rasamala-citation-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  padding: clamp(12px, 3vw, 28px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.18s ease, visibility 0.18s ease;
+}
+
+.rasamala-citation-modal.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.rasamala-citation-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.56);
+}
+
+.rasamala-citation-dialog {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: min(760px, 100%);
+  height: min(640px, calc(100vh - 32px));
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 18%, transparent);
+  border-radius: 18px;
+  background: var(--theme-surface);
+  color: var(--theme-on-surface);
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.28);
+  transform: translateY(10px) scale(0.985);
+  transition: transform 0.2s ease;
+}
+
+.rasamala-citation-modal.is-open .rasamala-citation-dialog {
+  transform: translateY(0) scale(1);
+}
+
+.rasamala-citation-dialog-header,
+.rasamala-citation-dialog-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 0 0 auto;
+  padding: 14px 18px;
+  background: color-mix(in srgb, var(--theme-primary) 5%, var(--theme-surface));
+}
+
+.rasamala-citation-dialog-header {
+  gap: 12px;
+  border-bottom: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 14%, transparent);
+}
+
+.rasamala-citation-dialog-footer {
+  justify-content: flex-end;
+  border-top: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 14%, transparent);
+}
+
+.rasamala-citation-dialog-heading {
+  min-width: 0;
+}
+
+.rasamala-citation-dialog-eyebrow {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--theme-primary);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.rasamala-citation-dialog-heading h2 {
+  margin: 0;
+  overflow: hidden;
+  color: var(--theme-on-surface);
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rasamala-citation-dialog-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--theme-muted-on-surface) 20%, transparent);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--theme-muted-on-surface);
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.rasamala-citation-dialog-close:hover,
+.rasamala-citation-dialog-close:focus-visible {
+  border-color: var(--theme-primary);
+  background: color-mix(in srgb, var(--theme-primary) 10%, transparent);
+  color: var(--theme-primary);
+  outline: none;
+}
+
+.rasamala-citation-frame-wrap {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  background: var(--theme-background);
+}
+
+.rasamala-citation-frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: var(--theme-background);
+}
+
+.rasamala-citation-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--theme-background);
+  color: var(--theme-muted-on-background);
+  font-size: 0.85rem;
+  pointer-events: none;
+}
+
+.rasamala-citation-loading[hidden] {
+  display: none !important;
+}
+
+.rasamala-citation-loading.is-error {
+  color: var(--theme-danger, #b42318);
+}
+
+@media (max-width: 575.98px) {
+  .rasamala-citation-modal {
+    padding: 10px;
+  }
+
+  .rasamala-citation-dialog {
+    width: 100%;
+    height: min(720px, calc(100vh - 20px));
+    border-radius: 15px;
+  }
+
+  .rasamala-citation-dialog-header,
+  .rasamala-citation-dialog-footer {
+    padding: 12px 14px;
+  }
+}
+
+
+/* Optional compact homepage tabs for long secondary sections. */
+.rasamala-home-section-tabs {
+  display: flex;
+  align-items: flex-end;
+  /* Center the remaining tabs when one or more sections are disabled. */
+  justify-content: center;
+  gap: 4px;
+  width: min(100% - 32px, 920px);
+  margin: 28px auto 0;
+  padding: 5px;
+  overflow-x: auto;
+  border: 1px solid color-mix(in srgb, var(--theme-primary) 18%, var(--theme-muted) 20%, transparent);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--theme-primary) 6%, var(--theme-surface));
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--theme-primary) 10%, transparent);
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.rasamala-home-section-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+
+.rasamala-home-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background: transparent;
+  color: var(--theme-muted);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.2;
+  cursor: pointer;
+  white-space: nowrap;
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 1;
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.rasamala-home-tab i {
+  width: 1.1em;
+  color: color-mix(in srgb, currentColor 78%, transparent);
+  font-size: 0.86em;
+  text-align: center;
+  transition: color 0.18s ease, transform 0.18s ease;
+}
+
+
+.rasamala-home-tab:hover,
+.rasamala-home-tab:focus-visible {
+  border-color: color-mix(in srgb, var(--theme-primary) 24%, transparent);
+  background: color-mix(in srgb, var(--theme-primary) 9%, var(--theme-surface));
+  color: var(--theme-primary);
+  outline: none;
+}
+
+.rasamala-home-tab:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--theme-accent) 28%, transparent);
+}
+
+
+.rasamala-home-tab.is-active {
+  border-color: var(--theme-primary);
+  background: var(--theme-primary);
+  color: var(--theme-on-primary);
+  box-shadow: 0 5px 12px color-mix(in srgb, var(--theme-primary) 24%, transparent);
+}
+
+.rasamala-home-tab.is-active i {
+  color: var(--theme-on-primary);
+  transform: scale(1.06);
+}
+
+
+.rasamala-home-tab-pane[hidden] {
+  display: none !important;
+}
+
+/* Keep inactive panes collapsed even if a Vue component re-renders the
+   section and drops the HTML `hidden` attribute. The layout class is applied
+   by Theme Viewer and is intentionally scoped to the homepage tab panes. */
+body.rasamala-home-layout-tabs #slims-home .rasamala-home-tab-pane[aria-hidden="true"] {
+  display: none !important;
+}
+
+/* In tab mode the tab label is the section heading. Do not repeat the
+   heading, subtitle, or subject chips inside the active pane. */
+body.rasamala-home-layout-tabs #slims-home .rasamala-home-tab-pane .rasamala-home-section-title,
+body.rasamala-home-layout-tabs #slims-home .rasamala-home-tab-pane .subtitle-section,
+body.rasamala-home-layout-tabs #slims-home .rasamala-home-tab-pane slims-group-subject {
+  display: none !important;
+}
+
+.rasamala-home-tab-pane .collection {
+  margin-top: 0 !important;
+}
+
+
+@media (max-width: 575.98px) {
+  .rasamala-home-section-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: center;
+    width: min(100% - 16px, 520px);
+    gap: 4px;
+    padding: 4px;
+    margin-top: 20px;
+    border-radius: 13px;
+    overflow: visible;
+    box-shadow: 0 6px 16px color-mix(in srgb, var(--theme-primary) 8%, transparent);
+  }
+
+  .rasamala-home-tab {
+    /* Keep a balanced two-column rhythm while centering an incomplete row. */
+    width: auto;
+    flex: 0 1 calc(50% - 4px);
+    max-width: calc(50% - 4px);
+    min-width: 0;
+    min-height: 48px;
+    padding: 8px 7px;
+    font-size: 0.72rem;
+    line-height: 1.25;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .rasamala-home-tab span {
+    min-width: 0;
+  }
+}
+
+
+/* Keep every section of the detail sidebar centred at every breakpoint. */
+.detail-sidebar-col,
+.detail-sidebar-col .detail-side-availability,
+.detail-sidebar-col .detail-avail-row,
+.detail-sidebar-col .avail-loc-callno {
+  text-align: center !important;
+}
+
+
+.detail-sidebar-col .detail-avail-heading-row,
+.detail-sidebar-col .detail-avail-row {
+  justify-content: center !important;
+}
+
+
+.detail-sidebar-col .avail-loc-callno {
+  flex: 0 1 auto !important;
+  max-width: 100% !important;
+}
+
+/* Topics in the fullscreen hero intentionally reuse the standard homepage
+   card treatment. The placement changes, but the visual language does not. */
+.rasamala-hero-topics {
+  width: min(100%, 1120px);
+  margin: clamp(14px, 2.5vh, 26px) auto 0;
+  text-align: center;
+}
+
+/* The hero uses the same Vue collection/member components as the homepage,
+   but keeps their heading and spacing compact enough for a full-screen search. */
+.rasamala-hero-inline-section {
+  width: min(100%, 1160px);
+  margin: clamp(12px, 2.2vh, 24px) auto 0;
+  text-align: center;
+}
+
+.rasamala-hero-inline-title {
+  margin: 0 0 10px;
+  color: var(--theme-text);
+  font-size: clamp(1rem, 1.5vw, 1.35rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.rasamala-hero-inline-title i {
+  color: var(--theme-accent-color);
+  margin-right: 0.3rem;
+}
+
+.rasamala-hero-inline-section slims-group-subject {
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.rasamala-hero-inline-section slims-collection,
+.rasamala-hero-inline-section slims-group-member {
+  display: block;
+  width: 100%;
+}
+
+.rasamala-hero-inline-section .collection,
+.rasamala-hero-inline-section .rasamala-group-member {
+  margin-top: 0.65rem !important;
+}
+
+.rasamala-hero-topics[hidden],
+#rasamala-home-topic-section[hidden] {
+  display: none !important;
+}
+
+.rasamala-hero-topics .topic {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none;
+}
+
+.rasamala-hero-topics .topic li {
+  width: 150px !important;
+  height: 150px !important;
+  margin: 10px !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted) 18%, transparent) !important;
+  border-radius: 18px !important;
+  background: var(--theme-surface) !important;
+  box-shadow: var(--rasamala-shadow-md) !important;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.rasamala-hero-topics .topic li a {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  gap: 0;
+  padding: 16px 12px !important;
+  color: var(--theme-text) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
+.rasamala-hero-topics .topic li span {
+  margin-top: auto !important;
+  color: inherit !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+}
+
+.rasamala-hero-topics .topic .topic-icon-fa,
+.rasamala-hero-topics .topic .topic-icon-img {
+  flex: 0 0 auto;
+  margin-bottom: 14px !important;
+}
+
+.rasamala-hero-topics .topic .topic-icon-fa {
+  display: flex !important;
+  width: 88px !important;
+  height: 88px !important;
+  align-items: center;
+  justify-content: center;
+  color: var(--theme-accent) !important;
+  font-size: 54px !important;
+}
+
+.rasamala-hero-topics .topic .topic-icon-img {
+  width: 80px !important;
+  height: 80px !important;
+  object-fit: contain !important;
+}
+
+@media (max-width: 575.98px) {
+  .rasamala-hero-topics {
+    margin-top: 12px;
+  }
+
+  .rasamala-hero-topics .topic {
+    gap: 0;
+  }
+
+  .rasamala-hero-topics .topic li {
+    width: calc(50% - 16px) !important;
+    height: 120px !important;
+    margin: 8px !important;
+    border-radius: 12px !important;
+  }
+
+  .rasamala-hero-topics .topic li a {
+    padding: 12px 8px !important;
+  }
+
+  .rasamala-hero-topics .topic .topic-icon-fa {
+    width: 48px !important;
+    height: 48px !important;
+    margin-bottom: 8px !important;
+    font-size: 26px !important;
+  }
+
+  .rasamala-hero-topics .topic .topic-icon-img {
+    width: 48px !important;
+    height: 48px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .rasamala-hero-topics .topic li span {
+    font-size: 11px !important;
+  }
+}
+
+/* Theme Viewer: progressive disclosure keeps the preview compact and easy to scan. */
+.palette-switcher-intro {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin: 0 0 10px !important;
+  padding: 6px 10px !important;
+  border-radius: 8px !important;
+  background: color-mix(in srgb, var(--theme-primary) 10%, var(--theme-surface)) !important;
+  border: 1px solid color-mix(in srgb, var(--theme-primary) 20%, transparent) !important;
+  color: var(--theme-text) !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+}
+
+.palette-switcher-intro a {
+  color: var(--theme-primary) !important;
+  font-weight: 700 !important;
+  text-decoration: underline !important;
+  transition: opacity 0.15s ease !important;
+}
+
+.palette-switcher-intro a:hover,
+.palette-switcher-intro a:focus {
+  opacity: 0.8 !important;
+}
+
+.palette-switcher-group {
+  margin: 0 0 8px !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted) 20%, transparent) !important;
+  border-radius: 10px !important;
+  background: color-mix(in srgb, var(--theme-surface) 82%, var(--theme-background) 18%) !important;
+  overflow: hidden !important;
+}
+
+.palette-switcher-group > summary {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  min-height: 38px !important;
+  padding: 8px 10px !important;
+  color: var(--theme-text) !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  cursor: pointer !important;
+  list-style: none !important;
+  user-select: none !important;
+}
+
+.palette-switcher-group > summary::-webkit-details-marker { display: none !important; }
+.palette-switcher-group > summary > i {
+  margin-left: auto !important;
+  color: var(--theme-muted) !important;
+  font-size: 10px !important;
+  transition: transform 0.18s ease !important;
+}
+.palette-switcher-group[open] > summary > i { transform: rotate(90deg) !important; }
+.palette-switcher-group-step {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 50% !important;
+  background: color-mix(in srgb, var(--theme-accent) 16%, transparent) !important;
+  color: var(--theme-accent) !important;
+  font-size: 10px !important;
+}
+.palette-switcher-group-body {
+  padding: 0 10px 10px !important;
+  border-top: 1px solid color-mix(in srgb, var(--theme-muted) 12%, transparent) !important;
+}
+.palette-switcher-field-wide { grid-column: 1 / -1 !important; }
+.palette-switcher-panel input.palette-switcher-select { line-height: 1.35 !important; }
+.palette-switcher-sticky-header {
+  position: sticky !important;
+  top: -16px !important;
+  z-index: 10 !important;
+  margin: -16px -16px 12px -16px !important;
+  padding: 12px 16px 10px 16px !important;
+  background: color-mix(in srgb, var(--theme-surface) 96%, var(--theme-background) 4%) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid color-mix(in srgb, var(--theme-muted) 20%, transparent) !important;
+  border-top-left-radius: 14px !important;
+  border-top-right-radius: 14px !important;
+}
+.palette-switcher-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  margin-bottom: 8px !important;
+  padding-bottom: 0 !important;
+  border-bottom: none !important;
+}
+.palette-switcher-header-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin-left: auto !important;
+  border-top: none !important;
+}
+.palette-switcher-header-search {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  flex: 1 1 170px !important;
+  min-width: 130px !important;
+  max-width: 240px !important;
+  margin-left: 2px !important;
+}
+.palette-switcher-header-search > i {
+  position: absolute !important;
+  left: 9px !important;
+  z-index: 1 !important;
+  color: var(--theme-muted) !important;
+  font-size: 10px !important;
+  pointer-events: none !important;
+}
+.palette-switcher-header-search-input {
+  width: 100% !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  padding: 4px 9px 4px 27px !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted) 24%, transparent) !important;
+  border-radius: 999px !important;
+  background: color-mix(in srgb, var(--theme-background) 62%, transparent) !important;
+  color: var(--theme-on-surface) !important;
+  font-size: 10px !important;
+  line-height: 1.2 !important;
+  box-shadow: none !important;
+  transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease !important;
+}
+.palette-switcher-header-search-input::placeholder { color: var(--theme-muted) !important; opacity: .9 !important; }
+.palette-switcher-header-search-input:focus {
+  border-color: var(--theme-accent) !important;
+  background: var(--theme-surface) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--theme-accent) 16%, transparent) !important;
+  outline: none !important;
+}
+/* Dynamic Theme Viewer search filtering. Keep conditionally unavailable
+   controls hidden even while a broad search is running. */
+.palette-switcher-field[data-theme-search-hidden],
+.palette-switcher-builder[data-theme-search-hidden],
+.palette-switcher-section-tools[data-theme-search-hidden],
+.palette-switcher-advanced-block[data-theme-search-hidden],
+.palette-switcher-custom[data-theme-search-hidden],
+.palette-switcher-image-options[data-theme-search-hidden] {
+  display: none !important;
+}
+.palette-switcher-save-wrap {
+  position: static !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  border-top: none !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+.palette-switcher-save-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  padding: 3px 10px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  border-radius: 6px !important;
+  white-space: nowrap !important;
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--theme-accent) 25%, transparent) !important;
+  transition: all 0.18s ease !important;
+}
+.palette-switcher-save-btn:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--theme-accent) 35%, transparent) !important;
+}
+.palette-switcher-save-status {
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  color: var(--theme-muted) !important;
+  max-width: 120px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+.palette-switcher-tinfo-intro {
+  margin: 0 0 10px !important;
+}
+.palette-switcher-builder {
+  margin: 0 0 12px !important;
+  padding: 10px !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted) 16%, transparent) !important;
+  border-radius: 9px !important;
+  background: color-mix(in srgb, var(--theme-background) 42%, transparent) !important;
+}
+.palette-switcher-builder:last-child { margin-bottom: 0 !important; }
+.palette-switcher-builder-head {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  margin-bottom: 8px !important;
+}
+.palette-switcher-builder-title {
+  margin: 0 !important;
+  color: var(--theme-text) !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+}
+.palette-switcher-builder-add {
+  flex: 0 0 auto !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+}
+.palette-switcher-builder-rows {
+  display: grid !important;
+  gap: 7px !important;
+}
+.palette-switcher-builder-columns-head {
+  display: grid !important;
+  grid-template-columns: minmax(90px, 1fr) minmax(110px, 1.4fr) 48px auto !important;
+  gap: 6px !important;
+  margin: 0 0 4px !important;
+  color: var(--theme-muted) !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: .04em !important;
+  text-transform: uppercase !important;
+}
+.palette-switcher-builder-columns-head span:last-child { visibility: hidden !important; }
+.palette-switcher-builder-row {
+  display: grid !important;
+  grid-template-columns: minmax(90px, 1fr) minmax(110px, 1.4fr) 48px auto !important;
+  gap: 6px !important;
+  align-items: center !important;
+}
+.palette-switcher-builder-row .palette-switcher-select { min-width: 0 !important; }
+.palette-switcher-builder-actions {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+  margin: 0 0 8px !important;
+}
+.palette-switcher-builder-action {
+  min-height: 28px !important;
+  padding: 4px 8px !important;
+  font-size: 11px !important;
+}
+.palette-switcher-language-options {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)) !important;
+  gap: 6px !important;
+}
+.palette-switcher-language-option {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  min-width: 0 !important;
+  padding: 5px 8px !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted) 18%, transparent) !important;
+  border-radius: 6px !important;
+  color: var(--theme-text) !important;
+  background: color-mix(in srgb, var(--theme-surface) 72%, transparent) !important;
+  cursor: pointer !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+}
+.palette-switcher-language-option input { margin: 0 !important; flex: 0 0 auto !important; }
+.palette-switcher-language-option .flag-icon { flex: 0 0 auto !important; }
+.palette-switcher-language-option-code { margin-left: 0 !important; opacity: 0.9 !important; font-size: 11px !important; font-weight: 600 !important; }
+.palette-switcher-language-option:has(input:checked) {
+  border-color: color-mix(in srgb, var(--theme-accent) 62%, transparent) !important;
+  background: color-mix(in srgb, var(--theme-accent) 12%, var(--theme-surface)) !important;
+}
+.palette-switcher-builder-row.is-invalid input,
+.palette-switcher-builder-row.is-invalid select {
+  border-color: #dc3545 !important;
+}
+.palette-switcher-builder-remove {
+  min-width: 30px !important;
+  min-height: 30px !important;
+  padding: 0 !important;
+}
+@media (max-width: 575.98px) {
+  .palette-switcher-builder-columns-head { display: none !important; }
+  .palette-switcher-builder-row {
+    grid-template-columns: minmax(0, 1fr) 30px !important;
+  }
+  .palette-switcher-builder-row input,
+  .palette-switcher-builder-row select { grid-column: 1 !important; }
+  .palette-switcher-builder-row .palette-switcher-builder-remove {
+    grid-column: 2 !important;
+    grid-row: 1 / span 3 !important;
+  }
+}
+.palette-switcher-tinfo-search {
+  margin-bottom: 10px !important;
+}
+.palette-switcher-tinfo-list {
+  display: grid !important;
+  gap: 8px !important;
+}
+.palette-switcher-tinfo-category {
+  border: 1px solid color-mix(in srgb, var(--theme-muted) 16%, transparent) !important;
+  border-radius: 8px !important;
+  background: color-mix(in srgb, var(--theme-background) 42%, transparent) !important;
+  overflow: hidden !important;
+}
+.palette-switcher-tinfo-category > summary {
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  padding: 7px 9px !important;
+  color: var(--theme-text) !important;
+  font-size: 11px !important;
+  font-weight: 750 !important;
+  cursor: pointer !important;
+  list-style: none !important;
+}
+.palette-switcher-tinfo-category > summary::-webkit-details-marker { display: none !important; }
+.palette-switcher-tinfo-category > summary > i {
+  margin-left: auto !important;
+  color: var(--theme-muted) !important;
+  font-size: 9px !important;
+  transition: transform 0.18s ease !important;
+}
+.palette-switcher-tinfo-category[open] > summary > i { transform: rotate(90deg) !important; }
+.palette-switcher-tinfo-category-body {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  padding: 8px !important;
+  border-top: 1px solid color-mix(in srgb, var(--theme-muted) 12%, transparent) !important;
+}
+.palette-switcher-tinfo-field {
+  min-width: 0 !important;
+}
+.palette-switcher-tinfo-field:has(textarea) {
+  grid-column: 1 / -1 !important;
+}
+
+/* Section 5 is a single, shallow workspace: custom background and advanced
+   TInfo controls remain visible without another nested accordion. */
+.palette-switcher-advanced-block {
+  margin: 0 0 10px !important;
+  padding: 10px !important;
+  border: 1px solid color-mix(in srgb, var(--theme-muted) 16%, transparent) !important;
+  border-radius: 9px !important;
+  background: color-mix(in srgb, var(--theme-background) 35%, transparent) !important;
+}
+.palette-switcher-advanced-block:last-child { margin-bottom: 0 !important; }
+.palette-switcher-advanced-block-head {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  margin-bottom: 8px !important;
+}
+.palette-switcher-advanced-block .palette-switcher-builder-title {
+  margin: 0 !important;
+  font-size: 12px !important;
+}
+.palette-switcher-advanced-block .palette-switcher-help {
+  font-size: 10px !important;
+  line-height: 1.35 !important;
+}
+.palette-switcher-background-custom[hidden] { display: none !important; }
+#theme-background-open-settings[hidden] { display: none !important; }
+.palette-switcher-tinfo-textarea {
+  min-height: 66px !important;
+  resize: vertical !important;
+}
+@media (max-width: 575.98px) {
+  .palette-switcher-header { flex-wrap: wrap !important; }
+  .palette-switcher-header-search {
+    order: 3 !important;
+    flex: 1 0 100% !important;
+    max-width: none !important;
+    margin: 2px 0 0 !important;
+  }
+  .palette-switcher-tinfo-category-body {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  .palette-switcher-tinfo-field:has(textarea) { grid-column: auto !important; }
+}
+@media (max-width: 575.98px) {
+  .palette-switcher-panel {
+    width: min(calc(100vw - 20px), 440px) !important;
+    right: 10px !important;
+    bottom: calc(70px + env(safe-area-inset-bottom, 0px)) !important;
+    max-height: calc(100dvh - 88px) !important;
+  }
+  .palette-switcher-group-body { padding-left: 9px !important; padding-right: 9px !important; }
 }

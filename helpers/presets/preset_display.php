@@ -46,10 +46,96 @@ if (!function_exists('themeColorModeToggleVisible')) {
   }
 }
 
+if (!function_exists('themeHomepageHeroModeOptions')) {
+  function themeHomepageHeroModeOptions()
+  {
+    return [
+      'yes',
+      'no',
+    ];
+  }
+}
+
+if (!function_exists('themeHeroBackgroundStyleOptions')) {
+  function themeHeroBackgroundStyleOptions()
+  {
+    return function_exists('themeBackgroundStyleOptions')
+      ? themeBackgroundStyleOptions(true)
+      : ['none', 'soft-gradient', 'aurora-glow', 'mesh-light', 'glass-surface', 'solid-theme', 'minimal-surface', 'custom'];
+  }
+}
+
+if (!function_exists('themeHeroBackgroundStyle')) {
+  function themeHeroBackgroundStyle($sysconf_param = null)
+  {
+    $source = is_array($sysconf_param) ? $sysconf_param : null;
+    $style = strtolower(trim((string)themeEffectiveTemplateValue('classic_hero_background_style', 'none', $source)));
+    $aliases = [
+      'default' => 'none',
+      'gradient' => 'soft-gradient',
+      'aurora' => 'aurora-glow',
+      'mesh' => 'mesh-light',
+      'glass' => 'glass-surface',
+      'solid' => 'solid-theme',
+      'minimal' => 'minimal-surface',
+    ];
+    $style = $aliases[$style] ?? $style;
+
+    return in_array($style, themeHeroBackgroundStyleOptions(), true) ? $style : 'none';
+  }
+}
+
+if (!function_exists('themeHomepageHeroMode')) {
+  function themeHomepageHeroMode($sysconf_param = null)
+  {
+    $source = is_array($sysconf_param) ? $sysconf_param : null;
+    $mode = strtolower(trim((string)themeEffectiveTemplateValue('classic_hero_fullscreen_mode', '', $source)));
+    if ($mode === '1' || $mode === 'show' || $mode === 'fullscreen' || $mode === 'yes') {
+      return 'yes';
+    }
+    if ($mode === '0' || $mode === 'hide' || $mode === 'no') {
+      return 'no';
+    }
+    return (int)themeEffectiveTemplateValue('classic_homepage_only_hero', 0, $source) === 1
+      ? 'yes'
+      : 'no';
+  }
+}
+
+if (!function_exists('themeHomepageHeroInsideContent')) {
+  function themeHomepageHeroInsideContent($sysconf_param = null)
+  {
+    $source = is_array($sysconf_param) ? $sysconf_param : null;
+    $value = strtolower(trim((string)themeEffectiveTemplateValue('classic_hero_topics_show', 'none', $source)));
+
+    if (in_array($value, ['1', 'yes', 'show', 'hero', 'topics', 'true', 'on'], true)) {
+      return 'topics';
+    }
+    if (in_array($value, ['popular', 'new_update', 'top_reader'], true)) {
+      return $value;
+    }
+    return 'none';
+  }
+}
+
+if (!function_exists('themeHomepageHeroShowsTopics')) {
+  function themeHomepageHeroShowsTopics($sysconf_param = null)
+  {
+    return themeHomepageHeroInsideContent($sysconf_param) === 'topics';
+  }
+}
+
+if (!function_exists('themeHomepageHeroShowsInfo')) {
+  function themeHomepageHeroShowsInfo($sysconf_param = null)
+  {
+    return false;
+  }
+}
+
 if (!function_exists('themeHomepageOnlyHero')) {
   function themeHomepageOnlyHero($sysconf_param = null)
   {
-    return (int)themeEffectiveTemplateValue('classic_homepage_only_hero', 0, $sysconf_param) === 1;
+    return themeHomepageHeroMode($sysconf_param) !== 'no';
   }
 }
 
@@ -92,7 +178,8 @@ if (!function_exists('themeFooterEnabled')) {
   function themeFooterEnabled($sysconf_param = null, $is_homepage = false)
   {
     $footer_show = (int)themeEffectiveTemplateValue('classic_footer_show', 1, $sysconf_param) === 1;
-    if (!$footer_show) {
+    $theme_viewer_preview = (int)themeEffectiveTemplateValue('classic_palette_switcher_show', 0, $sysconf_param) === 1;
+    if (!$footer_show && !$theme_viewer_preview) {
       return false;
     }
 
@@ -101,7 +188,9 @@ if (!function_exists('themeFooterEnabled')) {
       return (bool)$definition['footer_home'];
     }
 
-    return !($is_homepage && themeHomepageOnlyHero($sysconf_param));
+    // Fullscreen hero no longer suppresses the homepage sections or footer;
+    // each section follows its own TInfo show/hide setting.
+    return true;
   }
 }
 
@@ -117,7 +206,7 @@ if (!function_exists('themeBackgroundAnimation')) {
   {
     global $sysconf;
 
-    $animation = strtolower(trim((string)themeEffectiveTemplateValue('classic_hero_background_animation', 'particles', $sysconf)));
+    $animation = strtolower(trim((string)themeEffectiveTemplateValue('classic_hero_background_animation', 'none', $sysconf)));
     if (!in_array($animation, themeBackgroundAnimationOptions(), true)) {
       return 'particles';
     }

@@ -130,10 +130,8 @@ if (!function_exists('getPopularTopic')) {
       $existing_topics = array_filter($return);
       $exclude_sql = '';
       if (!empty($existing_topics)) {
-        $escaped_topics = array_map(function($topic) use ($dbs) {
-          return "'" . (method_exists($dbs, 'escape_string') ? $dbs->escape_string($topic) : addslashes($topic)) . "'";
-        }, $existing_topics);
-        $exclude_sql = " AND mt.topic NOT IN (" . implode(',', $escaped_topics) . ")";
+        $topic_placeholders = implode(',', array_fill(0, count($existing_topics), '?'));
+        $exclude_sql = " AND mt.topic NOT IN (" . $topic_placeholders . ")";
       }
 
       $sql = "SELECT mt.topic, COUNT(*) AS total
@@ -144,7 +142,21 @@ if (!function_exists('getPopularTopic')) {
               ORDER BY total DESC
               LIMIT ?";
       $stmt = $dbs->prepare($sql);
-      $stmt->bind_param("i", $need);
+      if (!$stmt) {
+        return $return;
+      }
+      if (!empty($existing_topics)) {
+        $bind_types = str_repeat('s', count($existing_topics)) . 'i';
+        $bind_values = array_values($existing_topics);
+        $bind_values[] = $need;
+        $bind_parameters = [$bind_types];
+        foreach ($bind_values as $parameter_index => $parameter_value) {
+          $bind_parameters[] = &$bind_values[$parameter_index];
+        }
+        call_user_func_array([$stmt, 'bind_param'], $bind_parameters);
+      } else {
+        $stmt->bind_param('i', $need);
+      }
       $stmt->execute();
       $query = $stmt->get_result();
       while ($data = $query->fetch_row()) {
@@ -264,11 +276,15 @@ if (!function_exists('getTopic')) {
   {
     $biblio_id = themeSafeInt($biblio_id);
 
-    $query = $dbs->query("SELECT topic FROM biblio_topic AS bt JOIN mst_topic AS mt ON bt.topic_id=mt.topic_id WHERE bt.biblio_id=" . $biblio_id);
+    $stmt = $dbs->prepare("SELECT topic FROM biblio_topic AS bt JOIN mst_topic AS mt ON bt.topic_id=mt.topic_id WHERE bt.biblio_id=?");
+    $stmt->bind_param("i", $biblio_id);
+    $stmt->execute();
+    $query = $stmt->get_result();
     $return = array();
     while ($data = $query->fetch_row()) {
       $return[] = $data[0];
     }
+    $stmt->close();
 
     return $return;
   }

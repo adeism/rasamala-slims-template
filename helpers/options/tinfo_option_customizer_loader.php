@@ -6,7 +6,7 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
 }
 
-$rasamala_is_public_customizer = isset($_GET['customize']) && $_GET['customize'] == 'public';
+$rasamala_is_public_customizer = isset($_GET['customize']) && $_GET['customize'] === 'public';
 $rasamala_requested_theme = strtolower(trim((string)($_GET['theme'] ?? '')));
 $rasamala_current_theme = strtolower(trim((string)($sysconf['template']['theme'] ?? '')));
 $rasamala_is_theme_context = $rasamala_requested_theme === ''
@@ -16,13 +16,14 @@ $rasamala_is_theme_context = $rasamala_requested_theme === ''
   || basename(__DIR__) === 'rasamala';
 
 if ($rasamala_is_public_customizer && $rasamala_is_theme_context) {
+  $rasamala_csp_nonce = function_exists('themeCspNonce') ? themeCspNonce() : '';
   require_once dirname(__DIR__) . '/tinfo_options_helper.php';
   require_once dirname(__DIR__) . '/tinfo_customizer.php';
   if (function_exists('rasamalaTinfoCustomizeAssets')) {
     echo rasamalaTinfoCustomizeAssets();
   } else {
-  echo <<<'HTML'
-<style>
+  echo <<<HTML
+<style nonce="{$rasamala_csp_nonce}">
 #navbar-menu-builder-container {
     border: 1px solid #E0E0E0;
     background: #FFFFFF;
@@ -98,7 +99,7 @@ if ($rasamala_is_public_customizer && $rasamala_is_theme_context) {
     font-size: 14px;
 }
 </style>
-<script>
+<script nonce="{$rasamala_csp_nonce}">
 $(document).ready(function() {
     var textarea = $('textarea[name="classic_navbar_menu"]');
     if (textarea.length) {

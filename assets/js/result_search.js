@@ -8,19 +8,46 @@
         return;
     }
 
-    const getBootstrapModal = (modalEl) => {
-        if (!modalEl || !window.bootstrap || !window.bootstrap.Modal) {
-            return null;
+    const showModal = (modalId) => {
+        const el = typeof modalId === 'string' ? document.getElementById(modalId) : modalId;
+        if (!el) return;
+        if (el.parentElement && el.parentElement !== document.body) {
+            document.body.appendChild(el);
         }
-
-        return window.bootstrap.Modal.getInstance(modalEl) || new window.bootstrap.Modal(modalEl);
+        if (modalId === 'mobileSortModal' || (el && el.id === 'mobileSortModal')) {
+            initSortControls();
+        }
+        document.body.classList.add('modal-open');
+        $('.rasamala-sticky-action-wrapper, .rasamala-sticky-toolbar').css('z-index', '1');
+        if (window.bootstrap && window.bootstrap.Modal) {
+            try {
+                const modal = window.bootstrap.Modal.getInstance(el) || new window.bootstrap.Modal(el);
+                if (modal) {
+                    modal.show();
+                    return;
+                }
+            } catch (err) {}
+        }
+        if ($ && $.fn && $.fn.modal) {
+            $(el).modal('show');
+        }
     };
 
     const hideModal = (modalId) => {
-        const modal = getBootstrapModal(document.getElementById(modalId));
-
-        if (modal) {
-            modal.hide();
+        const el = typeof modalId === 'string' ? document.getElementById(modalId) : modalId;
+        if (!el) return;
+        $('.rasamala-sticky-action-wrapper, .rasamala-sticky-toolbar').css('z-index', '');
+        if (window.bootstrap && window.bootstrap.Modal) {
+            try {
+                const modal = window.bootstrap.Modal.getInstance(el);
+                if (modal) {
+                    modal.hide();
+                    return;
+                }
+            } catch (err) {}
+        }
+        if ($ && $.fn && $.fn.modal) {
+            $(el).modal('hide');
         }
     };
 
@@ -66,6 +93,7 @@
     const initAvailabilityPopover = () => {
         let activePopover = null;
         let activePinned = false;
+        const canHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
 
         const closeActive = () => {
             if (activePopover) {
@@ -100,7 +128,7 @@
                     event.preventDefault();
                     event.stopPropagation();
 
-                    if (activePopover === popover && activePinned) {
+                    if (popover.classList.contains('show') && activePopover === popover) {
                         closeActive();
                     } else {
                         openPopover(popover, true);
@@ -116,7 +144,7 @@
         });
 
         document.addEventListener('mouseover', (event) => {
-            if (activePinned) {
+            if (!canHover || activePinned) {
                 return;
             }
 
@@ -131,6 +159,10 @@
         });
 
         document.addEventListener('mouseout', (event) => {
+            if (!canHover) {
+                return;
+            }
+
             const wrap = closestElement(event.target, '.biblio-avail-wrap');
             if (!wrap || activePinned) {
                 return;
@@ -245,32 +277,84 @@
 
         updateSortLabel();
 
-        $(document).on('click', '#mobile-sort-options a', function (event) {
+        $(document).off('click.sortOption', '#mobile-sort-options a').on('click.sortOption', '#mobile-sort-options a', function (event) {
             event.preventDefault();
-            const val = $(this).data('value');
-            $select.val(val).trigger('change');
-
-            $('#mobile-sort-options a').removeClass('active').find('.search-control-option-check').remove();
-
-            $(this).addClass('active');
-            $('<i>', { class: 'fas fa-check-circle search-control-option-check', 'aria-hidden': 'true' }).appendTo($(this));
-
-            updateSortLabel();
-            hideModal('mobileSortModal');
+            const val = $(this).attr('data-value') || $(this).data('value');
+            if (val) {
+                $select.val(val).trigger('change');
+                updateSortLabel();
+                hideModal('mobileSortModal');
+                const searchParams = new URLSearchParams(window.location.search);
+                searchParams.set('sortby', val);
+                window.location.search = searchParams.toString();
+            }
         });
     };
 
     const initMobileFilter = () => {
         $('#mobileFilterModal, #mobileSortModal, #mobileViewModal').appendTo('body');
 
+        $(document).on('click', '#btn-open-filter-modal', function (e) {
+            e.preventDefault();
+            showModal('mobileFilterModal');
+        });
+
+        $(document).on('click', '#btn-open-sort-modal', function (e) {
+            e.preventDefault();
+            showModal('mobileSortModal');
+        });
+
+        $(document).on('click', '#btn-open-view-modal', function (e) {
+            e.preventDefault();
+            showModal('mobileViewModal');
+        });
+
         updateActiveFilterBadge();
 
+        // Ensure clicking any filter label / facet / chip toggles the checkbox or radio
+        $(document).on('click', '#mobile-filter-container #search-filter label, #mobile-filter-container #search-filter .rasamala-filter-facet, #mobile-filter-container #search-filter .custom-control, #mobile-filter-container #search-filter .form-check, #mobile-filter-container #search-filter .badge', function (e) {
+            const $target = $(e.target);
+            if ($target.is('input')) {
+                setTimeout(updateActiveFilterBadge, 50);
+                return;
+            }
+
+            const $container = $(this);
+            let $input = $container.find('input[type="checkbox"], input[type="radio"]');
+
+            if ($input.length === 0 && $container.attr('for')) {
+                const forId = $container.attr('for');
+                $input = $(document.getElementById(forId));
+            }
+
+            if ($input.length > 0) {
+                e.preventDefault();
+                const isRadio = $input.attr('type') === 'radio';
+                if (isRadio) {
+                    const name = $input.attr('name');
+                    if (name) {
+                        $('#mobile-filter-container input[name="' + $.escapeSelector(name) + '"]').prop('checked', false).closest('label, .rasamala-filter-facet, .custom-control, .form-check').removeClass('active is-selected checked');
+                    }
+                    $input.prop('checked', true).trigger('change');
+                    $container.addClass('active is-selected checked');
+                } else {
+                    const newChecked = !$input.prop('checked');
+                    $input.prop('checked', newChecked).trigger('change');
+                    $container.toggleClass('active is-selected checked', newChecked);
+                }
+                updateActiveFilterBadge();
+            }
+        });
+
         $(document).on('change', '#mobile-filter-container #search-filter input', function () {
+            const $parent = $(this).closest('label, .rasamala-filter-facet, .custom-control, .form-check');
+            if ($parent.length > 0) {
+                $parent.toggleClass('active is-selected checked', $(this).prop('checked'));
+            }
             updateActiveFilterBadge();
         });
 
         $('#mobileFilterModal').on('show.bs.modal', function () {
-            $('#mobile-filter-container #search-filter input').off('change.filter');
             updateActiveFilterBadge();
         });
 
@@ -318,14 +402,14 @@
 
     const initResponsiveFilterPosition = () => {
         // Filter remains inside the pop-up modal on all screen sizes
-        if ($('#mobile-filter-container #search-filter').length > 0) {
-            $('#mobile-filter-container #search-filter input:not(.input-slider)').off('change');
-        }
     };
 
     const initResultLoadingState = () => {
         const triggerLoading = (scrollUp = false) => {
-            $('.result-search .wrapper').addClass('is-loading');
+            const $wrapper = $('.result-search .wrapper');
+            if ($wrapper.hasClass('is-loading')) return;
+
+            $wrapper.addClass('is-loading');
             if (window.RasamalaProgressBar && typeof window.RasamalaProgressBar.start === 'function') {
                 window.RasamalaProgressBar.start();
             }
@@ -333,7 +417,14 @@
                 const $toolbar = $('.rasamala-search-action-bar, .result-search');
                 if ($toolbar.length > 0) {
                     const top = Math.max(0, $toolbar.offset().top - 80);
-                    $('html, body').animate({ scrollTop: top }, 250);
+                    const reducedMotion = window.RasamalaMotionLifecycle
+                        && typeof window.RasamalaMotionLifecycle.prefersReducedMotion === 'function'
+                        && window.RasamalaMotionLifecycle.prefersReducedMotion();
+                    if (reducedMotion) {
+                        $('html, body').scrollTop(top);
+                    } else {
+                        $('html, body').animate({ scrollTop: top }, 250);
+                    }
                 }
             }
         };
@@ -349,10 +440,9 @@
         // 2. View mode switcher click
         $(document).on('click', '.search-view-option-item', function (event) {
             const href = $(this).attr('href');
-            const viewVal = $(this).data('view-value');
+            const viewVal = $(this).attr('data-view-value') || $(this).data('view-value');
 
             hideModal('mobileViewModal');
-            triggerLoading(false);
 
             if (href && href !== '#' && !href.startsWith('javascript:')) {
                 event.preventDefault();
@@ -363,6 +453,10 @@
                 const formEl = document.getElementById('search-view-mode-form');
                 if (formEl) {
                     formEl.submit();
+                } else {
+                    const searchParams = new URLSearchParams(window.location.search);
+                    searchParams.set('view', viewVal);
+                    window.location.search = searchParams.toString();
                 }
             }
         });

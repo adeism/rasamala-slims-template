@@ -79,7 +79,7 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
     $i = 0;
     $expand = true;
     if ($current_view !== 'simple') {
-        $notes = themeSanitizeHtml(getNotes($dbs, $biblio_id));
+        $notes = themeSanitizeHtml(getNotes($dbs, $biblio_id, $biblio_detail));
     }
     if ($current_view !== 'simple' && $settings['enable_custom_frontpage'] AND $settings['custom_fields']) {
         $custom_field = '<dl class="row text-sm">';
@@ -108,6 +108,7 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
         : themeSafeInt($availability);
     $availability_state_class = $availability > 0 ? 'is-available' : 'is-unavailable';
     $availability_side_icon = $availability > 0 ? 'fas fa-check-circle' : 'fas fa-times-circle';
+    $availability_label = $availability > 0 ? __('Available') : __('Not Available');
 
     // authors
     $_authors = isset($biblio_detail['author'])?$biblio_detail['author']:biblio_list_model::getAuthors($dbs, $biblio_id, true);
@@ -138,15 +139,15 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
             $cover_html_grid = $generated_cover;
         } else {
             $cover_alt = themeEscape(sprintf(__('Cover of %s'), trim(strip_tags((string)($biblio_detail['title'] ?? __('collection'))))));
-            $cover_html_list = '<img loading="lazy" src="'.themeEscape($thumb_url).'" alt="'.$cover_alt.'" class="img-fluid rounded '.($availability > 0 ?: 'not-available').'" title="' . themeEscape($availability > 0 ? '' :  __('Items is not available')) . '"/>';
-            $cover_html_grid = '<img loading="lazy" src="'.themeEscape($thumb_url).'" alt="'.$cover_alt.'" class="img-fluid img-thumbnail shadow '.($availability > 0 ?: 'not-available').'" title="' . themeEscape($availability > 0 ? '' :  __('Items is not available')) . '"/>';
+            $cover_html_list = '<img loading="lazy" src="'.themeEscape($thumb_url).'" alt="'.$cover_alt.'" class="img-fluid rounded '.($availability > 0 ? 'is-available' : 'not-available').'" title="' . themeEscape($availability > 0 ? '' :  __('Items is not available')) . '"/>';
+            $cover_html_grid = '<img loading="lazy" src="'.themeEscape($thumb_url).'" alt="'.$cover_alt.'" class="img-fluid img-thumbnail shadow '.($availability > 0 ? 'is-available' : 'not-available').'" title="' . themeEscape($availability > 0 ? '' :  __('Items is not available')) . '"/>';
         }
     }
 
     if ($current_view === 'simple'):
         $availability_icon = $availability > 0 ? 'fas fa-check-circle' : 'fas fa-times-circle';
         $availability_status_class = $availability > 0 ? 'biblio-avail-ok' : 'biblio-avail-no';
-        $availability_title = $availability > 0 ? __('Available') : __('Not Available');
+        $availability_title = $availability_label;
         $item_rows = '';
 
         foreach ($item_availability_data['items'] as $item) {
@@ -200,12 +201,12 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
         $output .= '</div>'; // -- close biblio-list-content
         $output .= '<aside class="biblio-list-side">';
         $output .= '<div class="biblio-list-availability '.$availability_state_class.'">';
-        $output .= '<span class="biblio-list-availability-label"><i class="'.$availability_side_icon.'" aria-hidden="true"></i>'.themeEscape(__('Available')).'</span>';
+        $output .= '<span class="biblio-list-availability-label"><i class="'.$availability_side_icon.'" aria-hidden="true"></i>'.themeEscape($availability_label).'</span>';
         $output .= '<strong class="'.$class_avail.'">'.$availability_summary.'</strong>';
         $output .= '</div>';
         $output .= '<button type="button" class="biblio-list-basket add-to-chart-button" data-biblio="'.$biblio_id.'"><i class="fas fa-plus" aria-hidden="true"></i><span>'.themeEscape(__('Add to basket')).'</span></button>';
         $output .= '<a class="biblio-list-action-link" href="'.themeEscape($detail_url_raw.'&MARC=true').'" title="'.themeEscape(__('Download detail data in MARC')).'" target="_blank" rel="noopener noreferrer"><i class="fas fa-file-download" aria-hidden="true"></i><span>'.themeEscape(__('MARC')).'</span></a>';
-        $output .= '<a class="biblio-list-action-link openPopUp citationLink" href="'.$cite_url.'" title="'.$title_attr.'" target="_blank" rel="noopener noreferrer"><i class="fas fa-quote-right" aria-hidden="true"></i><span>'.themeEscape(__('Cite')).'</span></a>';
+        $output .= '<a class="biblio-list-action-link citationLink" href="'.$cite_url.'" title="'.$title_attr.'" target="_blank" rel="noopener noreferrer"><i class="fas fa-quote-right" aria-hidden="true"></i><span>'.themeEscape(__('Cite')).'</span></a>';
         $output .= '</aside>';
         $output .= '</div>'; // -- close biblio-list-layout
         if ($i > 0 && $expand) {
@@ -218,7 +219,6 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
 
         $output .= '<div class="col-md-3 px-2 grid-item">';
         $output .= '<div class="card p-0 mb-3">';
-        $__ = '__';
         $title_cite = $title_attr;
         $marc_url = themeEscape($detail_url_raw.'&MARC=true');
         $add_to_basket_text = themeEscape(__('Add to basket'));
@@ -233,7 +233,7 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
     </a>
     <div class="dropdown-menu dropdown-menu-end text-sm">
         <a class="dropdown-item text-start px-3" href="{$marc_url}">{$marc_text}</a>
-        <a class="dropdown-item text-start px-3 openPopUp citationLink" href="{$cite_url}" title="{$title_cite}">{$cite_text}</a>
+        <a class="dropdown-item text-start px-3 citationLink" href="{$cite_url}" title="{$title_cite}" target="_blank" rel="noopener noreferrer">{$cite_text}</a>
         <div class="dropdown-divider"></div>
         <a class="dropdown-item text-start px-3 add-to-chart-button" data-biblio="{$biblio_id}" href="index.php?p=member&sec=title_basket">{$add_to_basket_text}</a>
     </div>
@@ -262,90 +262,205 @@ HTML;
     return $output;
 }
 
-function getNotes($dbs, $biblio_id)
-{
-    $biblio_id = themeSafeInt($biblio_id);
-    $query = $dbs->query('SELECT notes FROM biblio WHERE biblio_id = ' . $biblio_id);
-    $data = $query->fetch_row();
-    $notes_text = $data[0] ?? '';
+if (!function_exists('rasamalaBatchPrimeNotes')) {
+  function rasamalaBatchPrimeNotes($dbs, array $biblio_ids, array &$cache)
+  {
+      $valid_ids = [];
+      foreach ($biblio_ids as $id) {
+          $clean_id = themeSafeInt($id);
+          if ($clean_id > 0 && !isset($cache[$clean_id])) {
+              $valid_ids[] = $clean_id;
+              $cache[$clean_id] = '';
+          }
+      }
 
-    if (function_exists('themeNormalizeStoredTextEscapes')) {
-        $notes_text = themeNormalizeStoredTextEscapes($notes_text);
-    }
-    
-    // Remove literal string representations of newlines
-    $notes_text = str_replace(['\r\n', '\r', '\n', "\\r\\n", "\\r", "\\n"], ' ', $notes_text);
-    
-    // Remove actual carriage returns and newlines
-    $notes_text = str_replace(["\r\n", "\r", "\n"], ' ', $notes_text);
-    
-    // Strip HTML tags for clean preview
-    $notes_text = strip_tags($notes_text);
-    
-    // Collapse multiple consecutive spaces to a single space
-    $notes_text = preg_replace('/\s+/', ' ', $notes_text);
-    
-    return addEllipsis(trim($notes_text), 400);
+      if (empty($valid_ids)) {
+          return;
+      }
+
+      $placeholders = implode(',', array_fill(0, count($valid_ids), '?'));
+      $sql = "SELECT biblio_id, notes FROM biblio WHERE biblio_id IN (" . $placeholders . ")";
+      $statement = $dbs->prepare($sql);
+      if (!$statement) {
+          return;
+      }
+      $bind_types = str_repeat('i', count($valid_ids));
+      $bind_parameters = [$bind_types];
+      foreach ($valid_ids as $index => $value) {
+          $bind_parameters[] = &$valid_ids[$index];
+      }
+      call_user_func_array([$statement, 'bind_param'], $bind_parameters);
+      $statement->execute();
+      $query = $statement->get_result();
+
+      if ($query) {
+          while ($row = $query->fetch_assoc()) {
+              $b_id = themeSafeInt($row['biblio_id'] ?? 0);
+              if ($b_id <= 0 || !isset($cache[$b_id])) {
+                  continue;
+              }
+              $raw_text = (string)($row['notes'] ?? '');
+              if (function_exists('themeNormalizeStoredTextEscapes')) {
+                  $raw_text = themeNormalizeStoredTextEscapes($raw_text);
+              }
+              $raw_text = str_replace(['\r\n', '\r', '\n', "\\r\\n", "\\r", "\\n"], ' ', $raw_text);
+              $raw_text = str_replace(["\r\n", "\r", "\n"], ' ', $raw_text);
+              $raw_text = strip_tags($raw_text);
+              $raw_text = preg_replace('/\s+/', ' ', $raw_text);
+              $cache[$b_id] = addEllipsis(trim($raw_text), 400);
+          }
+      }
+      $statement->close();
+  }
 }
 
-function addEllipsis($string, $length, $end='…')
-{
-    if (strlen($string??'') > $length)
-    {
-        $length -= strlen($end);
-        $string  = substr($string, 0, $length);
-        $string .= $end;
-    }
+if (!function_exists('getNotes')) {
+  function getNotes($dbs, $biblio_id, array $biblio_detail = [])
+  {
+      static $cache = [];
 
-    return $string;
+      if (is_array($biblio_id)) {
+          rasamalaBatchPrimeNotes($dbs, $biblio_id, $cache);
+          return '';
+      }
+
+      $clean_id = themeSafeInt($biblio_id);
+
+      if (!empty($biblio_detail['notes'])) {
+          $raw_text = (string)$biblio_detail['notes'];
+          if (function_exists('themeNormalizeStoredTextEscapes')) {
+              $raw_text = themeNormalizeStoredTextEscapes($raw_text);
+          }
+          $raw_text = str_replace(['\r\n', '\r', '\n', "\\r\\n", "\\r", "\\n"], ' ', $raw_text);
+          $raw_text = str_replace(["\r\n", "\r", "\n"], ' ', $raw_text);
+          $raw_text = strip_tags($raw_text);
+          $raw_text = preg_replace('/\s+/', ' ', $raw_text);
+          $processed = addEllipsis(trim($raw_text), 400);
+          if ($clean_id > 0) {
+              $cache[$clean_id] = $processed;
+          }
+          return $processed;
+      }
+
+      if ($clean_id <= 0) {
+          return '';
+      }
+
+      if (isset($cache[$clean_id])) {
+          return $cache[$clean_id];
+      }
+
+      rasamalaBatchPrimeNotes($dbs, [$clean_id], $cache);
+
+      return $cache[$clean_id] ?? '';
+  }
 }
 
-function getAvailability($dbs, $biblio_id, $sysconf)
-{
-    $availability_data = rasamalaGetItemsAndAvailability($dbs, $biblio_id);
-    return themeSafeInt($availability_data['available'] ?? 0);
+if (!function_exists('addEllipsis')) {
+  function addEllipsis($string, $length, $end='…')
+  {
+      if (strlen($string??'') > $length)
+      {
+          $length -= strlen($end);
+          $string  = substr($string, 0, $length);
+          $string .= $end;
+      }
+
+      return $string;
+  }
 }
 
-function rasamalaGetItemsAndAvailability($dbs, $biblio_id)
-{
-    $biblio_id = themeSafeInt($biblio_id);
-    $items = [];
-    $total = 0;
-    $available = 0;
-    $sql = "SELECT i.item_code, i.call_number, ml.location_name,
-                   CASE
-                       WHEN IFNULL(mis.no_loan, 0)=1 THEN 0
-                       WHEN EXISTS(
-                           SELECT 1 FROM loan AS l
-                           WHERE l.item_code=i.item_code
-                             AND l.is_lent=1
-                             AND l.is_return=0
-                       ) THEN 0
-                       ELSE 1
-                   END AS is_available
-            FROM item AS i
-            LEFT JOIN mst_location AS ml ON i.location_id=ml.location_id
-            LEFT JOIN mst_item_status AS mis ON i.item_status_id=mis.item_status_id
-            WHERE i.biblio_id=".$biblio_id."
-            ORDER BY i.call_number ASC, i.item_code ASC";
-    $query = $dbs->query($sql);
+if (!function_exists('rasamalaBatchPrimeAvailability')) {
+  function rasamalaBatchPrimeAvailability($dbs, array $biblio_ids, array &$cache)
+  {
+      $valid_ids = [];
+      foreach ($biblio_ids as $id) {
+          $clean_id = themeSafeInt($id);
+          if ($clean_id > 0 && !isset($cache[$clean_id])) {
+              $valid_ids[] = $clean_id;
+              $cache[$clean_id] = [
+                  'items' => [],
+                  'total' => 0,
+                  'available' => 0,
+              ];
+          }
+      }
 
-    if ($query) {
-        while ($row = $query->fetch_assoc()) {
-            $row['is_available'] = themeSafeInt($row['is_available'] ?? 0);
-            $items[] = $row;
-            $total++;
-            if ($row['is_available'] > 0) {
-                $available++;
-            }
-        }
-    }
+      if (empty($valid_ids)) {
+          return;
+      }
 
-    return [
-        'items' => $items,
-        'total' => $total,
-        'available' => $available,
-    ];
+    $placeholders = implode(',', array_fill(0, count($valid_ids), '?'));
+    $sql = "SELECT i.biblio_id, i.item_code, i.call_number, ml.location_name,
+                     CASE
+                         WHEN IFNULL(mis.no_loan, 0)=1 THEN 0
+                         WHEN EXISTS(
+                             SELECT 1 FROM loan AS l
+                             WHERE l.item_code=i.item_code
+                               AND l.is_lent=1
+                               AND l.is_return=0
+                         ) THEN 0
+                         ELSE 1
+                     END AS is_available
+              FROM item AS i
+              LEFT JOIN mst_location AS ml ON i.location_id=ml.location_id
+              LEFT JOIN mst_item_status AS mis ON i.item_status_id=mis.item_status_id
+              WHERE i.biblio_id IN (".$placeholders.")
+              ORDER BY i.biblio_id ASC, i.call_number ASC, i.item_code ASC";
+
+      $statement = $dbs->prepare($sql);
+      if (!$statement) {
+          return;
+      }
+      $bind_types = str_repeat('i', count($valid_ids));
+      $bind_parameters = [$bind_types];
+      foreach ($valid_ids as $index => $value) {
+          $bind_parameters[] = &$valid_ids[$index];
+      }
+      call_user_func_array([$statement, 'bind_param'], $bind_parameters);
+      $statement->execute();
+      $query = $statement->get_result();
+      if ($query) {
+          while ($row = $query->fetch_assoc()) {
+              $b_id = themeSafeInt($row['biblio_id'] ?? 0);
+              if ($b_id <= 0 || !isset($cache[$b_id])) {
+                  continue;
+              }
+              $row['is_available'] = themeSafeInt($row['is_available'] ?? 0);
+              $cache[$b_id]['items'][] = $row;
+              $cache[$b_id]['total']++;
+              if ($row['is_available'] > 0) {
+                  $cache[$b_id]['available']++;
+              }
+          }
+      }
+      $statement->close();
+  }
+}
+
+if (!function_exists('rasamalaGetItemsAndAvailability')) {
+  function rasamalaGetItemsAndAvailability($dbs, $biblio_id)
+  {
+      static $cache = [];
+
+      if (is_array($biblio_id)) {
+          rasamalaBatchPrimeAvailability($dbs, $biblio_id, $cache);
+          return $cache;
+      }
+
+      $clean_id = themeSafeInt($biblio_id);
+      if ($clean_id <= 0) {
+          return ['items' => [], 'total' => 0, 'available' => 0];
+      }
+
+      if (isset($cache[$clean_id])) {
+          return $cache[$clean_id];
+      }
+
+      rasamalaBatchPrimeAvailability($dbs, [$clean_id], $cache);
+
+      return $cache[$clean_id] ?? ['items' => [], 'total' => 0, 'available' => 0];
+  }
 }
 
 function createButton(int $biblio_id, string $title)

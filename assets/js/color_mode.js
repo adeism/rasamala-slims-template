@@ -106,6 +106,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Theme Viewer intentionally stops bubbling inside its panel so that
+    // add/remove controls cannot trigger the outside-click closer. Listen in
+    // the capture phase so the viewer's own dark/light button still reaches
+    // this controller before that propagation guard runs.
     document.addEventListener('click', (event) => {
         const toggle = event.target.closest('#color-mode-toggle, #color-mode-toggle-nav, #color-mode-toggle-desktop, #palette-color-mode-toggle');
         if (!toggle) return;
@@ -119,5 +123,5 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {}
 
         applyColorMode(nextMode);
-    });
+    }, true);
 });

@@ -4,130 +4,11 @@ $(document).ready(function() {
     var topicIconOptions = config.iconOptions || [];
     var topicAssetBase = config.assetBase || '';
     var languageOptions = config.languageOptions || [];
-    var themePresetDescriptions = config.presets || {};
     var themePaletteDefinitions = config.palettes || {};
     var defaultAnnouncementText = (config.defaults && config.defaults.announcement) || '';
     var defaultCustomCss = (config.defaults && config.defaults.customCss) || '';
     var defaultVisitorSplitSteps = (config.defaults && config.defaults.visitorSteps) || '';
     var defaultVisitorInstitutionOptions = (config.defaults && config.defaults.visitorInstitutions) || '';
-
-    var quickSettingNames = [
-        'classic_theme_color',
-        'classic_palette_custom',
-        'classic_color_toggle',
-        'classic_palette_switcher_show',
-        'classic_font_family',
-        'classic_back_to_top',
-        'classic_floating_info',
-        'classic_whatsapp_number',
-        'classic_whatsapp_title',
-        'classic_whatsapp_desc',
-        'classic_whatsapp_categories',
-        'classic_navbar_menu',
-        'classic_member_area',
-        'classic_library_name_position',
-        'classic_library_subname',
-        'classic_language_visible_codes',
-        'classic_mobile_bottom_nav_show',
-        'classic_hero_text',
-        'classic_hero_text_size',
-        'classic_search_size',
-        'classic_search_placeholder',
-        'classic_search_result_layout',
-        'classic_search_panel_style',
-        'classic_news_list_layout',
-        'classic_announcement_show',
-        'classic_announcement_text',
-        'classic_announcement_style',
-        'classic_home_display_show',
-        'classic_home_display_style',
-        'classic_home_display_source',
-        'classic_home_display_custom_text',
-        'classic_home_display_content_filter',
-        'classic_home_display_content_detail',
-        'classic_home_display_biblio_filter',
-        'classic_home_item_limit',
-        'classic_home_char_limit',
-        'classic_ticker_show',
-        'classic_ticker_source',
-        'classic_ticker_custom_text',
-        'classic_ticker_content_filter',
-        'classic_ticker_content_detail',
-        'classic_ticker_biblio_filter',
-        'classic_ticker_speed',
-        'classic_ticker_item_limit',
-        'classic_ticker_char_limit',
-        'classic_home_content_cards_show',
-        'classic_home_content_cards_source',
-        'classic_home_content_path_1',
-        'classic_home_content_path_2',
-        'classic_home_content_path_3',
-        'classic_topic_show',
-        'classic_topic_heading_display',
-        'classic_topic_items',
-        'classic_popular_collection',
-        'classic_popular_collection_heading_display',
-        'classic_popular_collection_item',
-        'classic_new_collection',
-        'classic_new_collection_heading_display',
-        'classic_new_collection_item',
-        'classic_top_reader',
-        'classic_top_reader_heading_display',
-        'classic_top_reader_item',
-        'classic_homepage_section_order',
-        'classic_map',
-        'classic_map_link',
-        'classic_map_height',
-        'classic_map_desc',
-        'classic_fb_link',
-        'classic_twitter_link',
-        'classic_youtube_link',
-        'classic_instagram_link',
-        'classic_tiktok_link',
-        'classic_whatsapp_link',
-        'classic_telegram_link',
-        'classic_linkedin_link',
-        'classic_footer_show',
-        'classic_footer_about_us',
-        'classic_footer_search_show',
-        'classic_footer_copyright',
-        'classic_hero_background_animation',
-        'classic_background_animation_speed',
-        'classic_cursor_particles',
-        'classic_cursor_custom_icon',
-        'classic_prayer_times_show',
-        'classic_prayer_times_city',
-        'classic_auto_cover_generator',
-        'classic_title_chars',
-        'classic_parallel_title_separator',
-        'classic_show_author_role',
-        'classic_detail_label_type',
-        'classic_librarian_display_mode',
-        'classic_librarian_custom_usernames',
-        'visitor_layout_style',
-        'visitor_title',
-        'visitor_subtitle',
-        'visitor_institution_select_label',
-        'visitor_institution_options',
-        'visitor_theme_toggle',
-        'visitor_log_voice',
-        'visitor_quote',
-        'visitor_split_title',
-        'visitor_split_steps'
-    ];
-    var quickSectionAnchors = [
-        'classic_theme_preset',
-        'classic_theme_color',
-        'classic_navbar_menu',
-        'classic_hero_text',
-        'classic_home_display_show',
-        'classic_ticker_show',
-        'classic_home_content_cards_show',
-        'classic_map',
-        'classic_librarian_display_mode',
-        'classic_footer_show',
-        'classic_title_chars'
-    ];
 
     function fillEmptyTextarea(name, value) {
         var field = $('textarea[name="' + name + '"]');
@@ -181,12 +62,10 @@ $(document).ready(function() {
     }
 
     function syncBuilderSettingVisibility() {
-        var preset = settingValue('classic_theme_preset') || 'simple_homepage';
-        var isCustomPreset = preset === 'custom';
         var configs = [
             {name: 'classic_navbar_menu', selector: '#navbar-menu-builder-container', visible: true},
             {name: 'classic_language_visible_codes', selector: '#language-visible-builder-container', visible: true},
-            {name: 'classic_topic_items', selector: '#topic-items-builder-container', visible: isCustomPreset || settingValue('classic_topic_show') === '1'}
+            {name: 'classic_topic_items', selector: '#topic-items-builder-container', visible: settingValue('classic_topic_show') === '1'}
         ];
 
         configs.forEach(function(config) {
@@ -195,7 +74,7 @@ $(document).ready(function() {
             var container = $(config.selector);
             if (!field.length || !container.length) return;
 
-            var visible = !!config.visible && (isCustomPreset || isQuickSetting(config.name));
+            var visible = !!config.visible;
             field.hide();
             row.toggle(visible).removeAttr('data-rasamala-section-hidden');
             container.toggle(visible);
@@ -399,10 +278,10 @@ $(document).ready(function() {
         if ($('.rasamala-tinfo-section-row, .rasamala-tinfo-section-block').length) return;
 
         [
-            ['classic_theme_preset', 'Preset tema', 'Pilih tampilan keseluruhan. Mode Custom akan membuka semua pengaturan detail.'],
             ['classic_theme_color', 'Tampilan dasar', 'Palette warna, font, tombol bantu, breadcrumbs, dan CSS tambahan.'],
             ['classic_navbar_menu', 'Navbar dan bahasa', 'Menu utama, area anggota, bahasa yang ditampilkan, dan navigasi mobile.'],
-            ['classic_hero_text', 'Search, hero, dan berita', 'Teks pencarian, layout hasil pencarian, tampilan news list, animasi, cursor, dan banner pengumuman.'],
+            ['classic_hero_fullscreen_mode', 'Search dan Hero', 'Atur fullscreen hero, placement Topics, Background Style, perlakuan gambar (size, crop, filter, blur, overlay), background custom, dan indikator panah menuju konten bawah.'],
+            ['classic_hero_text', 'Teks Search dan berita', 'Teks pencarian, layout hasil pencarian, tampilan news list, animasi, cursor, dan banner pengumuman.'],
             ['classic_home_display_show', 'Info Area Search (Hero Info)', 'Konten singkat pendukung pencarian di bawah kolom pencarian (dapat berupa static badge, fading, atau ticker).'],
             ['classic_ticker_show', 'Floating Bottom Info Bar', 'Teks berjalan melayang di bagian kaki layar (viewport bottom) untuk info/pengumuman penting.'],
             ['classic_home_content_cards_show', 'Beranda', '3 latest content, topic, koleksi populer, koleksi terbaru, top reader, dan urutan section.'],
@@ -427,10 +306,6 @@ $(document).ready(function() {
         return value !== '' && value !== '0' && value !== 'hide' && value !== 'none';
     }
 
-    function isQuickSetting(name) {
-        return quickSettingNames.indexOf(name) !== -1;
-    }
-
     function enhanceCustomPaletteFields() {
         var field = settingField('classic_palette_custom');
         if (!field.length || field.data('rasamalaPaletteReady')) return;
@@ -452,6 +327,114 @@ $(document).ready(function() {
             .data('rasamalaPaletteReady', true);
 
         field.after(tutorial);
+    }
+
+    function enhanceCustomBackgroundField() {
+        var field = settingField('classic_background_style_custom');
+        if (!field.length || field.data('rasamalaBackgroundReady')) return;
+        var defaultPrompt = 'Buat 1 custom background CSS untuk OPAC perpustakaan. Output hanya 1 baris dengan format persis: LIGHT_BACKGROUND | DARK_BACKGROUND. Gunakan satu ekspresi CSS background yang aman, seperti linear-gradient(), radial-gradient(), conic-gradient(), color-mix(), atau var(--theme-primary). Light harus terang dan nyaman dibaca; Dark harus gelap dan tetap nyaman dibaca. Jangan gunakan URL, gambar eksternal, @import, selector, deklarasi CSS, tanda kurung kurawal, titik koma, script, atau markdown. Hindari animasi berat agar halaman tetap cepat. Tema visual yang diminta: [tulis konsep background di sini].';
+        var defaultImagePrompt = 'Buat 1 gambar background untuk OPAC perpustakaan dengan gaya modern, elegan, dan tenang. Utamakan pola atau tekstur seamless/tileable yang dapat di-loop mulus secara horizontal dan vertikal tanpa garis sambungan terlihat, sehingga cukup memakai satu aset kecil dengan CSS background-repeat. Sisakan area tengah yang bersih untuk teks dan kotak pencarian, tanpa tulisan, logo, wajah, atau detail yang mengganggu. Gunakan komposisi abstrak yang keren tetapi ringan: bentuk lembut, mesh, grain halus, atau motif geometris sederhana. Prioritaskan SVG atau AVIF/WebP terkompresi; jika raster, maksimal 1600x900 px, kualitas 70-80, target ukuran file di bawah 250 KB. Hindari GIF/video, frame animasi banyak, dan detail mikro yang membuat file besar. Output hanya prompt gambar, tanpa markdown atau penjelasan. Tema visual yang diminta: [tulis konsep warna dan gaya di sini].';
+        var backgroundPrompt = String(config.backgroundPrompt || defaultPrompt);
+        var backgroundImagePrompt = String(config.backgroundImagePrompt || defaultImagePrompt);
+        var tutorial = $('<div class="rasamala-palette-help"></div>')
+            .append($('<div class="rasamala-background-help-head"></div>')
+                .append($('<strong></strong>').text('Generate Background via AI'))
+                .append($('<div class="rasamala-background-actions"></div>')
+                    .append($('<button type="button" class="rasamala-background-action"></button>')
+                        .attr('title', 'Copy Background Prompt')
+                        .append($('<i class="fas fa-copy" aria-hidden="true"></i>'))
+                        .append($('<span></span>').text('Copy Prompt')))
+                    .append($('<button type="button" class="rasamala-background-action"></button>')
+                        .attr('title', 'Paste Background')
+                        .append($('<i class="fas fa-paste" aria-hidden="true"></i>'))
+                        .append($('<span></span>').text('Paste Background')))
+                    .append($('<button type="button" class="rasamala-background-action"></button>')
+                        .attr('title', 'Copy Image Prompt')
+                        .append($('<i class="fas fa-image" aria-hidden="true"></i>'))
+                        .append($('<span></span>').text('Copy Image Prompt')))))
+            .append($('<div class="rasamala-background-help-note"></div>')
+                .text('Salin prompt, minta AI membuat satu baris yang valid, lalu tempel hasilnya di sini.'))
+            .append($('<div class="rasamala-background-help-note"></div>')
+                .text('Gunakan Copy Image Prompt untuk meminta gambar seamless/loop yang keren tetapi tetap ringan.'))
+            .append($('<strong></strong>').text('Format: '))
+            .append(document.createTextNode('Light background | Dark background'))
+            .append($('<br>'))
+            .append(document.createTextNode('Isi dengan satu ekspresi CSS background, misalnya linear-gradient(), radial-gradient(), color-mix(), atau var(--theme-primary).'))
+            .append($('<br>'))
+            .append(document.createTextNode('Gunakan | untuk background khusus light dan dark. URL, @import, deklarasi CSS, dan script tidak diperbolehkan.'))
+            .append($('<br>'))
+            .append($('<code></code>').text('linear-gradient(145deg, var(--theme-primary), var(--theme-surface)) | linear-gradient(145deg, var(--theme-dark-primary), var(--theme-dark-surface))'));
+
+        field
+            .attr('placeholder', 'Light background | Dark background')
+            .addClass('rasamala-background-input rasamala-palette-combined')
+            .data('rasamalaBackgroundReady', true);
+
+        field.after(tutorial);
+
+        var copyButton = tutorial.find('.rasamala-background-action').eq(0);
+        var pasteButton = tutorial.find('.rasamala-background-action').eq(1);
+        var imagePromptButton = tutorial.find('.rasamala-background-action').eq(2);
+        var temporaryLabel = function(button, label, delay) {
+            var textNode = button.find('span');
+            var previous = textNode.text();
+            textNode.text(label);
+            window.setTimeout(function() {
+                textNode.text(previous);
+            }, delay || 1400);
+        };
+        var writeClipboard = function(value) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                return navigator.clipboard.writeText(value);
+            }
+            var fallback = $('<textarea>').val(value).addClass('rasamala-clipboard-fallback').appendTo('body');
+            fallback[0].select();
+            var copied = document.execCommand('copy');
+            fallback.remove();
+            return copied ? Promise.resolve() : Promise.reject(new Error('copy failed'));
+        };
+        var readClipboard = function() {
+            if (navigator.clipboard && navigator.clipboard.readText) {
+                return navigator.clipboard.readText();
+            }
+            return Promise.reject(new Error('clipboard unavailable'));
+        };
+
+        copyButton.on('click', function(event) {
+            event.preventDefault();
+            writeClipboard(backgroundPrompt).then(function() {
+                temporaryLabel(copyButton, 'Copied');
+            }).catch(function() {
+                temporaryLabel(copyButton, 'Clipboard unavailable', 1800);
+            });
+        });
+
+        pasteButton.on('click', function(event) {
+            event.preventDefault();
+            readClipboard().then(function(value) {
+                var pastedValue = String(value || '')
+                    .replace(/^\s*```(?:css)?\s*/i, '')
+                    .replace(/\s*```\s*$/i, '')
+                    .replace(/[\r\n]+/g, ' ')
+                    .trim();
+                if (!pastedValue) throw new Error('empty background');
+                var styleField = settingField('classic_hero_background_style');
+                if (styleField.length) styleField.val('custom').trigger('change');
+                field.val(pastedValue).trigger('input');
+                temporaryLabel(pasteButton, 'Pasted');
+            }).catch(function() {
+                temporaryLabel(pasteButton, 'Clipboard unavailable', 1800);
+            });
+        });
+
+        imagePromptButton.on('click', function(event) {
+            event.preventDefault();
+            writeClipboard(backgroundImagePrompt).then(function() {
+                temporaryLabel(imagePromptButton, 'Copied');
+            }).catch(function() {
+                temporaryLabel(imagePromptButton, 'Clipboard unavailable', 1800);
+            });
+        });
     }
 
     var themeViewerControls = [
@@ -543,68 +526,38 @@ $(document).ready(function() {
         });
     }
 
-    function ensureThemePresetSummary() {
-        var row = settingRow('classic_theme_preset');
-        if (!row.length || $('#theme-preset-summary').length) return;
-        var summary = $('<div id="theme-preset-summary" class="theme-preset-summary"></div>')
-            .append($('<span class="theme-preset-summary-title"></span>'))
-            .append($('<span class="theme-preset-summary-desc"></span>'));
-
-        if (row.is('tr')) {
-            var columns = Math.max(row.children('td, th').length, 1);
-            row.after($('<tr class="theme-preset-summary-row"></tr>').append($('<td></td>').attr('colspan', columns).append(summary)));
-        } else {
-            row.after(summary);
-        }
-    }
-
-    function syncThemePresetSummary() {
-        ensureThemePresetSummary();
-        var preset = settingValue('classic_theme_preset') || 'simple_homepage';
-        var info = themePresetDescriptions[preset] || themePresetDescriptions.simple_homepage || {};
-        $('#theme-preset-summary .theme-preset-summary-title').text(info.title || preset);
-        $('#theme-preset-summary .theme-preset-summary-desc').text(info.description || '');
-    }
-
     function syncThemePresetVisibility() {
-        var preset = settingValue('classic_theme_preset') || 'simple_homepage';
-        var isCustomPreset = preset === 'custom';
-        var presetRow = settingRow('classic_theme_preset');
         var rows = $();
 
         $('select[name], input[name], textarea[name]').each(function() {
             var name = this.name || '';
-            if (name === 'classic_theme_preset') return;
             if (name === 'responsive' || name.indexOf('classic_') === 0) {
                 rows = rows.add($(this).closest('.form-group, tr, .row'));
             }
         });
 
-        rows.not(presetRow).each(function() {
-            var row = $(this);
-            var visible = isCustomPreset;
-            row.find('select[name], input[name], textarea[name]').each(function() {
-                if (isQuickSetting(this.name || '')) {
-                    visible = true;
-                }
-            });
-            row.toggle(visible);
-        });
-        $('.rasamala-tinfo-section-row, .rasamala-tinfo-section-block').each(function() {
-            var anchor = $(this).attr('data-rasamala-section-anchor') || '';
-            $(this).toggle(isCustomPreset || quickSectionAnchors.indexOf(anchor) !== -1);
-        });
+        rows.show();
+        $('.rasamala-tinfo-section-row, .rasamala-tinfo-section-block').show();
         syncBuilderSettingVisibility();
     }
 
     function syncConditionalSettings() {
         clearSectionCollapseMarks();
-        syncThemePresetSummary();
         syncThemePresetVisibility();
-        var isCustomPreset = settingValue('classic_theme_preset') === 'custom';
         var customPaletteOn = settingValue('classic_theme_color') === 'custom';
+        var selectedBackgroundStyle = settingValue('classic_hero_background_style');
+        var customBackgroundOn = selectedBackgroundStyle === 'custom';
+        var imageBackgroundOn = selectedBackgroundStyle.indexOf('image-') === 0;
 
         setRowsVisible(['classic_palette_custom'], customPaletteOn);
+        setRowsVisible(['classic_background_style_custom'], customBackgroundOn);
+        setRowsVisible([
+            'classic_background_image_size',
+            'classic_background_image_position',
+            'classic_background_image_filter',
+            'classic_background_image_blur',
+            'classic_background_image_overlay'
+        ], imageBackgroundOn);
 
         var animationOn = settingValue('classic_hero_background_animation') !== 'none';
         setRowsVisible(['classic_background_animation_speed'], animationOn);
@@ -711,12 +664,20 @@ $(document).ready(function() {
 
     insertTinfoSections();
     enhanceCustomPaletteFields();
+    enhanceCustomBackgroundField();
     ensureThemeViewer();
     syncConditionalSettings();
     $(document).on('change input', [
-        'select[name="classic_theme_preset"]',
+        'select[name="classic_hero_fullscreen_mode"]',
+        'select[name="classic_hero_background_style"]',
+        'select[name="classic_background_image_size"]',
+        'select[name="classic_background_image_position"]',
+        'select[name="classic_background_image_filter"]',
+        'select[name="classic_background_image_blur"]',
+        'select[name="classic_background_image_overlay"]',
         'select[name="classic_theme_color"]',
         'textarea[name="classic_palette_custom"]',
+        'textarea[name="classic_background_style_custom"]',
         'select[name="classic_font_family"]',
         'select[name="classic_hero_background_animation"]',
         'select[name="classic_background_animation_speed"]',
@@ -792,14 +753,14 @@ $(document).ready(function() {
         forceBuilderSettingVisible(languageTextarea);
 
         languageOptions.forEach(function(language) {
-            var code = String(language.code || '').toLowerCase();
-            var isChecked = selectedLanguageCodes.length > 0 && selectedLanguageCodes.indexOf(code) !== -1;
-            var checkbox = $('<input type="checkbox" class="language-visible-checkbox" />').val(code).prop('checked', isChecked);
+            var code = String(language.code || '').trim();
+            if (!code) return;
+            var isChecked = selectedLanguageCodes.length > 0 && selectedLanguageCodes.indexOf(code.toLowerCase()) !== -1;
+            var checkbox = $('<input type="checkbox" class="language-visible-checkbox" />').val(code.toLowerCase()).prop('checked', isChecked);
             var option = $('<label class="language-visible-option"></label>')
                 .append(checkbox)
-                .append(language.flag ? $('<span></span>').addClass('flag-icon flag-icon-' + language.flag + ' flag-icon-rounded') : $('<span></span>'))
-                .append($('<span></span>').text(language.name || language.code))
-                .append($('<span class="language-visible-option-code"></span>').text(code));
+                .append(language.flag ? $('<span></span>').addClass('flag-icon flag-icon-' + String(language.flag).toLowerCase() + ' flag-icon-rounded') : $('<span></span>'))
+                .append($('<span class="language-visible-option-code"></span>').text(code.toUpperCase()));
             languageGrid.append(option);
         });
 
@@ -985,6 +946,11 @@ $(document).ready(function() {
         var container = $('<div id="navbar-menu-builder-container" class="mt-2"></div>');
         container.append($('<div class="navbar-menu-builder-help"></div>').text('Klik icon di kiri untuk mengganti. Format disimpan sebagai nama menu, URL, dan icon Font Awesome.'));
         var rowsContainer = $('<div id="navbar-menu-rows"></div>');
+        container.append($('<div class="rasamala-builder-columns-head"></div>')
+            .append($('<span></span>').text('Ikon'))
+            .append($('<span></span>').text('Label'))
+            .append($('<span></span>').text('URL'))
+            .append($('<span></span>').text('')));
         container.append(rowsContainer);
         var addBtn = $('<button type="button" class="btn btn-success btn-sm mt-2 rasamala-builder-action-btn" id="add-menu-row-btn" title="Tambah Menu">+</button>');
         container.append(addBtn);
@@ -1101,6 +1067,11 @@ $(document).ready(function() {
         var topicContainer = $('<div id="topic-items-builder-container" class="mt-2"></div>');
         topicContainer.append($('<div class="topic-items-builder-help"></div>').text('Klik icon di kiri untuk mengganti. Pilih salah satu icon, atau isi custom class/path di dalam panel icon.'));
         var topicRowsContainer = $('<div id="topic-items-rows"></div>');
+        topicContainer.append($('<div class="rasamala-builder-columns-head"></div>')
+            .append($('<span></span>').text('Ikon'))
+            .append($('<span></span>').text('Label'))
+            .append($('<span></span>').text('URL'))
+            .append($('<span></span>').text('')));
         topicContainer.append(topicRowsContainer);
         var addTopicBtn = $('<button type="button" class="btn btn-success btn-sm mt-2 rasamala-builder-action-btn" id="add-topic-row-btn" title="Tambah Topic">+</button>');
         topicContainer.append(addTopicBtn);
@@ -1210,6 +1181,16 @@ $(document).ready(function() {
         $(document).on('click', function() {
             $('.topic-builder-item').removeClass('is-icon-picker-open');
         });
+    }
+
+    var heroBgField = $('[name="classic_hero_background_style"]');
+    if (heroBgField.length && !$('#svg-tools-admin-link').length) {
+        heroBgField.after(
+            '<div id="svg-tools-admin-link" class="help-block text-muted mt-1" style="font-size:12px; margin-top:4px;">' +
+            '<i class="fa fa-external-link me-1" aria-hidden="true"></i>' +
+            'Buat background SVG lainnya: <a href="http://psb.feb.ui.ac.id/stools" target="_blank" rel="noopener noreferrer" style="font-weight:bold; color:#0d6efd; text-decoration:underline;">psb.feb.ui.ac.id/stools</a>' +
+            '</div>'
+        );
     }
 
     syncBuilderSettingVisibility();

@@ -71,18 +71,63 @@
           } else {
             $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
             $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-            $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+            $request_uri = function_exists('themeHeaderRequestUri')
+              ? themeHeaderRequestUri()
+              : preg_replace('/[^a-zA-Z0-9\/?=&_.-]/', '', strip_tags((string)($_SERVER['REQUEST_URI'] ?? '')));
             $current_page_url = $scheme . $host . $request_uri;
-            $current_qr_svg = function_exists('themeGenerateUrlQrSvg') ? themeGenerateUrlQrSvg($current_page_url, 180) : '';
+
+            // Fetch or format day and date with clock icon
+            $content_date_html = '';
+            $date_str = '';
+            if (isset($dbs) && method_exists($dbs, 'prepare')) {
+              $path_value = trim((string)($current_p ?? ''));
+              $id_safe = themeSafeInt($_GET['id'] ?? 0);
+              $sql = '';
+              if ($path_value !== '' && $id_safe > 0) {
+                $sql = 'SELECT input_date, last_update FROM content WHERE content_path=? OR content_id=? LIMIT 1';
+              } elseif ($path_value !== '') {
+                $sql = 'SELECT input_date, last_update FROM content WHERE content_path=? LIMIT 1';
+              } elseif ($id_safe > 0) {
+                $sql = 'SELECT input_date, last_update FROM content WHERE content_id=? LIMIT 1';
+              }
+
+              if ($sql !== '') {
+                $statement = $dbs->prepare($sql);
+                if ($statement) {
+                  if ($path_value !== '' && $id_safe > 0) {
+                    $statement->bind_param('si', $path_value, $id_safe);
+                  } elseif ($path_value !== '') {
+                    $statement->bind_param('s', $path_value);
+                  } else {
+                    $statement->bind_param('i', $id_safe);
+                  }
+                  $statement->execute();
+                  $content_result = $statement->get_result();
+                  if ($content_result && ($row = $content_result->fetch_assoc())) {
+                    $date_str = !empty($row['input_date']) ? $row['input_date'] : ($row['last_update'] ?? '');
+                  }
+                  $statement->close();
+                }
+              }
+            }
+            if ($date_str === '') {
+              $date_str = date('Y-m-d H:i:s');
+            }
+            $user_lang = $_SESSION['select_lang'] ?? ($_COOKIE['select_lang'] ?? ($sysconf['default_lang'] ?? 'id'));
+            $locale = (strpos($user_lang, 'en') === 0 || $user_lang === 'english') ? 'en' : 'id';
+            try {
+              $formatted_date = \Carbon\Carbon::parse($date_str)->locale($locale)->isoFormat('dddd, LL');
+            } catch (\Exception $e) {
+              $formatted_date = (string)$date_str;
+            }
+            $content_date_html = '<div class="content-date news-list-date"><i class="far fa-clock me-2" aria-hidden="true"></i>' . themeEscape($formatted_date) . '</div>';
 
             $content_actions = '
             <div class="content-detail-action-bar d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4 pb-3 border-bottom">
-                <div class="d-inline-flex align-items-center gap-2">
+                ' . $content_date_html . '
+                <div class="d-inline-flex align-items-center gap-2 ms-auto">
                     <button type="button" class="btn btn-content-share" data-url="' . themeEscape($current_page_url) . '" data-title="' . themeEscape($display_page_title) . '" title="' . themeEscape(__('Share')) . '">
                         <i class="fas fa-share-alt" aria-hidden="true"></i> <span>' . themeEscape(__('Share')) . '</span>
-                    </button>
-                    <button type="button" class="btn btn-content-qr d-none d-md-inline-flex" data-url="' . themeEscape($current_page_url) . '" data-title="' . themeEscape($display_page_title) . '" data-qr-svg="' . themeEscape($current_qr_svg) . '" title="Scan for Link">
-                        <i class="fas fa-qrcode" aria-hidden="true"></i> <span>Scan for Link</span>
                     </button>
                 </div>
             </div>';

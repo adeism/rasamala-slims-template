@@ -75,6 +75,62 @@ textarea[name^="classic_"] {
     font-size: 12px;
 }
 
+.rasamala-background-help-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.rasamala-background-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.rasamala-background-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    min-height: 28px;
+    padding: 4px 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #1d4ed8;
+    cursor: pointer;
+    font-size: 11px;
+    line-height: 1.2;
+}
+
+.rasamala-background-action:hover,
+.rasamala-background-action:focus {
+    border-color: #2563eb;
+    background: #eff6ff;
+    outline: none;
+}
+
+.rasamala-background-help-note {
+    margin-bottom: 6px;
+    color: #52606d;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.rasamala-clipboard-fallback {
+    position: fixed !important;
+    top: -1000px !important;
+    left: -1000px !important;
+    width: 1px !important;
+    height: 1px !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
 #themeCustomiseForm tr,
 tr:has(input[name^="classic_"]),
 tr:has(select[name^="classic_"]),
@@ -355,26 +411,6 @@ tr:has(textarea[name^="classic_"]) td {
         justify-content: flex-start;
     }
 }
-.theme-preset-summary {
-    margin: 8px 0 14px;
-    padding: 12px 14px;
-    border: 1px solid #DCEFE3;
-    border-radius: 6px;
-    background: #F6FBF8;
-    color: #24352B;
-}
-.theme-preset-summary-title {
-    display: block;
-    font-size: 13px;
-    font-weight: 700;
-    margin-bottom: 4px;
-}
-.theme-preset-summary-desc {
-    display: block;
-    color: #5F6F66;
-    font-size: 12px;
-    line-height: 1.45;
-}
 #navbar-menu-builder-container,
 #topic-items-builder-container,
 #language-visible-builder-container {
@@ -420,28 +456,30 @@ tr:has(textarea[name^="classic_"]) td {
 }
 .language-visible-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-    gap: 8px;
+    grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+    gap: 6px;
 }
 .language-visible-option {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     margin: 0;
-    padding: 8px 10px;
+    padding: 6px 8px;
     border: 1px solid #E0E0E0;
-    border-radius: var(--rasamala-radius-button, 999px);
+    border-radius: 6px;
     background: #FAFAFA;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 11px;
+    font-weight: 600;
 }
 .language-visible-option input {
     margin: 0 !important;
 }
 .language-visible-option-code {
-    color: #777;
+    color: #333;
     font-size: 11px;
-    margin-left: auto;
+    font-weight: 600;
+    margin-left: 0;
 }
 .topic-icon-preview {
     width: 42px;
@@ -566,6 +604,19 @@ tr:has(textarea[name^="classic_"]) td {
     align-items: center;
     margin-bottom: 8px;
 }
+.rasamala-builder-columns-head {
+    display: grid;
+    grid-template-columns: 42px minmax(120px, 1fr) minmax(160px, 1.2fr) 34px;
+    gap: 10px;
+    margin: 8px 0 4px;
+    color: #6c757d;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+}
+.rasamala-builder-columns-head span:first-child { text-align: center; }
+.rasamala-builder-columns-head span:last-child { visibility: hidden; }
 
 .rasamala-builder-input-name {
     width: 34%;
@@ -616,6 +667,9 @@ tr:has(textarea[name^="classic_"]) td {
     display: inline-block;
     font-weight: bold;
     font-size: 14px;
+}
+@media (max-width: 700px) {
+    .rasamala-builder-columns-head { display: none; }
 }
 
 .navbar-menu-extra-settings {

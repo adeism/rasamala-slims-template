@@ -7,6 +7,7 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
 }
 
 require_once __DIR__ . '/helpers/language.php';
+require_once __DIR__ . '/helpers/theme_feature_flags.php';
 require_once __DIR__ . '/helpers/tinfo_options_helper.php';
 require_once __DIR__ . '/helpers/tinfo_defaults.php';
 require_once __DIR__ . '/helpers/tinfo_options.php';

@@ -1,501 +1,223 @@
+<!-- markdownlint-disable MD013 -->
+
 # 🌲 Rasamala Theme for SLiMS 9 Bulian
-**Rasamala** adalah templat OPAC modern, cepat, dan kaya fitur untuk **SLiMS 9 Bulian**. Dikembangkan dengan pendekatan *mobile-first*, arsitektur PHP yang sangat rapi dan modular, serta kontrol kustomisasi visual penuh melalui **Tinfo (Pengaturan Tema)** tanpa menyentuh core SLiMS.
+
+**Rasamala** adalah templat OPAC modern, cepat, dan kaya fitur untuk **SLiMS 9 Bulian**. Dikembangkan dengan pendekatan *mobile-first*, arsitektur PHP modular yang sangat rapi, serta kontrol kustomisasi visual penuh melalui **Tinfo (Pengaturan Tema)** tanpa menyentuh core SLiMS.
 
 ![Preview Rasamala](preview.png)
 
----
-
-## 🎨 Filosofi Desain: Antara "Minimalis" dan "Pesta Visual"
-
-Mari jujur sebentar: **tidak semua perpustakaan itu sama dan butuh selera yang seragam!** ☕✨
-
-Ada perpustakaan yang sukanya tampil *super-clean*, hening, dan polos tanpa distraksi—mirip ruang baca sunyi tempat Anda bisa mendengar suara semut berbisik. Namun, tidak sedikit pula perpustakaan (terutama sekolah, kampus kekinian, atau perpustakaan umum interaktif) yang ingin OPAC-nya tampil **fun, atraktif, dan meriah** lengkap dengan animasi melayang, widget waktu sholat, *running text*, hingga *cursor neon* yang bikin pemustaka betah *scrolling*! 
-
-Karena itulah **Rasamala** dirancang fleksibel ibarat bunglon yang serba bisa:
-- 🌿 **Ingin Tampilan Minimalis & Polos?** Cukup pilih preset *Simple*, matikan animasi & partikel cursor. Hasilnya: OPAC super cepat, bersih, dan fokus pada pencarian tanpa distraksi.
-- 🎉 **Ingin Tampilan Meriah & Interaktif?** Aktifkan preset *Full*, hidupkan *Background Animation*, pasang *Cursor Particles*, tambah widget WhatsApp & waktu sholat. Hasilnya: OPAC bergaya portal modern yang memanjakan mata pemustaka!
-
-Apapun selera kepustakawanan Anda—mulai dari aliran *"Harap Tenang, Perbanyak Membaca"* sampai aliran *"Perpustakaan Ramai, Pemustaka Ceria"*—Rasamala siap memfasilitasinya hanya dengan beberapa klik! 🎛️
-
----
-
-## 🏆 Ide Kreatif: Kampanye "Lomba Desain OPAC Pemustaka"
-
-Ingin meningkatkan keterikatan (*user engagement*) pemustaka dengan perpustakaan Anda secara interaktif dan viral di media sosial? **Gunakan fitur Theme Viewer Floating OPAC Rasamala untuk menggelar kompetisi desain tema!** 📸🎨
-
-### 💡 Bagaimana Cara Kerjanya?
-
-1. 🎨 **Aktifkan Theme Viewer OPAC via Admin Tinfo:**  
-   Set opsi `Floating Theme Color Palette Menu` ke `Show`. Tombol kuas melayang (`fa-paint-brush`) akan muncul secara ajaib di pojok kanan bawah OPAC publik Anda!
-2. 🖌️ **Biarkan Pemustaka Berkreasi Bebas:**  
-   Pengunjung perpustakaan (siswa, mahasiswa, dosen, atau masyarakat umum) dapat menguji kombinasi *Custom Palette*, animasi background, efek partikel, hingga ikon *cursor* favorit mereka secara *real-time* di browser masing-masing tanpa mengganggu pengguna lain.
-3. 📸 **Mekanisme Lomba Media Sosial (Instagram / TikTok / X):**  
-   - Pemustaka merancang tampilan OPAC impian mereka, menekan tombol **"Copy Palette"** di Theme Viewer, lalu mengambil *screenshot* atau video layar saat menjelajahi OPAC perpustakaan Anda.
-   - Peserta mengunggah hasil kreasi ke sosial media dengan me-tag akun resmi perpustakaan dan menyertakan tagar khusus (contoh: `#OPACKreatifPerpustakaanKu` atau `#RasamalaThemeChallenge`).
-   - **Kategori Pemenang:**  
-     - ❤️ **Kategori Favorit Netizen:** Desain dengan *Like & Share* terbanyak.
-     - 👑 **Kategori Pilihan Kepala Perpustakaan:** Desain paling estetis dan sesuai identitas instansi.
-4. 🎉 **Terapkan Karya Pemenang Sebagai Tema Resmi!**  
-   Pustakawan admin cukup menyalin string *Palette Code* dari peserta pemenang, lalu menempelkannya ke field `Custom Palette Colors` di Tinfo Admin.  
-   *Voila!* Tampilan buatan pemustaka resmi menjadi wajah visual OPAC perpustakaan bulan ini! 🌟
+> **Status dokumentasi:** README ini disinkronkan dengan implementasi Rasamala per 31 Juli 2026. Nilai default dan daftar opsi diambil dari `helpers/tinfo_defaults.php`, `helpers/options/*.php`, dan konfigurasi Theme Viewer.
+>
+> **Catatan instalasi:** `rasamala-sw.js` bukan bagian dari folder tema. File tersebut harus berada di akar instalasi SLiMS agar service worker memiliki scope OPAC yang benar.
 
 ---
 
 ## 📑 Daftar Isi
 
-- [🎭 Filosofi Desain: Antara "Minimalis Anteng" dan "Pesta Visual"](#-filosofi-desain-antara-minimalis-anteng-dan-pesta-visual)
-- [🏆 Ide Kreatif: Kampanye "Lomba Desain OPAC Pemustaka"](#-ide-kreatif-kampanye-lomba-desain-opac-pemustaka)
-- [⚡ Sorotan Utama](#-sorotan-utama)
-- [🎛️ Panduan Lengkap Pengaturan Tema (Tinfo)](#️-panduan-lengkap-pengaturan-tema-tinfo)
-  - [1. 🎨 Preset & Skema Warna (Color Palette)](#1--preset--skema-warna-color-palette)
-  - [2. 🌙 Dark / Light Mode](#2--dark--light-mode)
-  - [3. 🧭 Navbar, Header & Kartu Anggota Digital](#3--navbar-header--kartu-anggota-digital)
-  - [4. 🔍 Hero & Kotak Pencarian (Search Box)](#4--hero--kotak-pencarian-search-box)
-  - [5. 🔮 Animasi Background & Efek Cursor](#5--animasi-background--efek-cursor)
-  - [6. 📢 Pengumuman & Running Text](#6--pengumuman--running-text)
-  - [7. 📰 Beranda, News & Section Manager](#7--beranda-news--section-manager)
-  - [8. 🗺️ Peta, Sosial Media & Footer](#8--peta-sosial-media--footer)
-  - [9. 🕌 Widget Waktu Sholat & Floating Reminder](#9--widget-waktu-sholat--floating-reminder)
-  - [10. 🏛️ Visitor Log (Buku Tamu Kiosk & Split Layout)](#10--visitor-log-buku-tamu-kiosk--split-layout)
-  - [11. 💬 Floating Action & WhatsApp Service Widget](#11--floating-action--whatsapp-service-widget)
-  - [12. 📊 Search Result, Detail Buku & Sitasi](#12--search-result-detail-buku--sitasi)
-- [🪪 Fitur Kartu Anggota Digital (Member Area)](#-fitur-kartu-anggota-digital-member-area)
-- [📱 Progressive Web App (PWA) & Dukungan Mobile Native](#-progressive-web-app-pwa--dukungan-mobile-native)
-- [⚡ Sistem Loading & Interaktivitas UI](#-sistem-loading--interaktivitas-ui)
-- [🧺 Keranjang Buku (Shopping Basket) & AJAX Real-Time](#-keranjang-buku-shopping-basket--ajax-real-time)
-- [🤖 Panduan Pembuat Custom Palette Berbasis AI](#-panduan-pembuat-custom-palette-berbasis-ai)
-- [📁 Arsitektur Direktori & Struktur File](#-arsitektur-direktori--struktur-file)
-- [🛡️ Keamanan & Aksesibilitas](#-keamanan--aksesibilitas)
+- [⚡ Sorotan Utama Fitur & Performa](#-sorotan-utama-fitur--performa)
+- [🎛️ Ringkasan Pengaturan Tema (Tinfo)](#️-ringkasan-pengaturan-tema-tinfo)
+- [🔁 Sinkronisasi Theme Viewer dan Tinfo](#-sinkronisasi-theme-viewer-dan-tinfo)
+- [🏆 Kampanye "Lomba Desain OPAC Pemustaka"](#-kampanye-lomba-desain-opac-pemustaka)
+- [📁 Arsitektur Direktori](#-arsitektur-direktori)
+- [🌐 Route OPAC Utama](#-route-opac-utama)
+- [📦 Aset Lokal dan Versi Library](#-aset-lokal-dan-versi-library)
+- [Keamanan & Aksesibilitas](#keamanan--aksesibilitas)
 - [🚀 Cara Instalasi](#-cara-instalasi)
+- [Smoke Test](#smoke-test)
 - [👥 Kredit & Pengembang](#-kredit--pengembang)
 
 ---
 
-## ⚡ Sorotan Utama
+## ⚡ Sorotan Utama Fitur & Performa
 
-- 🎨 **Kustomisasi Visual Lengkap via Tinfo:** Seluruh komponen tampilan dapat dikonfigurasi melalui panel admin tanpa perlu mengubah kode sumber.
-- 📱 **Mobile-First & Progressive Web App (PWA):** Dilengkapi *Mobile Bottom Nav 5-tombol*, PWA `manifest.json.php`, `sw.js` (Service Worker) caching aset statis, mode *standalone fullscreen*, dan dukungan `apple-touch-icon`.
-- 🔗 **Smart QR Code & Share Action Buttons (Offline Vector SVG):** Tombol *Share* & *Scan for Link* terpadu di seluruh halaman (Detail Buku, Berita, & Konten Kustom). Menggunakan generator **Kode QR Vektor SVG 100% Offline** (`BaconQrCode\Writer`) tanpa ketergantungan API pihak ketiga, serta integrasi **Native Mobile Web Share Sheet (`navigator.share`)**.
-- ✨ **Clean & Transparent Action Button Design System:** Desain tombol aksi (*Share*, *Scan for Link*, *Bookmark*) bergaya kapsul transparan (*Clean & Transparent Outline*) dengan warna teks & ikon mengikuti tema (`var(--theme-text)`), tajam dan kontras di Light Mode maupun Dark Mode.
-- 📍 **Smart Breadcrumb Hierarchy:** Logika penelusuran Breadcrumbs otomatis yang intuitif untuk detail berita dan konten kustom: **`Home` ➔ `Library News` ➔ `[Judul Artikel]`**.
-- 🛡️ **Robust Stacking Context & Mobile Modal Engine:** Relokasi otomatis elemen modal ke `document.body` dan manajemen Z-Index (`1060`) untuk mencegah penutupan terhalang *backdrop overlay* gelap, serta penanganan event sentuhan ganda (`click` & `touchend`).
-- 🔍 **Full-Width Responsive Search Results & Sticky Action Bar:** Layout hasil pencarian 100% *full-width* responsif dengan *Floating Sticky Toolbar* (Filter, Sort, View Mode) yang tetap melayang di atas layar saat digulir (*sticky on scroll*), serta banner ringkasan hasil pencarian terpisah di atasnya.
-- ⚡ **Navigation Progress Bar & Search Loading Overlay:** Top progress bar NProgress-style di bagian atas layar + *backdrop blur overlay & spinner* pada container hasil pencarian saat navigasi halaman/pagination.
-- 💀 **Realistic Skeleton Loading System:** Skeleton loading presisi sesuai grid komponen (sampul buku 1:1.35, avatar anggota, pill topik) dengan animasi shimmer serta dukungan penuh Dark Mode.
-- ⌨️ **Global Keyboard Shortcut (`Ctrl+K` / `⌘K`):** Pintasan keyboard instan untuk memfokuskan pencarian, dilengkapi badge visual `<kbd>` interaktif yang mendeteksi OS pengguna (`⌘K` di Mac, `Ctrl K` di Windows/Linux).
-- 🪪 **Kartu Anggota Digital Cerdas:** Mendukung format QR Code & Barcode, generator inisial nama jika foto tidak ada, serta indikator visual **border merah melingkar** otomatis untuk status expired/non-aktif.
-- 🧺 **Permanent Shopping Basket:** Tombol keranjang buku (`fas fa-shopping-basket`) selalu tampil di navbar atas & posisi tengah navigasi mobile, lengkap dengan *badge counter AJAX real-time*.
-- 🖼️ **Smart Cover Verification & SLiMS Storage API:** Verifikasi gambar sampul buku fisik via `\SLiMS\Filesystems\Storage::images()` & root path SLiMS sehingga gambar asli selalu tampil akurat tanpa tertimpa generator placeholder.
-- 🕌 **Widget Waktu Sholat Indonesia:** Menampilkan waktu sholat berikutnya di footer serta *floating reminder countdown* menjelang azan untuk kota-kota di Indonesia.
-- 🤖 **Interactive Theme Viewer & AI Palette Generator:** Pengunjung dapat melakukan preview palette, font, animasi, dan partikel cursor via floating menu OPAC, lengkap dengan generator prompt AI.
-- 🏛️ **Visitor Log Kiosk / Split Mode:** Buku tamu mendukung format institusi `kode(label)`, opsi ketik manual (`other`), serta kartu petunjuk HTML yang disanitasi.
-- 🚀 **100% Aset Lokal (Offline Ready):** Font Google (Inter, Roboto, Poppins, Playfair Display), Font Awesome, Bootstrap 5.3.3, dan Vue 3.5.39 disimpan lokal di folder templat.
+### 1. 🎨 Desain Visual, Theme Viewer & Mode Gelap
 
----
+- **Kustomisasi Visual Lengkap (Tinfo):** Atur mode hero fullscreen, skema warna, logo, running text, hingga animasi latar belakang langsung dari admin SLiMS.
+- **Dark / Light Mode Pintar:** Otomatis menyesuaikan preferensi OS/browser pengguna atau dikunci pada mode tertentu, lengkap dengan tombol toggle responsif.
+- **Interactive Theme Viewer & AI Prompt Helper:** Pemustaka dapat menguji mode hero fullscreen (Yes/No), pilihan konten di dalam hero, section beranda, *Custom Palette*, background, tipografi, dan animasi secara *real-time* melalui menu kuas melayang (`fa-paint-brush`). Theme Viewer menyediakan prompt yang dapat disalin untuk membantu pembuatan palette/background dengan alat AI eksternal; generator AI tidak berjalan di server tema. Kontrol Cursor Icon dan Cursor Particles masih disembunyikan oleh release gate.
+- **Simpan dari Theme Viewer (Admin):** Setelah login di area admin, tombol **Simpan Pengaturan Tema** muncul di Theme Viewer. Tombol ini mengirim konfigurasi preview ke form TInfo resmi dengan tetap membawa seluruh field lain, sehingga pengaturan yang tidak sedang dipreview tidak ikut terhapus.
+- **Sistem Logo Perpustakaan Bersyarat Admin:** Logo perpustakaan hanya tampil jika admin mengunggah file logo di Pengaturan Sistem Admin SLiMS (`$sysconf['logo_image']`), menjaga kebersihan tampilan jika belum ada logo.
 
-## 🎛️ Panduan Lengkap Pengaturan Tema (Tinfo)
+### 2. ⚡ Performa Maksimal & PWA Aman
 
-Pengaturan tema Rasamala dapat diakses melalui admin SLiMS pada menu **System > Theme > Customize/Tinfo**. Berikut adalah rincian opsi yang tersedia:
+- **Pemuatan JS Non-Blocking:** Sebagian besar script tema dan library halaman dimuat dengan atribut `defer`, termasuk bundle pencarian, Theme Viewer, animasi, dan PWA register. Script core atau partial tertentu tetap mengikuti kebutuhan kompatibilitas SLiMS, jadi klaim ini bukan berarti setiap tag script di seluruh alur core selalu `defer`.
+- **Aset Berdasarkan Halaman:** Vue dan `app.js` hanya untuk halaman dengan form pencarian; Masonry, Ion Slider, highlight, serta `result_search.js` hanya untuk halaman hasil pencarian. CSS CKEditor dan Colorbox tidak lagi dimuat di OPAC publik.
+- **Autocomplete JSON Ringan:** Saran judul memakai endpoint JSON kecil (maksimal 6 judul), debounce 250 ms, dan pembatalan request sebelumnya. Browser tidak lagi mengunduh serta mem-parsing halaman hasil pencarian penuh pada setiap input.
+- **PWA Static-Assets-Only:** `rasamala-sw.js` berada di akar aplikasi agar scope-nya mencakup OPAC. Worker hanya menyimpan aset tema same-origin berdasarkan destination `style`, `script`, `font`, `image`, dan `manifest`; HTML, hasil pencarian, akun anggota, admin, serta endpoint API selalu memakai jaringan.
+- **Default Produksi:** Theme Viewer aktif, hero fullscreen aktif dengan Topics di dalam hero, background default `Aurora Glow`, animasi `Neural Network` berkecepatan `Fast`, homepage tab aktif, dan partikel cursor nonaktif. Admin dapat mengubahnya melalui Tinfo. Release gate tetap memaksa Cursor Icon, Cursor Particles, dan Panel Background ke nilai aman masing-masing.
+- **Skeleton Shimmer Loading System:** Animasi shimmer presisi saat memuat data (sampul 1:1.35, avatar, pill topik) dengan indikator top progress bar NProgress-style.
 
-### 1. 🎨 Preset & Skema Warna (Color Palette)
+### 3. 📱 Mobile UI/UX & Engine Modal Teratas
 
-- **Preset Tampilan Tema (`classic_theme_preset`):**
-  - ⚡ **Simple (Search + Running Text):** Tampilan sangat minimalis, fokus utama pada kotak pencarian dan running text.
-  - 📚 **Simple + Topics:** Beranda ringkas dengan kotak pencarian dan ikon topik favorit.
-  - 🌟 **Full (Topics + News + Collections + Top Reader + Map):** Menampilkan seluruh modul beranda secara lengkap.
-  - 🔓 **Custom (Fully Unlocked):** Membuka kontrol manual penuh untuk seluruh section.
-- **Color Palette Preset (`classic_color_palette`):**
-  - 🌿 **Warm Gray** (Default akademis elegan)
-  - ⚪ **Minimal White** (Bersih & minimalis)
-  - 🖤 **Dark Gray** (Nuansa gelap modern)
-  - 💙 **Clean Blue** (Biru profesional)
-  - 📖 **Warm Library** (Nuansa kayu & kertas klasik)
-  - 🎨 **Custom Palette** (Menggunakan kombinasi warna kustom Anda)
-- **Custom Palette Colors (`classic_custom_palette_colors`):**
-  - Format input: `Light Primary; Secondary; Accent; Background; Surface; Text; Muted | Dark Primary; Dark Secondary; Dark Accent; Dark Background; Dark Surface; Dark Text; Dark Muted`
+- **Mobile Bottom Navigation (5-Tombol):** Bilah navigasi bawah seluler responsif untuk akses cepat ke Beranda, Pencarian, Keranjang, Topik, dan Area Anggota.
+- **Mobile Floating Action Pill (Kiri Bawah):** Kapsul aksi melayang (*Bookmark, Keranjang, Sitasi, Bagikan*) yang otomatis di-promosikan ke `document.body` (`z-index: 1045`). Mengambang secara mulus dan stabil di atas footer.
+- **Top-Level Modal Hierarchy (`z-index: 100000`):** Penanganan modal teratas untuk Sort, Filter, View Mode, Advanced Search (`#adv-modal`), dan Floating WhatsApp (`#whatsappModal`), menjamin dialog selalu muncul di atas backdrop overlay.
+
+### 4. 🔍 Pencarian Katalog, Detail Buku & Sitasi
+
+- **Full-Width Result Layout & Sticky Action Toolbar:** Tampilan hasil pencarian 100% *full-width* dengan toolbar melayang (*Filter, Sort by 8 pilihan, View Mode Simple/List/Grid*).
+- **Status Hasil yang Konsisten:** Empty state menggunakan jumlah hasil mesin pencarian, tombol Advanced Search selalu membuka `#adv-modal`, dan status ketersediaan mengikuti angka item yang tersedia.
+- **Generator Kode QR Vektor SVG Offline:** Generator QR Code 100% offline (`BaconQrCode\Writer`) tanpa ketergantungan API pihak ketiga, terintegrasi dengan **Native Mobile Web Share Sheet (`navigator.share`)**.
+- **Modul Sitasi Akademis & Keranjang Buku:** Generator sitasi otomatis format **APA, Chicago, MLA, Turabian** pada detail buku, serta keranjang buku permanen (*Shopping Basket*) dengan counter AJAX real-time.
+- **Global Keyboard Shortcut (`Ctrl+K` / `⌘K`):** Pintasan keyboard instan untuk memfokuskan pencarian dengan indikator visual `<kbd>`.
+
+### 5. 🪪 Keanggotaan Digital, Buku Tamu & Widget Layanan
+
+- **Kartu Anggota Digital Cerdas:** Mendukung QR Code & Barcode, generator inisial avatar jika foto tidak ada, serta indikator visual **border merah melingkar (`4px solid #dc3545`)** untuk anggota expired.
+- **Visitor Log Kiosk & Split Layout:** Form buku tamu mode Kiosk penuh atau Split Layout 2-kolom dengan dukungan format institusi `kode(label)` dan opsi input manual (`other`). Dependensi dimuat berurutan: Vue, Axios, lalu `visitor_counter.js`.
+- **Widget Layanan WhatsApp & Waktu Sholat:** Modal obrolan WhatsApp interaktif dengan template pesan otomatis, serta jadwal waktu sholat kota-kota di Indonesia lengkap dengan pop-up reminder azan.
 
 ---
 
-### 2. 🌙 Dark / Light Mode
+## 🎛️ Ringkasan Pengaturan Tema (Tinfo)
 
-- **Pilihan Mode (`classic_color_mode`):**
-  - 🌗 `auto - button show`: Otomatis mengikuti OS/browser pengguna + menampilkan tombol toggle.
-  - 🙈 `auto - button hide`: Otomatis mengikuti OS/browser pengguna tanpa tombol toggle.
-  - 🌙 `default dark - button show`: Default mode gelap + tombol toggle.
-  - 🙈 `default dark - button hide`: Kunci di mode gelap tanpa tombol toggle.
-  - ☀️ `default light - button show`: Default mode terang + tombol toggle.
-  - 🙈 `default light - button hide`: Kunci di mode terang tanpa tombol toggle.
+Akses menu admin SLiMS: **System > Theme > Customize/Tinfo**.
 
----
+| Kategori Pengaturan | Opsi Utama | Deskripsi Ringkas |
+| --- | --- | --- |
+| **Hero Fullscreen** | `Yes - Fullscreen Hero`, `No - Standard Homepage` | Mengatur apakah area pencarian memenuhi layar. Saat ada konten di bawah, indikator panah membantu pemustaka menemukan section berikutnya. Topics, info search, dan section beranda mengikuti pengaturan show/hide masing-masing. |
+| **Inside Fullscreen Hero** | `None - Keep Below Search`, `Topics`, `Popular among our collections`, `New collections + updated`, `Top Reader of the Year` | Menentukan satu konten yang dirender di dalam hero saat mode fullscreen aktif. `None` mempertahankan konten di bawah search. Pada homepage standar, konten hero-inside tidak dipasang ulang. |
+| **Background Style** | `None / Standard`, `Soft Gradient`, `Aurora Glow`, `Mesh Light`, `Glass Surface`, `Solid Theme`, `Minimal Surface`, `Ocean Waves (Theme Colors)`, `Custom`, serta gambar yang tersedia di `assets/images/backgrounds/` | Pilihan background diterapkan ke seluruh halaman dan tetap terlihat di bawah layer animasi. Untuk gambar tersedia `Normal`, `Crop / Cover`, `Contain`, `Stretch / Fill`, `Tile / Repeat`, `Full Width`, `Full Height`, posisi, filter, blur, dan overlay. Default produksi saat ini `Aurora Glow`; pilih `None / Standard` jika ingin background standar. |
+| **Theme Viewer Home Sections** | Topics, Latest Content, Popular Collections, New Collections, Top Reader, Footer | Saat Theme Viewer aktif, section dapat disembunyikan/ditampilkan dan disusun untuk preview. Map/Social Media memiliki kontrol terpisah pada `Map Visibility`; Running Text dan Info Search juga memiliki kontrol khusus. |
+| **Home Section Layout** | `Tab Mode`, `Standard Mode` | Memilih satu panel tab aktif agar halaman ringkas, atau menampilkan seluruh section beranda yang diaktifkan secara berurutan. Saat berpindah mode, pane nonaktif tetap disembunyikan sehingga kartu tidak terduplikasi. |
+| **Color Palette** | `Warm Gray`, `Minimal White`, `Dark Gray`, `Warm Library`, `Contemporary Tech Library`, `Deep Emerald & Bronze`, `Kraft Paper & Charcoal Ink`, `Midnight Navy & Gold Accent`, `Modern Charcoal & Warm Saffron`, `Royal Indigo & Bright Gold`, `Scandinavian Minimalist`, `High-Contrast Digital`, `Minimal Electric Lime`, `Warm Greige & Metallic Gold`, `Custom` | Pilihan kombinasi warna siap pakai atau custom palette 14-warna. Definisi preset tersentral di `helpers/palettes/theme_color_palettes.php`. |
+| **Dark / Light Mode** | `Auto`, `Default Dark`, `Default Light` (with/without toggle) | Pengaturan mode tampilan default dan tombol pengubah mode. |
+| **Header & Logo** | `Navbar`, `Hero Box`, Subname, Menu Navigation | Posisi penempatan logo/nama perpustakaan dan struktur navigasi atas. |
+| **Hero & Search Box** | Hero Title, Title Size, Placeholder, Search Box Size, Info Search Display, Fullscreen Placement | Seluruh kontrol hero yang berdampak langsung ke OPAC tersedia di Theme Viewer dengan preview real-time; konten Popular/New/Top Reader memakai komponen homepage yang sama agar tidak berbeda saat disimpan. |
+| **Animasi & Kursor** | `None`, Floating Glyphs, Code Rain, Moving Grid, Twinkling Stars, Zen Ripples, Neural Network, Starfield Warp, Floating Embers | Animasi background dan kecepatannya tersedia di Theme Viewer/Tinfo. Cursor Icon dan Cursor Particles didefinisikan di kode, tetapi kontrolnya disembunyikan sementara melalui release gate dan dipaksa ke `default`/`none`. |
+| **Simpan Theme Viewer** | Khusus sesi admin | Menyimpan palette, hero/search, info area, running text, mobile navbar, back-to-top, background treatment, layout tab, font, animasi, dan visibility section ke pengaturan template aktif. Fitur yang sedang di-release gate tidak ikut ditampilkan/disimpan dari kontrol publik. |
+| **All TInfo Settings di Theme Viewer** | General, Navbar, Hero, Content, Footer, Display, Visitor/Guestbook | Theme Viewer memuat metadata langsung dari `helpers/options/*.php`. Field yang belum memiliki preview khusus tersedia di panel **All TInfo Settings** dengan pencarian, dikelompokkan per kategori, dan perubahan langsung diterapkan ke DOM preview tanpa Save. Nilai dikonfirmasi ulang melalui form TInfo agar tidak ada pengaturan yang hilang atau tertimpa. |
+| **Pengumuman & Ticker** | Announcement Banner (5 style), Running Text Ticker | Banner pesan penting di atas pencarian dan running text di bagian bawah. |
+| **Section Manager** | Show/Hide section, Reorder Sections, Title Format, News Display Mode | Status tampil section dapat diatur dari TInfo atau langsung dipromosikan dari checklist Theme Viewer. |
+| **Peta, Medsos & Footer** | Map Embed URL, Social Media Links, Footer Search, About Us Text | Peta/lini media sosial dapat dipreview sebagai kombinasi `Map + Social`, `Map only`, `Social only`, atau disembunyikan dari Theme Viewer; URL dan deskripsi tetap mengikuti TInfo. |
+| **Waktu Sholat** | `Footer + Floating Reminder`, `Footer Only`, `Reminder Only`, `Hide` | Jadwal sholat kota-kota Indonesia dan countdown pengingat azan. |
+| **Visitor Log** | `Kiosk Mode`, `Split Layout`, Institution List, Panel HTML | Format buku tamu pengunjung dan instruksi pengisian. |
+| **Floating Action & WA** | `WhatsApp Mode`, `Libinfo Mode`, `Hide`, Number, Hours, Template | Tombol layanan melayang dan template awal pesan WhatsApp. |
 
-### 3. 🧭 Navbar, Header & Kartu Anggota Digital
+## 🔁 Sinkronisasi Theme Viewer dan Tinfo
 
-- **Posisi Logo & Nama Perpustakaan (`classic_logo_position`):**
-  - 📌 `Navbar`: Logo dan nama perpustakaan berada di dalam baris navbar.
-  - 🎯 `Hero Box`: Logo dan nama dipindahkan di atas kotak pencarian (Desktop).
-- **Subnama Perpustakaan (`classic_show_subname`):** Tampilkan atau sembunyikan subnama perpustakaan.
-- **Pengaturan Navbar Menu (`classic_navbar_menus`):** Konfigurasi menu navigasi atas lengkap dengan ikon Font Awesome.
-- **Area Anggota (`classic_member_area`):** Tampilkan atau sembunyikan tautan Member Area.
-- **Tipe Kode Kartu Anggota (`classic_card_code_type`):**
-  - 📱 `QR Code` (BaconQrCode Svg Renderer)
-  - ║▌ `Barcode` (PHPBarcode Code128)
-- **Field Kartu Anggota (`classic_card_show_fields`):** Pilih atribut yang ditampilkan (Nama, ID, Institusi, Tipe Anggota).
-- **Mobile Bottom Navigation Bar (`classic_mobile_bottom_nav_show`):** Tampilkan atau sembunyikan bilah navigasi bawah ponsel 5-tombol.
-- **Daftar Kode Bahasa (`classic_language_selection_list`):** Membatasi bahasa yang muncul pada pemilih bahasa (misal: `id_ID;en_US`).
-
----
-
-### 4. 🔍 Hero & Kotak Pencarian (Search Box)
-
-- **Judul Search Bar (`classic_hero_title`):** Ubah teks salam/judul di atas kotak pencarian (contoh: *Pencarian Koleksi Perpustakaan*).
-- **Ukuran Judul Hero (`classic_hero_title_size`):** Pilihan `Normal` atau `Large`.
-- **Placeholder Kotak Pencarian (`classic_search_placeholder`):** Teks panduan di dalam input pencarian.
-- **Ukuran Kotak Pencarian (`classic_search_box_size`):** Pilihan `Normal` atau `Large`.
-- **Tampilan Info Search (`classic_info_search_display`):**
-  - 🏷️ `Pills / Badges`: Menampilkan kata kunci/koleksi terbaru berbentuk badge pill.
-  - 🎞️ `Fading Slideshow`: Teks berganti halus secara bertahap.
-  - 📜 `Horizontal Ticker`: Teks berjalan secara horizontal.
+- Definisi field admin dan field yang dibaca Theme Viewer berasal dari file yang sama di `helpers/options/*.php`; kategori yang tersedia adalah **General & Layout**, **Navigation Bar**, **Hero & Background**, **Homepage & Content**, **Footer & Social Media**, **Display & Detail Pages**, dan **Visitor / Guestbook**.
+- Theme Viewer publik menerapkan perubahan sebagai preview lokal di browser. Perubahan tersebut tidak ditulis ke database secara otomatis.
+- Tombol **Simpan Pengaturan Tema** hanya muncul setelah sesi admin terdeteksi. Penyimpanan dilakukan melalui form TInfo resmi agar field lain tetap dibawa dan tidak terhapus.
+- `helpers/theme_feature_flags.php` menyaring field yang sedang berada dalam release gate. Saat gate aktif, nilai efektifnya adalah `classic_search_panel_style=solid`, `classic_cursor_custom_icon=default`, dan `classic_cursor_particles=none`.
+- Preview yang tersimpan di browser dapat dihapus dengan membersihkan data situs untuk origin OPAC. Nilai database tetap menjadi sumber konfigurasi produksi.
 
 ---
 
-### 5. 🔮 Animasi Background & Efek Cursor
+## 🏆 Kampanye "Lomba Desain OPAC Pemustaka"
 
-- **Animasi Latar Belakang (`classic_bg_animation`):**
-  - `None`, `Floating Glyphs`, `Code Rain`, `Moving Grid`, `Twinkling Stars`, `Zen Ripples`, `Neural Network`, `Starfield Warp`, `Floating Embers`.
-- **Kecepatan Animasi (`classic_bg_animation_speed`):** Skala kecepatan animasi background.
-- **Mode Partikel Cursor (`classic_cursor_particles`):** `Auto`, `Light`, `Medium`, `High`, `Disable`.
-- **Ikon Cursor Custom (`classic_cursor_icon`):** `Default Browser`, `Neon Comet`, `Pixel Sword`, `Electric Bolt`, `Ink Brush`, `Rainbow Ribbon`.
-- **Floating Theme Viewer OPAC (`classic_theme_viewer_show`):** Aktifkan menu melayang di OPAC agar pengunjung dapat menguji warna, font, dan animasi secara interaktif.
+Gunakan fitur **Theme Viewer Floating OPAC** untuk menggelar kompetisi desain tema interaktif:
 
----
-
-### 6. 📢 Pengumuman & Running Text
-
-- **Banner Pengumuman (`classic_announcement_show`):** Tampilkan atau sembunyikan banner di atas kotak pencarian.
-- **Isi Pengumuman (`classic_announcement_text`):** Mendukung teks tebal, tautan, dan HTML yang disanitasi.
-- **Gaya Pengumuman (`classic_announcement_style`):** `Theme Adaptive`, `Info (Biru)`, `Warning (Kuning)`, `Danger (Merah)`, `Success (Hijau)`.
-- **Running Text Bawah (`classic_ticker_show`):** Tampilkan running text di bagian `Bottom` atau `Hide`.
-- **Sumber Data Running Text (`classic_ticker_source`):** `Latest Content`, `Latest Bibliography`, atau `Custom Text`.
+1. **Aktifkan Theme Viewer:** Set `Floating Theme Color Palette Menu` ke `Show`. Tombol kuas (`fa-paint-brush`) akan muncul di pojok kanan bawah OPAC publik.
+2. **Pemustaka Berkreasi:** Pengunjung merancang skema warna kustom, background, tipografi, dan animasi latar yang sedang tersedia secara real-time. Kontrol cursor mengikuti release gate dan tidak dijanjikan sebagai fitur publik.
+3. **Mekanisme Lomba:** Pemustaka menyalin kode palette (**Copy Palette**), mengambil screenshot/video, lalu mengunggahnya ke media sosial (Instagram/TikTok/X) dengan men-tag akun perpustakaan.
+4. **Terapkan Karya Pemenang:** Admin menyalin *Palette Code* peserta pemenang ke kolom `Custom Palette Colors` di Tinfo Admin.
 
 ---
 
-### 7. 📰 Beranda, News & Section Manager
-
-- **Urutan Section Beranda (`classic_home_section_order`):** Atur urutan tampilnya section di beranda: `Topics`, `News`, `Popular Collection`, `New Collection`, `Top Reader`, `Map`.
-- **Format Judul Section (`classic_home_section_title_format`):**
-  - `Title + Subtitle + Subject`
-  - `Title + Subtitle`
-  - `Title + Subject`
-  - `Title Only`
-  - `Hide All Headers`
-- **Tampilan Berita (`classic_news_display_mode`):** `Title & Excerpt`, `Title Only`, `Title, Excerpt & Thumbnail`.
-
----
-
-### 8. 🗺️ Peta, Sosial Media & Footer
-
-- **Opsi Tampilan Peta & Sosial Media (`classic_home_display_show`):** `Show Map & Social Media`, `Hide All`, `Hide Map Only`, `Hide Social Media Only`.
-- **URL Peta Google Maps (`classic_home_display_map_url`):** Tautan embed iframe Google Maps lokasi perpustakaan.
-- **Tautan Sosial Media:** Mendukung Facebook, Twitter/X, YouTube, Instagram, TikTok, WhatsApp, Telegram, dan LinkedIn.
-- **Footer Search Box (`classic_footer_search_show`):** Tampilkan atau sembunyikan pencarian cepat di footer.
-- **Teks Tentang Kami (`classic_footer_about_us`):** Deskripsi ringkas profil perpustakaan di footer.
-
----
-
-### 9. 🕌 Widget Waktu Sholat & Floating Reminder
-
-- **Mode Tampilan Waktu Sholat (`classic_waktu_sholat_mode`):**
-  - 🕌 `Footer + Floating Reminder`: Menampilkan jadwal di footer + pop-up pengingat menjelang azan.
-  - 📌 `Footer Only`: Menampilkan jadwal di footer saja.
-  - 🔔 `Floating Reminder Only`: Menampilkan pop-up pengingat saja.
-  - 🙈 `Hide`: Sembunyikan modul waktu sholat.
-- **Pilihan Kota (`classic_waktu_sholat_city`):** Mendukung kota-kota besar di Indonesia (Jakarta, Surabaya, Bandung, Medan, Makassar, Semarang, dll).
-
----
-
-### 10. 🏛️ Visitor Log (Buku Tamu Kiosk & Split Layout)
-
-- **Layout Buku Tamu (`classic_visitor_layout`):**
-  - 🖥️ `Kiosk Mode`: Tampilan penuh terpusat untuk komputer meja pengunjung.
-  - 📑 `Split Layout`: Layout 2 kolom (form di kiri, panel petunjuk HTML di kanan).
-- **Label & Isi Dropdown Institusi (`classic_visitor_institution_list`):**
-  - Format: `kode(Label Pilihan);kode2(Label 2);other`
-  - Contoh: `feb(Fakultas Ekonomi dan Bisnis);ft(Fakultas Teknik);fk(Fakultas Kedokteran);other`
-  - *Opsi `other` akan membuka input teks manual untuk pengunjung di luar daftar.*
-- **Kartu Petunjuk Split Layout (`classic_visitor_right_panel_html`):**
-  ```html
-  <div class="inst-step">
-    <div class="inst-icon-box"><i class="fas fa-id-card"></i></div>
-    <div class="inst-content">
-      <h3>1. Isi Identitas</h3>
-      <p>Scan kartu anggota atau ketik nomor identitas Anda.</p>
-    </div>
-  </div>
-  ```
-
----
-
-### 11. 💬 Floating Action & WhatsApp Service Widget
-
-- **Mode Floating Info (`classic_floating_info_mode`):**
-  - 💬 `WhatsApp Mode`: Membuka modal layanan WhatsApp interaktif.
-  - ℹ️ `Libinfo Mode`: Membuka modal informasi perpustakaan.
-  - 🙈 `Hide`: Sembunyikan tombol floating info.
-- **Nomor WhatsApp & Jam Layanan (`classic_whatsapp_number`, `classic_whatsapp_hours`):** Nomor tujuan WhatsApp dan jadwal operasional.
-- **Deskripsi Layanan & Template Pesan (`classic_whatsapp_description`, `classic_whatsapp_message_template`):** Format template awal pesan otomatis (misal: *Nama; Nomor Anggota; Pertanyaan*). Token `{member_name}` otomatis terisi untuk anggota yang sudah login.
-
----
-
-### 12. 📊 Search Result, Detail Buku, Sitasi & Tombol Aksi
-
-- **Default Layout Hasil Pencarian (`classic_search_result_layout`):**
-  - 📄 `Simple View`: Judul, pengarang, dan badge ketersediaan ringkas.
-  - 📋 `List View`: Tampilan daftar dengan sampul, abstrak, dan detail bibliografi.
-  - 🔲 `Grid View`: Tampilan kartu grid modern.
-- **Latar Belakang Panel Pencarian (`classic_search_result_panel_style`):** `Transparent` atau `Solid`.
-- **Auto Generate Cover (`classic_auto_cover_mode`):** Generate sampul buku otomatis berbasis warna tema jika file gambar tidak ditemukan.
-- **Modul Sitasi Kategori Akademis:** Mendukung pembuat sitasi otomatis format **APA**, **Chicago**, **MLA**, dan **Turabian** pada halaman detail buku.
-- **Tombol Aksi Terpadu (*Share*, *Scan for Link QR*, *Bookmark*):**
-  - 🌐 **Sistem Tombol Aksi Kapsul Transparan:** Menggunakan skema desain transparan (*Clean Outline*) dengan warna teks & ikon `var(--theme-text)` yang otomatis menyesuaikan mode terang / malam.
-  - 📲 **Native Web Share Sheet & Dynamic Modal:** Pada mobile, menekan *Share* otomatis memicu aplikasi berbagi bawaan ponsel (`navigator.share`). Pada desktop, membuka modal berbagi `#mediaSocialModal`.
-  - 📱 **Offline Vector QR Code Generator:** Menggunakan generator `BaconQrCode\Writer` bawaan SLiMS 9 untuk membuat Kode QR Vektor SVG 100% offline tanpa perlu koneksi internet atau API eksternal.
-
----
-
-## 🪪 Fitur Kartu Anggota Digital (Member Area)
-
-Akses melalui halaman `index.php?p=member&sec=my_card`:
-
-1. **Badge Kertas Digital Rapi:** Menampilkan nama perpustakaan, foto/inisial profil, nama anggota, ID anggota, tipe keanggotaan, institusi, dan masa berlaku.
-2. **Generasi Inisial Otomatis:** Jika foto profil anggota belum diunggah, sistem otomatis membuat avatar inisial nama dengan warna gradien yang serasi.
-3. **Indikator Visual Non-Aktif / Expired:**
-   - 🟢 **Anggota Aktif:** Tampilan bersih tanpa teks label berlebihan.
-   - 🔴 **Anggota Expired / Inactive:** Foto atau inisial profil **otomatis diberi border merah melingkar (`4px solid #dc3545`)** dan efek *red glow ring*, serta menampilkan informasi petunjuk perpanjangan di bagian bawah.
-
-```css
-.rasamala-digital-card-avatar.is-expired,
-.rasamala-digital-card-initials.is-expired {
-  border: 4px solid #dc3545 !important;
-  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.4), 0 4px 10px rgba(220, 53, 69, 0.25) !important;
-}
-```
-
----
-
-## 📱 Progressive Web App (PWA) & Dukungan Mobile Native
-
-Templat Rasamala dilengkapi integrasi **PWA (Progressive Web App)** penuh:
-
-1. 📲 **Instalasi Aplikasi Tanpa App Store:** Pemustaka dapat menginstal OPAC langsung dari Chrome / Safari ke *Home Screen* perangkat mobile mereka sebagai aplikasi berdiri sendiri (*Standalone App*).
-2. ⚙️ **Service Worker (`assets/js/sw.js`):** Menggunakan strategi *Network-First* untuk halaman pencarian/buku dan *Cache-First* untuk seluruh aset statis (CSS, JS, Font Google lokal, FontAwesome).
-3. 🎨 **Web App Manifest Dinamis (`assets/manifest.json.php`):** Otomatis menyinkronkan nama perpustakaan (`$sysconf['library_name']`), subnama, warna tema, serta ikon favicon bawaan SLiMS (`$sysconf['webicon']`).
-
----
-
-## ⚡ Sistem Loading & Interaktivitas UI
-
-1. 💀 **Realistic Skeleton Loading:** Menampilkan indikator memuat presisi tinggi sesuai dimensi komponen asli (buku rasio 1:1.35, avatar anggota 90px, pill topik) dengan efek *shimmering* serta dukungan Dark Mode.
-2. 🚀 **Top Navigation Progress Bar (`#rasamala-page-progress-bar`):** Indikator progres NProgress-style di bagian paling atas layar saat navigasi link, pagination, filter, atau pencarian.
-3. ⏳ **Search Result Loading Overlay:** Efek *backdrop blur* dan spinner melingkar pada container hasil pencarian saat berpindah halaman (pagination), disertai *smooth scroll* otomatis ke toolbar hasil.
-4. ⌨️ **Pintasan Keyboard Global (`Ctrl+K` / `⌘K`):** Menekan `Ctrl+K` atau `Cmd+K` akan memfokuskan kursor pada kotak pencarian utama secara instan. Dilengkapi badge visual `<kbd>` yang mendeteksi OS pengguna.
-
----
-
-## 🧺 Keranjang Buku (Shopping Basket) & AJAX Real-Time
-
-- 🛒 **Penempatan Permanen:** Tombol keranjang buku (`fas fa-shopping-basket`) selalu tampil di navbar atas serta diposisikan di **posisi tengah (posisi 3)** pada bilah navigasi bawah ponsel.
-- ⚡ **Pembaruan Serentak Real-Time:** Saat pengunjung menekan tombol *"Add to basket"*, skrip AJAX di `app_jquery.js` memperbarui seluruh badge counter (`#count-basket`, `.count-basket`, `.basket-badge-mobile`) secara instan tanpa perlu memuat ulang halaman (*zero refresh*).
-
----
-
-## 🤖 Panduan Pembuat Custom Palette Berbasis AI
-
-Anda dapat memanfaatkan AI (ChatGPT, Claude, Gemini) untuk membuat kombinasi warna custom palette Rasamala. Tempelkan prompt berikut ke AI pilihan Anda:
+## 📁 Arsitektur Direktori
 
 ```text
-Buat 1 custom palette OPAC perpustakaan dalam format persis berikut:
-Primary; Secondary; Accent; Background; Surface; Text; Muted | Dark Primary; Dark Secondary; Dark Accent; Dark Background; Dark Surface; Dark Text; Dark Muted
-
-Aturan:
-- Output hanya 1 baris kode warna hex 6 digit, tanpa penjelasan, tanpa bullet.
-- Gunakan tanda titik koma dan spasi antar warna: #000000; #111111; ...
-- Gunakan tanda | untuk memisahkan light palette dan dark palette.
-- Text wajib kontras minimal 4.5:1 terhadap Background dan Surface pada mode yang sama.
-- Dark Text wajib terang jika Dark Background/Dark Surface gelap.
-- Light Text wajib gelap jika Light Background/Light Surface terang.
-- Primary dipakai untuk navbar/tombol utama.
-- Accent hanya untuk highlight dan ikon.
-
-Konsep visual yang diminta: [misal: Emerald Forest, Deep Sapphire, Warm Parchment]
+rasamala/
+├── index_template.inc.php       # Router/template utama OPAC publik
+├── detail_template.php          # Template halaman detail bibliografi
+├── biblio_list_template.php     # Template daftar katalog hasil pencarian
+├── news_template.php            # Format halaman berita/informasi
+├── visitor_template.php          # Halaman visitor log/kiosk
+├── login_template.inc.php       # Wrapper halaman login tertentu
+├── classic.php                  # Controller & Bootstrap tema Rasamala
+├── tinfo.inc.php                # Entry point pengaturan tema admin
+├── theme_helpers.php            # Loader helper bersama
+├── helpers/                     # 📂 Helper PHP, opsi Tinfo, preset, security, dan UI
+├── parts/                       # 📂 UI Partials (Header, Footer, Navbar, Search, Modals, Detail)
+├── citation/                    # 📂 Modul Sitasi (APA, Chicago, MLA, Turabian)
+├── assets/                      # 📂 Aset statis lokal (CSS, JS, fonts, images, manifest)
+└── docs/                        # 📂 Dokumentasi & Laporan Audit Internal
 ```
 
-**Contoh Output AI Siap Pakai:**
-```text
-#2F5D50; #8C6A3F; #D5A021; #F6F4EE; #FFFFFF; #1F2A24; #68746D | #5C8374; #C6A15B; #E7C66C; #07110E; #12231E; #F5F3EA; #9FB0A8
-```
+`rasamala-sw.js` berada satu tingkat di atas folder `template/rasamala/`, yaitu di akar instalasi SLiMS. Asset khusus halaman detail berada di `assets/js/detail_page.js`; library visitor lokal yang digunakan adalah Vue, Axios, dan `visitor_counter.js`.
+
+## 🌐 Route OPAC Utama
+
+| Route | Fungsi |
+| --- | --- |
+| `index.php` | Homepage katalog |
+| `index.php?search=search&keywords=...` | Hasil pencarian |
+| `index.php?p=show_detail&id=...` | Detail bibliografi |
+| `index.php?p=news` | Daftar berita/informasi |
+| `index.php?p=librarian` | Daftar pustakawan |
+| `index.php?p=visitor` | Visitor log/kiosk |
+| `index.php?p=member` | Area anggota |
+| `index.php?p=login` | Login staf melalui alur core SLiMS |
+
+Halaman detail tidak memuat navbar/header sendiri; header dan footer disediakan oleh alur template utama. Karena itu, perubahan pada `detail_template.php` sebaiknya tetap dipusatkan pada konten detail dan asset detail.
+
+## 📦 Aset Lokal dan Versi Library
+
+Semua asset tema disimpan lokal dan tidak bergantung pada CDN untuk rendering utama.
+
+| Library/Asset | Versi/Status | Penggunaan |
+| --- | --- | --- |
+| jQuery | 3.6.4 | Kompatibilitas dan helper UI |
+| Vue | 3.5.39 | Koleksi homepage dan visitor UI |
+| Axios | 1.19.0 | POST visitor log melalui `visitor_counter.js` |
+| Bootstrap | 5.3.3 | Grid, modal, dropdown, dan komponen UI |
+| Masonry | 4.2.2 | Layout hasil pencarian |
+| `detail_page.js` | Asset tema lokal | Progress bar, availability popover, dan native lightbox |
+| `rasamala-sw.js` | Worker root lokal | Cache aset statis tema saja |
+
+Library yang disediakan oleh core SLiMS melalui `JWB` tetap mengikuti versi instalasi SLiMS dan tidak dikelola oleh folder tema.
 
 ---
 
-## 📁 Arsitektur Direktori & Struktur File
+## Keamanan & Aksesibilitas
 
-Repositori templat Rasamala disusun dengan arsitektur yang sangat terstruktur, modular, dan mudah dirawat:
-
-```text
-template/rasamala/
-├── index_template.inc.php        # 🏁 Entry point utama OPAC publik SLiMS
-├── tinfo.inc.php                  # 🟢 Single entry point pengelola admin Tinfo
-├── theme_helpers.php             # 🔗 Loader wrapper utama untuk folder helpers/
-├── classic.php                    # 🔄 Compatibility layer & loader fungsi core SLiMS
-├── biblio_list_template.php     # 📚 Templat daftar katalog (Simple, List, Grid)
-├── detail_template.php          # 📖 Templat halaman detail bibliografi
-├── news_template.php            # 📰 Templat berita & pengumuman
-├── visitor_template.php         # 🏛️ Templat kiosk & split layout buku tamu
-├── login_template.inc.php       # 🔐 Templat login pustakawan & anggota
-├── custom_frontpage_record.inc.php # 🖼️ Custom frontpage records handler
-├── preview.png                  # 🖼️ Gambar thumbnail preview templat SLiMS
-│
-├── helpers/                       # 📂 MODULAR PHP LOGIC & OPTIMIZED HELPERS
-│   ├── core.php                 # Library fungsi dasar & resolusi aset
-│   ├── security.php             # Sanitizer HTMLPurifier, XSS escape & CSP
-│   ├── palette.php              # Formula kontras & kalkulasi warna HSL/Hex
-│   ├── preset.php               # Resolver preset tema & skema warna
-│   ├── navigation.php           # Parser menu navbar, topik & breadcrumbs
-│   ├── visitor.php              # Parser institusi & logika buku tamu
-│   ├── ui.php                   # Entry point helper UI & generator avatar/cover
-│   ├── detail.php               # Parser ketersediaan eksemplar & detail katalog
-│   ├── member.php               # Logika kartu digital & profil keanggotaan
-│   ├── language.php             # Translation dictionary & helper lokalisasi
-│   ├── tinfo_defaults.php       # Definisi default opsi Tinfo admin
-│   ├── tinfo_options.php        # Form builder Tinfo admin (~50 KB)
-│   ├── tinfo_options_helper.php # Helper opsi ikon & bahasa Tinfo
-│   ├── tinfo_customizer.php     # Asset customizer JS & CSS loader Tinfo
-│   │
-│   ├── options/                 # 📂 Modular Tinfo Option Builders
-│   │   ├── tinfo_option_general.php
-│   │   ├── tinfo_option_navbar.php
-│   │   ├── tinfo_option_hero.php
-│   │   ├── tinfo_option_display.php
-│   │   ├── tinfo_option_content.php
-│   │   ├── tinfo_option_footer.php
-│   │   ├── tinfo_option_visitor.php
-│   │   └── tinfo_option_customizer_loader.php
-│   │
-│   ├── presets/                 # 📂 Modular Preset Definitions & Resolvers
-│   │   ├── preset_definitions.php
-│   │   ├── preset_resolvers.php
-│   │   └── preset_display.php
-│   │
-│   └── ui/                      # 📂 Modular UI Component Generators
-│       ├── ui_header.php        # Meta head, favicon, & library logo html
-│       ├── ui_content.php       # Content helper & section generators
-│       ├── ui_text.php          # Text truncator & badge generators
-│       ├── ui_cover.php         # Smart cover verifier & auto-generator
-│       └── ui_librarian.php     # Librarian avatar & staff badge generator
-│
-├── parts/                         # 📂 UI PARTIALS OPAC (Modul Tampilan Ringkas)
-│   ├── header.php               # HTML Header & tag meta
-│   ├── footer.php               # HTML Footer & tautan bawah
-│   ├── modals.php               # Konsolidasi dialog modal (Topic, Social, Adv)
-│   ├── _navbar.php              # Bilah navigasi atas desktop & mobile
-│   ├── _search-form.php         # Kotak pencarian utama
-│   ├── _result-search.php       # Layout hasil pencarian katalog & sticky toolbar
-│   ├── _home.php                # Komponen section beranda
-│   ├── _member.php              # Logika & kartu digital member area
-│   ├── _modal_topic.php         # Modal dialog daftar topik lengkap
-│   ├── _modal_social_media.php  # Modal dialog tautan sosial media
-│   ├── _modal_advanced.php      # Modal dialog pencarian spesifik / advanced
-│   ├── mobile_bottom_nav.php    # Bilah navigasi bawah ponsel 5-tombol
-│   ├── bottom_info_bar.php      # Running text bottom info bar
-│   ├── floating_actions.php     # Widget WhatsApp & tombol floating
-│   ├── chat_widget.php          # Panel obrolan / informasi
-│   ├── palette_switcher.php     # Floating Theme Viewer OPAC & AI Prompt
-│   ├── waktu_sholat.php         # Modul jadwal waktu sholat Indonesia
-│   │
-│   ├── detail/                  # 📂 Detail Page UI Partials
-│   │   ├── detail_fields.php    # Bidang detail bibliografi & sitasi
-│   │   └── detail_sidebar.php   # Sidebar ketersediaan & rekomendasi
-│   │
-│   ├── member/                  # 📂 Member Area UI Partials
-│   │   ├── digital_card.php     # Kartu digital anggota & QR/Barcode
-│   │   └── member_layout.php    # Dashboard & panel keanggotaan
-│   │
-│   └── visitor/                 # 📂 Visitor Log UI Partials
-│       ├── visitor_kiosk.php    # Form buku tamu mode Kiosk
-│       ├── visitor_split.php    # Form buku tamu mode Split Panel
-│       └── visitor_ticker.php   # Running text pengumuman pengunjung
-│
-├── citation/                      # 📂 Modul Sitasi Akademis (APA, Chicago, MLA, Turabian)
-│   ├── apa_style_template.php
-│   ├── chicago_style_template.php
-│   ├── mla_style_template.php
-│   └── turabian_style_template.php
-│
-├── assets/                        # 📂 ASSET PRODUKSI LOKAL (OFFLINE READY)
-│   ├── css/                     # Modul Stylesheet CSS
-│   │   ├── foundation.css       # Token CSS, variabel tema, & gaya dasar
-│   │   ├── opac-pages.css       # Layout katalog, detail, member & modal
-│   │   ├── theme-components.css # Komponen UI, badge, & theme viewer
-│   │   ├── theme-dark.css       # Styling mode gelap (Dark Mode)
-│   │   ├── header-runtime.css   # Dynamic CSS generator runtime
-│   │   ├── visitor.css          # Styling buku tamu kiosk & split
-│   │   └── tinfo-customizer.css # Styling admin customizer Tinfo
-│   │
-│   ├── js/                      # Modul JavaScript
-│   │   ├── app.js               # Core app initialization & progress bar
-│   │   ├── app_jquery.js        # Core jQuery handlers & basket AJAX
-│   │   ├── result_search.js     # Filter, sorting, view mode, & AJAX
-│   │   ├── palette_switcher.js  # Theme Viewer, AI Prompt, & custom palette
-│   │   ├── theme_viewer.js      # Palette switcher preview engine
-│   │   ├── theme_drawer.js      # Offcanvas drawer navigation
-│   │   ├── tinfo-customizer.js  # Admin Tinfo customizer builder
-│   │   ├── color_mode.js        # Dark/Light mode toggle engine
-│   │   ├── cursor-particles.js  # Canvas cursor particle system
-│   │   ├── cursor-icons.js      # Custom neon cursor follower engine
-│   │   ├── hero_animation.js    # Canvas background animation engine
-│   │   ├── member_area.js       # Member dashboard & card engine
-│   │   ├── visitor_counter.js   # Kiosk & split visitor counter
-│   │   ├── sw.js                # Service Worker PWA offline caching
-│   │   └── bootstrap_compat.js  # Bootstrap 5 compatibility bridge
-│   │
-│   ├── fonts/                   # Font Google lokal (Inter, Roboto, Poppins, Playfair)
-│   ├── flags/                   # Ikon bendera SVG
-│   ├── manifest.json.php        # PWA Web App Manifest dinamis
-│   └── site.webmanifest         # Static fallback web manifest
-│
-└── docs/                          # 📂 Laporan Audit & Dokumentasi Internal (Git Ignored)
-```
-
----
-
-## 🛡️ Keamanan & Aksesibilitas
-
-- **Sanitasi HTML Tingkat Tinggi:** Seluruh pengumuman kustom, deskripsi footer, dan petunjuk visitor disanitasi menggunakan `HTMLPurifier` bawaan SLiMS.
-- **Proteksi XSS & CSRF:** Seluruh variabel masukan pengguna melewati pembersihan nilai dan *strict escaping* (`ENT_QUOTES`, `UTF-8`).
-- **Standar Aksesibilitas (WAI-ARIA):**
-  - Menggunakan struktur semantik HTML5 (`<main>`, `<nav>`, `<header>`, `<footer>`, `<section>`).
-  - Elemen dekoratif dan ikon dilengkapi atribut `aria-hidden="true"`.
-  - Tombol tanpa teks dilengkapi `aria-label` yang jelas untuk screen reader.
-  - Dialog modal tertutup diberi atribut `inert` untuk mencegah perangkap fokus keyboard.
+- **SQL Prepared Statements:** Query yang menerima ID, path, filter tipe koleksi, topic, atau username menggunakan `Prepared Statement` (`$dbs->prepare`) dan menutup statement setelah dipakai. Query yang tersisa dengan `$dbs->query()` hanya berisi konstanta internal tanpa input pengguna.
+- **Sanitasi Data & Proteksi XSS:** Output HTML memakai escaping UTF-8, CSS melalui `themeSanitizeCustomCss()`, HTML melalui sanitizer/HTMLPurifier, URL melalui helper allowlist, serta atribut asset core melalui whitelist.
+- **Native Lightbox Aman:** Preview gambar memakai DOM API, memvalidasi protocol `http/https` dan ekstensi pada pathname, lalu menetapkan `img.src` sebagai property DOM tanpa merangkai HTML dari `href`.
+- **CSP Nonce:** Inline script/style tema memakai nonce per-request. Inline script core yang dilewatkan sanitizer juga diberi nonce; `unsafe-inline`/`unsafe-eval` masih dipertahankan untuk kompatibilitas library core SLiMS yang belum dimigrasikan.
+- **PWA Terbatas:** Service worker hanya menerima request `GET` same-origin untuk asset tema yang dapat dicache. HTML, API, pencarian, area anggota, dan admin tidak dicache.
+- **Dependency lokal:** Library pihak ketiga disimpan lokal, sehingga tidak ada kebutuhan CDN untuk tampilan utama dan versi dapat diaudit dari header asset.
+- **Aksesibilitas WCAG & WAI-ARIA:** Structure semantik HTML5 (`<main>`, `<nav>`, `<footer>`), target sentuh seluler minimum **48x48px** dengan efek touch ripple, atribut `aria-label` & `<label class="visually-hidden">` untuk screen reader, serta atribut `inert` pada modal tertutup.
 
 ---
 
 ## 🚀 Cara Instalasi
 
-1. **Unduh atau Salin Templat:**  
-   Salin folder `rasamala` ke dalam direktori templat SLiMS Anda:
+1. Pastikan instalasi Anda menggunakan **SLiMS 9 Bulian** dan PHP yang didukung oleh versi SLiMS tersebut.
+2. Salin folder `rasamala` ke direktori templat SLiMS Anda: `/path/to/slims/template/rasamala`
+3. Salin `rasamala-sw.js` ke akar instalasi SLiMS agar PWA dapat mengontrol halaman OPAC:
+
    ```text
-   /path/to/slims/template/rasamala
+   /path/to/slims/
+   ├── rasamala-sw.js
+   └── template/rasamala/
    ```
 
-2. **Aktifkan Melalui Konfigurasi SLiMS / Admin:**  
-   Buka file `config/sysconfig.inc.php` dan set:
+   Worker harus dapat diakses dari origin yang sama dengan OPAC, misalnya `https://example.org/slims/rasamala-sw.js`. Jangan menaruhnya hanya di `template/rasamala/assets/js/` karena scope worker akan terlalu sempit.
+4. Aktifkan tema melalui admin SLiMS pada menu **System > Theme**, atau set di `sysconfig.inc.php` pada akar instalasi SLiMS:
+
    ```php
    $sysconf['template']['theme'] = 'rasamala';
    ```
-   Atau aktifkan melalui panel Admin SLiMS pada menu **System > Theme**.
 
-3. **Pengaturan Tema (Tinfo):**  
-   Buka menu **System > Theme > Customize/Tinfo** untuk menyesuaikan preset, skema warna, logo, running text, dan fitur lainnya.
+5. Sesuaikan opsi tema melalui menu **System > Theme > Customize/Tinfo**. Theme Viewer aktif secara default, sedangkan kontrol cursor dan panel background sementara mengikuti release gate pada `helpers/theme_feature_flags.php`.
+6. Setelah aktivasi atau perubahan worker, lakukan hard refresh OPAC. Jika worker versi lama masih terdaftar, unregister worker lama dari DevTools atau bersihkan data situs, lalu buka ulang OPAC.
+7. Uji route homepage, pencarian, detail buku, berita, member, visitor log, Theme Viewer, dan modal peta. Jika dependensi QR `BaconQrCode` tidak tersedia, halaman detail tetap menyediakan fallback link dan tidak gagal render.
+
+## Smoke Test
+
+Jalankan pemeriksaan berikut setelah instalasi, perubahan TInfo, atau pembaruan asset:
+
+1. **Aktivasi admin:** Aktifkan Rasamala dari **System > Theme**. Buka TInfo, simpan satu perubahan, lalu pastikan nilai tersimpan setelah reload.
+2. **Homepage standar:** Buka `index.php`. Pastikan navbar hanya muncul sekali, search form dapat digunakan, dan section yang aktif tidak terduplikasi.
+3. **Hero fullscreen:** Uji `Topics`, `Popular among our collections`, `New collections + updated`, `Top Reader of the Year`, dan `None - Keep Below Search`. Pastikan hanya satu konten yang muncul di dalam hero.
+4. **Background:** Uji `None / Standard`, preset background, `Custom`, dan bila tersedia background gambar. Pastikan background tetap terbaca dalam mode light/dark.
+5. **Theme Viewer:** Ubah palette, typography, layout tab, visibility section, running text, dan Map Visibility. Pastikan preview berubah tanpa reload; penyimpanan hanya terjadi melalui tombol admin.
+6. **Pencarian dan detail:** Uji autocomplete, hasil `Simple/List/Grid`, filter, detail buku, QR/fallback link, availability popover, citation, bookmark, basket, share, dan native lightbox.
+7. **Halaman layanan:** Uji `?p=news`, `?p=librarian`, `?p=visitor` pada layout Kiosk dan Split, `?p=member`, login, WhatsApp/Libinfo, Map/Social, footer, dan mobile bottom navigation.
+8. **PWA/cache:** Di DevTools, pastikan worker terdaftar pada scope root instalasi SLiMS. Pastikan hanya asset tema yang dicache; HTML, pencarian, API, member, dan admin tetap terlihat sebagai request jaringan.
+9. **Regression keamanan:** Buka console browser dan pastikan tidak ada 404 asset, error parse JSON, error `vegas`, atau error JavaScript. Uji kembali setelah hard refresh atau unregister worker lama.
 
 ---
 
@@ -504,3 +226,43 @@ template/rasamala/
 - **Pengembang Templat Rasamala:** **Ade Ismail Siregar** ([adeismailbox@gmail.com](mailto:adeismailbox@gmail.com))
 - **Basis Pengembangan:** SLiMS Default / Classic Template
 - **Sistem SLiMS:** Komunitas SLiMS ([https://slims.web.id/](https://slims.web.id/))
+
+---
+
+## Pembaruan UI/UX Terbaru
+
+- **Spinner pencarian stabil:** Submit ganda melalui tombol/Enter dicegah; state spinner di-reset saat halaman dipulihkan dari cache browser, navigasi gagal, atau timeout.
+- **Ikon pencarian konsisten:** Spinner dan `fa-search` memakai ukuran, line-height, dan kotak ikon yang sama agar tetap berada di tengah tombol.
+- **Sidebar detail terpusat:** `.detail-sidebar-col` beserta cover, heading ketersediaan, lokasi, dan jumlah eksemplar diratakan ke tengah pada desktop maupun seluler.
+- **Link konten terbaru homepage:** `.latest-content-link` dipusatkan secara horizontal dan tekstual tanpa mengubah perilaku daftar yang dapat di-scroll.
+- **Konten CKEditor ringkas tanpa mengubah core:** Markup core tetap menggunakan `ck-content p-5`; Rasamala menimpanya melalui `.rasamala-theme .ck-content.p-5` di `assets/css/foundation.css` dengan padding setara `p-1`.
+- **Footer lebih ringkas:** Jarak luar footer menggunakan `py-1 border-top` agar tidak menyisakan ruang vertikal berlebihan.
+- **Ikon bahasa selalu terlihat:** Stylesheet flag dimuat normal dan diberi versi cache agar ikon bendera pada pemilih bahasa tidak hilang ketika lazy-load gagal.
+- **Homepage section tabs (opsional):** Tinfo > `Compact Homepage Sections as Tabs` dapat menggabungkan Popular Collections, New Collections, Top Reader, serta Map/Social Media menjadi tab ringkas. Saat aktif, judul/subtitle section dan subject chips di dalam pane disembunyikan agar tidak mengulang label tab; Topics dan Latest Content tetap ditampilkan normal. Tab memakai rail segmented yang ringan, state aktif kontras, navigasi keyboard kiri/kanan, dan klik terdelegasi dari root Vue agar tetap aktif setelah render ulang. Pada mobile, tab ditampilkan sebagai grid 2×2 agar seluruh pilihan terlihat tanpa scroll horizontal.
+- **CSP kompatibel:** Inline script/style yang dibuat tema memakai nonce CSP; sanitizer asset core menghapus event handler dan atribut `style` dari tag asset yang diproses. `unsafe-inline` dan `unsafe-eval` masih menjadi kompatibilitas sementara untuk core/library tertentu.
+- **Native lightbox detail:** Preview sampul tidak lagi menyisipkan `href` ke string HTML; URL divalidasi dan modal dibangun melalui DOM API di `assets/js/detail_page.js`.
+- **PWA worker tervalidasi:** `rasamala-sw.js` menggunakan cache khusus aset statis dan tidak menyimpan respons halaman/API.
+- **Dependency visitor diperbarui:** Axios lokal diperbarui ke v1.19.0; API request visitor tetap menggunakan konfigurasi Axios yang kompatibel.
+- **API koleksi tahan error:** Jika endpoint koleksi populer mengembalikan HTML akibat instalasi SLiMS lama atau data peminjaman kosong, UI otomatis memakai endpoint koleksi terbaru tanpa error parsing JSON.
+
+### Release gate sementara
+
+Sebelum publish, fitur berikut disembunyikan dari **Theme Viewer** dan **System > Theme > Customize/Tinfo**:
+
+| Fitur | Flag | Default saat gate aktif |
+| --- | --- | --- |
+| Panel Background (Transparent/Solid) | `panel_background` | `solid` |
+| Cursor Icon | `cursor_icon` | `default` (browser) |
+| Cursor Particles | `cursor_particles` | `none` |
+
+Implementasi renderer, option definition, dan nilai database tetap dipertahankan. `helpers/theme_feature_flags.php` menyaring kontrol dan memaksa default aman agar konfigurasi lama atau draft `localStorage` tidak mengaktifkan fitur yang belum siap. Tidak diperlukan migrasi database.
+
+Saat fitur sudah stabil:
+
+1. Ubah flag terkait menjadi `true` pada `helpers/theme_feature_flags.php`.
+2. Deploy file PHP/JavaScript terbaru.
+3. Bersihkan cache aset dan browser, lalu uji Theme Viewer serta TInfo admin.
+
+### Snapshot default produksi
+
+Default instalasi baru sekarang mengikuti konfigurasi OPAC yang sedang dipakai: **Midnight Navy & Gold**, Theme Viewer aktif, mode fullscreen hero dengan Topics di dalam hero, background `Aurora Glow`, animasi `Neural Network` berkecepatan cepat, mode tab homepage, pencarian ukuran kecil dengan placeholder `silakan cari disini`, dan tombol floating `Libinfo`. Pilihan `None / Standard` tetap tersedia, tetapi bukan default produksi saat ini. Entri uji sementara dari Theme Viewer tidak dipromosikan ke default.

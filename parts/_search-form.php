@@ -33,6 +33,7 @@ if ($_search_lib_name_in_hero) {
 }
 
 $show_hero_text = ($is_homepage_search || $_search_lib_name_in_hero) && $hero_text !== '';
+$theme_viewer_preview_enabled = (int)themeEffectiveTemplateValue('classic_palette_switcher_show', 0, $sysconf) === 1;
 $latest_content_display = strtolower(trim((string)themeEffectiveTemplateValue('classic_home_display_show', 'below', $sysconf)));
 if ($latest_content_display === '1') {
     $latest_content_display = 'below';
@@ -44,7 +45,7 @@ if ($latest_content_display === '1') {
 if (!in_array($latest_content_display, ['below', 'bottom', 'hide'], true)) {
     $latest_content_display = 'below';
 }
-$show_latest_content = $is_homepage_search && $latest_content_display === 'below';
+$show_latest_content = $is_homepage_search && ($latest_content_display === 'below' || $theme_viewer_preview_enabled);
 $latest_content_items = [];
 $ticker_items_below = [];
 
@@ -71,7 +72,8 @@ if (isset($dbs) && $dbs) {
             );
         }
 
-        $show_ticker_below = $is_homepage_search && themeEffectiveTemplateValue('classic_ticker_show', 0, $sysconf) === 'below';
+        $ticker_position = strtolower(trim((string)themeEffectiveTemplateValue('classic_ticker_show', 0, $sysconf)));
+        $show_ticker_below = $is_homepage_search && ($ticker_position === 'below' || ($theme_viewer_preview_enabled && $ticker_position !== 'bottom'));
         if ($show_ticker_below) {
             $ticker_limit = themeSafeLimit($sysconf['template']['classic_ticker_item_limit'] ?? 5, 5, 1, 12);
             $raw_ticker_limit = (int)($sysconf['template']['classic_ticker_char_limit'] ?? 48);
@@ -94,22 +96,8 @@ if (isset($dbs) && $dbs) {
         }
     }
 }
-$col_class = 'col-lg-8';
-$card_body_style = 'padding: 12px 24px !important;';
-$input_font_style = 'font-size: 16px;';
-$icon_font_style = 'font-size: 18px;';
 
-if ($search_size === 'small') {
-    $col_class = 'col-lg-8';
-    $card_body_style = 'padding: 8px 16px !important;';
-    $input_font_style = 'font-size: 14px;';
-    $icon_font_style = 'font-size: 16px;';
-} elseif ($search_size === 'large') {
-    $col_class = 'col-lg-10';
-    $card_body_style = 'padding: 22px 36px !important;';
-    $input_font_style = 'font-size: 22px;';
-    $icon_font_style = 'font-size: 26px;';
-}
+$col_class = ($search_size === 'large') ? 'col-lg-10' : 'col-lg-8';
 ?>
 
 <div class="search position-relative search-size-<?= themeEscape($search_size) ?> <?= themeHomepageOnlyHero($sysconf) ? 'mt-0' : '' ?>" id="search-wraper">
@@ -132,7 +120,7 @@ if ($search_size === 'small') {
                     <h1><?= themeEscape($hero_text); ?></h1>
                 </div>
                 <?php endif; ?>
-                <div class="position-relative">
+                <div class="position-relative" v-click-outside="hideSuggestions">
                     <div class="card border-0 shadow-sm rounded-pill">
                         <div class="card-body">
                             <form id="search-form" class="d-flex align-items-center" action="index.php" method="get" @submit.prevent="searchSubmit">
@@ -140,25 +128,85 @@ if ($search_size === 'small') {
                                 <input ref="keywords" value="<?= themeEscape(getQuery('keywords')) ?>" v-model.trim="keywords"
                                        type="text" id="search-input"
                                        name="keywords" class="input-transparent flex-grow-1" autocomplete="off"
+                                       @focus="searchOnFocus"
+                                       @click="searchOnClickArea"
+                                       @mousedown="searchOnClickArea"
+                                       @blur="searchOnBlur"
+                                       @keydown.down.prevent="navigateSuggestions(1)"
+                                       @keydown.up.prevent="navigateSuggestions(-1)"
+                                       @keydown.enter.prevent="handleEnterKey"
+                                       @keydown.esc="showSuggestions = false"
                                        aria-label="<?= themeEscape(__('Search keyword')); ?>"
                                        placeholder="<?= themeEscape(__($sysconf['template']['classic_search_placeholder'] ?? 'Enter keyword to search collection...'));?>"/>
                                 <div class="d-flex align-items-center gap-2 ms-2">
                                     <!-- Keyboard Shortcut Badge -->
-                                    <kbd class="search-kbd-badge shadow-sm" id="search-kbd-badge" title="<?= themeEscape(__('Press Ctrl+K to search')) ?>" aria-label="Ctrl K" onclick="document.getElementById('search-input') && document.getElementById('search-input').focus()">
+                                    <kbd class="search-kbd-badge shadow-sm" id="search-kbd-badge" title="<?= themeEscape(__('Press Ctrl+K to search')) ?>" aria-label="Ctrl K" tabindex="0" role="button">
                                         <span id="search-kbd-modifier">Ctrl</span> K
                                     </kbd>
                                     <!-- Advanced Search Icon -->
-                                    <a href="index.php?search=search" class="d-inline-flex" data-bs-toggle="modal" data-bs-target="#adv-modal" title="<?= themeEscape(__('Advanced Search')) ?>" aria-label="<?= themeEscape(__('Advanced Search')) ?>">
+                                    <a href="#" class="d-inline-flex open-adv-modal-btn" data-bs-toggle="modal" data-bs-target="#adv-modal" data-toggle="modal" data-target="#adv-modal" title="<?= themeEscape(__('Advanced Search')) ?>" aria-label="<?= themeEscape(__('Advanced Search')) ?>">
                                         <i class="fas fa-sliders-h" aria-hidden="true"></i>
                                     </a>
                                     <!-- Search Button -->
-                                    <button type="submit" class="btn p-0 border-0 bg-transparent" aria-label="<?= themeEscape(__('Search')) ?>" :disabled="loading">
-                                        <i v-if="loading" class="fas fa-spinner fa-spin" aria-hidden="true"></i>
+                                    <button type="submit" class="btn p-0 border-0 bg-transparent" aria-label="<?= themeEscape(__('Search')) ?>" :aria-busy="loading ? 'true' : 'false'" :disabled="loading">
+                                        <i v-if="loading" class="fas fa-spinner fa-spin text-primary" aria-hidden="true"></i>
                                         <i v-else class="fas fa-search" aria-hidden="true"></i>
                                     </button>
                                 </div>
                             </form>
                         </div>
+                    </div>
+
+                    <!-- Live Search Autocomplete Suggestions Panel (UX-05) -->
+                    <div v-if="showSuggestions && (suggestions.length > 0 || (keywords === '' && lastKeywords.length > 0))"
+                         class="search-suggestion-dropdown shadow-lg" role="listbox" id="search-suggestions-list">
+
+                        <!-- Live Suggestions Group -->
+                        <template v-if="suggestions.length > 0">
+                            <div class="search-suggestion-group-title d-flex justify-content-between align-items-center">
+                                <span><?= __('Search Suggestions') ?></span>
+                                <span v-if="suggestLoading" class="badge bg-light text-muted fw-normal"><i class="fas fa-spinner fa-spin me-1"></i><?= __('Loading...') ?></span>
+                            </div>
+                            <div v-for="(item, idx) in suggestions"
+                                 :key="'sug-' + idx"
+                                 :class="['search-suggestion-item', { 'is-selected': selectedIndex === idx }]"
+                                 role="option"
+                                 :aria-selected="selectedIndex === idx"
+                                 @mousedown.prevent="selectSuggestion(item)">
+                                <div class="search-suggestion-icon">
+                                    <i :class="item.icon || 'fas fa-search'" aria-hidden="true"></i>
+                                </div>
+                                <div class="search-suggestion-content">
+                                    <div class="search-suggestion-text">{{ item.text }}</div>
+                                    <div class="search-suggestion-meta" v-if="item.type === 'history'"><?= __('Recent Search') ?></div>
+                                    <div class="search-suggestion-meta" v-else-if="item.type === 'title'"><?= __('Collection Title') ?></div>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- Search History Fallback Group -->
+                        <template v-else-if="keywords === '' && lastKeywords.length > 0">
+                            <div class="search-suggestion-group-title d-flex justify-content-between align-items-center">
+                                <span><?= __('Search History') ?></span>
+                                <button type="button" class="btn btn-link btn-xs text-danger text-decoration-none p-0" @click.stop="clearHistory">
+                                    <i class="fas fa-trash-alt me-1"></i><?= __('Clear') ?>
+                                </button>
+                            </div>
+                            <div v-for="(key, idx) in lastKeywords"
+                                 :key="'hist-' + idx"
+                                 :class="['search-suggestion-item', { 'is-selected': selectedIndex === idx }]"
+                                 role="option"
+                                 :aria-selected="selectedIndex === idx"
+                                 @mousedown.prevent="selectSuggestion(idx)">
+                                <div class="search-suggestion-icon">
+                                    <i class="fas fa-history" aria-hidden="true"></i>
+                                </div>
+                                <div class="search-suggestion-content">
+                                    <div class="search-suggestion-text" v-if="tmpObj[key]">{{ tmpObj[key].text }}</div>
+                                    <div class="search-suggestion-meta"><?= __('Saved in browser') ?></div>
+                                </div>
+                            </div>
+                        </template>
                     </div>
                 </div>
                 <?php if (!empty($ticker_items_below) && $show_ticker_below) : ?>
@@ -180,7 +228,7 @@ if ($search_size === 'small') {
                 </div>
                 <?php endif; ?>
 
-                <?php if (!empty($latest_content_items) && $latest_content_display === 'below') : 
+                <?php if (!empty($latest_content_items) && ($latest_content_display === 'below' || $theme_viewer_preview_enabled)) :
                     $home_display_style = themeEffectiveTemplateValue('classic_home_display_style', 'badges', $sysconf);
                 ?>
                 <div class="latest-content-strip latest-content-style-<?= themeEscape($home_display_style); ?>">
@@ -197,20 +245,6 @@ if ($search_size === 'small') {
                             </div>
                             <?php endforeach; ?>
                         </div>
-                        <script>
-                        document.addEventListener('DOMContentLoaded', function() {
-                            var slider = document.getElementById('hero-info-fade-slider');
-                            if (!slider) return;
-                            var items = slider.querySelectorAll('.latest-content-fade-item');
-                            if (items.length <= 1) return;
-                            var activeIndex = 0;
-                            setInterval(function() {
-                                items[activeIndex].classList.remove('active');
-                                activeIndex = (activeIndex + 1) % items.length;
-                                items[activeIndex].classList.add('active');
-                            }, 4000);
-                        });
-                        </script>
                     <?php elseif ($home_display_style === 'ticker') : ?>
                         <div class="latest-content-ticker mt-1 mb-1" data-speed="normal" role="status">
                             <div class="latest-content-ticker-track">

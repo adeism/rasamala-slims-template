@@ -7,6 +7,156 @@ document.addEventListener('DOMContentLoaded', () => {
     const query = (selector, root = document) => root.querySelector(selector);
     const queryAll = (selector, root = document) => Array.prototype.slice.call(root.querySelectorAll(selector));
 
+    // Citation links used to rely on SLiMS' Colorbox handler. Rasamala does
+    // not load that legacy plugin, so the handler prevented the link's
+    // default action and left the page progress bar running forever. Render
+    // the citation in an in-page dialog instead of opening a browser tab or
+    // a browser-dependent popup. The capture phase keeps the legacy handler
+    // from intercepting the click.
+    const citationDialog = {
+        element: null,
+        frame: null,
+        loading: null,
+        closeButton: null,
+        previousFocus: null,
+        timeoutId: null
+    };
+
+    const setCitationLoading = (state) => {
+        const loading = citationDialog.loading;
+        if (!loading) return;
+
+        const icon = loading.querySelector('i');
+        const text = loading.querySelector('span');
+        const isError = state === 'error';
+
+        loading.hidden = state === 'ready';
+        loading.classList.toggle('is-error', isError);
+        if (icon) {
+            icon.className = isError ? 'fas fa-exclamation-triangle' : 'fas fa-spinner fa-spin';
+        }
+        if (text) {
+            text.textContent = isError ? 'Citation could not be loaded.' : 'Loading citation...';
+        }
+    };
+
+    const clearCitationTimeout = () => {
+        if (citationDialog.timeoutId !== null) {
+            window.clearTimeout(citationDialog.timeoutId);
+            citationDialog.timeoutId = null;
+        }
+    };
+
+    const closeCitationDialog = () => {
+        if (!citationDialog.element) return;
+
+        citationDialog.element.classList.remove('is-open');
+        citationDialog.element.hidden = true;
+        document.body.classList.remove('rasamala-citation-modal-open');
+        clearCitationTimeout();
+        setCitationLoading('ready');
+        if (citationDialog.frame) citationDialog.frame.src = 'about:blank';
+
+        if (citationDialog.previousFocus && document.contains(citationDialog.previousFocus)) {
+            citationDialog.previousFocus.focus();
+        }
+    };
+
+    const ensureCitationDialog = () => {
+        if (citationDialog.element) return;
+
+        const modal = document.createElement('div');
+        modal.id = 'rasamala-citation-modal';
+        modal.className = 'rasamala-citation-modal';
+        modal.hidden = true;
+        modal.innerHTML = `
+            <div class="rasamala-citation-modal-backdrop" data-citation-close></div>
+            <section class="rasamala-citation-dialog" role="dialog" aria-modal="true" aria-labelledby="rasamala-citation-title">
+                <header class="rasamala-citation-dialog-header">
+                    <div class="rasamala-citation-dialog-heading">
+                        <span class="rasamala-citation-dialog-eyebrow">Citation</span>
+                        <h2 id="rasamala-citation-title">Book citation</h2>
+                    </div>
+                    <button type="button" class="rasamala-citation-dialog-close" data-citation-close aria-label="Close citation">&times;</button>
+                </header>
+                <div class="rasamala-citation-frame-wrap">
+                    <div class="rasamala-citation-loading" role="status">
+                        <i class="fas fa-spinner fa-spin" aria-hidden="true"></i>
+                        <span>Loading citation...</span>
+                    </div>
+                    <iframe class="rasamala-citation-frame" title="Book citation" loading="eager"></iframe>
+                </div>
+                <footer class="rasamala-citation-dialog-footer">
+                    <button type="button" class="btn btn-sm btn-secondary rounded-pill px-3" data-citation-close>Close</button>
+                </footer>
+            </section>`;
+
+        document.body.appendChild(modal);
+        citationDialog.element = modal;
+        citationDialog.frame = modal.querySelector('.rasamala-citation-frame');
+        citationDialog.loading = modal.querySelector('.rasamala-citation-loading');
+        citationDialog.closeButton = modal.querySelector('.rasamala-citation-dialog-close');
+
+        modal.addEventListener('click', (event) => {
+            const closeTrigger = event.target && event.target.closest
+                ? event.target.closest('[data-citation-close]')
+                : null;
+            if (closeTrigger) closeCitationDialog();
+        });
+
+        if (citationDialog.frame) {
+            citationDialog.frame.addEventListener('load', () => {
+                clearCitationTimeout();
+                setCitationLoading('ready');
+            });
+            citationDialog.frame.addEventListener('error', () => {
+                clearCitationTimeout();
+                setCitationLoading('error');
+            });
+        }
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && citationDialog.element && citationDialog.element.classList.contains('is-open')) {
+                event.preventDefault();
+                closeCitationDialog();
+            }
+        });
+    };
+
+    const openCitationDialog = (link) => {
+        ensureCitationDialog();
+        if (!citationDialog.element || !citationDialog.frame) return;
+
+        citationDialog.previousFocus = link;
+        citationDialog.frame.title = link.getAttribute('data-title') || 'Book citation';
+        clearCitationTimeout();
+        setCitationLoading('loading');
+        citationDialog.frame.src = link.href;
+        citationDialog.timeoutId = window.setTimeout(() => {
+            citationDialog.timeoutId = null;
+            setCitationLoading('error');
+        }, 10000);
+        citationDialog.element.hidden = false;
+        document.body.classList.add('rasamala-citation-modal-open');
+
+        window.requestAnimationFrame(() => {
+            citationDialog.element.classList.add('is-open');
+            if (citationDialog.closeButton) citationDialog.closeButton.focus();
+        });
+    };
+
+    document.addEventListener('click', (event) => {
+        const citationLink = event.target && event.target.closest
+            ? event.target.closest('a.citationLink')
+            : null;
+
+        if (!citationLink || !citationLink.href) return;
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        openCitationDialog(citationLink);
+    }, true);
+
     const csrfToken = () => {
         const metaToken = query('meta[name="csrf-token"]');
         const inputToken = query('input[name="csrf_token"]');
@@ -100,8 +250,32 @@ document.addEventListener('DOMContentLoaded', () => {
         return temporary.textContent || temporary.innerText || '';
     };
 
+    const copyInputValue = (input) => {
+        if (!input) return Promise.resolve(false);
+
+        const fallbackCopy = () => {
+            input.focus();
+            input.select();
+            input.setSelectionRange(0, input.value.length);
+            try {
+                return document.execCommand('copy');
+            } catch (error) {
+                return false;
+            }
+        };
+
+        if (navigator.clipboard && window.isSecureContext) {
+            return navigator.clipboard.writeText(input.value)
+                .then(() => true)
+                .catch(() => fallbackCopy());
+        }
+
+        return Promise.resolve(fallbackCopy());
+    };
+
     const resizeFitHeightImages = () => {
         queryAll('.fit-height').forEach((image) => {
+            image.style.height = '';
             const width = image.getBoundingClientRect().width || image.offsetWidth;
 
             if (width > 0) {
@@ -112,6 +286,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     resizeFitHeightImages();
     window.addEventListener('resize', resizeFitHeightImages);
+
+    queryAll('#shareModalInput, #contentQrModalInput, .detail-qr-modal-input').forEach((input) => {
+        input.addEventListener('focus', () => input.select());
+        input.addEventListener('click', () => input.select());
+    });
+
+    queryAll('.mobile-language-select').forEach((select) => {
+        select.addEventListener('change', () => {
+            if (select.value) {
+                window.location.href = `index.php?select_lang=${encodeURIComponent(select.value)}`;
+            }
+        });
+    });
 
     if (window.toastr) {
         window.toastr.options = {
@@ -198,44 +385,68 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    queryAll('a[data-bs-target="#mediaSocialModal"]').forEach((link) => {
-        link.addEventListener('click', () => {
-            const modalBody = query('#mediaSocialModalBody');
-            const id = encodeURIComponent(link.getAttribute('data-id') || '');
-            const title = encodeURIComponent(stripHtml(link.getAttribute('data-title')).replace(/["']/g, ''));
-            const iframe = document.createElement('iframe');
-
-            if (!modalBody) return;
-
-            iframe.src = `?p=sharelink&id=${id}&title=${title}`;
-            iframe.className = 'w-100';
-            iframe.style.height = '5.5rem';
-
-            modalBody.textContent = '';
-            modalBody.appendChild(iframe);
-        });
-    });
-
     document.addEventListener('click', (e) => {
-        const shareBtn = e.target.closest('.btn-news-share, .btn-content-share, .detail-share-btn, .btn-theme-share');
+        const shareBtn = e.target.closest('.detail-share-btn, .btn-theme-share, .btn-content-share, .btn-news-share');
         if (shareBtn) {
             e.preventDefault();
             e.stopPropagation();
             const url = shareBtn.getAttribute('data-url') || window.location.href;
             const title = shareBtn.getAttribute('data-title') || document.title;
 
-            if (navigator.share) {
-                navigator.share({ title: title, url: url }).catch(() => {});
-            } else {
+            const openShareModal = () => {
+                const modalTitle = document.getElementById('shareModalBookTitle');
+                const modalInput = document.getElementById('shareModalInput');
+                const waBtn = document.getElementById('shareWaBtn');
+                const fbBtn = document.getElementById('shareFbBtn');
+                const twBtn = document.getElementById('shareTwBtn');
+                const tgBtn = document.getElementById('shareTelegramBtn');
+                const liBtn = document.getElementById('shareLinkedinBtn');
+                const emailBtn = document.getElementById('shareEmailBtn');
+
+                if (modalTitle) modalTitle.textContent = title;
+                if (modalInput) modalInput.value = url;
+                if (waBtn) waBtn.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(title + ' - ' + url)}`;
+                if (fbBtn) fbBtn.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+                if (twBtn) twBtn.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`;
+                if (tgBtn) tgBtn.href = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+                if (liBtn) liBtn.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+                if (emailBtn) emailBtn.href = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(title + '\n' + url)}`;
+
                 const modalEl = document.getElementById('mediaSocialModal');
                 if (modalEl) {
                     forceShowModal(modalEl);
                 } else if (navigator.clipboard) {
                     navigator.clipboard.writeText(url).then(() => {
-                        alert('Link berhasil disalin!');
+                        alert('Tautan berhasil disalin!');
                     });
                 }
+            };
+
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            if (isMobile && navigator.share) {
+                navigator.share({ title: title, text: title, url: url }).catch((err) => {
+                    if (err && err.name !== 'AbortError') {
+                        openShareModal();
+                    }
+                });
+            } else {
+                openShareModal();
             }
+        }
+
+        const copyBtn = e.target.closest('#shareCopyBtn');
+        if (copyBtn) {
+            e.preventDefault();
+            const input = document.getElementById('shareModalInput');
+            const alertBox = document.getElementById('shareCopySuccess');
+            copyInputValue(input).then((copied) => {
+                if (copied && alertBox) {
+                    alertBox.classList.remove('d-none');
+                    setTimeout(() => alertBox.classList.add('d-none'), 3500);
+                } else if (!copied) {
+                    notify('error', 'Unable to copy the link.');
+                }
+            });
         }
 
         const qrBtn = e.target.closest('.btn-news-qr, .btn-content-qr');
@@ -255,7 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     qrImgWrap.innerHTML = qrSvg;
                 } else {
                     const apiQr = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(url);
-                    qrImgWrap.innerHTML = `<img src="${apiQr}" alt="QR Code" class="img-fluid rounded" style="max-width:160px; height:auto;">`;
+                    qrImgWrap.innerHTML = `<img src="${apiQr}" alt="QR Code" class="img-fluid rounded content-qr-fallback-image">`;
                 }
             }
             if (qrTitle) qrTitle.textContent = title;
@@ -401,6 +612,104 @@ document.addEventListener('DOMContentLoaded', () => {
         hideChatButton.addEventListener('click', () => setChatVisibility(true));
     }
 
+    // Mobile navbar: use a real fullscreen menu so long/custom navbar
+    // configurations never get clipped by the hero or the viewport edge.
+    const mobileNavbarToggle = query('#rasamala-mobile-menu-toggle');
+    const mobileNavbarClose = query('#rasamala-mobile-menu-close');
+    const mobileNavbarPanel = query('#navbarSupportedContent');
+    const mobileNavbarMedia = typeof window.matchMedia === 'function'
+        ? window.matchMedia('(max-width: 991.98px)')
+        : null;
+    let mobileNavbarPreviousFocus = null;
+
+    const isMobileNavbarViewport = () => mobileNavbarMedia
+        ? mobileNavbarMedia.matches
+        : window.innerWidth <= 991.98;
+    const setMobileNavbarState = (open, restoreFocus = true) => {
+        if (!mobileNavbarPanel || !mobileNavbarToggle) return;
+
+        if (open && !isMobileNavbarViewport()) return;
+
+        // Desktop keeps the normal navbar in the document flow and should
+        // never inherit the mobile panel's aria-hidden/inert state.
+        if (!open && !isMobileNavbarViewport()) {
+            mobileNavbarPanel.classList.remove('rasamala-mobile-menu-open');
+            mobileNavbarPanel.setAttribute('aria-hidden', 'false');
+            mobileNavbarPanel.removeAttribute('inert');
+            document.body.classList.remove('rasamala-mobile-menu-open');
+            mobileNavbarToggle.setAttribute('aria-expanded', 'false');
+            mobileNavbarToggle.classList.remove('is-active');
+            return;
+        }
+
+        mobileNavbarPanel.classList.toggle('rasamala-mobile-menu-open', open);
+        mobileNavbarPanel.setAttribute('aria-hidden', open ? 'false' : 'true');
+        if (open) {
+            mobileNavbarPanel.removeAttribute('inert');
+            document.body.classList.add('rasamala-mobile-menu-open');
+            mobileNavbarPreviousFocus = document.activeElement;
+        } else {
+            mobileNavbarPanel.setAttribute('inert', '');
+            document.body.classList.remove('rasamala-mobile-menu-open');
+        }
+        mobileNavbarToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        mobileNavbarToggle.classList.toggle('is-active', open);
+
+        if (open) {
+            window.requestAnimationFrame(() => {
+                if (mobileNavbarClose) mobileNavbarClose.focus();
+            });
+        } else if (restoreFocus && mobileNavbarPreviousFocus
+            && document.contains(mobileNavbarPreviousFocus)
+            && typeof mobileNavbarPreviousFocus.focus === 'function') {
+            mobileNavbarPreviousFocus.focus();
+        }
+    };
+
+    if (mobileNavbarPanel && mobileNavbarToggle) {
+        if (isMobileNavbarViewport()) {
+            setMobileNavbarState(false, false);
+        } else {
+            mobileNavbarPanel.setAttribute('aria-hidden', 'false');
+            mobileNavbarPanel.removeAttribute('inert');
+        }
+
+        mobileNavbarToggle.addEventListener('click', (event) => {
+            event.preventDefault();
+            const isOpen = mobileNavbarPanel.classList.contains('rasamala-mobile-menu-open');
+            setMobileNavbarState(!isOpen);
+        });
+
+        if (mobileNavbarClose) {
+            mobileNavbarClose.addEventListener('click', () => setMobileNavbarState(false));
+        }
+
+        mobileNavbarPanel.addEventListener('click', (event) => {
+            const link = event.target.closest('a');
+            if (!link || link.classList.contains('dropdown-toggle')) return;
+            const href = (link.getAttribute('href') || '').trim();
+            if (href && href !== '#') setMobileNavbarState(false, false);
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && mobileNavbarPanel.classList.contains('rasamala-mobile-menu-open')) {
+                event.preventDefault();
+                setMobileNavbarState(false);
+            }
+        });
+
+        const syncMobileNavbarViewport = () => {
+            if (!isMobileNavbarViewport()) setMobileNavbarState(false, false);
+        };
+        if (mobileNavbarMedia) {
+            if (typeof mobileNavbarMedia.addEventListener === 'function') {
+                mobileNavbarMedia.addEventListener('change', syncMobileNavbarViewport);
+            } else if (typeof mobileNavbarMedia.addListener === 'function') {
+                mobileNavbarMedia.addListener(syncMobileNavbarViewport);
+            }
+        }
+    }
+
     const mobileMoreButtons = queryAll('[data-mobile-more-trigger]');
     const mobileMoreOverlay = query('#mobile-more-menu-overlay');
     const closeMobileMoreButton = query('#close-mobile-more-menu');
@@ -442,7 +751,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         backToTopButton.addEventListener('click', (event) => {
             event.preventDefault();
-            window.scrollTo({top: 0, behavior: 'smooth'});
+            const reducedMotion = window.RasamalaMotionLifecycle
+                && typeof window.RasamalaMotionLifecycle.prefersReducedMotion === 'function'
+                && window.RasamalaMotionLifecycle.prefersReducedMotion();
+            window.scrollTo({top: 0, behavior: reducedMotion ? 'auto' : 'smooth'});
         });
     }
 
@@ -574,6 +886,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const RasamalaProgressBar = {
         bar: null,
         timer: null,
+        hideTimer: null,
         progress: 0,
         init() {
             if (this.bar) return;
@@ -588,15 +901,17 @@ document.addEventListener('DOMContentLoaded', () => {
         start() {
             this.init();
             if (!this.bar) return;
+            if (this.bar.classList.contains('active')) return;
             clearTimeout(this.timer);
+            clearTimeout(this.hideTimer);
             this.progress = 15;
-            this.bar.style.width = '15%';
+            this.bar.style.transform = 'scaleX(0.15)';
             this.bar.classList.add('active');
 
             const trickle = () => {
                 if (this.progress < 88) {
                     this.progress += Math.floor(Math.random() * 8) + 3;
-                    this.bar.style.width = Math.min(this.progress, 88) + '%';
+                    this.bar.style.transform = `scaleX(${Math.min(this.progress, 88) / 100})`;
                     this.timer = setTimeout(trickle, 200);
                 }
             };
@@ -605,11 +920,14 @@ document.addEventListener('DOMContentLoaded', () => {
         done() {
             if (!this.bar) return;
             clearTimeout(this.timer);
-            this.bar.style.width = '100%';
-            this.timer = setTimeout(() => {
+            clearTimeout(this.hideTimer);
+            this.bar.style.transform = 'scaleX(1)';
+            this.hideTimer = setTimeout(() => {
+                this.hideTimer = null;
                 this.bar.classList.remove('active');
-                setTimeout(() => {
-                    this.bar.style.width = '0%';
+                this.timer = setTimeout(() => {
+                    this.timer = null;
+                    this.bar.style.transform = 'scaleX(0)';
                 }, 300);
             }, 200);
         }
@@ -625,11 +943,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const target = link.getAttribute('target');
         const hasModal = link.hasAttribute('data-bs-toggle') || link.hasAttribute('data-toggle');
 
-        if (!href || href === '#' || href.startsWith('javascript:') || href.startsWith('mailto:') || href.startsWith('tel:') || target === '_blank' || hasModal) {
+        const isSamePageAnchor = href && (
+            href.startsWith('#') || (
+                !!link.hash &&
+                link.origin === window.location.origin &&
+                link.pathname.replace(/\/$/, '') === window.location.pathname.replace(/\/$/, '') &&
+                link.search === window.location.search
+            )
+        );
+
+        if (!href || href === '#' || href.startsWith('javascript:') || href.startsWith('mailto:') || href.startsWith('tel:') || target === '_blank' || hasModal || isSamePageAnchor) {
             return;
         }
-
-        RasamalaProgressBar.start();
 
         const isPaging = link.closest('.pagingList') || link.closest('.pagination') || link.classList.contains('page-link');
         const isBiblioLink = link.closest('.biblioResult') || link.closest('.biblio-item') || link.classList.contains('biblio-title-link');
@@ -637,6 +962,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isPaging || isBiblioLink) {
             const wrapper = document.querySelector('.result-search .wrapper');
             if (wrapper) {
+                if (wrapper.classList.contains('is-loading')) return;
                 wrapper.classList.add('is-loading');
                 const toolbar = document.querySelector('.search-result-toolbar') || document.querySelector('.result-search');
                 if (toolbar) {
@@ -644,7 +970,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         }
+
+        RasamalaProgressBar.start();
     });
+
+    window.addEventListener('pageshow', () => {
+        document.querySelectorAll('.result-search .wrapper.is-loading').forEach((wrapper) => {
+            wrapper.classList.remove('is-loading');
+        });
+        RasamalaProgressBar.done();
+    }, {passive: true});
 
     window.addEventListener('beforeunload', () => {
         RasamalaProgressBar.start();

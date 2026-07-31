@@ -43,12 +43,13 @@ return [
         'dbfield' => 'visitor_institution_select_label',
         'label' => themeTranslate('Visitor Faculty / Institution Label'),
         'type' => 'text',
-        'default' => 'Select Faculty / Institution'
+        'default' => 'Pilih Fakultas / Institusi'
     ],
     'visitor-institution-options' => [
         'dbfield' => 'visitor_institution_options',
         'label' => themeTranslate('Visitor Faculty / Institution List'),
         'type' => 'longtext',
+        'help' => themeTranslate('Format: kode(label); kode(label); other. Contoh: feb(Fakultas Ekonomi); fpsi(Psikologi); other.'),
         'default' => $rasamala_default_visitor_institution_options ?? '',
         'width' => '100',
         'max' => 5000
@@ -57,7 +58,7 @@ return [
         'dbfield' => 'visitor_theme_toggle',
         'label' => themeTranslate('Visitor Page Dark Mode Toggle Button'),
         'type' => 'dropdown',
-        'default' => 1,
+        'default' => 0,
         'data' => [
             [1, themeTranslate('Enable')],
             [0, themeTranslate('Disable')]
@@ -77,12 +78,13 @@ return [
         'dbfield' => 'visitor_split_title',
         'label' => themeTranslate('Visitor Split Layout Guide Title'),
         'type' => 'text',
-        'default' => 'User Guide'
+        'default' => 'Petunjuk Penggunaan'
     ],
     'visitor-split-steps' => [
         'dbfield' => 'visitor_split_steps',
         'label' => themeTranslate('Visitor Split Layout Guide Steps'),
         'type' => 'longtext',
+        'help' => themeTranslate('Satu langkah per baris dengan format: ikon | judul | keterangan. Contoh: fas fa-id-card | Isi Identitas | Scan kartu anggota.'),
         'default' => $rasamala_default_visitor_split_steps ?? '',
         'width' => '100',
         'max' => 5000

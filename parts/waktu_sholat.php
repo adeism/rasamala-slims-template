@@ -265,7 +265,7 @@ if (!function_exists('rasamalaWaktuSholatReminderHtml')) {
             </div>
             <button type="button" class="prayer-reminder-close" aria-label="<?= themeEscape(__('Close')) ?>">&times;</button>
         </div>
-        <script>
+        <script nonce="<?= themeCspNonce(); ?>">
         (function () {
             var reminder = document.querySelector('.prayer-reminder-toast');
             if (!reminder) return;

@@ -16,13 +16,9 @@ if (!function_exists('themeIsHomepage')) {
 if (!function_exists('themePresetKey')) {
   function themePresetKey($sysconf_param = null)
   {
-    global $sysconf;
-
-    $source = is_array($sysconf_param) ? $sysconf_param : $sysconf;
-    $preset = strtolower(trim((string)($source['template']['classic_theme_preset'] ?? 'simple_homepage')));
-    $definitions = themePresetDefinitions();
-
-    return array_key_exists($preset, $definitions) ? $preset : 'simple_homepage';
+    // Preset values are kept only for compatibility with older integrations;
+    // the current TInfo and Theme Viewer always use manual settings.
+    return 'custom';
   }
 }
 
@@ -46,7 +42,10 @@ if (!function_exists('themePresetQuickSettingKeys')) {
       'classic_search_result_layout',
       'classic_search_panel_style',
       'classic_news_list_layout',
+      'classic_hero_fullscreen_mode',
+      'classic_hero_topics_show',
       'classic_home_display_show',
+      'classic_home_sections_tabs',
       'classic_home_display_style',
       'classic_home_display_source',
       'classic_home_display_custom_text',
@@ -65,10 +64,21 @@ if (!function_exists('themePresetQuickSettingKeys')) {
       'classic_ticker_item_limit',
       'classic_ticker_char_limit',
       'classic_home_content_cards_show',
+      'classic_topic_show',
+      'classic_popular_collection',
+      'classic_new_collection',
+      'classic_top_reader',
       'classic_home_content_cards_source',
       'classic_home_content_path_1',
       'classic_home_content_path_2',
       'classic_home_content_path_3',
+      'classic_hero_background_style',
+      'classic_background_image_size',
+      'classic_background_image_position',
+      'classic_background_image_filter',
+      'classic_background_image_blur',
+      'classic_background_image_overlay',
+      'classic_background_style_custom',
       'classic_hero_background_animation',
       'classic_background_animation_speed',
       'classic_cursor_particles',
@@ -104,6 +114,14 @@ if (!function_exists('themeEffectiveTemplateValue')) {
     global $sysconf;
 
     $source = is_array($sysconf_param) ? $sysconf_param : $sysconf;
+    // Keep unfinished release-gated features at safe production defaults even
+    // when an older database value or a stale Theme Viewer draft exists.
+    if (function_exists('rasamalaDisabledTinfoValue')) {
+      $disabled_value = rasamalaDisabledTinfoValue($key, null);
+      if ($disabled_value !== null) {
+        return $disabled_value;
+      }
+    }
     $definition = themePresetDefinition($source);
     if (!themePresetIsCustom($source) && !themePresetUsesManualSetting($key) && array_key_exists($key, $definition['settings'])) {
       return $definition['settings'][$key];

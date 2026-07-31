@@ -184,18 +184,10 @@ if (!function_exists('themeRenderLibrarianPage')) {
       $mode = 'librarian_senior';
     }
 
-    $escape = static function ($value) use ($dbs) {
-      if (method_exists($dbs, 'real_escape_string')) {
-        return $dbs->real_escape_string($value);
-      }
-      if (method_exists($dbs, 'escape_string')) {
-        return $dbs->escape_string($value);
-      }
-      return addslashes($value);
-    };
-
     $where = '1=1';
     $order = 'user_type DESC, realname ASC, username ASC';
+    $parameters = [];
+    $parameter_types = '';
     if ($mode === 'librarian_senior') {
       $where = 'user_type IN (1,2)';
     } elseif ($mode === 'senior') {
@@ -208,10 +200,11 @@ if (!function_exists('themeRenderLibrarianPage')) {
       $usernames = array_map(static function ($entry) {
         return $entry['username'];
       }, $custom_entries);
-      $escaped_usernames = array_map($escape, $usernames);
-      $quoted_usernames = "'" . implode("','", $escaped_usernames) . "'";
-      $where = 'username IN (' . $quoted_usernames . ')';
-      $order = 'FIELD(username, ' . $quoted_usernames . ')';
+      $username_placeholders = implode(',', array_fill(0, count($usernames), '?'));
+      $where = 'username IN (' . $username_placeholders . ')';
+      $order = 'FIELD(username, ' . $username_placeholders . ')';
+      $parameters = array_merge($usernames, $usernames);
+      $parameter_types = str_repeat('s', count($parameters));
       $position_overrides = [];
       foreach ($custom_entries as $entry) {
         if ($entry['position'] !== '') {
@@ -224,8 +217,21 @@ if (!function_exists('themeRenderLibrarianPage')) {
             FROM user
             WHERE {$where}
             ORDER BY {$order}";
-    $query = $dbs->query($sql);
+    $statement = $dbs->prepare($sql);
+    if (!$statement) {
+      return '<p class="rasamala-librarian-empty">' . themeEscape(__('No librarian data yet')) . '</p>';
+    }
+    if ($parameters) {
+      $bind_parameters = [$parameter_types];
+      foreach ($parameters as $index => $value) {
+        $bind_parameters[] = &$parameters[$index];
+      }
+      call_user_func_array([$statement, 'bind_param'], $bind_parameters);
+    }
+    $statement->execute();
+    $query = $statement->get_result();
     if (!$query || $query->num_rows < 1) {
+      $statement->close();
       return '<p class="rasamala-librarian-empty">' . themeEscape(__('No librarian data yet')) . '</p>';
     }
 
@@ -237,6 +243,7 @@ if (!function_exists('themeRenderLibrarianPage')) {
       $html .= themeRenderLibrarianCard($librarian, $source);
     }
 
+    $statement->close();
     return $html;
   }
 }

@@ -9,68 +9,12 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
 if (!function_exists('themeAccentPalettes')) {
   function themeAccentPalettes()
   {
-    return [
-      'warmgray' => [
-        'label' => 'Warm Gray',
-        'primary' => '#6f5b43',
-        'hover' => '#5d4b36',
-        'secondary' => '#a58a63',
-        'accent' => '#c8a24a',
-        'background' => '#f4f1ec',
-        'surface' => '#ffffff',
-        'text' => '#2f2a24',
-        'muted' => '#7a7167',
-        'rgb' => '111, 91, 67',
-      ],
-      'minimalwhite' => [
-        'label' => 'Minimal White',
-        'primary' => '#0f172a',
-        'hover' => '#020617',
-        'secondary' => '#64748b',
-        'accent' => '#2563eb',
-        'background' => '#ffffff',
-        'surface' => '#ffffff',
-        'text' => '#0f172a',
-        'muted' => '#64748b',
-        'rgb' => '15, 23, 42',
-      ],
-      'darkgray' => [
-        'label' => 'Dark Gray',
-        'primary' => '#374151',
-        'hover' => '#1f2937',
-        'secondary' => '#6b7280',
-        'accent' => '#0ea5e9',
-        'background' => '#f3f4f6',
-        'surface' => '#ffffff',
-        'text' => '#111827',
-        'muted' => '#5f6875',
-        'rgb' => '55, 65, 81',
-      ],
-      'cleanblue' => [
-        'label' => 'Clean Blue',
-        'primary' => '#1d4ed8',
-        'hover' => '#1e40af',
-        'secondary' => '#0f766e',
-        'accent' => '#38bdf8',
-        'background' => '#f8fafc',
-        'surface' => '#ffffff',
-        'text' => '#172033',
-        'muted' => '#64748b',
-        'rgb' => '29, 78, 216',
-      ],
-      'warmlibrary' => [
-        'label' => 'Warm Library',
-        'primary' => '#7f1d1d',
-        'hover' => '#641818',
-        'secondary' => '#3f6212',
-        'accent' => '#b7791f',
-        'background' => '#fff7ed',
-        'surface' => '#fffdf8',
-        'text' => '#2f1f1a',
-        'muted' => '#7c6256',
-        'rgb' => '127, 29, 29',
-      ],
-    ];
+    static $palettes = null;
+    if ($palettes === null) {
+      $palettes = require __DIR__ . '/palettes/theme_color_palettes.php';
+    }
+
+    return $palettes;
   }
 }
 
@@ -79,7 +23,7 @@ if (!function_exists('themeNormalizeAccentPaletteKey')) {
   {
     $key = strtolower(trim((string)($color ?? 'warmgray')));
     $aliases = [
-      'cyan' => 'cleanblue',
+      'cyan' => 'contemporarytechlibrary',
       'emerald' => 'warmgray',
       'forest' => 'warmgray',
       'orange' => 'warmlibrary',
@@ -193,18 +137,22 @@ if (!function_exists('themeSelectedDarkAccentColor')) {
     $source = is_array($sysconf_param) ? $sysconf_param : $sysconf;
     $key = themeNormalizeAccentPaletteKey($color);
     $light_palette = themeSelectedAccentColor($key, $source);
+    $palette_definitions = themeAccentPalettes();
+    $dark_definition = (isset($palette_definitions[$key]['dark']) && is_array($palette_definitions[$key]['dark']))
+      ? $palette_definitions[$key]['dark']
+      : [];
     $base = [
       'label' => 'Dark Palette',
-      'primary' => $light_palette['primary'] ?? '#1a2e40',
-      'hover' => themeAdjustHexColor($light_palette['primary'] ?? '#1a2e40', -28),
-      'secondary' => $light_palette['secondary'] ?? '#b38f4d',
-      'accent' => $light_palette['accent'] ?? '#d9534f',
-      'background' => '#101318',
-      'surface' => '#161a22',
-      'text' => '#f4f6f8',
-      'muted' => '#b6bec8',
-      'rgb' => themeHexToRgbString($light_palette['primary'] ?? '#1a2e40'),
-      'accent_rgb' => themeHexToRgbString($light_palette['accent'] ?? '#d9534f'),
+      'primary' => $dark_definition['primary'] ?? ($light_palette['primary'] ?? '#1a2e40'),
+      'hover' => $dark_definition['hover'] ?? themeAdjustHexColor($dark_definition['primary'] ?? ($light_palette['primary'] ?? '#1a2e40'), -28),
+      'secondary' => $dark_definition['secondary'] ?? ($light_palette['secondary'] ?? '#b38f4d'),
+      'accent' => $dark_definition['accent'] ?? ($light_palette['accent'] ?? '#d9534f'),
+      'background' => $dark_definition['background'] ?? '#101318',
+      'surface' => $dark_definition['surface'] ?? '#161a22',
+      'text' => $dark_definition['text'] ?? '#f4f6f8',
+      'muted' => $dark_definition['muted'] ?? '#b6bec8',
+      'rgb' => themeHexToRgbString($dark_definition['primary'] ?? ($light_palette['primary'] ?? '#1a2e40')),
+      'accent_rgb' => themeHexToRgbString($dark_definition['accent'] ?? ($light_palette['accent'] ?? '#d9534f')),
     ];
 
     if ($key === 'custom') {

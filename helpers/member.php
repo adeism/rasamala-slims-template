@@ -99,6 +99,7 @@ if (!function_exists('rasamalaMemberExpiryStatus')) {
 if (!function_exists('rasamalaMemberRedirect')) {
     function rasamalaMemberRedirect($url)
     {
+        $url = str_replace(["\r", "\n", "\0"], '', (string)$url);
         if (!headers_sent()) {
             header('Location: ' . $url);
             exit;

@@ -105,16 +105,54 @@ const fetchJsonArray = function (url) {
             if (!res.ok) {
                 throw new Error(`Request failed with status ${res.status}`);
             }
-            return res.json();
+            return res.text().then(text => ({
+                text: text
+            }));
         })
-        .then(res => Array.isArray(res) ? res : []);
+        .then(payload => {
+            var parsed;
+            try {
+                parsed = JSON.parse(payload.text);
+            } catch (error) {
+                // Some SLiMS installations return the full OPAC HTML for the
+                // popular endpoint when there are no loan rows. Fall back to
+                // latest collections instead of leaking an HTML parse error.
+                if (String(url || '').indexOf('api/biblio/popular') !== -1) {
+                    return fetchJsonArray('index.php?p=api/biblio/latest');
+                }
+                throw new Error('The collection endpoint did not return JSON.');
+            }
+            return Array.isArray(parsed) ? parsed : [];
+        });
 };
-const renderAsyncMessage = function (h, type, message) {
+const renderAsyncMessage = function (h, type, message, onRetry) {
+    const children = [
+        h('div', { class: 'theme-async-message text-muted small fw-medium' }, message)
+    ];
+
+    if (type === 'error' && typeof onRetry === 'function') {
+        children.unshift(
+            h('div', { class: 'theme-async-error-icon mb-2' }, [
+                h('i', { class: 'fas fa-exclamation-circle text-warning fs-3', 'aria-hidden': 'true' })
+            ])
+        );
+        children.push(
+            h('button', {
+                type: 'button',
+                class: 'btn btn-outline-primary btn-sm rounded-pill mt-3 px-4 shadow-sm theme-async-retry-btn',
+                onClick: onRetry
+            }, [
+                h('i', { class: 'fas fa-redo-alt me-2', 'aria-hidden': 'true' }),
+                'Coba Lagi'
+            ])
+        );
+    }
+
     return h('div', {
-        class: `theme-async-state theme-async-state-${type}`,
+        class: `theme-async-state theme-async-state-${type} theme-async-message-wrap text-center py-4 px-3 rounded-4 border shadow-sm my-3 mx-auto`,
         role: type === 'error' ? 'alert' : 'status',
         'aria-live': 'polite'
-    }, message);
+    }, children);
 };
 const renderSkeleton = function (h, type, count) {
     const items = [];
@@ -533,8 +571,7 @@ const SlimsMember = {
                             class: 'text-secondary ml-1'
                         }, 'Loans'),
                         Vue.h('span', {
-                            class: 'd-inline-block mx-3 align-middle bg-secondary',
-                            style: 'width: 1px; height: 16px;'
+                            class: 'd-inline-block mx-3 align-middle bg-secondary theme-stat-divider'
                         }),
                         Vue.h('b', this.totalBiblio),
                         Vue.h('span', {
@@ -592,7 +629,7 @@ const SlimsCollection = {
             return renderSkeleton(Vue.h, 'collection', limitVal);
         }
         if (this.error) {
-            return renderAsyncMessage(Vue.h, 'error', this.error);
+            return renderAsyncMessage(Vue.h, 'error', this.error, () => this.getData());
         }
         if (this.biblios.length < 1) {
             return renderAsyncMessage(Vue.h, 'empty', 'No collections available yet.');
@@ -654,7 +691,7 @@ const SlimsGroupSubject = {
             return renderSkeleton(Vue.h, 'subject', 8);
         }
         if (this.error) {
-            return renderAsyncMessage(Vue.h, 'error', this.error);
+            return renderAsyncMessage(Vue.h, 'error', this.error, () => this.getData());
         }
         if (this.subjects.length < 1) {
             return renderAsyncMessage(Vue.h, 'empty', 'No topics available yet.');
@@ -716,7 +753,7 @@ const SlimsGroupMember = {
             return renderSkeleton(Vue.h, 'member', limitVal);
         }
         if (this.error) {
-            return renderAsyncMessage(Vue.h, 'error', this.error);
+            return renderAsyncMessage(Vue.h, 'error', this.error, () => this.getData());
         }
         if (this.members.length < 1) {
             return renderAsyncMessage(Vue.h, 'empty', 'No top readers available yet.');
@@ -738,6 +775,96 @@ const SlimsGroupMember = {
     }
 };
 
+// The fullscreen hero sits outside #slims-home, so its collection/member
+// cards need a small Vue mount of their own. Keeping this renderer lazy means
+// only the selected hero section performs an API request.
+const mountRasamalaHeroInside = function(mount, type) {
+    if (!mount || !window.Vue) return null;
+    if (mount._rasamalaHeroApp) {
+        mount._rasamalaHeroApp.unmount();
+        mount._rasamalaHeroApp = null;
+    }
+    mount._rasamalaHeroType = null;
+    mount.textContent = '';
+
+    const data = {
+        popular: {
+            title: 'Popular among our collections',
+            icon: 'fas fa-fire',
+            subjectUrl: 'index.php?p=api/subject/popular',
+            collectionUrl: 'index.php?p=api/biblio/popular',
+            limit: parseInt(mount.getAttribute('data-popular-limit'), 10) || 6
+        },
+        new_update: {
+            title: 'New collections + updated',
+            icon: 'fas fa-book',
+            subjectUrl: 'index.php?p=api/subject/latest',
+            collectionUrl: 'index.php?p=api/biblio/latest',
+            limit: parseInt(mount.getAttribute('data-new-limit'), 10) || 6
+        },
+        top_reader: {
+            title: 'Top reader of the year',
+            icon: 'fas fa-trophy',
+            memberUrl: 'index.php?p=api/member/top',
+            limit: parseInt(mount.getAttribute('data-top-reader-limit'), 10) || 5
+        }
+    }[type];
+    if (!data) return null;
+
+    const app = Vue.createApp({
+        render() {
+            const children = [
+                Vue.h('h2', {class: 'rasamala-hero-inline-title'}, [
+                    Vue.h('i', {class: data.icon, 'aria-hidden': 'true'}),
+                    ' ' + data.title
+                ])
+            ];
+            if (type === 'top_reader') {
+                children.push(Vue.h(SlimsGroupMember, {url: data.memberUrl, limit: data.limit}));
+            } else {
+                children.push(Vue.h(SlimsGroupSubject, {url: data.subjectUrl}));
+                children.push(Vue.h(SlimsCollection, {url: data.collectionUrl, limit: data.limit}));
+            }
+            return Vue.h('div', {class: 'rasamala-hero-inline-section'}, children);
+        }
+    });
+    app.component('slims-book', SlimsBook);
+    app.component('slims-member', SlimsMember);
+    app.component('slims-collection', SlimsCollection);
+    app.component('slims-group-subject', SlimsGroupSubject);
+    app.component('slims-group-member', SlimsGroupMember);
+    app.mount(mount);
+    mount._rasamalaHeroApp = app;
+    mount._rasamalaHeroType = type;
+    return app;
+};
+
+window.RasamalaHeroRenderer = {
+    mount: mountRasamalaHeroInside,
+    clear: function(mount) {
+        if (!mount) return;
+        if (mount._rasamalaHeroApp) {
+            mount._rasamalaHeroApp.unmount();
+            mount._rasamalaHeroApp = null;
+        }
+        mount._rasamalaHeroType = null;
+        mount.removeAttribute('data-hero-mounted-type');
+        mount.textContent = '';
+    }
+};
+
+// Non-Theme-Viewer pages still need the saved hero selection to render.
+(function mountSavedHeroInside() {
+    const root = document.getElementById('rasamala-hero-inside-content');
+    if (!root) return;
+    // Theme Viewer owns the initial mount when its lazy templates are present.
+    if (root.querySelector('#rasamala-hero-inside-templates')) return;
+    const activeItem = root.querySelector('.rasamala-hero-inside-item:not([hidden])');
+    const type = activeItem && activeItem.getAttribute('data-inside');
+    const mount = activeItem && activeItem.querySelector('[data-hero-inside-mount]');
+    if (mount && type && type !== 'topics') mountRasamalaHeroInside(mount, type);
+}());
+
 // Initialize showAdvancedApp Vue instance if element exists
 if (document.getElementById('search-wraper')) {
     const showAdvancedApp = Vue.createApp({
@@ -749,11 +876,22 @@ if (document.getElementById('search-wraper')) {
                 keywords: '',
                 tmpObj: {},
                 isProgrammaticFocus: false,
-                loading: false
+                loading: false,
+                suggestions: [],
+                suggestLoading: false,
+                showSuggestions: false,
+                selectedIndex: -1,
+                debounceTimer: null,
+                suggestionController: null,
+                suggestRequestId: 0,
+                searchNavigationTimer: null,
+                onSearchPageShow: null,
+                historyVersion: 0
             };
         },
         computed: {
             lastKeywords() {
+                const _ver = this.historyVersion;
                 let keywords = readSearchHistory(), arr = [];
                 this.tmpObj = {};
                 for (let key in keywords) {
@@ -767,21 +905,50 @@ if (document.getElementById('search-wraper')) {
                 return arr.slice(0, 5);
             }
         },
+        watch: {
+            keywords(newVal) {
+                this.selectedIndex = -1;
+                this.handleKeywordChange(newVal);
+            }
+        },
         mounted() {
             if (this.$refs.keywords && window.innerWidth >= 768) {
                 this.isProgrammaticFocus = true;
                 this.$refs.keywords.focus();
             }
+            this.onSearchPageShow = () => this.resetSearchLoading();
+            window.addEventListener('pageshow', this.onSearchPageShow);
+        },
+        beforeUnmount() {
+            window.removeEventListener('pageshow', this.onSearchPageShow);
+            this.resetSearchLoading();
         },
         methods: {
             searchOnFocus(e) {
-                if (this.isProgrammaticFocus) {
-                    this.isProgrammaticFocus = false;
-                    this.isFocus = true;
-                    return;
-                }
-                this.show = true;
                 this.isFocus = true;
+                if (this.isProgrammaticFocus) {
+                    // Focused programmatically on initial page load / navigation:
+                    // Keep cursor focused in search box, but DO NOT show search history dropdown!
+                    this.showSuggestions = false;
+                } else {
+                    this.show = true;
+                    if (this.keywords.length >= 2) {
+                        this.showSuggestions = true;
+                    } else {
+                        this.showSuggestions = false;
+                    }
+                }
+            },
+            searchOnClickArea(e) {
+                // User manually clicked/tapped inside search input or search area
+                this.isProgrammaticFocus = false;
+                this.isFocus = true;
+                this.show = true;
+                if (this.keywords === '' && this.lastKeywords.length > 0) {
+                    this.showSuggestions = true;
+                } else if (this.keywords.length >= 2) {
+                    this.showSuggestions = true;
+                }
             },
             searchOnBlur(e) {
                 this.isFocus = false;
@@ -792,6 +959,174 @@ if (document.getElementById('search-wraper')) {
                     this.searchBy = 'keywords';
                 }
             },
+            hideSuggestions() {
+                this.showSuggestions = false;
+            },
+            handleKeywordChange(val) {
+                const query = String(val || '').trim();
+                const requestId = ++this.suggestRequestId;
+                if (this.debounceTimer) {
+                    clearTimeout(this.debounceTimer);
+                    this.debounceTimer = null;
+                }
+                if (this.suggestionController) {
+                    this.suggestionController.abort();
+                    this.suggestionController = null;
+                }
+
+                if (query.length < 2) {
+                    this.suggestions = [];
+                    this.suggestLoading = false;
+                    this.showSuggestions = !this.isProgrammaticFocus && this.isFocus && (query === '' && this.lastKeywords.length > 0);
+                    return;
+                }
+
+                this.isProgrammaticFocus = false;
+                this.suggestLoading = true;
+                this.showSuggestions = true;
+
+                this.debounceTimer = setTimeout(() => {
+                    this.fetchLiveSuggestions(query, requestId);
+                }, 250);
+            },
+            fetchLiveSuggestions(query, requestId) {
+                if (requestId !== this.suggestRequestId) return;
+
+                const historyMatches = [];
+                const historyData = readSearchHistory();
+                for (let key in historyData) {
+                    if (key.toLowerCase().indexOf(query.toLowerCase()) !== -1) {
+                        historyMatches.push({
+                            text: key,
+                            type: 'history',
+                            searchBy: historyData[key].searchBy || 'keywords',
+                            icon: 'fas fa-history'
+                        });
+                    }
+                }
+
+                const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+                this.suggestionController = controller;
+                const fetchUrl = `index.php?rasamala_suggest=1&q=${encodeURIComponent(query)}`;
+                const requestOptions = {
+                    headers: { 'Accept': 'application/json' }
+                };
+                if (controller) requestOptions.signal = controller.signal;
+
+                let timeoutId = null;
+                const timeoutPromise = new Promise((resolve, reject) => {
+                    timeoutId = setTimeout(() => {
+                        if (controller) controller.abort();
+                        const timeoutError = new Error('Suggestion request timed out');
+                        timeoutError.name = 'TimeoutError';
+                        reject(timeoutError);
+                    }, 4000);
+                });
+
+                const requestPromise = fetch(fetchUrl, requestOptions)
+                    .then(res => {
+                        if (!res.ok) throw new Error('Suggestion request failed');
+                        return res.text().then(text => {
+                            try {
+                                const parsed = JSON.parse(text);
+                                return Array.isArray(parsed) ? parsed : [];
+                            } catch (error) {
+                                return [];
+                            }
+                        });
+                    });
+
+                Promise.race([requestPromise, timeoutPromise])
+                    .then(items => {
+                        if (requestId !== this.suggestRequestId) return;
+
+                        const liveItems = [];
+                        const seen = new Set(historyMatches.map(h => h.text.toLowerCase()));
+                        (Array.isArray(items) ? items : []).forEach(item => {
+                            const text = String(item && item.title ? item.title : '').trim();
+                            if (text && !seen.has(text.toLowerCase()) && liveItems.length < 5) {
+                                seen.add(text.toLowerCase());
+                                liveItems.push({
+                                    text: text,
+                                    type: 'title',
+                                    searchBy: 'keywords',
+                                    icon: 'fas fa-book'
+                                });
+                            }
+                        });
+
+                        this.suggestions = [...historyMatches.slice(0, 3), ...liveItems].slice(0, 8);
+                    })
+                    .catch(error => {
+                        if (error && error.name === 'AbortError') return;
+                        if (requestId !== this.suggestRequestId) return;
+                        this.suggestions = historyMatches.slice(0, 5);
+                    })
+                    .finally(() => {
+                        if (timeoutId) clearTimeout(timeoutId);
+                        if (requestId !== this.suggestRequestId) return;
+                        this.suggestLoading = false;
+                        this.suggestionController = null;
+                    });
+            },
+            navigateSuggestions(direction) {
+                if (!this.showSuggestions) {
+                    this.showSuggestions = true;
+                    return;
+                }
+                const total = this.suggestions.length > 0 ? this.suggestions.length : this.lastKeywords.length;
+                if (total === 0) return;
+
+                this.selectedIndex += direction;
+                if (this.selectedIndex >= total) {
+                    this.selectedIndex = 0;
+                } else if (this.selectedIndex < 0) {
+                    this.selectedIndex = total - 1;
+                }
+            },
+            handleEnterKey() {
+                if (this.showSuggestions && this.selectedIndex >= 0) {
+                    this.selectSuggestion(this.selectedIndex);
+                } else {
+                    this.searchSubmit();
+                }
+            },
+            selectSuggestion(itemOrIndex) {
+                let text = '';
+                let searchBy = 'keywords';
+
+                if (typeof itemOrIndex === 'number') {
+                    if (this.suggestions.length > 0 && this.suggestions[itemOrIndex]) {
+                        text = this.suggestions[itemOrIndex].text;
+                        searchBy = this.suggestions[itemOrIndex].searchBy || 'keywords';
+                    } else if (this.lastKeywords.length > 0 && this.lastKeywords[itemOrIndex]) {
+                        const key = this.lastKeywords[itemOrIndex];
+                        text = this.tmpObj[key] ? this.tmpObj[key].text : '';
+                        searchBy = this.tmpObj[key] ? this.tmpObj[key].searchBy : 'keywords';
+                    }
+                } else if (typeof itemOrIndex === 'object' && itemOrIndex !== null) {
+                    text = itemOrIndex.text;
+                    searchBy = itemOrIndex.searchBy || 'keywords';
+                }
+
+                if (text) {
+                    this.keywords = text;
+                    this.searchBy = searchBy;
+                }
+                this.showSuggestions = false;
+                this.searchSubmit();
+            },
+            clearHistory() {
+                try {
+                    if (window.localStorage) {
+                        window.localStorage.removeItem(searchHistoryStorageKey);
+                    }
+                } catch (e) {}
+                this.tmpObj = {};
+                this.suggestions = [];
+                this.showSuggestions = false;
+                this.historyVersion++;
+            },
             searchOnClick(searchBy) {
                 this.searchBy = searchBy;
                 this.searchSubmit();
@@ -800,10 +1135,31 @@ if (document.getElementById('search-wraper')) {
                 const item = this.tmpObj[key] || {};
                 return makeSearchUrl(item.searchBy, item.text);
             },
+            resetSearchLoading() {
+                if (this.searchNavigationTimer) {
+                    clearTimeout(this.searchNavigationTimer);
+                    this.searchNavigationTimer = null;
+                }
+                this.loading = false;
+            },
             searchSubmit() {
+                // Enter can trigger both keydown and submit. Only navigate once.
+                if (this.loading) return;
+
                 if (this.keywords !== '') this.saveKeyword();
                 this.loading = true;
-                window.location.href = makeSearchUrl(this.searchBy, this.keywords);
+                const searchUrl = makeSearchUrl(this.searchBy, this.keywords);
+
+                // A failed/cancelled navigation must not leave the button spinning forever.
+                this.searchNavigationTimer = window.setTimeout(() => {
+                    this.resetSearchLoading();
+                }, 10000);
+
+                try {
+                    window.location.assign(searchUrl);
+                } catch (error) {
+                    this.resetSearchLoading();
+                }
             },
             saveKeyword() {
                 const keyword = normalizeSearchKeyword(this.keywords);
@@ -826,6 +1182,7 @@ if (document.getElementById('search-wraper')) {
                     };
                 }
                 writeSearchHistory(keywords);
+                this.historyVersion++;
             }
         }
     });
@@ -855,6 +1212,18 @@ if (document.getElementById('slims-home')) {
         const kbdModifier = document.getElementById('search-kbd-modifier');
         if (kbdModifier) {
             kbdModifier.textContent = isMac ? '⌘' : 'Ctrl';
+        }
+
+        const searchBadge = document.getElementById('search-kbd-badge');
+        if (searchBadge) {
+            const focusSearch = function (event) {
+                if (event.type === 'keydown' && event.key !== 'Enter' && event.key !== ' ') return;
+                event.preventDefault();
+                const searchInput = document.getElementById('search-input');
+                if (searchInput) searchInput.focus();
+            };
+            searchBadge.addEventListener('click', focusSearch);
+            searchBadge.addEventListener('keydown', focusSearch);
         }
     });
 
@@ -894,11 +1263,3 @@ if (document.getElementById('slims-home')) {
         }
     });
 })();
-
-// PWA Service Worker Registration
-if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
-    window.addEventListener('load', function () {
-        const swPath = 'template/rasamala/assets/js/sw.js';
-        navigator.serviceWorker.register(swPath).catch(function () {});
-    });
-}

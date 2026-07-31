@@ -73,9 +73,15 @@ if (!function_exists('themeGetDisplayItems')) {
                        last_update DESC,
                        input_date DESC,
                        content_id DESC
-              LIMIT " . $limit;
+                    LIMIT ?";
 
-      $query = $dbs->query($sql);
+                  $statement = $dbs->prepare($sql);
+                  if (!$statement) {
+              return $items;
+                  }
+                  $statement->bind_param('i', $limit);
+                  $statement->execute();
+                  $query = $statement->get_result();
       if ($query) {
         while ($row = $query->fetch_assoc()) {
           $path = trim((string)($row['content_path'] ?? ''));
@@ -99,14 +105,16 @@ if (!function_exists('themeGetDisplayItems')) {
           ];
         }
       }
+      $statement->close();
     } else {
       $where = "COALESCE(b.opac_hide,0)=0 AND b.title<>''";
       $join = "";
+      $filter_value = null;
       if ($biblio_filter !== 'all') {
-        $escaped_filter = $dbs->real_escape_string($biblio_filter);
         $join = " LEFT JOIN item AS i ON b.biblio_id=i.biblio_id
                   LEFT JOIN mst_coll_type AS ct ON i.coll_type_id=ct.coll_type_id";
-        $where .= " AND ct.coll_type_name='{$escaped_filter}'";
+        $where .= " AND ct.coll_type_name=?";
+        $filter_value = (string)$biblio_filter;
       }
 
       $sql = "SELECT DISTINCT b.biblio_id, b.title, b.last_update
@@ -114,9 +122,19 @@ if (!function_exists('themeGetDisplayItems')) {
               {$join}
               WHERE {$where}
               ORDER BY b.last_update DESC, b.biblio_id DESC
-              LIMIT " . $limit;
+              LIMIT ?";
 
-      $query = $dbs->query($sql);
+      $statement = $dbs->prepare($sql);
+      if (!$statement) {
+        return $items;
+      }
+      if ($filter_value !== null) {
+        $statement->bind_param('si', $filter_value, $limit);
+      } else {
+        $statement->bind_param('i', $limit);
+      }
+      $statement->execute();
+      $query = $statement->get_result();
       if ($query) {
         while ($row = $query->fetch_assoc()) {
           $full_title = $row['title'] ?? '';
@@ -127,6 +145,7 @@ if (!function_exists('themeGetDisplayItems')) {
           ];
         }
       }
+      $statement->close();
     }
 
     return $items;
@@ -338,16 +357,6 @@ if (!function_exists('themeHomeContentCards')) {
     }
 
     $items = [];
-    $escape = static function ($value) use ($dbs) {
-      if (method_exists($dbs, 'real_escape_string')) {
-        return $dbs->real_escape_string($value);
-      }
-      if (method_exists($dbs, 'escape_string')) {
-        return $dbs->escape_string($value);
-      }
-      return addslashes($value);
-    };
-
     if ($mode === 'custom') {
       foreach (['classic_home_content_path_1', 'classic_home_content_path_2', 'classic_home_content_path_3'] as $key) {
         $path = themeContentPathInput(themeEffectiveTemplateValue($key, '', $source));
@@ -355,11 +364,10 @@ if (!function_exists('themeHomeContentCards')) {
           continue;
         }
 
-        $escaped_path = $escape($path);
         $sql = "SELECT content_title, content_desc, content_path, publish_date, input_date, last_update
                 FROM content
                 WHERE COALESCE(is_draft,0)=0
-                  AND content_path='{$escaped_path}'
+                  AND content_path=?
                   AND content_path<>''
                   AND (publish_date IS NULL OR publish_date <= CURDATE())
                 ORDER BY COALESCE(publish_date, DATE(last_update), DATE(input_date)) DESC,
@@ -367,7 +375,13 @@ if (!function_exists('themeHomeContentCards')) {
                          input_date DESC,
                          content_id DESC
                 LIMIT 1";
-        $query = $dbs->query($sql);
+        $statement = $dbs->prepare($sql);
+        $query = false;
+        if ($statement) {
+          $statement->bind_param('s', $path);
+          $statement->execute();
+          $query = $statement->get_result();
+        }
         $card = null;
         if ($query && ($row = $query->fetch_assoc())) {
           $card = themeHomeContentCardFromRow($row, $path);
@@ -377,6 +391,9 @@ if (!function_exists('themeHomeContentCards')) {
         }
         if ($card) {
           $items[] = $card;
+        }
+        if ($statement) {
+          $statement->close();
         }
       }
 
@@ -394,9 +411,14 @@ if (!function_exists('themeHomeContentCards')) {
             ORDER BY COALESCE(publish_date, DATE(last_update), DATE(input_date)) DESC,
                      last_update DESC,
                      input_date DESC,
-                     content_id DESC
-            LIMIT 3";
-    $query = $dbs->query($sql);
+                   content_id DESC
+                LIMIT 3";
+              $statement = $dbs->prepare($sql);
+              if (!$statement) {
+                return $items;
+              }
+              $statement->execute();
+              $query = $statement->get_result();
     if ($query) {
       while ($row = $query->fetch_assoc()) {
         $card = themeHomeContentCardFromRow($row);
@@ -405,7 +427,241 @@ if (!function_exists('themeHomeContentCards')) {
         }
       }
     }
+    $statement->close();
 
     return $items;
+  }
+}
+
+if (!function_exists('addEllipsis')) {
+  function addEllipsis($string, $length, $end='…')
+  {
+      if (strlen($string??'') > $length)
+      {
+          $length -= strlen($end);
+          $string  = substr($string, 0, $length);
+          $string .= $end;
+      }
+
+      return $string;
+  }
+}
+
+if (!function_exists('rasamalaBatchPrimeAvailability')) {
+  function rasamalaBatchPrimeAvailability($dbs, array $biblio_ids, array &$cache)
+  {
+      $valid_ids = [];
+      foreach ($biblio_ids as $id) {
+          $clean_id = themeSafeInt($id);
+          if ($clean_id > 0 && !isset($cache[$clean_id])) {
+              $valid_ids[] = $clean_id;
+              $cache[$clean_id] = [
+                  'items' => [],
+                  'total' => 0,
+                  'available' => 0,
+              ];
+          }
+      }
+
+      if (empty($valid_ids)) {
+          return;
+      }
+
+      $placeholders = implode(',', array_fill(0, count($valid_ids), '?'));
+      $sql = "SELECT i.biblio_id, i.item_code, i.call_number, ml.location_name,
+                     CASE
+                         WHEN IFNULL(mis.no_loan, 0)=1 THEN 0
+                         WHEN EXISTS(
+                             SELECT 1 FROM loan AS l
+                             WHERE l.item_code=i.item_code
+                               AND l.is_lent=1
+                               AND l.is_return=0
+                         ) THEN 0
+                         ELSE 1
+                     END AS is_available
+              FROM item AS i
+              LEFT JOIN mst_location AS ml ON i.location_id=ml.location_id
+              LEFT JOIN mst_item_status AS mis ON i.item_status_id=mis.item_status_id
+                WHERE i.biblio_id IN (".$placeholders.")
+              ORDER BY i.biblio_id ASC, i.call_number ASC, i.item_code ASC";
+
+            $statement = $dbs->prepare($sql);
+            if (!$statement) {
+              return;
+            }
+            $bind_types = str_repeat('i', count($valid_ids));
+            $bind_parameters = [$bind_types];
+            foreach ($valid_ids as $index => $value) {
+              $bind_parameters[] = &$valid_ids[$index];
+            }
+            call_user_func_array([$statement, 'bind_param'], $bind_parameters);
+            $statement->execute();
+            $query = $statement->get_result();
+      if ($query) {
+          while ($row = $query->fetch_assoc()) {
+              $b_id = themeSafeInt($row['biblio_id'] ?? 0);
+              if ($b_id <= 0 || !isset($cache[$b_id])) {
+                  continue;
+              }
+              $row['is_available'] = themeSafeInt($row['is_available'] ?? 0);
+              $cache[$b_id]['items'][] = $row;
+              $cache[$b_id]['total']++;
+              if ($row['is_available'] > 0) {
+                  $cache[$b_id]['available']++;
+              }
+          }
+      }
+            $statement->close();
+  }
+}
+
+if (!function_exists('rasamalaGetItemsAndAvailability')) {
+  function rasamalaGetItemsAndAvailability($dbs, $biblio_id)
+  {
+      static $cache = [];
+
+      if (is_array($biblio_id)) {
+          rasamalaBatchPrimeAvailability($dbs, $biblio_id, $cache);
+          return $cache;
+      }
+
+      $clean_id = themeSafeInt($biblio_id);
+      if ($clean_id <= 0) {
+          return ['items' => [], 'total' => 0, 'available' => 0];
+      }
+
+      if (isset($cache[$clean_id])) {
+          return $cache[$clean_id];
+      }
+
+      rasamalaBatchPrimeAvailability($dbs, [$clean_id], $cache);
+
+      return $cache[$clean_id] ?? ['items' => [], 'total' => 0, 'available' => 0];
+  }
+}
+
+if (!function_exists('rasamalaBatchPrimeNotes')) {
+  function rasamalaBatchPrimeNotes($dbs, array $biblio_ids, array &$cache)
+  {
+      $valid_ids = [];
+      foreach ($biblio_ids as $id) {
+          $clean_id = themeSafeInt($id);
+          if ($clean_id > 0 && !isset($cache[$clean_id])) {
+              $valid_ids[] = $clean_id;
+              $cache[$clean_id] = '';
+          }
+      }
+
+      if (empty($valid_ids)) {
+          return;
+      }
+
+        $placeholders = implode(',', array_fill(0, count($valid_ids), '?'));
+        $sql = "SELECT biblio_id, notes FROM biblio WHERE biblio_id IN (" . $placeholders . ")";
+        $statement = $dbs->prepare($sql);
+        if (!$statement) {
+          return;
+        }
+        $bind_types = str_repeat('i', count($valid_ids));
+        $bind_parameters = [$bind_types];
+        foreach ($valid_ids as $index => $value) {
+          $bind_parameters[] = &$valid_ids[$index];
+        }
+        call_user_func_array([$statement, 'bind_param'], $bind_parameters);
+        $statement->execute();
+        $query = $statement->get_result();
+
+      if ($query) {
+          while ($row = $query->fetch_assoc()) {
+              $b_id = themeSafeInt($row['biblio_id'] ?? 0);
+              if ($b_id <= 0 || !isset($cache[$b_id])) {
+                  continue;
+              }
+              $raw_text = (string)($row['notes'] ?? '');
+              if (function_exists('themeNormalizeStoredTextEscapes')) {
+                  $raw_text = themeNormalizeStoredTextEscapes($raw_text);
+              }
+              $raw_text = str_replace(['\r\n', '\r', '\n', "\\r\\n", "\\r", "\\n"], ' ', $raw_text);
+              $raw_text = str_replace(["\r\n", "\r", "\n"], ' ', $raw_text);
+              $raw_text = strip_tags($raw_text);
+              $raw_text = preg_replace('/\s+/', ' ', $raw_text);
+              $cache[$b_id] = addEllipsis(trim($raw_text), 400);
+          }
+      }
+            $statement->close();
+  }
+}
+
+if (!function_exists('getNotes')) {
+  function getNotes($dbs, $biblio_id, array $biblio_detail = [])
+  {
+      static $cache = [];
+
+      if (is_array($biblio_id)) {
+          rasamalaBatchPrimeNotes($dbs, $biblio_id, $cache);
+          return '';
+      }
+
+      $clean_id = themeSafeInt($biblio_id);
+
+      if (!empty($biblio_detail['notes'])) {
+          $raw_text = (string)$biblio_detail['notes'];
+          if (function_exists('themeNormalizeStoredTextEscapes')) {
+              $raw_text = themeNormalizeStoredTextEscapes($raw_text);
+          }
+          $raw_text = str_replace(['\r\n', '\r', '\n', "\\r\\n", "\\r", "\\n"], ' ', $raw_text);
+          $raw_text = str_replace(["\r\n", "\r", "\n"], ' ', $raw_text);
+          $raw_text = strip_tags($raw_text);
+          $raw_text = preg_replace('/\s+/', ' ', $raw_text);
+          $processed = addEllipsis(trim($raw_text), 400);
+          if ($clean_id > 0) {
+              $cache[$clean_id] = $processed;
+          }
+          return $processed;
+      }
+
+      if ($clean_id <= 0) {
+          return '';
+      }
+
+      if (isset($cache[$clean_id])) {
+          return $cache[$clean_id];
+      }
+
+      rasamalaBatchPrimeNotes($dbs, [$clean_id], $cache);
+
+      return $cache[$clean_id] ?? '';
+  }
+}
+
+if (!function_exists('rasamalaNewsFirstImageSrc')) {
+  function rasamalaNewsFirstImageSrc($html)
+  {
+      $html = (string)$html;
+      if (trim($html) === '') {
+          return '';
+      }
+
+      if (preg_match('/<img[^>]+src=["\']([^"\']+)["\']/i', $html, $matches)) {
+          $src = trim($matches[1] ?? '');
+          if ($src !== '') {
+              return $src;
+          }
+      }
+
+      return '';
+  }
+}
+
+if (!function_exists('rasamalaSearchFilterHtml')) {
+  function rasamalaSearchFilterHtml($html)
+  {
+      $html = (string)$html;
+      $html = preg_replace('/class="list-group\s+list-group-flush"/i', 'class="list-group list-group-flush rasamala-filter-list"', $html);
+      $html = preg_replace('/class="([^"]*)\blist-group-item\b([^"]*)"/i', 'class="$1list-group-item rasamala-filter-facet$2"', $html);
+      $html = preg_replace('/\s*\bborder-top-0\b/i', '', $html);
+      $html = preg_replace('/\s*\bborder-left\b|\s*\bborder-right\b/i', '', $html);
+
+      return $html;
   }
 }

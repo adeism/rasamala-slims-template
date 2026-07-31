@@ -15,4 +15,6 @@
 
 <?php
 // Chat Engine
-include LIB . "contents/chat.php";
+if (defined('LIB') && is_file(LIB . 'contents/chat.php')) {
+    include LIB . 'contents/chat.php';
+}

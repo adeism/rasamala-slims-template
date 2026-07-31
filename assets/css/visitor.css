@@ -15,7 +15,7 @@ body.rasamala-dark .visitor-bg-gradient {
   border: 1px solid rgba(255, 255, 255, 0.4) !important;
   border-radius: 20px !important;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15) !important;
-  transition: all 0.3s ease !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease, opacity 0.3s ease !important;
   margin: auto !important;
 }
 
@@ -47,7 +47,7 @@ body.rasamala-dark .visitor-kiosk-card {
   font-size: 16px !important;
   height: auto !important;
   color: var(--rasamala-text-primary) !important;
-  transition: all 0.25s ease !important;
+  transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease !important;
 }
 
 body.rasamala-dark .visitor-input {
@@ -74,7 +74,7 @@ body.rasamala-dark .visitor-input {
   font-size: 16px !important;
   background-color: var(--rasamala-accent) !important;
   border-color: var(--rasamala-accent) !important;
-  transition: all 0.25s ease !important;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease, opacity 0.25s ease !important;
   letter-spacing: 0.02em !important;
 }
 
@@ -102,7 +102,7 @@ body.rasamala-dark .visitor-input {
   width: 100% !important;
   border-radius: 14px !important;
   padding: 24px !important;
-  transition: all 0.3s ease !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease, opacity 0.3s ease !important;
 }
 
 .feedback-success {
@@ -170,7 +170,7 @@ body.rasamala-dark .visitor-avatar-wrap {
   background: transparent !important;
   border: none !important;
   padding: 4px 8px !important;
-  transition: all 0.25s ease !important;
+  transition: color 0.25s ease, background-color 0.25s ease, opacity 0.25s ease !important;
   font-size: 14px !important;
   cursor: pointer !important;
 }
@@ -213,7 +213,7 @@ body.rasamala-dark .visitor-avatar-wrap {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  transition: all 0.3s ease !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease, opacity 0.3s ease !important;
 }
 
 body.rasamala-dark .left-form-section,
@@ -244,7 +244,7 @@ body.rasamala-dark .tabs {
   cursor: pointer;
   font-size: 16px;
   font-weight: 600;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease;
   border-bottom: 4px solid transparent;
   margin-bottom: -2px;
 }
@@ -281,7 +281,7 @@ body.rasamala-dark .tabs {
   border-radius: 12px;
   background: rgba(var(--theme-accent-rgb), 0.03);
   border: 1px solid transparent;
-  transition: all 0.25s ease;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
 
 .inst-step:hover {
@@ -390,18 +390,22 @@ body.rasamala-dark .inst-step:hover {
   height: 2px;
   background: var(--rasamala-accent);
   box-shadow: 0 0 8px var(--rasamala-accent), 0 0 15px var(--rasamala-accent);
-  top: 0;
+  top: 5px;
   animation: laserMove 2.5s ease-in-out infinite alternate;
+}
+
+html.rasamala-page-hidden .scan-laser {
+  animation-play-state: paused !important;
 }
 
 @keyframes laserMove {
   0% {
-    top: 10%;
+    transform: translate3d(0, 0, 0);
     opacity: 0.7;
   }
 
   100% {
-    top: 90%;
+    transform: translate3d(0, 40px, 0);
     opacity: 1;
   }
 }

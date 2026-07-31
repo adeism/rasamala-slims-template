@@ -43,6 +43,7 @@ return [
         'dbfield' => 'classic_card_show_fields',
         'label' => themeTranslate('Digital Card: Visible Fields (comma separated)'),
         'type' => 'text',
+        'help' => themeTranslate('Pisahkan nama field dengan koma, misalnya: name,member_id,institution.'),
         'default' => 'name,member_id,institution,member_type'
     ],
     'card-code-type' => [
@@ -79,7 +80,7 @@ return [
         'dbfield' => 'classic_language_visible_codes',
         'label' => themeTranslate('Visible Languages'),
         'type' => 'longtext',
-        'default' => 'id_ID, en_US',
+        'default' => 'en_US, id_ID, ja_JP',
         'width' => '100',
         'max' => 1000
     ],

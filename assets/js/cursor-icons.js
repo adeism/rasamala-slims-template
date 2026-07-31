@@ -20,6 +20,7 @@
     book: 'pixel-sword'
   };
   var activeCleanup = null;
+  var reducedMotionMedia = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
 
   function hexToRgb(hex) {
     var c = String(hex || '').replace('#', '');
@@ -103,6 +104,9 @@
 
     var style = document.createElement('style');
     style.id = 'rasamala-cursor-icon-style';
+    var nonceSource = document.querySelector('style[nonce],script[nonce]');
+    var nonce = nonceSource && nonceSource.getAttribute('nonce');
+    if (nonce) style.setAttribute('nonce', nonce);
     style.textContent = [
       'body.rasamala-custom-cursor-active,',
       'body.rasamala-custom-cursor-active a,',
@@ -126,7 +130,8 @@
     }
 
     var body = document.body;
-    if (!body || reducedMotion() || !pointerIsFine()) {
+    var explicitViewerChoice = body && body.getAttribute('data-cursor-icon-explicit') === '1';
+    if (!body || (!explicitViewerChoice && reducedMotion()) || !pointerIsFine()) {
       document.body && document.body.classList.remove('rasamala-custom-cursor-active');
       return;
     }
@@ -137,6 +142,9 @@
       window.RasamalaCursorState = null;
       return;
     }
+
+    // Do not override an explicit Theme Viewer choice when Save-Data is on.
+    // The selected icon is already a bounded, lightweight renderer.
 
     var modeData = findMode(modeId);
     var mode = modeData.mode;
@@ -299,15 +307,33 @@
       context.restore();
     }
 
-    function frame(timestamp) {
+    function stopFrame() {
+      if (frameId) {
+        cancelAnimationFrame(frameId);
+        frameId = 0;
+      }
+    }
+
+    function scheduleFrame() {
+      if (!visible || document.hidden || frameId) return;
       frameId = requestAnimationFrame(frame);
-      if (!visible) return;
+    }
+
+    function frame(timestamp) {
+      frameId = 0;
+      if (!visible || document.hidden) return;
+      if (timestamp - lastFrame < frameInterval) {
+        scheduleFrame();
+        return;
+      }
       if (timestamp - lastFrame < frameInterval) return;
       lastFrame = timestamp;
 
       time = timestamp || 0;
-      smoothX += (mouseX - smoothX) * 0.35;
-      smoothY += (mouseY - smoothY) * 0.35;
+      // Keep the decorative glyph close to the real pointer. A low smoothing
+      // factor made the icon visibly trail behind fast movements.
+      smoothX += (mouseX - smoothX) * 0.78;
+      smoothY += (mouseY - smoothY) * 0.78;
       velocityX *= 0.88;
       velocityY *= 0.88;
       speed = Math.hypot(velocityX, velocityY);
@@ -319,6 +345,7 @@
 
       context.clearRect(0, 0, width, height);
       drawShape();
+      scheduleFrame();
     }
 
     function onMove(event) {
@@ -331,6 +358,11 @@
     function setVisible(nextVisible) {
       visible = nextVisible;
       canvas.style.opacity = visible ? '1' : '0';
+      if (visible) {
+        scheduleFrame();
+      } else {
+        stopFrame();
+      }
     }
 
     function onMouseLeave() { setVisible(false); }
@@ -344,9 +376,9 @@
     document.addEventListener('visibilitychange', onVisibilityChange);
 
     resize();
-    frameId = requestAnimationFrame(frame);
+    scheduleFrame();
     activeCleanup = function () {
-      cancelAnimationFrame(frameId);
+      stopFrame();
       window.removeEventListener('resize', resize);
       document.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseleave', onMouseLeave);
@@ -364,4 +396,11 @@
     init();
   }
   document.addEventListener('rasamala:cursor-settings-changed', init);
+  if (reducedMotionMedia) {
+    if (reducedMotionMedia.addEventListener) {
+      reducedMotionMedia.addEventListener('change', init);
+    } else if (reducedMotionMedia.addListener) {
+      reducedMotionMedia.addListener(init);
+    }
+  }
 }());

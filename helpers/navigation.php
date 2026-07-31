@@ -164,6 +164,9 @@ if (!function_exists('themeBreadcrumbCurrentLabel')) {
   {
     $label = trim(html_entity_decode(strip_tags((string)($label ?? '')), ENT_QUOTES, 'UTF-8'));
     if ($label !== '') {
+      if (strpos($label, '=') !== false) {
+        $label = trim(explode('=', $label)[0]);
+      }
       return $label;
     }
 

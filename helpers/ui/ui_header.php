@@ -126,8 +126,11 @@ if (!function_exists('themeHeaderBodyClasses')) {
   function themeHeaderBodyClasses($sysconf_param, $selected_color, $effective_palette_key, $background_animation, $is_login)
   {
     $is_homepage = !isset($_GET['p']) && !isset($_GET['search']);
+    $hero_mode = function_exists('themeHomepageHeroMode') ? themeHomepageHeroMode($sysconf_param) : 'no';
+    $hero_background_style = function_exists('themeHeroBackgroundStyle') ? themeHeroBackgroundStyle($sysconf_param) : 'none';
     $is_homepage_only_hero = $is_homepage && themeHomepageOnlyHero($sysconf_param);
-    $palette_switcher_show = (int)themeEffectiveTemplateValue('classic_palette_switcher_show', 1, $sysconf_param) === 1;
+    $home_tabs_configured = (int)themeEffectiveTemplateValue('classic_home_sections_tabs', 0, $sysconf_param) === 1;
+    $palette_switcher_show = (int)themeEffectiveTemplateValue('classic_palette_switcher_show', 0, $sysconf_param) === 1;
     $search_panel_style = strtolower(trim((string)themeEffectiveTemplateValue('classic_search_panel_style', 'transparent', $sysconf_param)));
     if (!in_array($search_panel_style, ['transparent', 'solid'], true)) {
       $search_panel_style = 'transparent';
@@ -164,6 +167,18 @@ if (!function_exists('themeHeaderBodyClasses')) {
     }
     if ($is_homepage_only_hero) {
       $body_classes .= ' rasamala-home-hero-only';
+    }
+    $body_classes .= ' rasamala-home-hero-mode-' . preg_replace('/[^a-z0-9_-]+/i', '-', $hero_mode);
+    $background_style_class = preg_replace('/[^a-z0-9_-]+/i', '-', $hero_background_style);
+    // Keep the legacy hero-prefixed class for compatibility while exposing a
+    // page-wide class for the Background Style control.
+    $body_classes .= ' rasamala-background-style-' . $background_style_class;
+    $body_classes .= ' rasamala-hero-bg-style-' . $background_style_class;
+    if (function_exists('themeBackgroundStyleIsImage') && themeBackgroundStyleIsImage($hero_background_style, $sysconf_param)) {
+      $body_classes .= ' rasamala-background-image-active';
+    }
+    if ($is_homepage) {
+      $body_classes .= ' rasamala-home-layout-' . ($home_tabs_configured ? 'tabs' : 'standard');
     }
     if (!$is_login) {
       $body_classes .= ' rasamala-debug-hidden';
@@ -287,7 +302,14 @@ if (!function_exists('themeHeaderContext')) {
     $ticker_speed_val = themeHeaderTickerSpeedValue($source);
     $is_login = !empty($is_login);
     $background_animation = themeBackgroundAnimation();
-    $palette_switcher_show = (int)themeEffectiveTemplateValue('classic_palette_switcher_show', 1, $source) === 1;
+    $palette_switcher_show = (int)themeEffectiveTemplateValue('classic_palette_switcher_show', 0, $source) === 1;
+    $custom_css = themeSanitizeCustomCss($source['template']['classic_custom_css'] ?? '');
+    $custom_background_css = function_exists('themeBackgroundStyleRuntimeCss')
+      ? themeBackgroundStyleRuntimeCss($source)
+      : '';
+    if ($custom_background_css !== '') {
+      $custom_css = trim($custom_css . "\n" . $custom_background_css);
+    }
 
     return [
       'request_uri' => themeHeaderRequestUri(),
@@ -296,7 +318,7 @@ if (!function_exists('themeHeaderContext')) {
       'selected_color' => $selected_color,
       'selected_dark_color' => $selected_dark_color,
       'header_config' => themeHeaderRuntimeConfig($source, $selected_color, $selected_dark_color, $font_stack, $ticker_speed_val, $is_login),
-      'custom_css' => themeSanitizeCustomCss($source['template']['classic_custom_css'] ?? ''),
+      'custom_css' => $custom_css,
       'icon' => themeHeaderFavicon($source, $imagesDisk),
       'body_classes' => themeHeaderBodyClasses($source, $selected_color, $effective_palette_key, $background_animation, $is_login),
       'background_animation' => $background_animation,
@@ -310,32 +332,26 @@ if (!function_exists('themeHeaderContext')) {
 if (!function_exists('themeLibraryLogoHtml')) {
   function themeLibraryLogoHtml($sysconf, $imagesDisk = null, $class = 'navbar-brand-img')
   {
-    $html = '';
-    $logo_image = $sysconf['logo_image'] ?? '';
+    $logo_image = trim((string)($sysconf['logo_image'] ?? ''));
+    if ($logo_image === '') {
+        return '';
+    }
 
     if (!$imagesDisk) {
         $imagesDisk = $GLOBALS['imagesDisk'] ?? null;
     }
 
-    if ($logo_image !== '' && $imagesDisk && $imagesDisk->isExists($path = 'default/' . $logo_image)) {
+    $path = 'default/' . $logo_image;
+    if ($imagesDisk && $imagesDisk->isExists($path)) {
         $src = themeEscape(SWB . 'images/' . $path);
-        $html = '<img class="' . themeEscape($class) . '" src="' . $src . '" alt="" aria-hidden="true" loading="eager">';
-    } elseif (file_exists(dirname(__DIR__) . '/assets/images/logo.png')) {
-        $src = themeEscape(assetsVersioned('images/logo.png'));
-        $html = '<img class="' . themeEscape($class) . '" src="' . $src . '" alt="" aria-hidden="true" loading="eager">';
-    } else {
-        if ($class === 'hero-library-logo') {
-            $html = '<span class="hero-library-logo-fallback"><i class="fas fa-book-open" aria-hidden="true"></i></span>';
-        } else {
-            $width = ($class === 'footer-brand-img') ? 22 : 18;
-            $height = ($class === 'footer-brand-img') ? 22 : 18;
-            $svg_class = ($class === 'footer-brand-img') ? 'mb-2 footer-book-icon' : 'navbar-book-icon';
-            $html = '<svg xmlns="http://www.w3.org/2000/svg" width="' . $width . '" height="' . $height . '" fill="currentColor" class="bi bi-book ' . $svg_class . '" viewBox="0 0 16 16" aria-hidden="true" focusable="false">';
-            $html .= '<path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.933-.575-2.202-.954-3.41-1.11-1.226-.157-2.484-.013-3.388.337zm11-.14c.654-.689 1.782-.886 3.11-.752 1.234.124 2.503.523 3.388.893v9.923c-.904-.35-2.162-.494-3.388-.337-1.208.156-2.477.535-3.409 1.11V2.688zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>';
-            $html .= '</svg>';
-        }
+        return '<img class="' . themeEscape($class) . '" src="' . $src . '" alt="" aria-hidden="true" loading="eager">';
     }
 
-    return $html;
+    if (defined('SB') && is_file(SB . 'images/' . $path)) {
+        $src = themeEscape(SWB . 'images/' . $path);
+        return '<img class="' . themeEscape($class) . '" src="' . $src . '" alt="" aria-hidden="true" loading="eager">';
+    }
+
+    return '';
   }
 }

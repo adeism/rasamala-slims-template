@@ -51,6 +51,21 @@ if (!function_exists('themeSafeHttpsUrl')) {
   }
 }
 
+if (!function_exists('themeCspNonce')) {
+  function themeCspNonce()
+  {
+    static $nonce = null;
+    if ($nonce === null) {
+      if (function_exists('random_bytes')) {
+        $nonce = bin2hex(random_bytes(16));
+      } else {
+        $nonce = md5(uniqid(mt_rand(), true));
+      }
+    }
+    return $nonce;
+  }
+}
+
 if (!function_exists('themeRequestIsHttps')) {
   function themeRequestIsHttps()
   {
@@ -227,6 +242,9 @@ if (!function_exists('themeSanitizeCoreAssetTags')) {
         $script_content = (string)($match[3] ?? '');
         if ($src === '' && trim($script_content) === '') {
           continue;
+        }
+        if ($src === '' && trim($script_content) !== '') {
+          $safe_attrs[] = 'nonce="' . themeEscape(themeCspNonce()) . '"';
         }
 
         $output .= '<script' . ($safe_attrs ? ' ' . implode(' ', $safe_attrs) : '') . '>' . $script_content . '</script>' . "\n";

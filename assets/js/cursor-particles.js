@@ -74,6 +74,9 @@
     if (document.getElementById('rasamala-cursor-particles-style')) return;
     var style = document.createElement('style');
     style.id = 'rasamala-cursor-particles-style';
+    var nonceSource = document.querySelector('style[nonce],script[nonce]');
+    var nonce = nonceSource && nonceSource.getAttribute('nonce');
+    if (nonce) style.setAttribute('nonce', nonce);
     style.textContent = '#rasamala-cursor-particles-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:2147483645;pointer-events:none;}';
     document.head.appendChild(style);
   }
@@ -85,8 +88,8 @@
     }
 
     var body = document.body;
-    if (!body || reducedMotion() || !pointerIsFine()) return;
-
+    var explicitViewerChoice = body && body.getAttribute('data-cursor-particles-explicit') === '1';
+    if (!body || (!explicitViewerChoice && reducedMotion()) || !pointerIsFine()) return;
     var particleSetting = body.getAttribute('data-cursor-particles') || 'none';
     if (particleSetting === 'none' || particleSetting === '0') return;
 
@@ -361,21 +364,42 @@
       }
     }
 
-    function frame(timestamp) {
+    function stopFrame() {
+      if (frameId) {
+        cancelAnimationFrame(frameId);
+        frameId = 0;
+      }
+    }
+
+    function scheduleFrame() {
+      if (!visible || document.hidden || frameId) return;
       frameId = requestAnimationFrame(frame);
-      if (!visible) return;
-      if (timestamp - lastFrame < 1000 / q.fps) return;
+    }
+
+    function frame(timestamp) {
+      frameId = 0;
+      if (!visible || document.hidden) return;
+      if (timestamp - lastFrame < 1000 / q.fps) {
+        scheduleFrame();
+        return;
+      }
       lastFrame = timestamp;
 
       context.clearRect(0, 0, width, height);
       drawTrail();
       drawParticles();
       updateTrailLife();
+      scheduleFrame();
     }
 
     function setVisible(nextVisible) {
       visible = nextVisible;
       canvas.style.opacity = visible ? '1' : '0';
+      if (visible) {
+        scheduleFrame();
+      } else {
+        stopFrame();
+      }
     }
 
     function onMouseLeave() {
@@ -398,7 +422,7 @@
     document.addEventListener('visibilitychange', onVisibilityChange);
 
     activeCleanup = function () {
-      if (frameId) window.cancelAnimationFrame(frameId);
+      stopFrame();
       window.removeEventListener('resize', resize);
       document.removeEventListener('mousemove', onMove);
       document.removeEventListener('click', onClick);
@@ -415,7 +439,7 @@
     };
 
     resize();
-    frameId = requestAnimationFrame(frame);
+    scheduleFrame();
   }
 
   if (document.readyState === 'loading') {

@@ -52,14 +52,22 @@ if (!function_exists('rasamalaNewsRawContentByPath')) {
       return '';
     }
 
-    $safe_path = method_exists($dbs, 'escape_string') ? $dbs->escape_string($path) : addslashes($path);
-    $query = $dbs->query("SELECT content_desc FROM content WHERE content_path='{$safe_path}' AND COALESCE(is_draft,0)=0 LIMIT 1");
+    $statement = $dbs->prepare('SELECT content_desc FROM content WHERE content_path=? AND COALESCE(is_draft,0)=0 LIMIT 1');
+    if (!$statement) {
+      return '';
+    }
+    $statement->bind_param('s', $path);
+    $statement->execute();
+    $query = $statement->get_result();
     if (!$query || !method_exists($query, 'fetch_assoc')) {
+      $statement->close();
       return '';
     }
 
     $row = $query->fetch_assoc();
-    return is_array($row) ? stripslashes($row['content_desc'] ?? '') : '';
+    $content = is_array($row) ? stripslashes($row['content_desc'] ?? '') : '';
+    $statement->close();
+    return $content;
   }
 }
 
@@ -137,14 +145,7 @@ function news_list_tpl($title, $path, $date, $summary) {
                   <?php if ($date_html !== '') : ?>
                   <div class="content-date news-list-date"><i class="far fa-clock me-2" aria-hidden="true"></i><?= $escape($date_html) ?></div>
                   <?php endif; ?>
-                  <?php $news_qr_svg = function_exists('themeGenerateUrlQrSvg') ? themeGenerateUrlQrSvg($news_url, 180) : ''; ?>
-                  <div class="news-action-buttons d-inline-flex align-items-center gap-2">
-                      <button type="button" class="btn btn-news-share" data-url="<?= $escape($news_url) ?>" data-title="<?= $escape($display_title) ?>" title="<?= $escape(__('Share')); ?>">
-                          <i class="fas fa-share-alt" aria-hidden="true"></i> <span><?= $escape(__('Share')); ?></span>
-                      </button>
-                      <button type="button" class="btn btn-news-qr d-none d-md-inline-flex" data-url="<?= $escape($news_url) ?>" data-title="<?= $escape($display_title) ?>" data-qr-svg="<?= $escape($news_qr_svg) ?>" title="Scan for Link">
-                          <i class="fas fa-qrcode" aria-hidden="true"></i> <span>Scan for Link</span>
-                      </button>
+                  <div class="news-action-buttons d-inline-flex align-items-center gap-2 ms-auto">
                       <?php if ($show_readmore) : ?>
                       <a class="btn btn-primary btn-sm btn-news-readmore rounded-pill" href="<?= $escape($news_url) ?>"><?php echo __('Read More') ?></a>
                       <?php endif; ?>

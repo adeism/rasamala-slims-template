@@ -6,7 +6,7 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
 }
 ?>
-<div class="col-md-3 mb-4 text-center text-md-left detail-sidebar-col">
+<div class="col-md-3 mb-4 text-center detail-sidebar-col">
     <div class="detail-cover-wrapper">
         <div class="detail-cover">
           <?= themeSanitizeHtml($image); ?>
@@ -15,7 +15,7 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
     </div>
     <div class="detail-side-availability">
         <div class="detail-avail-heading-row d-flex align-items-center justify-content-between mb-2">
-            <h5 class="detail-side-heading mb-0"><?= __('Availability'); ?></h5>
+            <h5 class="detail-side-heading mb-0"><i class="fas fa-book me-2 text-theme-accent" aria-hidden="true"></i><?= __('Availability'); ?></h5>
         </div>
         <?php
         $availability_output = themeDetailAvailabilityHtml($dbs ?? null, $biblio_id_safe, $availability_html);
@@ -28,8 +28,8 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
                 <div class="detail-qr-img-wrap mb-2">
                     <?= $qrcode_svg ?? ''; ?>
                 </div>
-                <span class="detail-qr-label text-muted d-block small fw-bold">
-                    <i class="fas fa-qrcode me-1 text-primary"></i> Scan for Link
+                <span class="detail-qr-label text-muted d-block small fw-medium">
+                    <i class="fas fa-qrcode me-1 text-theme-accent"></i> Scan for Link
                 </span>
             </div>
         </div>

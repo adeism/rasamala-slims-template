@@ -61,6 +61,8 @@
         manualInstitution: '',
         otherInstitutionValue: otherInstitutionValue,
         currentTime: '',
+        clockInterval: null,
+        motionUnsubscribe: null,
         timeout: null,
         csrfName: config.csrfName || '',
         csrfToken: config.csrfToken || '',
@@ -90,7 +92,17 @@
     mounted: function () {
       this.focusCurrentInput();
       this.updateTime();
-      setInterval(this.updateTime, 1000);
+      this.startClock();
+
+      if (window.RasamalaMotionLifecycle && typeof window.RasamalaMotionLifecycle.subscribe === 'function') {
+        this.motionUnsubscribe = window.RasamalaMotionLifecycle.subscribe(function (visible) {
+          if (visible) {
+            this.startClock();
+          } else {
+            this.stopClock();
+          }
+        }.bind(this));
+      }
 
       if (this.quotesEnabled) {
         this.getQuotes();
@@ -98,7 +110,29 @@
 
       document.addEventListener('click', this.keepScannerInputFocused);
     },
+    beforeUnmount: function () {
+      this.stopClock();
+      clearTimeout(this.timeout);
+      if (typeof this.motionUnsubscribe === 'function') {
+        this.motionUnsubscribe();
+        this.motionUnsubscribe = null;
+      }
+      document.removeEventListener('click', this.keepScannerInputFocused);
+    },
     methods: {
+      startClock: function () {
+        this.stopClock();
+        if (document.hidden) return;
+        this.clockInterval = window.setInterval(function () {
+          this.updateTime();
+        }.bind(this), 1000);
+      },
+      stopClock: function () {
+        if (this.clockInterval !== null) {
+          window.clearInterval(this.clockInterval);
+          this.clockInterval = null;
+        }
+      },
       focusCurrentInput: function (tabName) {
         var targetTab = tabName || this.activeTab;
 

@@ -198,3 +198,38 @@ if (!function_exists('themeFormatDetailAuthors')) {
     return $output;
   }
 }
+
+if (!function_exists('themeFormatDetailSubjects')) {
+  function themeFormatDetailSubjects($subjects) {
+    $subjects = trim((string)($subjects ?? ''));
+    if ($subjects === '') {
+      return '';
+    }
+
+    $raw_parts = preg_split('/\s*(?:<br\s*\/?>|;|\r?\n)\s*/i', $subjects);
+    $output_tags = [];
+
+    foreach ($raw_parts as $part) {
+      $clean_text = trim(strip_tags($part));
+      if ($clean_text === '' || $clean_text === '-') {
+        continue;
+      }
+
+      if (preg_match('/<a\s+[^>]*href=["\']([^"\']+)["\'][^>]*>(.*?)<\/a>/i', $part, $m)) {
+        $url = $m[1];
+        $text = trim(strip_tags($m[2]));
+        $output_tags[] = '<a href="' . themeEscape($url) . '" class="btn btn-outline-secondary btn-sm rounded-pill detail-subject-tag me-1 mb-1">' . themeEscape($text) . '</a>';
+      } else {
+        $sub_parts = preg_split('/\s*,\s*/', $clean_text);
+        foreach ($sub_parts as $sub) {
+          $sub = trim($sub);
+          if ($sub === '' || $sub === '-') continue;
+          $url = 'index.php?subject=' . urlencode($sub) . '&search=Search';
+          $output_tags[] = '<a href="' . themeEscape($url) . '" class="btn btn-outline-secondary btn-sm rounded-pill detail-subject-tag me-1 mb-1">' . themeEscape($sub) . '</a>';
+        }
+      }
+    }
+
+    return implode(' ', $output_tags);
+  }
+}

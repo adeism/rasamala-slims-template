@@ -127,7 +127,7 @@ if (!function_exists('themePresetDefinitions')) {
           'classic_home_display_show' => 'below',
           'classic_ticker_show' => 0,
           'classic_footer_show' => 1,
-          'classic_theme_color' => 'cleanblue',
+          'classic_theme_color' => 'contemporarytechlibrary',
           'classic_font_family' => 'inter',
           'classic_hero_background_animation' => 'waves',
           'classic_cursor_particles' => 'none',

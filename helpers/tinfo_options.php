@@ -9,21 +9,30 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
 }
 
 require_once __DIR__ . '/language.php';
+require_once __DIR__ . '/theme_feature_flags.php';
 
 // ----------------------------------------------------------------------------
 // Load Modular Theme Option Definitions
 // ----------------------------------------------------------------------------
 $theme = $sysconf['template']['theme'] ?? 'rasamala';
 
-$sysconf['template']['option'][$theme] = array_merge(
-    require __DIR__ . '/options/tinfo_option_general.php',
-    require __DIR__ . '/options/tinfo_option_navbar.php',
-    require __DIR__ . '/options/tinfo_option_hero.php',
-    require __DIR__ . '/options/tinfo_option_content.php',
-    require __DIR__ . '/options/tinfo_option_footer.php',
-    require __DIR__ . '/options/tinfo_option_display.php',
-    require __DIR__ . '/options/tinfo_option_visitor.php'
-);
+$rasamala_tinfo_option_files = [
+    __DIR__ . '/options/tinfo_option_general.php',
+    __DIR__ . '/options/tinfo_option_navbar.php',
+    __DIR__ . '/options/tinfo_option_hero.php',
+    __DIR__ . '/options/tinfo_option_content.php',
+    __DIR__ . '/options/tinfo_option_footer.php',
+    __DIR__ . '/options/tinfo_option_display.php',
+    __DIR__ . '/options/tinfo_option_visitor.php',
+];
+$rasamala_tinfo_options = [];
+foreach ($rasamala_tinfo_option_files as $rasamala_tinfo_option_file) {
+    $rasamala_tinfo_options = array_merge(
+        $rasamala_tinfo_options,
+        rasamalaFilterDisabledTinfoOptions(require $rasamala_tinfo_option_file)
+    );
+}
+$sysconf['template']['option'][$theme] = $rasamala_tinfo_options;
 
 // ----------------------------------------------------------------------------
 // Load Theme Admin Customizer UI Bootstrapper

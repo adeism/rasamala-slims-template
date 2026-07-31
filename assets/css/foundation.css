@@ -20,6 +20,12 @@
   display: none !important;
 }
 
+/* Vue removes this directive after mounting; prevent the loading branch from
+   flashing as a literal icon while deferred Vue assets are still loading. */
+#search-wraper #search-form button[type="submit"] > i[v-if="loading"] {
+  display: none !important;
+}
+
 /* ----------------------------------------------------
    1. Design System Variables & Global Overrides
    ---------------------------------------------------- */
@@ -234,7 +240,7 @@ body.rasamala-home-hero-only .rasamala-hero-section,
   flex-grow: 1;
 }
 
-body.rasamala-background-animation-active {
+body.rasamala-background-animation-active:not([class*="rasamala-background-style-image-"]) {
   background-color: #ffffff !important;
   background-image: none !important;
   background: #ffffff !important;
@@ -586,7 +592,7 @@ body.rasamala-palette-dark:not(.rasamala-dark) .irs-grid-text {
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
   min-height: auto;
-  border-bottom: 1px solid var(--rasamala-chrome-border) !important;
+  border-bottom: none !important;
   position: sticky !important;
   top: 0 !important;
   z-index: var(--z-header) !important;
@@ -667,6 +673,15 @@ body.rasamala-palette-dark:not(.rasamala-dark) .irs-grid-text {
   color: var(--rasamala-text-secondary);
   font-size: 14px;
   font-weight: 500;
+}
+
+.theme-async-message-wrap {
+  max-width: 420px;
+}
+
+.theme-stat-divider {
+  width: 1px;
+  height: 16px;
 }
 
 .theme-async-state-error {
@@ -823,7 +838,7 @@ body.rasamala-palette-dark:not(.rasamala-dark) .irs-grid-text {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   user-select: none;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .search-kbd-badge:hover {
@@ -844,13 +859,15 @@ body.rasamala-palette-dark:not(.rasamala-dark) .irs-grid-text {
   top: 0;
   left: 0;
   height: 3px;
-  width: 0%;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
   background: linear-gradient(90deg, var(--theme-primary-color, #0f172a), var(--theme-accent-color, #2563eb));
   box-shadow: 0 0 10px rgba(var(--theme-accent-rgb, 37, 99, 235), 0.7), 0 0 5px rgba(var(--theme-accent-rgb, 37, 99, 235), 0.5);
   z-index: 999999;
   pointer-events: none;
   opacity: 0;
-  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
 }
 
 .rasamala-page-progress-bar.active {
@@ -908,7 +925,7 @@ body.rasamala-palette-dark:not(.rasamala-dark) .irs-grid-text {
 /* Uniform Choice Card Modals (View Mode, Sort, Filter) */
 .search-view-modal-options .list-group-item,
 .search-sort-modal-options .list-group-item {
-  transition: all 0.2s ease !important;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease !important;
   cursor: pointer !important;
 }
 
@@ -1792,6 +1809,151 @@ nav.navbar {
     border-top: 1px solid rgba(255, 255, 255, 0.16) !important;
   }
 
+  /* Mobile navigation opens as a true viewport overlay instead of pushing
+     the page content down. The panel keeps its own scroll area so every
+     configured navbar link remains reachable on short screens. */
+  .c-header .navbar-collapse {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: calc(var(--z-header, 12000) + 20) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    flex-basis: auto !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    max-height: 100vh !important;
+    max-height: 100dvh !important;
+    margin: 0 !important;
+    padding: max(14px, env(safe-area-inset-top, 0px)) clamp(16px, 5vw, 28px) max(18px, env(safe-area-inset-bottom, 0px)) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    background: var(--rasamala-chrome-bg, var(--theme-primary)) !important;
+    color: var(--rasamala-chrome-text, var(--theme-on-primary, #fff)) !important;
+    border: 0 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transform: translateY(-12px) !important;
+    transition: opacity 180ms ease, transform 220ms ease, visibility 0s linear 220ms !important;
+  }
+
+  .c-header .navbar-collapse.rasamala-mobile-menu-open {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: translateY(0) !important;
+    transition-delay: 0s !important;
+  }
+
+  .rasamala-mobile-menu-topbar {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    flex: 0 0 auto !important;
+    min-height: 42px !important;
+    padding: 0 0 12px !important;
+    margin-bottom: 12px !important;
+    border-bottom: 1px solid var(--rasamala-chrome-border, rgba(255, 255, 255, 0.18)) !important;
+  }
+
+  .rasamala-mobile-menu-heading {
+    min-width: 0 !important;
+    overflow: hidden !important;
+    color: var(--rasamala-chrome-text, var(--theme-on-primary, #fff)) !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.01em !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  .rasamala-mobile-menu-close {
+    display: inline-flex !important;
+    flex: 0 0 38px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 38px !important;
+    height: 38px !important;
+    padding: 0 !important;
+    border: 1px solid var(--rasamala-chrome-border, rgba(255, 255, 255, 0.2)) !important;
+    border-radius: 999px !important;
+    background: color-mix(in srgb, var(--rasamala-chrome-text, #fff) 10%, transparent) !important;
+    color: var(--rasamala-chrome-text, var(--theme-on-primary, #fff)) !important;
+    font-size: 16px !important;
+    line-height: 1 !important;
+  }
+
+  .rasamala-mobile-menu-close:hover,
+  .rasamala-mobile-menu-close:focus-visible {
+    background: color-mix(in srgb, var(--theme-accent) 24%, transparent) !important;
+    color: var(--rasamala-chrome-text, var(--theme-on-primary, #fff)) !important;
+    outline: 2px solid color-mix(in srgb, var(--theme-accent) 62%, transparent) !important;
+    outline-offset: 2px !important;
+  }
+
+  .c-header .navbar-collapse .navbar-nav {
+    display: flex !important;
+    flex: 0 0 auto !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    gap: 6px !important;
+    margin: 0 !important;
+  }
+
+  .c-header .navbar-collapse .navbar-nav .nav-item {
+    width: 100% !important;
+  }
+
+  .c-header .navbar-collapse .navbar-nav .nav-link {
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+    min-height: 48px !important;
+    padding: 11px 14px !important;
+    border: 1px solid transparent !important;
+    border-radius: 12px !important;
+    color: var(--rasamala-chrome-text-muted, var(--rasamala-chrome-text, #fff)) !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+  }
+
+  .c-header .navbar-collapse .navbar-nav .nav-link:hover,
+  .c-header .navbar-collapse .navbar-nav .nav-item.active .nav-link,
+  .c-header .navbar-collapse .navbar-nav .nav-link:focus-visible {
+    border-color: var(--rasamala-chrome-border, rgba(255, 255, 255, 0.18)) !important;
+    background: color-mix(in srgb, var(--theme-accent) 18%, transparent) !important;
+    color: var(--rasamala-chrome-text, var(--theme-on-primary, #fff)) !important;
+    outline: none !important;
+  }
+
+  .c-header .navbar-collapse .navbar-nav .navbar-menu-icon {
+    width: 22px !important;
+    margin-right: 10px !important;
+    color: var(--theme-accent) !important;
+    font-size: 14px !important;
+  }
+
+  .c-header .navbar-collapse .dropdown-menu {
+    position: static !important;
+    width: 100% !important;
+    margin: 2px 0 4px !important;
+    border-color: var(--rasamala-chrome-border, rgba(255, 255, 255, 0.16)) !important;
+    background: color-mix(in srgb, var(--rasamala-chrome-bg, var(--theme-primary)) 90%, #000 10%) !important;
+    box-shadow: none !important;
+  }
+
+  body.rasamala-mobile-menu-open {
+    overflow: hidden !important;
+    touch-action: none !important;
+  }
+
   .c-header .navbar-nav {
     gap: 4px !important;
   }
@@ -1825,6 +1987,15 @@ nav.navbar {
 .c-header .nav-item.dropdown,
 .c-header .dropdown {
   overflow: visible !important;
+}
+
+@media (max-width: 991.98px) {
+  /* Restore the overlay's internal scroll after the global dropdown overflow
+     rule above; long custom navbar lists must remain reachable. */
+  .c-header .navbar-collapse {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
 }
 
 .c-header .nav-item.dropdown.show,
@@ -2123,6 +2294,12 @@ footer .footer-about-text a:focus,
 .rasamala-theme .ck-content {
   max-width: 100% !important;
   overflow-wrap: anywhere !important;
+}
+
+
+/* Compact CKEditor content rendered by SLiMS without changing core templates. */
+.rasamala-theme .ck-content.p-5 {
+  padding: 0.25rem !important;
 }
 
 

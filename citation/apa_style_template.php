@@ -18,12 +18,17 @@
 
 if (!defined('RASAMALA_CITE_STYLES_LOADED')) {
     define('RASAMALA_CITE_STYLES_LOADED', true);
+    $csp_nonce = function_exists('themeCspNonce') ? themeCspNonce() : '';
+    // The citation route is rendered before the Rasamala theme helpers are
+    // loaded, so do not call themeEscape() here.  Keep this view usable when
+    // it is opened directly (or in a popup) as well as from show_detail.
+    $citation_nonce_attr = htmlspecialchars((string)$csp_nonce, ENT_QUOTES, 'UTF-8');
     $theme_dir = 'template/' . ($sysconf['template']['theme'] ?? 'rasamala');
     echo '<link rel="stylesheet" href="' . $theme_dir . '/assets/css/foundation.css">';
     echo '<link rel="stylesheet" href="' . $theme_dir . '/assets/css/header-runtime.css">';
     echo '<link rel="stylesheet" href="' . $theme_dir . '/assets/css/opac-pages.css">';
     echo '<link rel="stylesheet" href="' . $theme_dir . '/assets/css/theme-dark.css">';
-    echo '<style>
+    echo '<style nonce="' . $citation_nonce_attr . '">
     html, body {
         background-color: var(--theme-background, #f8f9fa) !important;
         color: var(--theme-text, #212529) !important;
@@ -81,7 +86,7 @@ if (!defined('RASAMALA_CITE_STYLES_LOADED')) {
         color: var(--theme-dark-text, #f1f5f9) !important;
     }
     </style>
-    <script>
+    <script nonce="' . $citation_nonce_attr . '">
     (function() {
         var isDark = false;
         try {

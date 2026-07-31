@@ -86,14 +86,17 @@ if (!function_exists('themeDetailCallNumberTags')) {
   {
     $call_numbers = [];
     $location_names = [];
-    if ($dbs && method_exists($dbs, 'query')) {
+    if ($dbs && method_exists($dbs, 'prepare')) {
       $biblio_id = themeSafeInt($biblio_id);
-      $query = $dbs->query("SELECT DISTINCT i.call_number, ml.location_name, i.site
+      $stmt = $dbs->prepare("SELECT DISTINCT i.call_number, ml.location_name, i.site
           FROM item AS i
           LEFT JOIN mst_location AS ml ON i.location_id=ml.location_id
-          WHERE i.biblio_id=" . $biblio_id . "
+          WHERE i.biblio_id=?
           ORDER BY ml.location_name ASC, i.call_number ASC");
-      if ($query) {
+      if ($stmt) {
+        $stmt->bind_param('i', $biblio_id);
+        $stmt->execute();
+        $query = $stmt->get_result();
         while ($row = $query->fetch_assoc()) {
           $call_number = trim($row['call_number'] ?? '');
           if (themeDetailHasValue($call_number)) {
@@ -111,6 +114,7 @@ if (!function_exists('themeDetailCallNumberTags')) {
             $location_names[$location] = true;
           }
         }
+        $stmt->close();
       }
     }
 
@@ -128,7 +132,7 @@ if (!function_exists('themeDetailCallNumberTags')) {
     $has_multiple_locations = count($location_names) > 1;
     $seen = [];
     $output = '<div class="detail-callnumber-strip">';
-    $output .= '<div class="detail-callnumber-label">' . themeEscape(__('Call Number')) . '</div>';
+    $output .= '<div class="detail-callnumber-label"><i class="fas fa-barcode me-2 text-theme-accent" aria-hidden="true"></i>' . themeEscape(__('Call Number')) . '</div>';
     foreach ($call_numbers as $item) {
       $display_call_number = $item['call_number'];
       if ($has_multiple_locations && $item['location'] !== '') {
@@ -149,8 +153,13 @@ if (!function_exists('themeDetailCallNumberTags')) {
 if (!function_exists('themeDetailAvailabilityHtml')) {
   function themeDetailAvailabilityHtml($dbs, $biblio_id, $fallback_html = '')
   {
-    if (!$dbs || !method_exists($dbs, 'query')) {
-      return themeDetailHasValue($fallback_html) ? themeSanitizeHtml($fallback_html) : '';
+    if (!$dbs || !method_exists($dbs, 'prepare')) {
+      if (themeDetailHasValue($fallback_html)) {
+        $clean_fallback = (string)$fallback_html;
+        $clean_fallback = preg_replace('/(<h[1-6][^>]*>)\s*(Availability)\s*(<\/h[1-6]>)/i', '$1<i class="fas fa-book me-2 text-theme-accent" aria-hidden="true"></i>$2$3', $clean_fallback);
+        return themeSanitizeHtml($clean_fallback);
+      }
+      return '';
     }
 
     $biblio_id = themeSafeInt($biblio_id);
@@ -168,15 +177,23 @@ if (!function_exists('themeDetailAvailabilityHtml')) {
             FROM item AS i
             LEFT JOIN mst_location AS ml ON i.location_id=ml.location_id
             LEFT JOIN mst_item_status AS mis ON i.item_status_id=mis.item_status_id
-            WHERE i.biblio_id=" . $biblio_id . "
+            WHERE i.biblio_id=?
             ORDER BY ml.location_name ASC, i.call_number ASC, i.item_code ASC";
-    $query = $dbs->query($sql);
+    $stmt = $dbs->prepare($sql);
+    if (!$stmt) {
+      return '';
+    }
+    $stmt->bind_param('i', $biblio_id);
+    $stmt->execute();
+    $query = $stmt->get_result();
     if (!$query || $query->num_rows < 1) {
+      $stmt->close();
       return '';
     }
 
     $locations = [];
     while ($item = $query->fetch_assoc()) {
+    $stmt->close();
       $location = trim($item['location_name'] ?? '');
       if ($location === '') {
         $location = __('Location name is not set');

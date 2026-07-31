@@ -6,6 +6,48 @@
 # @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
 # @Last modified time: 2026-07-15T15:16:37+07:00
 
+if (isset($_GET['rasamala_suggest']) && (string)$_GET['rasamala_suggest'] === '1') {
+  header('Content-Type: application/json; charset=utf-8');
+  header('Cache-Control: private, max-age=30');
+  header('X-Content-Type-Options: nosniff');
+
+  $query = trim((string)($_GET['q'] ?? ''));
+  $query = function_exists('mb_substr') ? mb_substr($query, 0, 80, 'UTF-8') : substr($query, 0, 80);
+  $query = str_replace(['%', '_'], '', $query);
+  $query_length = function_exists('mb_strlen') ? mb_strlen($query, 'UTF-8') : strlen($query);
+  $suggestions = [];
+
+  if ($query_length >= 2 && isset($dbs) && $dbs instanceof mysqli) {
+    $statement = $dbs->prepare(
+      "SELECT b.biblio_id, b.title,
+              GROUP_CONCAT(DISTINCT ma.author_name ORDER BY ma.author_name SEPARATOR '; ') AS author
+       FROM biblio AS b
+       LEFT JOIN biblio_author AS ba ON ba.biblio_id = b.biblio_id
+       LEFT JOIN mst_author AS ma ON ma.author_id = ba.author_id
+       WHERE b.title LIKE CONCAT(?, '%')
+       GROUP BY b.biblio_id, b.title
+       ORDER BY b.last_update DESC
+       LIMIT 6"
+    );
+
+    if ($statement) {
+      $statement->bind_param('s', $query);
+      $statement->execute();
+      $result = $statement->get_result();
+      while ($result && ($row = $result->fetch_assoc())) {
+        $suggestions[] = [
+          'title' => (string)($row['title'] ?? ''),
+          'author' => (string)($row['author'] ?? '')
+        ];
+      }
+      $statement->close();
+    }
+  }
+
+  echo json_encode($suggestions, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE);
+  exit;
+}
+
 $imagesDisk = \SLiMS\Filesystems\Storage::images();
 
 // setup list view
@@ -51,7 +93,7 @@ if (isset($_GET['p']) || isset($_GET['search'])) {
   } else {
     // --------------------------------------------------------------------------
     // handle member page
-    if ($_GET['p'] == 'member') {
+    if (($_GET['p'] ?? '') === 'member') {
       include 'parts/_member.php';
     } else {
       include 'parts/_other.php';

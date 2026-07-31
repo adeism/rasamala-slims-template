@@ -10,8 +10,10 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
 }
 
+require_once __DIR__ . '/helpers/theme_feature_flags.php';
 require_once __DIR__ . '/helpers/security.php';
 require_once __DIR__ . '/helpers/palette.php';
+require_once __DIR__ . '/helpers/background.php';
 require_once __DIR__ . '/helpers/preset.php';
 require_once __DIR__ . '/helpers/navigation.php';
 require_once __DIR__ . '/helpers/visitor.php';

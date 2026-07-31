@@ -20,7 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const cpuCores = Number(window.navigator.hardwareConcurrency || 4);
         const deviceMemory = Number(window.navigator.deviceMemory || 4);
         const smallViewport = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
-        const liteMode = smallViewport || cpuCores <= 4 || deviceMemory <= 4;
+        const saveData = !!(window.navigator.connection && window.navigator.connection.saveData);
+        const liteMode = smallViewport || cpuCores <= 4 || deviceMemory <= 4 || saveData;
 
         const speedMult = parseFloat(layer.getAttribute('data-speed-multiplier')) || 1.0;
 
@@ -36,6 +37,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (reducedMotion) {
             layer.classList.add('is-static');
+            return;
+        }
+
+        if (saveData) {
+            layer.classList.add('is-static', 'is-data-saver');
             return;
         }
 
@@ -62,6 +68,12 @@ document.addEventListener('DOMContentLoaded', () => {
             let height = 0;
             let frameId = 0;
             let stage = null;
+            let running = false;
+            let pageVisible = !document.hidden;
+            let unsubscribeLifecycle = null;
+            let fallbackVisibilityHandler = null;
+            let lastFrameTime = 0;
+            const frameInterval = liteMode ? (1000 / 30) : 0;
 
             if (!context) return false;
 
@@ -86,18 +98,66 @@ document.addEventListener('DOMContentLoaded', () => {
             stage = setupStage(context, () => width, () => height);
             resize();
 
+            const stopLoop = () => {
+                running = false;
+                if (frameId) {
+                    window.cancelAnimationFrame(frameId);
+                    frameId = 0;
+                }
+            };
+
             const loop = () => {
+                frameId = 0;
+                if (!running || !pageVisible) return;
+
+                const now = window.performance && typeof window.performance.now === 'function'
+                    ? window.performance.now()
+                    : Date.now();
+                if (frameInterval > 0 && now - lastFrameTime < frameInterval) {
+                    frameId = window.requestAnimationFrame(loop);
+                    return;
+                }
+                lastFrameTime = now;
+
                 if (stage && typeof stage.frame === 'function') {
                     stage.frame(context, width, height);
                 }
                 frameId = window.requestAnimationFrame(loop);
             };
 
-            frameId = window.requestAnimationFrame(loop);
+            const startLoop = () => {
+                if (running || !pageVisible) return;
+                running = true;
+                frameId = window.requestAnimationFrame(loop);
+            };
+
+            const onPageVisibility = (visible) => {
+                pageVisible = visible === true && !document.hidden;
+                if (pageVisible) {
+                    startLoop();
+                } else {
+                    stopLoop();
+                }
+            };
+
+            if (window.RasamalaMotionLifecycle && typeof window.RasamalaMotionLifecycle.subscribe === 'function') {
+                unsubscribeLifecycle = window.RasamalaMotionLifecycle.subscribe(onPageVisibility);
+            } else {
+                fallbackVisibilityHandler = () => onPageVisibility(!document.hidden);
+                document.addEventListener('visibilitychange', fallbackVisibilityHandler, {passive: true});
+                onPageVisibility(!document.hidden);
+            }
+
             window.addEventListener('resize', resize, {passive: true});
             layer._rasamalaAnimationCleanup = () => {
-                window.cancelAnimationFrame(frameId);
+                stopLoop();
                 window.removeEventListener('resize', resize);
+                if (typeof unsubscribeLifecycle === 'function') {
+                    unsubscribeLifecycle();
+                }
+                if (fallbackVisibilityHandler) {
+                    document.removeEventListener('visibilitychange', fallbackVisibilityHandler);
+                }
             };
 
             return true;

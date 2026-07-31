@@ -221,8 +221,12 @@ if ($current_p === 'member' && $is_logged_in_member) {
 }
 ?>
 
-<?php if (($sysconf['template']['classic_mobile_bottom_nav_show'] ?? 1) == 1) : ?>
-<div class="mobile-bottom-nav d-lg-none">
+<?php
+$mobile_bottom_nav_enabled = (int)themeEffectiveTemplateValue('classic_mobile_bottom_nav_show', 1, $sysconf) === 1;
+$theme_viewer_preview_enabled = (int)themeEffectiveTemplateValue('classic_palette_switcher_show', 0, $sysconf) === 1;
+?>
+<?php if ($mobile_bottom_nav_enabled || $theme_viewer_preview_enabled) : ?>
+<div class="mobile-bottom-nav d-lg-none"<?= $mobile_bottom_nav_enabled ? '' : ' hidden'; ?>>
     <?php
     foreach ($primary_bottom_nav as $item) {
         $key = $item['key'];
@@ -330,7 +334,7 @@ if ($current_p === 'member' && $is_logged_in_member) {
                     <?php if (!empty($current_mobile_language['code'])): ?>
                     <span class="flag-icon flag-icon-<?= themeEscape($current_mobile_language['code']); ?> flag-icon-rounded mobile-language-current-flag" aria-hidden="true"></span>
                     <?php endif; ?>
-                    <select class="form-control mobile-language-select" aria-label="<?= themeEscape(__('Select Language')); ?>" onchange="if (this.value) window.location.href = 'index.php?select_lang=' + encodeURIComponent(this.value);">
+                    <select class="form-control mobile-language-select" aria-label="<?= themeEscape(__('Select Language')); ?>">
                         <?php foreach ($mobile_language_links as $mobile_language): ?>
                         <option value="<?= themeEscape($mobile_language['code']); ?>" <?= $mobile_language['active'] ? 'selected' : '' ?>>
                             <?= themeEscape($mobile_language['name']); ?>

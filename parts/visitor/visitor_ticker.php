@@ -25,9 +25,6 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
 
 <?php
 $visitor_room_query = trim(isset($_GET['room']) ? '&room=' . simbio_security::xssFree($_GET['room']) : '');
-$visitor_counter_script = function_exists('assetsVersioned')
-    ? assetsVersioned('js/visitor_counter.js')
-    : $sysconf['template']['dir'] . '/' . $sysconf['template']['theme'] . '/assets/js/visitor_counter.js';
 $visitor_js_config = [
     'submitLabel' => __('Check In'),
     'submittingLabel' => __('Checking in...'),
@@ -67,5 +64,3 @@ $visitor_js_config = [
 ];
 ?>
 <script id="rasamala-visitor-config" type="application/json"><?= json_encode($visitor_js_config, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?></script>
-<script src="<?php echo themeEscape($sysconf['template']['dir'].'/'.$sysconf['template']['theme'].'/assets/js/axios.min.js'); ?>"></script>
-<script src="<?= themeEscape($visitor_counter_script); ?>"></script>

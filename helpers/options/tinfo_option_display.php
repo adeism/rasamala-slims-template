@@ -24,6 +24,7 @@ return [
         'dbfield' => 'classic_librarian_custom_usernames',
         'label' => themeTranslate('Custom Librarian Usernames'),
         'type' => 'text',
+        'help' => themeTranslate('Satu username per baris atau titik koma. Posisi opsional: username (Pustakawan).'),
         'default' => ''
     ],
 
@@ -105,6 +106,7 @@ return [
         'dbfield' => 'classic_title_chars',
         'label' => themeTranslate('Main Title Character Limit'),
         'type' => 'text',
+        'help' => themeTranslate('Isi angka batas karakter judul, misalnya 100.'),
         'default' => 100,
         'width' => '10',
         'max' => 4
@@ -113,6 +115,7 @@ return [
         'dbfield' => 'classic_parallel_title_separator',
         'label' => themeTranslate('Parallel Title Separator Character'),
         'type' => 'text',
+        'help' => themeTranslate('Masukkan karakter pemisah judul paralel, misalnya =.'),
         'default' => '=',
         'width' => '10',
         'max' => 12

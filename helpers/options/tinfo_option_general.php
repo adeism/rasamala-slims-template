@@ -3,47 +3,43 @@
  * Rasamala Template - Options: Section 1 (General & Layout Settings)
  */
 if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
-  die("can not access this file directly");
+    die("can not access this file directly");
 }
 
+$palette_file = __DIR__ . '/../palette.php';
+if (is_file($palette_file)) {
+    require_once $palette_file;
+}
+$theme_color_palette_options = [];
+if (function_exists('themeAccentPalettes')) {
+    foreach (themeAccentPalettes() as $palette_key => $palette_info) {
+        $theme_color_palette_options[] = [
+            $palette_key,
+            themeTranslate($palette_info['label'] ?? ucfirst($palette_key)),
+        ];
+    }
+}
+$theme_color_palette_options[] = ['custom', themeTranslate('Custom Palette')];
+
 return [
-    'theme-preset' => [
-        'dbfield' => 'classic_theme_preset',
-        'label' => themeTranslate('Overall Theme Preset'),
-        'type' => 'dropdown',
-        'default' => 'custom',
-        'data' => [
-            ['simple_homepage', themeTranslate('Simple - Search + Running Text')],
-            ['office', themeTranslate('Simple + Topics')],
-            ['all_show', themeTranslate('Full - Topics + News + Collections + Top Reader + Map + Running Text')],
-            ['custom', themeTranslate('Custom (Fully Unlocked)')]
-        ]
-    ],
     'theme-color' => [
         'dbfield' => 'classic_theme_color',
         'label' => themeTranslate('Theme Color Palette'),
         'type' => 'dropdown',
-        'default' => 'custom',
-        'data' => [
-            ['warmgray', themeTranslate('Warm Gray (Default)')],
-            ['minimalwhite', themeTranslate('Minimal White')],
-            ['darkgray', themeTranslate('Dark Gray')],
-            ['cleanblue', themeTranslate('Clean Blue')],
-            ['warmlibrary', themeTranslate('Warm Library')],
-            ['custom', themeTranslate('Custom Palette')]
-        ]
+        'default' => 'midnightnavygold',
+        'data' => $theme_color_palette_options
     ],
     'palette-custom' => [
         'dbfield' => 'classic_palette_custom',
         'label' => themeTranslate('Custom Palette Colors'),
         'type' => 'longtext',
-        'default' => '#0B4F54; #5C8374; #F2994A; #F4F6F8; #FFFFFF; #1C1E21; #B0B7BD | #1A2E40; #B38F4D; #D9534F; #101318; #161A22; #F4F6F8; #B6BEC8',
+        'default' => '#44403c; #292524; #ca8a04; #fafaf9; #f5f5f4; #111827; #374151 | #57534e; #44403c; #eab308; #121110; #1c1917; #f8fafc; #cbd5e1',
     ],
     'color-toggle' => [
         'dbfield' => 'classic_color_toggle',
         'label' => themeTranslate('Dark/Light Mode Button'),
         'type' => 'dropdown',
-        'default' => 'auto_show',
+        'default' => 'dark_hide',
         'data' => [
             ['auto_show', themeTranslate('Auto - Show Button (System Mode)')],
             ['auto_hide', themeTranslate('Auto - Hide Button (System Mode)')],
@@ -90,7 +86,7 @@ return [
         'dbfield' => 'classic_floating_info',
         'label' => __('Tombol Info Melayang'),
         'type' => 'dropdown',
-        'default' => 'whatsapp',
+        'default' => 'libinfo',
         'data' => [
             ['libinfo', __('Show Library Info (Libinfo)')],
             ['whatsapp', __('WhatsApp Mode')],
@@ -101,6 +97,7 @@ return [
         'dbfield' => 'classic_whatsapp_number',
         'label' => __('Nomor WhatsApp (dengan Kode Negara)'),
         'type' => 'text',
+        'help' => __('Gunakan format internasional tanpa tanda + atau spasi, misalnya 628123456789.'),
         'default' => '628123456789'
     ],
     'whatsapp-title' => [
@@ -119,7 +116,8 @@ return [
         'dbfield' => 'classic_whatsapp_desc',
         'label' => __('Deskripsi Singkat WhatsApp (Format: nama_orang; pesan singkat)'),
         'type' => 'longtext',
-        'default' => 'Pustakawan; Halo, silakan ketik pesan Anda langsung di kolom bawah. Agar kami dapat membantu lebih cepat, tuliskan nama, nomor anggota (jika ada), lalu pertanyaan Anda.'
+        'help' => __('Format: nama pengirim; pesan singkat. Contoh: Pustakawan; Halo, ada yang bisa kami bantu?'),
+        'default' => 'Pustakawan; Halo, ada yg bisa kami bantu ?'
     ],
     'whatsapp-categories' => [
         'dbfield' => 'classic_whatsapp_categories',

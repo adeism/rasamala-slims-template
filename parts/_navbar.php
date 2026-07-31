@@ -14,6 +14,12 @@ if (!isset($is_login)) {
 
 $is_homepage = themeIsHomepage();
 $is_hero_only = $is_homepage && themeHomepageOnlyHero($sysconf);
+$theme_viewer_preview_enabled = (int)themeEffectiveTemplateValue('classic_palette_switcher_show', 0, $sysconf) === 1;
+$show_color_mode_toggle = function_exists('themeColorModeToggleVisible')
+    ? (themeColorModeToggleVisible($sysconf) || $theme_viewer_preview_enabled)
+    : $theme_viewer_preview_enabled;
+$show_member_area = ((int)($sysconf['template']['classic_member_area'] ?? 1) === 1) || $theme_viewer_preview_enabled;
+$member_area_preview_hidden = $theme_viewer_preview_enabled && (int)($sysconf['template']['classic_member_area'] ?? 1) !== 1;
 
 $menu_raw = $sysconf['template']['classic_navbar_menu'] ?? themeNavbarMenuDefault();
 $main_menus = themeParseNavbarMenus($menu_raw);
@@ -31,13 +37,13 @@ $lib_name_in_hero = ($lib_name_position === 'hero');
         <?php echo themeLibraryLogoHtml($sysconf, $imagesDisk ?? null, 'navbar-brand-img'); ?>
         <div class="d-inline-flex flex-column ms-1 navbar-brand-text">
             <span class="navbar-lib-name"><?php echo themeEscape($sysconf['library_name']); ?></span>
-            <?php if ($sysconf['template']['classic_library_subname']) : ?>
-            <span class="navbar-lib-subname"><?php echo themeEscape($sysconf['library_subname']); ?></span>
+            <?php if ($sysconf['template']['classic_library_subname'] || $theme_viewer_preview_enabled) : ?>
+            <span class="navbar-lib-subname"<?= !$sysconf['template']['classic_library_subname'] ? ' hidden' : ''; ?>><?php echo themeEscape($sysconf['library_subname']); ?></span>
             <?php endif; ?>
         </div>
     </a>
     <div class="navbar-mobile-controls d-lg-none">
-        <?php if (themeColorModeToggleVisible($sysconf)): ?>
+        <?php if ($show_color_mode_toggle): ?>
         <button id="color-mode-toggle-nav"
                 class="btn-color-mode-toggle-nav"
                 title="<?= themeEscape(__('Dark mode')) ?>"
@@ -48,13 +54,20 @@ $lib_name_in_hero = ($lib_name_position === 'hero');
             <i class="fas fa-moon" aria-hidden="true"></i>
         </button>
         <?php endif; ?>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        <button id="rasamala-mobile-menu-toggle" class="navbar-toggler" type="button"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
     </div>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="navbar-collapse" id="navbarSupportedContent" aria-hidden="false">
+        <div class="rasamala-mobile-menu-topbar d-lg-none">
+            <span class="rasamala-mobile-menu-heading"><?= themeEscape($sysconf['library_name'] ?? __('Navigation')); ?></span>
+            <button id="rasamala-mobile-menu-close" class="rasamala-mobile-menu-close" type="button"
+                    aria-label="<?= themeEscape(__('Close')); ?>">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
         <ul class="navbar-nav ms-auto flex-lg-nowrap align-items-lg-center rasamala-navbar-menu">
           <?php
           foreach ($main_menus as $main_menu) {
@@ -72,7 +85,7 @@ $lib_name_in_hero = ($lib_name_position === 'hero');
             $safe_icon = themeEscape(themeNavbarMenuIconClass($main_menu, 'fas fa-link'));
 
             $menu_str = <<<HTML
-<li class="nav-item {$safe_active}">
+<li class="nav-item {$safe_active}" data-rasamala-navbar-main-item="1">
     <a class="nav-link" href="{$safe_url}"><i class="{$safe_icon} navbar-menu-icon" aria-hidden="true"></i><span class="navbar-menu-label">{$safe_text}</span></a>
 </li>
 HTML;
@@ -93,10 +106,10 @@ HTML;
           </li>
           <?php endif; ?>
           <?php
-          if (($sysconf['template']['classic_member_area'] ?? 1) == 1) {
+          if ($show_member_area) {
             if ($is_login) {
               ?>
-                <li class="nav-item dropdown <?= $menu_member_active; ?>">
+                <li class="nav-item dropdown <?= $menu_member_active; ?>"<?= $member_area_preview_hidden ? ' hidden' : ''; ?>>
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">
                         <img class="rounded-full ms-2 me-2 navbar-user-avatar"
@@ -113,7 +126,7 @@ HTML;
                     </div>
                 </li>
             <?php } else { ?>
-                <li class="nav-item <?= $menu_member_active; ?>">
+                <li class="nav-item <?= $menu_member_active; ?>"<?= $member_area_preview_hidden ? ' hidden' : ''; ?>>
                     <a class="nav-link" href="index.php?p=member">
                         <i class="fas fa-user navbar-menu-icon" aria-hidden="true"></i>
                         <span class="navbar-menu-label"><?= themeEscape(__('Member Area')) ?></span>
@@ -168,7 +181,7 @@ HTML;
 	                </div>
 	            </li>
 	            <?php } ?>
-            <?php if (themeColorModeToggleVisible($sysconf)): ?>
+            <?php if ($show_color_mode_toggle): ?>
             <li class="nav-item d-none d-lg-block nav-color-toggle-wrapper-desktop">
                 <button id="color-mode-toggle-desktop"
                         class="nav-link btn-color-mode-toggle-desktop bg-transparent border-0 px-2"
