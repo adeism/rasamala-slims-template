@@ -132,7 +132,7 @@ return [
     ],
     'latest-content-section-show' => [
         'dbfield' => 'classic_home_content_cards_show',
-        'label' => themeTranslate('Latest Content Section'),
+        'label' => themeTranslate('Latest Content Section (News / Cards)'),
         'type' => 'dropdown',
         'default' => 1,
         'data' => [
@@ -152,7 +152,7 @@ return [
     ],
     'new-collection-section-show' => [
         'dbfield' => 'classic_new_collection',
-        'label' => themeTranslate('New Collections Section'),
+        'label' => themeTranslate('New Collections Section (Koleksi Terbaru)'),
         'type' => 'dropdown',
         'default' => 1,
         'data' => [

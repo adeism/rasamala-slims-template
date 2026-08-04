@@ -43,6 +43,11 @@ $background_animation = themeBackgroundAnimation();
 $background_animation_class = $background_animation !== 'none' ? ' rasamala-search-banner-bg-' . themeEscape($background_animation) : '';
 $parallel_title_separator = themeParallelTitleSeparator();
 $title_character_limit = themeTitleCharacterLimit();
+$home_content_source = $sysconf;
+if ($theme_viewer_preview_enabled) {
+    $home_content_source['template']['classic_home_content_cards_show'] = 1;
+}
+$home_content_cards = (isset($dbs) && $dbs && function_exists('themeHomeContentCards')) ? themeHomeContentCards($dbs, $home_content_source) : [];
 ?>
 
 <script nonce="<?= themeCspNonce(); ?>">
@@ -71,7 +76,7 @@ window.rasamalaTitleCharacterLimit = <?= themeSafeInt($title_character_limit, 10
                          data-popular-limit="<?= themeSafeInt($sysconf['template']['classic_popular_collection_item'] ?? 6, 6, 1, 100); ?>"
                          data-new-limit="<?= themeSafeInt($sysconf['template']['classic_new_collection_item'] ?? 6, 6, 1, 100); ?>"
                          data-top-reader-limit="<?= themeSafeInt($sysconf['template']['classic_top_reader_item'] ?? 5, 5, 1, 100); ?>">
-                        <?php if (!$theme_viewer_preview_enabled && $is_homepage_only_hero && $hero_inside_content === 'topics' && !empty($home_topic_items)) : ?>
+                        <?php if ($is_homepage_only_hero && $hero_inside_content === 'topics' && !empty($home_topic_items)) : ?>
                         <div class="rasamala-hero-topics" aria-label="<?= themeEscape(__('Topics')); ?>">
                             <ul class="topic d-flex flex-wrap justify-content-center px-0 mb-0" role="list">
                                 <?php foreach ($home_topic_items as $home_topic_item) echo themeTopicItemHtml($home_topic_item); ?>
@@ -86,7 +91,7 @@ window.rasamalaTitleCharacterLimit = <?= themeSafeInt($title_character_limit, 10
                          data-popular-limit="<?= themeSafeInt($sysconf['template']['classic_popular_collection_item'] ?? 6, 6, 1, 100); ?>"
                          data-new-limit="<?= themeSafeInt($sysconf['template']['classic_new_collection_item'] ?? 6, 6, 1, 100); ?>"
                          data-top-reader-limit="<?= themeSafeInt($sysconf['template']['classic_top_reader_item'] ?? 5, 5, 1, 100); ?>">
-                        <?php if (!$theme_viewer_preview_enabled && $is_homepage_only_hero && $hero_inside_content === 'popular') : ?>
+                        <?php if ($is_homepage_only_hero && $hero_inside_content === 'popular') : ?>
                         <div class="rasamala-hero-inline-section">
                             <h2 class="rasamala-hero-inline-title"><i class="fas fa-fire" aria-hidden="true"></i> <?= themeEscape(__('Popular among our collections')); ?></h2>
                             <slims-group-subject url="index.php?p=api/subject/popular"></slims-group-subject>
@@ -101,7 +106,7 @@ window.rasamalaTitleCharacterLimit = <?= themeSafeInt($title_character_limit, 10
                          data-popular-limit="<?= themeSafeInt($sysconf['template']['classic_popular_collection_item'] ?? 6, 6, 1, 100); ?>"
                          data-new-limit="<?= themeSafeInt($sysconf['template']['classic_new_collection_item'] ?? 6, 6, 1, 100); ?>"
                          data-top-reader-limit="<?= themeSafeInt($sysconf['template']['classic_top_reader_item'] ?? 5, 5, 1, 100); ?>">
-                        <?php if (!$theme_viewer_preview_enabled && $is_homepage_only_hero && $hero_inside_content === 'new_update') : ?>
+                        <?php if ($is_homepage_only_hero && $hero_inside_content === 'new_update') : ?>
                         <div class="rasamala-hero-inline-section">
                             <h2 class="rasamala-hero-inline-title"><i class="fas fa-book" aria-hidden="true"></i> <?= themeEscape(__('New collections + updated')); ?></h2>
                             <slims-group-subject url="index.php?p=api/subject/latest"></slims-group-subject>
@@ -116,10 +121,49 @@ window.rasamalaTitleCharacterLimit = <?= themeSafeInt($title_character_limit, 10
                          data-popular-limit="<?= themeSafeInt($sysconf['template']['classic_popular_collection_item'] ?? 6, 6, 1, 100); ?>"
                          data-new-limit="<?= themeSafeInt($sysconf['template']['classic_new_collection_item'] ?? 6, 6, 1, 100); ?>"
                          data-top-reader-limit="<?= themeSafeInt($sysconf['template']['classic_top_reader_item'] ?? 5, 5, 1, 100); ?>">
-                        <?php if (!$theme_viewer_preview_enabled && $is_homepage_only_hero && $hero_inside_content === 'top_reader') : ?>
+                        <?php if ($is_homepage_only_hero && $hero_inside_content === 'top_reader') : ?>
                         <div class="rasamala-hero-inline-section">
                             <h2 class="rasamala-hero-inline-title"><i class="fas fa-trophy" aria-hidden="true"></i> <?= themeEscape(__('Top reader of the year')); ?></h2>
                             <slims-group-member url="index.php?p=api/member/top" limit="<?= themeSafeInt($sysconf['template']['classic_top_reader_item'] ?? 5, 5, 1, 100); ?>"></slims-group-member>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <!-- 5. Latest Content / News Cards -->
+                <div id="rasamala-hero-inside-news" class="rasamala-hero-inside-item" data-inside="news" <?= ($is_homepage_only_hero && $hero_inside_content === 'news') ? '' : 'hidden'; ?>>
+                    <div data-hero-inside-mount
+                         data-popular-limit="<?= themeSafeInt($sysconf['template']['classic_popular_collection_item'] ?? 6, 6, 1, 100); ?>"
+                         data-new-limit="<?= themeSafeInt($sysconf['template']['classic_new_collection_item'] ?? 6, 6, 1, 100); ?>"
+                         data-top-reader-limit="<?= themeSafeInt($sysconf['template']['classic_top_reader_item'] ?? 5, 5, 1, 100); ?>">
+                        <?php if ($is_homepage_only_hero && $hero_inside_content === 'news') : ?>
+                        <div class="rasamala-hero-inline-section">
+                            <h2 class="rasamala-hero-inline-title"><i class="fas fa-newspaper" aria-hidden="true"></i> <?= themeEscape(__('Latest Content')); ?></h2>
+                            <div class="rasamala-home-content-cards">
+                                <?php foreach ($home_content_cards as $content_card) :
+                                    $card_title = $content_card['title'] ?? '';
+                                    $card_url = $content_card['url'] ?? '#';
+                                    $card_excerpt = $content_card['excerpt'] ?? '';
+                                    $card_image = $content_card['image_src'] ?? '';
+                                ?>
+                                <a class="rasamala-home-content-card" href="<?= themeEscape($card_url); ?>" title="<?= themeEscape($card_title); ?>">
+                                    <span class="rasamala-home-content-thumb" aria-hidden="<?= $card_image ? 'false' : 'true'; ?>">
+                                        <?php if ($card_image) : ?>
+                                        <img loading="lazy" src="<?= themeEscape($card_image); ?>" alt="" aria-hidden="true">
+                                        <?php else : ?>
+                                        <span class="rasamala-home-content-thumb-placeholder">
+                                            <i class="fas fa-newspaper" aria-hidden="true"></i>
+                                        </span>
+                                        <?php endif; ?>
+                                    </span>
+                                    <span class="rasamala-home-content-body">
+                                        <span class="rasamala-home-content-title"><?= themeEscape($card_title); ?></span>
+                                        <?php if ($card_excerpt) : ?>
+                                        <span class="rasamala-home-content-excerpt"><?= themeEscape($card_excerpt); ?></span>
+                                        <?php endif; ?>
+                                    </span>
+                                </a>
+                                <?php endforeach; ?>
+                            </div>
                         </div>
                         <?php endif; ?>
                     </div>
@@ -152,6 +196,37 @@ window.rasamalaTitleCharacterLimit = <?= themeSafeInt($title_character_limit, 10
                     <div class="rasamala-hero-inline-section">
                         <h2 class="rasamala-hero-inline-title"><i class="fas fa-trophy" aria-hidden="true"></i> <?= themeEscape(__('Top reader of the year')); ?></h2>
                         <slims-group-member url="index.php?p=api/member/top" limit="<?= themeSafeInt($sysconf['template']['classic_top_reader_item'] ?? 5, 5, 1, 100); ?>"></slims-group-member>
+                    </div>
+                </template>
+                <template data-hero-inside-template="news">
+                    <div class="rasamala-hero-inline-section">
+                        <h2 class="rasamala-hero-inline-title"><i class="fas fa-newspaper" aria-hidden="true"></i> <?= themeEscape(__('Latest Content')); ?></h2>
+                        <div class="rasamala-home-content-cards">
+                            <?php foreach ($home_content_cards as $content_card) :
+                                $card_title = $content_card['title'] ?? '';
+                                $card_url = $content_card['url'] ?? '#';
+                                $card_excerpt = $content_card['excerpt'] ?? '';
+                                $card_image = $content_card['image_src'] ?? '';
+                            ?>
+                            <a class="rasamala-home-content-card" href="<?= themeEscape($card_url); ?>" title="<?= themeEscape($card_title); ?>">
+                                <span class="rasamala-home-content-thumb" aria-hidden="<?= $card_image ? 'false' : 'true'; ?>">
+                                    <?php if ($card_image) : ?>
+                                    <img loading="lazy" src="<?= themeEscape($card_image); ?>" alt="" aria-hidden="true">
+                                    <?php else : ?>
+                                    <span class="rasamala-home-content-thumb-placeholder">
+                                        <i class="fas fa-newspaper" aria-hidden="true"></i>
+                                    </span>
+                                    <?php endif; ?>
+                                </span>
+                                <span class="rasamala-home-content-body">
+                                    <span class="rasamala-home-content-title"><?= themeEscape($card_title); ?></span>
+                                    <?php if ($card_excerpt) : ?>
+                                    <span class="rasamala-home-content-excerpt"><?= themeEscape($card_excerpt); ?></span>
+                                    <?php endif; ?>
+                                </span>
+                            </a>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
                 </template>
             </div>
@@ -262,12 +337,6 @@ $home_section_heading = function ($section_key, $title, $subtitle = '', $extra_c
     <?php
 };
 
-$home_content_source = $sysconf;
-if ($theme_viewer_preview_enabled) {
-    $home_content_source['template']['classic_home_content_cards_show'] = 1;
-}
-$home_content_cards = (isset($dbs) && $dbs && function_exists('themeHomeContentCards')) ? themeHomeContentCards($dbs, $home_content_source) : [];
-
 foreach ($sections as $section) {
     if ($home_tabs_enabled && !$home_tabs_inserted && in_array($section, $home_tab_visible, true)) :
         $home_tabs_inserted = true;
@@ -309,7 +378,7 @@ foreach ($sections as $section) {
         </section>
         <?php
     }
-    elseif ($section === 'news' && $home_section_enabled('news') && !empty($home_content_cards)) {
+    elseif ($section === 'news' && !($is_homepage_only_hero && $hero_inside_content === 'news') && $home_section_enabled('news')) {
         ?>
         <section class="container rasamala-home-section rasamala-home-content-cards-section">
             <div class="rasamala-home-content-cards">
@@ -355,7 +424,7 @@ foreach ($sections as $section) {
         </section>
         <?php
     }
-    elseif ($section === 'new-collection' && !($is_homepage_only_hero && $hero_inside_content === 'new_update') && $home_section_enabled('new-collection')) {
+    elseif (in_array($section, ['new-collection', 'new_collection', 'new_update', 'latest', 'latest_content'], true) && !($is_homepage_only_hero && $hero_inside_content === 'new_update') && $home_section_enabled('new-collection')) {
         $heading_mode = strtolower(trim((string)themeEffectiveTemplateValue('classic_new_collection_heading_display', 'all', $sysconf)));
         $show_subject = in_array($heading_mode, ['all', 'title_subject'], true);
         $section_class = $home_tabs_enabled ? 'mt-3' : (($heading_mode === 'hide' && !$show_subject) ? 'mt-3' : 'mt-5');

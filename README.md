@@ -8,7 +8,7 @@
 
 > **Status dokumentasi:** README ini disinkronkan dengan implementasi Rasamala per 31 Juli 2026. Nilai default dan daftar opsi diambil dari `helpers/tinfo_defaults.php`, `helpers/options/*.php`, dan konfigurasi Theme Viewer.
 >
-> **Catatan instalasi:** `rasamala-sw.js` bukan bagian dari folder tema. File tersebut harus berada di akar instalasi SLiMS agar service worker memiliki scope OPAC yang benar.
+> **Catatan instalasi:** Rasamala bersifat mandiri. Cukup salin folder `rasamala` ke direktori `template/`; tidak ada file tema yang perlu ditempatkan di akar instalasi SLiMS.
 
 ---
 
@@ -34,16 +34,16 @@
 
 - **Kustomisasi Visual Lengkap (Tinfo):** Atur mode hero fullscreen, skema warna, logo, running text, hingga animasi latar belakang langsung dari admin SLiMS.
 - **Dark / Light Mode Pintar:** Otomatis menyesuaikan preferensi OS/browser pengguna atau dikunci pada mode tertentu, lengkap dengan tombol toggle responsif.
-- **Interactive Theme Viewer & AI Prompt Helper:** Pemustaka dapat menguji mode hero fullscreen (Yes/No), pilihan konten di dalam hero, section beranda, *Custom Palette*, background, tipografi, dan animasi secara *real-time* melalui menu kuas melayang (`fa-paint-brush`). Theme Viewer menyediakan prompt yang dapat disalin untuk membantu pembuatan palette/background dengan alat AI eksternal; generator AI tidak berjalan di server tema. Kontrol Cursor Icon dan Cursor Particles masih disembunyikan oleh release gate.
+- **Interactive Theme Viewer:** Pemustaka dapat menguji mode hero fullscreen (Yes/No), pilihan konten di dalam hero, section beranda, *Custom Palette*, preset background, tipografi, dan animasi secara *real-time* melalui menu kuas melayang (`fa-paint-brush`). Editor CSS background kustom tidak ditampilkan di Theme Viewer; opsi `Custom Background Style` tetap dikelola melalui TInfo admin. Kontrol Cursor Icon dan Cursor Particles masih disembunyikan oleh release gate.
 - **Simpan dari Theme Viewer (Admin):** Setelah login di area admin, tombol **Simpan Pengaturan Tema** muncul di Theme Viewer. Tombol ini mengirim konfigurasi preview ke form TInfo resmi dengan tetap membawa seluruh field lain, sehingga pengaturan yang tidak sedang dipreview tidak ikut terhapus.
 - **Sistem Logo Perpustakaan Bersyarat Admin:** Logo perpustakaan hanya tampil jika admin mengunggah file logo di Pengaturan Sistem Admin SLiMS (`$sysconf['logo_image']`), menjaga kebersihan tampilan jika belum ada logo.
 
-### 2. ⚡ Performa Maksimal & PWA Aman
+### 2. ⚡ Performa dan Instalasi Portabel
 
-- **Pemuatan JS Non-Blocking:** Sebagian besar script tema dan library halaman dimuat dengan atribut `defer`, termasuk bundle pencarian, Theme Viewer, animasi, dan PWA register. Script core atau partial tertentu tetap mengikuti kebutuhan kompatibilitas SLiMS, jadi klaim ini bukan berarti setiap tag script di seluruh alur core selalu `defer`.
+- **Pemuatan JS Non-Blocking:** Sebagian besar script tema dan library halaman dimuat dengan atribut `defer`, termasuk bundle pencarian, Theme Viewer, animasi, dan cleanup worker lama. Script core atau partial tertentu tetap mengikuti kebutuhan kompatibilitas SLiMS, jadi klaim ini bukan berarti setiap tag script di seluruh alur core selalu `defer`.
 - **Aset Berdasarkan Halaman:** Vue dan `app.js` hanya untuk halaman dengan form pencarian; Masonry, Ion Slider, highlight, serta `result_search.js` hanya untuk halaman hasil pencarian. CSS CKEditor dan Colorbox tidak lagi dimuat di OPAC publik.
 - **Autocomplete JSON Ringan:** Saran judul memakai endpoint JSON kecil (maksimal 6 judul), debounce 250 ms, dan pembatalan request sebelumnya. Browser tidak lagi mengunduh serta mem-parsing halaman hasil pencarian penuh pada setiap input.
-- **PWA Static-Assets-Only:** `rasamala-sw.js` berada di akar aplikasi agar scope-nya mencakup OPAC. Worker hanya menyimpan aset tema same-origin berdasarkan destination `style`, `script`, `font`, `image`, dan `manifest`; HTML, hasil pencarian, akun anggota, admin, serta endpoint API selalu memakai jaringan.
+- **Instalasi Satu Folder:** Rasamala tidak mendaftarkan service worker dan tidak membutuhkan file di luar `template/rasamala/`. Script cleanup lokal menghapus registrasi dan cache Rasamala dari rilis lama secara selektif.
 - **Default Produksi:** Theme Viewer aktif, hero fullscreen aktif dengan Topics di dalam hero, background default `Aurora Glow`, animasi `Neural Network` berkecepatan `Fast`, homepage tab aktif, dan partikel cursor nonaktif. Admin dapat mengubahnya melalui Tinfo. Release gate tetap memaksa Cursor Icon, Cursor Particles, dan Panel Background ke nilai aman masing-masing.
 - **Skeleton Shimmer Loading System:** Animasi shimmer presisi saat memuat data (sampul 1:1.35, avatar, pill topik) dengan indikator top progress bar NProgress-style.
 
@@ -77,7 +77,7 @@ Akses menu admin SLiMS: **System > Theme > Customize/Tinfo**.
 | --- | --- | --- |
 | **Hero Fullscreen** | `Yes - Fullscreen Hero`, `No - Standard Homepage` | Mengatur apakah area pencarian memenuhi layar. Saat ada konten di bawah, indikator panah membantu pemustaka menemukan section berikutnya. Topics, info search, dan section beranda mengikuti pengaturan show/hide masing-masing. |
 | **Inside Fullscreen Hero** | `None - Keep Below Search`, `Topics`, `Popular among our collections`, `New collections + updated`, `Top Reader of the Year` | Menentukan satu konten yang dirender di dalam hero saat mode fullscreen aktif. `None` mempertahankan konten di bawah search. Pada homepage standar, konten hero-inside tidak dipasang ulang. |
-| **Background Style** | `None / Standard`, `Soft Gradient`, `Aurora Glow`, `Mesh Light`, `Glass Surface`, `Solid Theme`, `Minimal Surface`, `Ocean Waves (Theme Colors)`, `Custom`, serta gambar yang tersedia di `assets/images/backgrounds/` | Pilihan background diterapkan ke seluruh halaman dan tetap terlihat di bawah layer animasi. Untuk gambar tersedia `Normal`, `Crop / Cover`, `Contain`, `Stretch / Fill`, `Tile / Repeat`, `Full Width`, `Full Height`, posisi, filter, blur, dan overlay. Default produksi saat ini `Aurora Glow`; pilih `None / Standard` jika ingin background standar. |
+| **Background Style** | `None / Standard`, `Soft Gradient`, `Aurora Glow`, `Ocean Waves`, `Aurora Wave Ribbons`, `Memphis Retro Pattern`, `Isometric Cubes`, `Terrazzo Speckle`, gaya dinamis lain, `Custom`, serta gambar yang tersedia di `assets/images/backgrounds/` | Pilihan background diterapkan ke seluruh halaman dan tetap mengikuti token warna aktif. Empat gaya baru terinspirasi dari SVG di `assets/images/backgrounds/new/` dan dirender inline agar otomatis menyesuaikan light/dark theme colors. Untuk gambar tersedia `Normal`, `Crop / Cover`, `Contain`, `Stretch / Fill`, `Tile / Repeat`, `Full Width`, `Full Height`, posisi, filter, blur, dan overlay. Default produksi saat ini `Aurora Glow`; pilih `None / Standard` jika ingin background standar. |
 | **Theme Viewer Home Sections** | Topics, Latest Content, Popular Collections, New Collections, Top Reader, Footer | Saat Theme Viewer aktif, section dapat disembunyikan/ditampilkan dan disusun untuk preview. Map/Social Media memiliki kontrol terpisah pada `Map Visibility`; Running Text dan Info Search juga memiliki kontrol khusus. |
 | **Home Section Layout** | `Tab Mode`, `Standard Mode` | Memilih satu panel tab aktif agar halaman ringkas, atau menampilkan seluruh section beranda yang diaktifkan secara berurutan. Saat berpindah mode, pane nonaktif tetap disembunyikan sehingga kartu tidak terduplikasi. |
 | **Color Palette** | `Warm Gray`, `Minimal White`, `Dark Gray`, `Warm Library`, `Contemporary Tech Library`, `Deep Emerald & Bronze`, `Kraft Paper & Charcoal Ink`, `Midnight Navy & Gold Accent`, `Modern Charcoal & Warm Saffron`, `Royal Indigo & Bright Gold`, `Scandinavian Minimalist`, `High-Contrast Digital`, `Minimal Electric Lime`, `Warm Greige & Metallic Gold`, `Custom` | Pilihan kombinasi warna siap pakai atau custom palette 14-warna. Definisi preset tersentral di `helpers/palettes/theme_color_palettes.php`. |
@@ -135,7 +135,7 @@ rasamala/
 └── docs/                        # 📂 Dokumentasi & Laporan Audit Internal
 ```
 
-`rasamala-sw.js` berada satu tingkat di atas folder `template/rasamala/`, yaitu di akar instalasi SLiMS. Asset khusus halaman detail berada di `assets/js/detail_page.js`; library visitor lokal yang digunakan adalah Vue, Axios, dan `visitor_counter.js`.
+Seluruh file milik tema berada di dalam folder `template/rasamala/`. Asset khusus halaman detail berada di `assets/js/detail_page.js`; library visitor lokal yang digunakan adalah Vue, Axios, dan `visitor_counter.js`.
 
 ## 🌐 Route OPAC Utama
 
@@ -164,7 +164,7 @@ Semua asset tema disimpan lokal dan tidak bergantung pada CDN untuk rendering ut
 | Bootstrap | 5.3.3 | Grid, modal, dropdown, dan komponen UI |
 | Masonry | 4.2.2 | Layout hasil pencarian |
 | `detail_page.js` | Asset tema lokal | Progress bar, availability popover, dan native lightbox |
-| `rasamala-sw.js` | Worker root lokal | Cache aset statis tema saja |
+| `service-worker-cleanup.js` | Asset tema lokal | Menghapus worker dan cache Rasamala dari rilis lama |
 
 Library yang disediakan oleh core SLiMS melalui `JWB` tetap mengikuti versi instalasi SLiMS dan tidak dikelola oleh folder tema.
 
@@ -176,7 +176,7 @@ Library yang disediakan oleh core SLiMS melalui `JWB` tetap mengikuti versi inst
 - **Sanitasi Data & Proteksi XSS:** Output HTML memakai escaping UTF-8, CSS melalui `themeSanitizeCustomCss()`, HTML melalui sanitizer/HTMLPurifier, URL melalui helper allowlist, serta atribut asset core melalui whitelist.
 - **Native Lightbox Aman:** Preview gambar memakai DOM API, memvalidasi protocol `http/https` dan ekstensi pada pathname, lalu menetapkan `img.src` sebagai property DOM tanpa merangkai HTML dari `href`.
 - **CSP Nonce:** Inline script/style tema memakai nonce per-request. Inline script core yang dilewatkan sanitizer juga diberi nonce; `unsafe-inline`/`unsafe-eval` masih dipertahankan untuk kompatibilitas library core SLiMS yang belum dimigrasikan.
-- **PWA Terbatas:** Service worker hanya menerima request `GET` same-origin untuk asset tema yang dapat dicache. HTML, API, pencarian, area anggota, dan admin tidak dicache.
+- **Tanpa Service Worker Tema:** Rasamala tidak mengintersepsi atau menyimpan respons HTML, API, pencarian, area anggota, maupun admin. Cleanup hanya menargetkan registrasi dan cache bernama Rasamala dari rilis lama.
 - **Dependency lokal:** Library pihak ketiga disimpan lokal, sehingga tidak ada kebutuhan CDN untuk tampilan utama dan versi dapat diaudit dari header asset.
 - **Aksesibilitas WCAG & WAI-ARIA:** Structure semantik HTML5 (`<main>`, `<nav>`, `<footer>`), target sentuh seluler minimum **48x48px** dengan efek touch ripple, atribut `aria-label` & `<label class="visually-hidden">` untuk screen reader, serta atribut `inert` pada modal tertutup.
 
@@ -186,24 +186,15 @@ Library yang disediakan oleh core SLiMS melalui `JWB` tetap mengikuti versi inst
 
 1. Pastikan instalasi Anda menggunakan **SLiMS 9 Bulian** dan PHP yang didukung oleh versi SLiMS tersebut.
 2. Salin folder `rasamala` ke direktori templat SLiMS Anda: `/path/to/slims/template/rasamala`
-3. Salin `rasamala-sw.js` ke akar instalasi SLiMS agar PWA dapat mengontrol halaman OPAC:
-
-   ```text
-   /path/to/slims/
-   ├── rasamala-sw.js
-   └── template/rasamala/
-   ```
-
-   Worker harus dapat diakses dari origin yang sama dengan OPAC, misalnya `https://example.org/slims/rasamala-sw.js`. Jangan menaruhnya hanya di `template/rasamala/assets/js/` karena scope worker akan terlalu sempit.
-4. Aktifkan tema melalui admin SLiMS pada menu **System > Theme**, atau set di `sysconfig.inc.php` pada akar instalasi SLiMS:
+3. Aktifkan tema melalui admin SLiMS pada menu **System > Theme**, atau set di `sysconfig.inc.php` pada akar instalasi SLiMS:
 
    ```php
    $sysconf['template']['theme'] = 'rasamala';
    ```
 
-5. Sesuaikan opsi tema melalui menu **System > Theme > Customize/Tinfo**. Theme Viewer aktif secara default, sedangkan kontrol cursor dan panel background sementara mengikuti release gate pada `helpers/theme_feature_flags.php`.
-6. Setelah aktivasi atau perubahan worker, lakukan hard refresh OPAC. Jika worker versi lama masih terdaftar, unregister worker lama dari DevTools atau bersihkan data situs, lalu buka ulang OPAC.
-7. Uji route homepage, pencarian, detail buku, berita, member, visitor log, Theme Viewer, dan modal peta. Jika dependensi QR `BaconQrCode` tidak tersedia, halaman detail tetap menyediakan fallback link dan tidak gagal render.
+4. Sesuaikan opsi tema melalui menu **System > Theme > Customize/Tinfo**. Theme Viewer aktif secara default, sedangkan kontrol cursor dan panel background sementara mengikuti release gate pada `helpers/theme_feature_flags.php`.
+5. Setelah upgrade dari rilis lama, buka OPAC sekali agar cleanup lokal menghapus worker/cache Rasamala terdahulu. Lakukan hard refresh bila browser masih menampilkan asset lama.
+6. Uji route homepage, pencarian, detail buku, berita, member, visitor log, Theme Viewer, dan modal peta. Jika dependensi QR `BaconQrCode` tidak tersedia, halaman detail tetap menyediakan fallback link dan tidak gagal render.
 
 ## Smoke Test
 
@@ -216,8 +207,8 @@ Jalankan pemeriksaan berikut setelah instalasi, perubahan TInfo, atau pembaruan 
 5. **Theme Viewer:** Ubah palette, typography, layout tab, visibility section, running text, dan Map Visibility. Pastikan preview berubah tanpa reload; penyimpanan hanya terjadi melalui tombol admin.
 6. **Pencarian dan detail:** Uji autocomplete, hasil `Simple/List/Grid`, filter, detail buku, QR/fallback link, availability popover, citation, bookmark, basket, share, dan native lightbox.
 7. **Halaman layanan:** Uji `?p=news`, `?p=librarian`, `?p=visitor` pada layout Kiosk dan Split, `?p=member`, login, WhatsApp/Libinfo, Map/Social, footer, dan mobile bottom navigation.
-8. **PWA/cache:** Di DevTools, pastikan worker terdaftar pada scope root instalasi SLiMS. Pastikan hanya asset tema yang dicache; HTML, pencarian, API, member, dan admin tetap terlihat sebagai request jaringan.
-9. **Regression keamanan:** Buka console browser dan pastikan tidak ada 404 asset, error parse JSON, error `vegas`, atau error JavaScript. Uji kembali setelah hard refresh atau unregister worker lama.
+8. **Cleanup rilis lama:** Di DevTools, pastikan tidak ada service worker dengan script `rasamala-sw.js` atau `template/rasamala/assets/js/sw.js`, dan cache bernama `rasamala-static-*`/`rasamala-opac-*` telah hilang.
+9. **Regression keamanan:** Buka console browser dan pastikan tidak ada 404 asset, error parse JSON, error `vegas`, atau error JavaScript. Uji kembali setelah hard refresh.
 
 ---
 
@@ -241,7 +232,7 @@ Jalankan pemeriksaan berikut setelah instalasi, perubahan TInfo, atau pembaruan 
 - **Homepage section tabs (opsional):** Tinfo > `Compact Homepage Sections as Tabs` dapat menggabungkan Popular Collections, New Collections, Top Reader, serta Map/Social Media menjadi tab ringkas. Saat aktif, judul/subtitle section dan subject chips di dalam pane disembunyikan agar tidak mengulang label tab; Topics dan Latest Content tetap ditampilkan normal. Tab memakai rail segmented yang ringan, state aktif kontras, navigasi keyboard kiri/kanan, dan klik terdelegasi dari root Vue agar tetap aktif setelah render ulang. Pada mobile, tab ditampilkan sebagai grid 2×2 agar seluruh pilihan terlihat tanpa scroll horizontal.
 - **CSP kompatibel:** Inline script/style yang dibuat tema memakai nonce CSP; sanitizer asset core menghapus event handler dan atribut `style` dari tag asset yang diproses. `unsafe-inline` dan `unsafe-eval` masih menjadi kompatibilitas sementara untuk core/library tertentu.
 - **Native lightbox detail:** Preview sampul tidak lagi menyisipkan `href` ke string HTML; URL divalidasi dan modal dibangun melalui DOM API di `assets/js/detail_page.js`.
-- **PWA worker tervalidasi:** `rasamala-sw.js` menggunakan cache khusus aset statis dan tidak menyimpan respons halaman/API.
+- **Instalasi tema mandiri:** Service worker Rasamala telah dihentikan; seluruh file aktif tema berada di `template/rasamala/`, dengan cleanup selektif untuk rilis lama.
 - **Dependency visitor diperbarui:** Axios lokal diperbarui ke v1.19.0; API request visitor tetap menggunakan konfigurasi Axios yang kompatibel.
 - **API koleksi tahan error:** Jika endpoint koleksi populer mengembalikan HTML akibat instalasi SLiMS lama atau data peminjaman kosong, UI otomatis memakai endpoint koleksi terbaru tanpa error parsing JSON.
 

@@ -188,7 +188,7 @@ if ($cursor_particles !== 'none' || $palette_switcher_show):
 ?>
 <script src="<?php echo assetsVersioned('js/cursor-particles.js'); ?>" defer></script>
 <?php endif; ?>
-<script src="<?php echo assetsVersioned('js/pwa-register.js'); ?>" defer></script>
+<script src="<?php echo assetsVersioned('js/service-worker-cleanup.js'); ?>" defer></script>
 
 
 </body>

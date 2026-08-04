@@ -61,7 +61,7 @@ if (!function_exists('themeHeroBackgroundStyleOptions')) {
   {
     return function_exists('themeBackgroundStyleOptions')
       ? themeBackgroundStyleOptions(true)
-      : ['none', 'soft-gradient', 'aurora-glow', 'mesh-light', 'glass-surface', 'solid-theme', 'minimal-surface', 'custom'];
+      : ['none', 'soft-gradient', 'aurora-glow', 'mesh-light', 'solid-theme', 'minimal-surface', 'custom'];
   }
 }
 
@@ -75,7 +75,6 @@ if (!function_exists('themeHeroBackgroundStyle')) {
       'gradient' => 'soft-gradient',
       'aurora' => 'aurora-glow',
       'mesh' => 'mesh-light',
-      'glass' => 'glass-surface',
       'solid' => 'solid-theme',
       'minimal' => 'minimal-surface',
     ];
@@ -111,6 +110,9 @@ if (!function_exists('themeHomepageHeroInsideContent')) {
     if (in_array($value, ['1', 'yes', 'show', 'hero', 'topics', 'true', 'on'], true)) {
       return 'topics';
     }
+    if (in_array($value, ['news', 'latest', 'latest_content', 'news_cards'], true)) {
+      return 'news';
+    }
     if (in_array($value, ['popular', 'new_update', 'top_reader'], true)) {
       return $value;
     }
@@ -142,12 +144,22 @@ if (!function_exists('themeHomepageOnlyHero')) {
 if (!function_exists('themeHomepageSectionOrder')) {
   function themeHomepageSectionOrder($sysconf_param = null)
   {
-    $order_raw = (string)themeEffectiveTemplateValue('classic_homepage_section_order', 'topic;popular;new-collection;top-reader;map', $sysconf_param);
+    $order_raw = (string)themeEffectiveTemplateValue('classic_homepage_section_order', 'topic;news;popular;new-collection;top-reader;map', $sysconf_param);
     $sections = array_filter(array_map(function ($item) {
-      return strtolower(trim(str_replace(' ', '', $item)));
+      $clean = strtolower(trim(str_replace(' ', '', $item)));
+      if (in_array($clean, ['new_collection', 'new_update', 'new-collection', 'latest', 'latest_content'], true)) {
+        return 'new-collection';
+      }
+      if (in_array($clean, ['top_reader', 'top-reader'], true)) {
+        return 'top-reader';
+      }
+      if (in_array($clean, ['topics', 'topic'], true)) {
+        return 'topic';
+      }
+      return $clean;
     }, explode(';', $order_raw)));
 
-    return $sections;
+    return array_values(array_unique($sections));
   }
 }
 
@@ -157,14 +169,20 @@ if (!function_exists('themeHomepageSectionEnabled')) {
     $section = strtolower(trim((string)$section));
     switch ($section) {
       case 'topic':
+      case 'topics':
         return (int)themeEffectiveTemplateValue('classic_topic_show', 1, $sysconf_param) === 1;
       case 'news':
         return (int)themeEffectiveTemplateValue('classic_home_content_cards_show', 1, $sysconf_param) === 1;
       case 'popular':
         return (int)themeEffectiveTemplateValue('classic_popular_collection', 1, $sysconf_param) === 1;
       case 'new-collection':
+      case 'new_collection':
+      case 'new_update':
+      case 'latest':
+      case 'latest_content':
         return (int)themeEffectiveTemplateValue('classic_new_collection', 1, $sysconf_param) === 1;
       case 'top-reader':
+      case 'top_reader':
         return (int)themeEffectiveTemplateValue('classic_top_reader', 1, $sysconf_param) === 1;
       case 'map':
         return themeShowMap($sysconf_param) || themeShowSocialMedia($sysconf_param);

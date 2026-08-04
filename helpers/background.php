@@ -30,14 +30,12 @@ if (!function_exists('themeBackgroundStyles')) {
         $slug = strtolower(trim((string)preg_replace('/[^a-z0-9]+/i', '-', $base_name), '-')) ?: 'background';
         $key = 'image-' . $slug;
 
-        // bg-ocean-waves.svg is represented by the theme-colored inline SVG
-        // style declared in theme_background_styles.php. Keep the original
-        // asset available for other uses, but do not expose a duplicate
-        // "-2" option in the Theme Viewer/TInfo background selector.
-        if ($key === 'image-bg-ocean-waves'
-          && !empty($styles[$key]['theme_waves'])) {
+        // Built-in theme-colored SVG styles are handled by dynamic SVG layers
+        // in parts/background_layers.php. Do not expose duplicate "-2" options.
+        if (!empty($styles[$key]['theme_waves']) || !empty($styles[$key]['theme_svg'])) {
           continue;
         }
+
 
         $suffix = 2;
         while (isset($used_keys[$key])) {

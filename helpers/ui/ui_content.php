@@ -429,6 +429,29 @@ if (!function_exists('themeHomeContentCards')) {
     }
     $statement->close();
 
+    if (empty($items)) {
+      $items = [
+        [
+          'title' => themeTranslate('Layanan Perpustakaan Digital Berbasis Web'),
+          'url' => 'index.php?p=news',
+          'excerpt' => themeTranslate('Akses koleksi digital dan jurnal ilmiah kapan saja dan di mana saja melalui portal OPAC kami.'),
+          'image_src' => '',
+        ],
+        [
+          'title' => themeTranslate('Panduan Bebas Pustaka & Pengembalian Buku'),
+          'url' => 'index.php?p=news',
+          'excerpt' => themeTranslate('Informasi tata cara pengurusan bebas pustaka bagi pemustaka dan mahasiswa tingkat akhir.'),
+          'image_src' => '',
+        ],
+        [
+          'title' => themeTranslate('Penambahan Koleksi Baru Bulan Ini'),
+          'url' => 'index.php?p=news',
+          'excerpt' => themeTranslate('Simak daftar rekomendasi buku dan bahan pustaka terbaru yang siap dipinjam minggu ini.'),
+          'image_src' => '',
+        ],
+      ];
+    }
+
     return $items;
   }
 }

@@ -678,7 +678,19 @@ document.addEventListener('DOMContentLoaded', () => {
             queryAll('.whatsapp-modal-status').forEach(element => element.textContent = String(settings.classic_service_hours || ''));
         }
         if (settingChanged('classic_whatsapp_desc')) {
-            queryAll('.chat-bubble-text').forEach(element => element.textContent = String(settings.classic_whatsapp_desc || ''));
+            const raw = String(settings.classic_whatsapp_desc || '').trim();
+            let author = 'Pustakawan';
+            let message = raw;
+            if (raw.includes(';')) {
+                const parts = raw.split(';');
+                author = parts.shift().trim();
+                message = parts.join(';').trim();
+            }
+            if (!author) author = 'Pustakawan';
+            message = message.replace(new RegExp('^' + author.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*[:;]\\s*', 'i'), '');
+            message = message.replace(/^pustakawan\s*[:;]\s*/i, '');
+            queryAll('.chat-bubble-author').forEach(element => element.textContent = author);
+            queryAll('.chat-bubble-text').forEach(element => element.textContent = message || 'Halo, ada yg bisa kami bantu ?');
         }
         if (settingChanged('classic_whatsapp_number')) {
             const number = String(settings.classic_whatsapp_number || '').replace(/[^0-9]/g, '');
@@ -689,7 +701,14 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
         if (settingChanged('classic_whatsapp_categories')) {
-            const template = String(settings.classic_whatsapp_categories || '').trim();
+            let raw = String(settings.classic_whatsapp_categories || '').trim();
+            let template = raw;
+            if (raw.includes(';') || raw.includes(',')) {
+                const fields = raw.split(/[;,]+/).map(f => f.trim().replace(/[:.]*$/, '')).filter(Boolean);
+                if (fields.length > 0) {
+                    template = fields.map(f => f + ':').join('\n');
+                }
+            }
             queryAll('[data-whatsapp-form] .whatsapp-message-input').forEach(input => {
                 input.value = template;
                 input.dataset.tinfoPreviewManaged = '1';

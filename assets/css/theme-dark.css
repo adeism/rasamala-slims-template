@@ -220,64 +220,14 @@ body.rasamala-dark.rasamala-home-hero-only:not(.rasamala-background-animation-ac
     linear-gradient(145deg, var(--theme-dark-background), var(--theme-dark-surface)) !important;
 }
 
-body.rasamala-dark.rasamala-home-hero-only:not(.rasamala-background-animation-active).rasamala-hero-bg-style-mesh-light .rasamala-search-banner-section.rasamala-search-banner-hero-only {
-  background:
-    linear-gradient(120deg, color-mix(in srgb, var(--theme-dark-primary) 28%, transparent) 25%, transparent 25%) 0 0 / 34px 34px,
-    linear-gradient(300deg, color-mix(in srgb, var(--theme-dark-accent) 24%, transparent) 25%, transparent 25%) 0 0 / 34px 34px,
-    linear-gradient(145deg, var(--theme-dark-background), var(--theme-dark-surface)) !important;
-}
-
-body.rasamala-dark.rasamala-home-hero-only:not(.rasamala-background-animation-active).rasamala-hero-bg-style-glass-surface .rasamala-search-banner-section.rasamala-search-banner-hero-only {
-  background: color-mix(in srgb, var(--theme-dark-primary) 24%, var(--theme-dark-surface) 76%) !important;
-}
-
-body.rasamala-dark.rasamala-home-hero-only:not(.rasamala-background-animation-active).rasamala-hero-bg-style-solid-theme .rasamala-search-banner-section.rasamala-search-banner-hero-only {
-  background: var(--theme-dark-background) !important;
-}
-
-body.rasamala-dark.rasamala-home-hero-only:not(.rasamala-background-animation-active).rasamala-hero-bg-style-minimal-surface .rasamala-search-banner-section.rasamala-search-banner-hero-only {
-  background: linear-gradient(180deg, var(--theme-dark-surface), var(--theme-dark-background)) !important;
-}
-
 /* The Background Style control applies to the full page canvas. Keep this
    layer below the global animation canvas and above the dark-mode base color. */
 body.rasamala-dark.rasamala-background-style-soft-gradient {
-  background: linear-gradient(145deg,
-    color-mix(in srgb, var(--theme-dark-primary) 46%, var(--theme-dark-background)) 0%,
-    color-mix(in srgb, var(--theme-dark-secondary) 28%, var(--theme-dark-surface)) 48%,
-    color-mix(in srgb, var(--theme-dark-accent) 34%, var(--theme-dark-background)) 100%) !important;
-  background-attachment: fixed !important;
+  background: transparent !important;
 }
 
 body.rasamala-dark.rasamala-background-style-aurora-glow {
-  background:
-    radial-gradient(circle at 15% 15%, color-mix(in srgb, var(--theme-dark-accent) 42%, transparent), transparent 36%),
-    radial-gradient(circle at 86% 72%, color-mix(in srgb, var(--theme-dark-secondary) 34%, transparent), transparent 42%),
-    linear-gradient(145deg, var(--theme-dark-background), var(--theme-dark-surface)) !important;
-  background-attachment: fixed !important;
-}
-
-body.rasamala-dark.rasamala-background-style-mesh-light {
-  background:
-    linear-gradient(120deg, color-mix(in srgb, var(--theme-dark-primary) 28%, transparent) 25%, transparent 25%) 0 0 / 34px 34px,
-    linear-gradient(300deg, color-mix(in srgb, var(--theme-dark-accent) 24%, transparent) 25%, transparent 25%) 0 0 / 34px 34px,
-    linear-gradient(145deg, var(--theme-dark-background), var(--theme-dark-surface)) !important;
-  background-attachment: fixed !important;
-}
-
-body.rasamala-dark.rasamala-background-style-glass-surface {
-  background: color-mix(in srgb, var(--theme-dark-primary) 24%, var(--theme-dark-surface) 76%) !important;
-  background-attachment: fixed !important;
-}
-
-body.rasamala-dark.rasamala-background-style-solid-theme {
-  background: var(--theme-dark-background) !important;
-  background-attachment: fixed !important;
-}
-
-body.rasamala-dark.rasamala-background-style-minimal-surface {
-  background: linear-gradient(180deg, var(--theme-dark-surface), var(--theme-dark-background)) !important;
-  background-attachment: fixed !important;
+  background: transparent !important;
 }
 
 body.rasamala-dark.rasamala-background-style-image-bg-ocean-waves {

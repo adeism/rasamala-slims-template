@@ -73,6 +73,7 @@ return [
         'data' => [
             ['none', themeTranslate('None - Keep Below Search')],
             ['topics', themeTranslate('Topics')],
+            ['news', themeTranslate('Latest Content (News Cards)')],
             ['popular', themeTranslate('Popular Among Our Collection')],
             ['new_update', themeTranslate('New Collection + Update')],
             ['top_reader', themeTranslate('Top Reader of the Year')]

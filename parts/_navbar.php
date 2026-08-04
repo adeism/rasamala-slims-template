@@ -12,6 +12,13 @@ if (!isset($is_login)) {
         : (isset($_SESSION['m_login']) && (bool)$_SESSION['m_login']);
 }
 
+if (!isset($member_image_path)) {
+    $member_image_name = $_SESSION['m_image'] ?? 'person.png';
+    $member_image_path = function_exists('getImagePath') && isset($sysconf)
+        ? getImagePath($sysconf, $member_image_name, 'persons')
+        : 'images/persons/' . $member_image_name;
+}
+
 $is_homepage = themeIsHomepage();
 $is_hero_only = $is_homepage && themeHomepageOnlyHero($sysconf);
 $theme_viewer_preview_enabled = (int)themeEffectiveTemplateValue('classic_palette_switcher_show', 0, $sysconf) === 1;
@@ -113,7 +120,7 @@ HTML;
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">
                         <img class="rounded-full ms-2 me-2 navbar-user-avatar"
-                             src="<?php echo themeEscape($member_image_path); ?>"
+                             src="<?php echo themeEscape($member_image_path ?? ''); ?>"
                              alt="<?= htmlspecialchars(sprintf(__('Avatar of %s'), $_SESSION['m_name'] ?? __('Member')), ENT_QUOTES, 'UTF-8') ?>">
                       <?php echo themeEscape($_SESSION['m_name'] ?? ''); ?>
                     </a>

@@ -18,7 +18,7 @@ if (isset($_GET['p']) && $_GET['p'] === 'visitor') {
   echo '<script src="' . themeEscape(assets('js/axios.min.js')) . '" defer></script>';
   echo '<script src="' . themeEscape(assetsVersioned('js/visitor_counter.js')) . '" defer></script>';
   echo '<script src="' . themeEscape(assetsVersioned('js/color_mode.js')) . '" defer></script>';
-  echo '<script src="' . themeEscape(assetsVersioned('js/pwa-register.js')) . '" defer></script>';
+  echo '<script src="' . themeEscape(assetsVersioned('js/service-worker-cleanup.js')) . '" defer></script>';
   echo '</body></html>';
 } else {
   include "index_template.inc.php";

@@ -91,7 +91,6 @@ if (!function_exists('themeTranslate')) {
       'Soft Gradient' => 'Gradient Lembut',
       'Aurora Glow' => 'Aurora Glow',
       'Mesh Light' => 'Mesh Light',
-      'Glass Surface' => 'Glass Surface',
       'Solid Theme' => 'Warna Solid Tema',
       'Minimal Surface' => 'Surface Minimalis',
       'Explore more content' => 'Jelajahi konten lainnya',

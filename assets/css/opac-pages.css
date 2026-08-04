@@ -2715,12 +2715,6 @@ body.rasamala-hero-bg-style-mesh-light .rasamala-search-banner-section.rasamala-
     linear-gradient(145deg, var(--theme-background), var(--theme-surface)) !important;
 }
 
-body.rasamala-hero-bg-style-glass-surface .rasamala-search-banner-section.rasamala-search-banner-hero-only {
-  background: color-mix(in srgb, var(--theme-primary) 24%, var(--theme-surface) 76%) !important;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
 body.rasamala-hero-bg-style-solid-theme .rasamala-search-banner-section.rasamala-search-banner-hero-only {
   background: var(--theme-background) !important;
 }
@@ -2793,53 +2787,183 @@ html body.rasamala-dark .rasamala-theme-wave-front {
   .rasamala-theme-wave-layer { height: 230px !important; }
 }
 
+/* Generic Theme SVG Layer container */
+.rasamala-theme-svg-layer {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  display: none !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  contain: paint strict !important;
+}
+
+.rasamala-theme-pattern-svg,
+.rasamala-theme-blobs-svg,
+.rasamala-theme-full-svg,
+.rasamala-theme-wave-svg {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+@media (max-width: 767.98px) {
+  .rasamala-theme-svg-layer {
+    transform: translateZ(0);
+    will-change: transform;
+  }
+  .rasamala-theme-wave-layer {
+    height: 100vh !important;
+    height: 100dvh !important;
+  }
+}
+
+
+/* 1. Liquid Cyber Waves */
+body.rasamala-background-style-image-bg-liquid-cyber .rasamala-theme-liquid-layer { display: block !important; }
+.rasamala-grad-stop-primary { stop-color: var(--theme-primary); }
+.rasamala-grad-stop-secondary { stop-color: var(--theme-secondary); }
+.rasamala-grad-stop-accent { stop-color: var(--theme-accent); }
+.rasamala-liquid-back { opacity: 0.35 !important; }
+.rasamala-liquid-front { opacity: 0.25 !important; }
+
+/* 2. Aurora Neon Borealis */
+body.rasamala-background-style-image-bg-aurora-neon .rasamala-theme-aurora-layer { display: block !important; }
+.rasamala-aurora-glow-1 { fill: var(--theme-primary) !important; opacity: 0.32 !important; }
+.rasamala-aurora-glow-2 { fill: var(--theme-accent) !important; opacity: 0.28 !important; }
+.rasamala-aurora-glow-3 { fill: var(--theme-secondary) !important; opacity: 0.22 !important; }
+
+/* 3. Galaxy Nebula & Starfield */
+body.rasamala-background-style-image-bg-galaxy-nebula .rasamala-theme-galaxy-layer { display: block !important; }
+.rasamala-nebula-stop-1 { stop-color: var(--theme-primary); stop-opacity: 0.38; }
+.rasamala-nebula-stop-2 { stop-color: var(--theme-secondary); stop-opacity: 0.22; }
+.rasamala-nebula-stop-3 { stop-color: var(--theme-background); stop-opacity: 0; }
+.rasamala-star-bright { fill: var(--theme-accent) !important; opacity: 0.85 !important; }
+.rasamala-star-dim { fill: #ffffff !important; opacity: 0.45 !important; }
+
+/* 5. Quantum Cyber Mesh */
+body.rasamala-background-style-image-bg-quantum-mesh .rasamala-theme-quantum-layer { display: block !important; }
+.rasamala-quantum-grid-h { stroke: var(--theme-primary) !important; opacity: 0.28 !important; }
+.rasamala-quantum-grid-v { stroke: var(--theme-accent) !important; opacity: 0.22 !important; }
+
+/* 6. Zen Bamboo & Drifting Leaves */
+body.rasamala-background-style-image-bg-zen-bamboo .rasamala-theme-bamboo-layer { display: block !important; }
+.rasamala-bamboo-stalk-1 { stroke: var(--theme-primary) !important; opacity: 0.22 !important; }
+.rasamala-bamboo-stalk-2 { stroke: var(--theme-secondary) !important; opacity: 0.18 !important; }
+.rasamala-bamboo-leaf-1 { fill: var(--theme-primary) !important; opacity: 0.28 !important; }
+.rasamala-bamboo-leaf-2 { fill: var(--theme-accent) !important; opacity: 0.32 !important; }
+.rasamala-bamboo-leaf-floating { fill: var(--theme-accent) !important; opacity: 0.38 !important; }
+
+/* 9. Sunset Wave Horizons */
+body.rasamala-background-style-image-bg-sunset-horizons .rasamala-theme-sunset-layer { display: block !important; }
+.rasamala-sunset-stop-1 { stop-color: var(--theme-accent); stop-opacity: 0.30; }
+.rasamala-sunset-stop-2 { stop-color: var(--theme-primary); stop-opacity: 0.15; }
+.rasamala-sunset-dune-1 { opacity: 0.35 !important; }
+.rasamala-sunset-dune-2 { fill: var(--theme-primary) !important; opacity: 0.22 !important; }
+.rasamala-sunset-dune-3 { fill: var(--theme-secondary) !important; opacity: 0.15 !important; }
+
+/* 10. Floating Books & Scattered Flying Pages */
+body.rasamala-background-style-image-bg-flying-books-pages .rasamala-theme-flying-books-layer { display: block !important; }
+.rasamala-open-book-page-left { fill: color-mix(in srgb, var(--theme-primary) 28%, var(--theme-surface)) !important; stroke: var(--theme-primary) !important; stroke-width: 1.2 !important; opacity: 0.40 !important; }
+.rasamala-open-book-page-right { fill: color-mix(in srgb, var(--theme-secondary) 25%, var(--theme-surface)) !important; stroke: var(--theme-secondary) !important; stroke-width: 1.2 !important; opacity: 0.35 !important; }
+.rasamala-book-spine-line { stroke: var(--theme-accent) !important; opacity: 0.50 !important; }
+.rasamala-flying-page-1 { fill: var(--theme-primary) !important; opacity: 0.22 !important; }
+.rasamala-flying-page-2 { fill: var(--theme-accent) !important; opacity: 0.28 !important; }
+.rasamala-flying-page-3 { fill: var(--theme-secondary) !important; opacity: 0.18 !important; }
+.rasamala-stack-book-1 { fill: var(--theme-primary) !important; opacity: 0.32 !important; }
+.rasamala-stack-book-2 { fill: var(--theme-secondary) !important; opacity: 0.28 !important; }
+.rasamala-stack-book-3 { fill: var(--theme-accent) !important; opacity: 0.25 !important; }
+
+/* 11 - 14. Gemini Vector Background Layers */
+body.rasamala-background-style-image-bg-gemini-desk .rasamala-theme-gemini-desk-layer { display: block !important; }
+body.rasamala-background-style-image-bg-gemini-shelf .rasamala-theme-gemini-shelf-layer { display: block !important; }
+body.rasamala-background-style-image-bg-gemini-cosmic .rasamala-theme-gemini-cosmic-layer { display: block !important; }
+
+/* Dynamic Theme Color Stops for Gemini Backgrounds */
+.rasamala-gemini-desk-stop-1 { stop-color: var(--theme-background) !important; stop-opacity: 0.95 !important; }
+.rasamala-gemini-desk-stop-2 { stop-color: color-mix(in srgb, var(--theme-primary) 18%, var(--theme-background) 82%) !important; stop-opacity: 0.90 !important; }
+.rasamala-gemini-desk-stop-3 { stop-color: color-mix(in srgb, var(--theme-accent) 28%, var(--theme-background) 72%) !important; stop-opacity: 0.95 !important; }
+
+.rasamala-gemini-shelf-stop-1 { stop-color: var(--theme-background) !important; stop-opacity: 0.95 !important; }
+.rasamala-gemini-shelf-stop-2 { stop-color: color-mix(in srgb, var(--theme-secondary) 22%, var(--theme-background) 78%) !important; stop-opacity: 0.90 !important; }
+.rasamala-gemini-shelf-stop-3 { stop-color: color-mix(in srgb, var(--theme-primary) 32%, var(--theme-background) 68%) !important; stop-opacity: 0.95 !important; }
+
+.rasamala-gemini-cosmic-stop-1 { stop-color: color-mix(in srgb, var(--theme-primary) 35%, var(--theme-background) 65%) !important; stop-opacity: 0.95 !important; }
+.rasamala-gemini-cosmic-stop-2 { stop-color: color-mix(in srgb, var(--theme-secondary) 25%, var(--theme-background) 75%) !important; stop-opacity: 0.90 !important; }
+.rasamala-gemini-cosmic-stop-3 { stop-color: var(--theme-background) !important; stop-opacity: 0.95 !important; }
+
+
+
+
+
+
+
 body.rasamala-background-image-active {
   background-image: none !important;
   background-attachment: fixed !important;
 }
 
-body.rasamala-background-style-soft-gradient {
-  background: linear-gradient(145deg,
-    color-mix(in srgb, var(--theme-primary) 38%, var(--theme-background)) 0%,
-    color-mix(in srgb, var(--theme-secondary) 30%, var(--theme-surface)) 48%,
-    color-mix(in srgb, var(--theme-accent) 34%, var(--theme-background)) 100%) !important;
-  background-attachment: fixed !important;
-}
+/* A. Soft Gradient Layer */
+body.rasamala-background-style-soft-gradient .rasamala-theme-soft-gradient-layer { display: block !important; }
+.rasamala-soft-grad-stop-1 { stop-color: color-mix(in srgb, var(--theme-primary) 45%, var(--theme-background)); }
+.rasamala-soft-grad-stop-2 { stop-color: color-mix(in srgb, var(--theme-secondary) 35%, var(--theme-surface)); }
+.rasamala-soft-grad-stop-3 { stop-color: color-mix(in srgb, var(--theme-accent) 40%, var(--theme-background)); }
 
-body.rasamala-background-style-aurora-glow {
-  background:
-    radial-gradient(circle at 15% 15%, color-mix(in srgb, var(--theme-accent) 48%, transparent), transparent 38%),
-    radial-gradient(circle at 86% 72%, color-mix(in srgb, var(--theme-secondary) 38%, transparent), transparent 42%),
-    linear-gradient(145deg, var(--theme-background), var(--theme-surface)) !important;
-  background-attachment: fixed !important;
-}
-
-body.rasamala-background-style-mesh-light {
-  background:
-    linear-gradient(120deg, color-mix(in srgb, var(--theme-primary) 30%, transparent) 25%, transparent 25%) 0 0 / 34px 34px,
-    linear-gradient(300deg, color-mix(in srgb, var(--theme-accent) 26%, transparent) 25%, transparent 25%) 0 0 / 34px 34px,
-    linear-gradient(145deg, var(--theme-background), var(--theme-surface)) !important;
-  background-attachment: fixed !important;
-}
-
-body.rasamala-background-style-glass-surface {
-  background: color-mix(in srgb, var(--theme-primary) 24%, var(--theme-surface) 76%) !important;
-  background-attachment: fixed !important;
-}
-
-body.rasamala-background-style-solid-theme {
-  background: var(--theme-background) !important;
-  background-attachment: fixed !important;
-}
-
-body.rasamala-background-style-minimal-surface {
-  background: linear-gradient(180deg, var(--theme-surface), var(--theme-background)) !important;
-  background-attachment: fixed !important;
-}
+/* B. Aurora Glow Layer */
+body.rasamala-background-style-aurora-glow .rasamala-theme-aurora-glow-layer { display: block !important; }
+.rasamala-aurora-core-1 { fill: var(--theme-accent) !important; opacity: 0.38 !important; }
+.rasamala-aurora-core-2 { fill: var(--theme-secondary) !important; opacity: 0.32 !important; }
+.rasamala-aurora-core-3 { fill: var(--theme-primary) !important; opacity: 0.28 !important; }
 
 body.rasamala-background-style-image-bg-ocean-waves {
   background: var(--theme-background) !important;
   background-attachment: fixed !important;
+}
+
+/* Title Basket Best-Practice UI/UX Enhancements */
+.rasamala-basket-header {
+  background: var(--theme-surface) !important;
+  border-color: color-mix(in srgb, var(--theme-muted) 20%, transparent) !important;
+}
+
+.rasamala-basket-actions-toolbar {
+  background: var(--theme-surface) !important;
+  border-color: color-mix(in srgb, var(--theme-muted) 20%, transparent) !important;
+}
+
+.rasamala-basket-table {
+  background: var(--theme-surface) !important;
+  color: var(--theme-text) !important;
+}
+
+.rasamala-basket-table th {
+  background: color-mix(in srgb, var(--theme-surface) 90%, var(--theme-primary) 10%) !important;
+  color: var(--theme-text) !important;
+}
+
+.rasamala-basket-table td {
+  border-color: color-mix(in srgb, var(--theme-muted) 15%, transparent) !important;
+}
+
+.rasamala-basket-empty-card {
+  background: var(--theme-surface) !important;
+  border-color: color-mix(in srgb, var(--theme-muted) 20%, transparent) !important;
+}
+
+.btn-emerald {
+  background-color: #059669 !important;
+  border-color: #059669 !important;
+  color: #ffffff !important;
+}
+
+.btn-emerald:hover, .btn-emerald:focus {
+  background-color: #047857 !important;
+  border-color: #047857 !important;
+  color: #ffffff !important;
 }
 
 body.rasamala-background-style-custom {
@@ -5187,20 +5311,20 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 }
 
 
-#slims-home .rasamala-home-content-cards-section {
+.rasamala-home-content-cards-section {
   margin-top: 28px !important;
   margin-bottom: 18px !important;
 }
 
 
-#slims-home .rasamala-home-content-cards {
+.rasamala-home-content-cards {
   display: grid !important;
   grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   gap: 14px !important;
 }
 
 
-#slims-home .rasamala-home-content-card {
+.rasamala-home-content-card {
   display: grid !important;
   grid-template-columns: 92px minmax(0, 1fr) !important;
   gap: 13px !important;
@@ -5208,75 +5332,75 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   min-height: 112px !important;
   padding: 12px !important;
   overflow: hidden !important;
-  color: var(--rasamala-text-primary) !important;
+  color: var(--theme-text, var(--rasamala-text-primary)) !important;
   text-align: left !important;
   text-decoration: none !important;
-  border: 1px solid rgba(var(--theme-accent-rgb), 0.16) !important;
-  border-radius: var(--rasamala-radius-card) !important;
-  background: rgba(255, 255, 255, 0.78) !important;
-  box-shadow: var(--rasamala-shadow-md) !important;
-  /* backdrop-filter: blur(14px) !important; (removed for performance) */
-  /* -webkit-backdrop-filter: blur(14px) !important; (removed for performance) */
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease !important;
+  border: 1px solid color-mix(in srgb, var(--theme-text, #000) 12%, transparent) !important;
+  border-radius: var(--rasamala-radius-card, 16px) !important;
+  background: var(--theme-surface, #ffffff) !important;
+  background-color: var(--theme-surface, #ffffff) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease !important;
 }
 
 
-#slims-home .rasamala-home-content-card:hover,
-#slims-home .rasamala-home-content-card:focus {
-  color: var(--rasamala-text-primary) !important;
+.rasamala-home-content-card:hover,
+.rasamala-home-content-card:focus {
+  color: var(--theme-text, var(--rasamala-text-primary)) !important;
   text-decoration: none !important;
-  border-color: rgba(var(--theme-accent-rgb), 0.34) !important;
-  box-shadow: 0 16px 34px rgba(var(--theme-accent-rgb), 0.14) !important;
+  border-color: color-mix(in srgb, var(--theme-accent, #059669) 60%, var(--theme-text, #000) 40%) !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14) !important;
   transform: translateY(-2px) !important;
+  background: color-mix(in srgb, var(--theme-surface, #ffffff) 92%, var(--theme-primary, #059669) 8%) !important;
 }
 
 
-#slims-home .rasamala-home-content-thumb {
+.rasamala-home-content-thumb {
   display: flex !important;
   align-items: stretch !important;
   justify-content: stretch !important;
   width: 92px !important;
   aspect-ratio: 4 / 3 !important;
   overflow: hidden !important;
-  border-radius: var(--rasamala-radius-control) !important;
-  background: rgba(var(--theme-accent-rgb), 0.1) !important;
+  border-radius: var(--rasamala-radius-control, 10px) !important;
+  background: color-mix(in srgb, var(--theme-accent, #059669) 15%, var(--theme-surface, #ffffff) 85%) !important;
 }
 
 
-#slims-home .rasamala-home-content-thumb img,
-#slims-home .rasamala-home-content-thumb-placeholder {
+.rasamala-home-content-thumb img,
+.rasamala-home-content-thumb-placeholder {
   display: flex !important;
   width: 100% !important;
   height: 100% !important;
 }
 
 
-#slims-home .rasamala-home-content-thumb img {
+.rasamala-home-content-thumb img {
   object-fit: cover !important;
 }
 
 
-#slims-home .rasamala-home-content-thumb-placeholder {
+.rasamala-home-content-thumb-placeholder {
   align-items: center !important;
   justify-content: center !important;
-  color: #fff !important;
+  color: var(--theme-on-primary, #ffffff) !important;
   font-size: 26px !important;
   background:
-    radial-gradient(circle at 28% 20%, rgba(255, 255, 255, 0.22), transparent 34%),
-    linear-gradient(135deg, rgba(var(--theme-accent-rgb), 0.92), rgba(var(--theme-accent-rgb), 0.62)) !important;
+    radial-gradient(circle at 28% 20%, rgba(255, 255, 255, 0.28), transparent 34%),
+    linear-gradient(135deg, var(--theme-primary, #059669), var(--theme-accent, #10b981)) !important;
 }
 
 
-#slims-home .rasamala-home-content-body {
+.rasamala-home-content-body {
   display: block !important;
   min-width: 0 !important;
 }
 
 
-#slims-home .rasamala-home-content-title {
+.rasamala-home-content-title {
   display: -webkit-box !important;
   overflow: hidden !important;
-  color: var(--rasamala-text-primary) !important;
+  color: var(--theme-text, var(--rasamala-text-primary)) !important;
   font-size: 13.5px !important;
   font-weight: 700 !important;
   line-height: 1.35 !important;
@@ -5287,11 +5411,11 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 }
 
 
-#slims-home .rasamala-home-content-excerpt {
+.rasamala-home-content-excerpt {
   display: -webkit-box !important;
   margin-top: 5px !important;
   overflow: hidden !important;
-  color: var(--theme-muted) !important;
+  color: var(--theme-muted, var(--rasamala-text-secondary)) !important;
   font-size: 12px !important;
   font-weight: 400 !important;
   line-height: 1.45 !important;
@@ -5299,6 +5423,10 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   -webkit-line-clamp: 2 !important;
   line-clamp: 2 !important;
   -webkit-box-orient: vertical !important;
+}
+
+.rasamala-hero-inline-title {
+  color: var(--theme-text, var(--rasamala-text-primary)) !important;
 }
 
 
@@ -5445,7 +5573,7 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 
 
 @media (max-width: 991.98px) {
-  #slims-home .rasamala-home-content-cards {
+  .rasamala-home-content-cards {
     grid-template-columns: 1fr !important;
   }
 }
@@ -5522,25 +5650,25 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
     font-size: 11px !important;
   }
 
-  #slims-home .rasamala-home-content-cards {
+  .rasamala-home-content-cards {
     grid-template-columns: 1fr !important;
   }
 
-  #slims-home .rasamala-home-content-card {
+  .rasamala-home-content-card {
     grid-template-columns: 82px minmax(0, 1fr) !important;
     min-height: 98px !important;
     padding: 10px !important;
   }
 
-  #slims-home .rasamala-home-content-thumb {
+  .rasamala-home-content-thumb {
     width: 82px !important;
   }
 
-  #slims-home .rasamala-home-content-title {
+  .rasamala-home-content-title {
     font-size: 13px !important;
   }
 
-  #slims-home .rasamala-home-content-excerpt {
+  .rasamala-home-content-excerpt {
     font-size: 11.5px !important;
     -webkit-line-clamp: 1 !important;
     line-clamp: 1 !important;
@@ -9217,4 +9345,74 @@ body.rasamala-home-layout-tabs #slims-home .rasamala-home-tab-pane slims-group-s
     max-height: calc(100dvh - 88px) !important;
   }
   .palette-switcher-group-body { padding-left: 9px !important; padding-right: 9px !important; }
+}
+
+/* Reference-driven theme-colored backgrounds from assets/images/backgrounds/new. */
+body.rasamala-background-style-image-bg-theme-aurora-ribbons .rasamala-theme-aurora-ribbons-layer,
+body.rasamala-background-style-image-bg-theme-memphis .rasamala-theme-memphis-layer,
+body.rasamala-background-style-image-bg-theme-cubes .rasamala-theme-cubes-layer,
+body.rasamala-background-style-image-bg-theme-terrazzo .rasamala-theme-terrazzo-layer {
+  display: block !important;
+}
+
+.rasamala-theme-aurora-bg-1 { stop-color: color-mix(in srgb, var(--theme-primary) 58%, var(--theme-background) 42%); }
+.rasamala-theme-aurora-bg-2 { stop-color: color-mix(in srgb, var(--theme-secondary) 32%, var(--theme-background) 68%); }
+.rasamala-theme-aurora-bg-3 { stop-color: color-mix(in srgb, var(--theme-accent) 24%, var(--theme-background) 76%); }
+.rasamala-theme-aurora-ribbon-1 { fill: color-mix(in srgb, var(--theme-primary) 56%, var(--theme-accent) 44%); opacity: .54 !important; }
+.rasamala-theme-aurora-ribbon-2 { fill: color-mix(in srgb, var(--theme-secondary) 52%, var(--theme-accent) 48%); opacity: .44 !important; }
+.rasamala-theme-aurora-ribbon-3 { fill: var(--theme-accent) !important; opacity: .24 !important; }
+.rasamala-theme-aurora-ribbon-glow path { fill: var(--theme-accent) !important; opacity: .22 !important; }
+
+.rasamala-theme-memphis-base { fill: color-mix(in srgb, var(--theme-background) 94%, var(--theme-surface) 6%); }
+.rasamala-memphis-zigzag-1,
+.rasamala-memphis-zigzag-2,
+.rasamala-memphis-zigzag-3 { fill: none !important; stroke: var(--theme-primary) !important; stroke-width: 5 !important; opacity: .42 !important; }
+.rasamala-memphis-zigzag-2 { stroke: var(--theme-accent) !important; opacity: .34 !important; }
+.rasamala-memphis-zigzag-3 { stroke: var(--theme-secondary) !important; opacity: .30 !important; }
+.rasamala-memphis-ring-1,
+.rasamala-memphis-ring-2 { fill: none !important; stroke: var(--theme-accent) !important; stroke-width: 10 !important; opacity: .22 !important; }
+.rasamala-memphis-ring-2 { stroke: var(--theme-primary) !important; opacity: .18 !important; }
+.rasamala-memphis-dot-1 { fill: var(--theme-secondary) !important; opacity: .50 !important; }
+.rasamala-memphis-dot-2 { fill: var(--theme-accent) !important; opacity: .42 !important; }
+.rasamala-memphis-triangle-1,
+.rasamala-memphis-triangle-2 { fill: var(--theme-primary) !important; opacity: .18 !important; }
+.rasamala-memphis-triangle-2 { fill: var(--theme-accent) !important; opacity: .16 !important; }
+.rasamala-memphis-cross-1 path,
+.rasamala-memphis-cross-2 path { fill: none !important; stroke: var(--theme-secondary) !important; stroke-width: 7 !important; stroke-linecap: round !important; opacity: .34 !important; }
+.rasamala-memphis-cross-2 path { stroke: var(--theme-accent) !important; opacity: .28 !important; }
+.rasamala-memphis-arc { fill: none !important; stroke: var(--theme-primary) !important; stroke-width: 6 !important; opacity: .24 !important; }
+
+.rasamala-theme-cubes-base { fill: color-mix(in srgb, var(--theme-background) 97%, var(--theme-primary) 3%); }
+.rasamala-cube-top-1 { stop-color: color-mix(in srgb, var(--theme-accent) 62%, var(--theme-surface) 38%); }
+.rasamala-cube-top-2 { stop-color: var(--theme-accent); }
+.rasamala-cube-left-1 { stop-color: color-mix(in srgb, var(--theme-primary) 64%, var(--theme-background) 36%); }
+.rasamala-cube-left-2 { stop-color: var(--theme-primary); }
+.rasamala-cube-right-1 { stop-color: color-mix(in srgb, var(--theme-secondary) 58%, var(--theme-background) 42%); }
+.rasamala-cube-right-2 { stop-color: var(--theme-secondary); }
+.rasamala-cube-top,
+.rasamala-cube-left,
+.rasamala-cube-right,
+.rasamala-cube-top-alt,
+.rasamala-cube-left-alt,
+.rasamala-cube-right-alt { stroke: var(--theme-on-background) !important; stroke-opacity: .16 !important; stroke-width: 1.5 !important; }
+.rasamala-cube-top { fill: url(#rasamalaThemeCubeTop) !important; opacity: .48 !important; }
+.rasamala-cube-left { fill: url(#rasamalaThemeCubeLeft) !important; opacity: .36 !important; }
+.rasamala-cube-right { fill: url(#rasamalaThemeCubeRight) !important; opacity: .30 !important; }
+.rasamala-cube-top-alt { fill: color-mix(in srgb, var(--theme-secondary) 56%, var(--theme-accent) 44%) !important; opacity: .48 !important; }
+.rasamala-cube-left-alt { fill: color-mix(in srgb, var(--theme-primary) 42%, var(--theme-secondary) 58%) !important; opacity: .36 !important; }
+.rasamala-cube-right-alt { fill: color-mix(in srgb, var(--theme-accent) 62%, var(--theme-primary) 38%) !important; opacity: .30 !important; }
+
+.rasamala-terrazzo-pattern-base { fill: color-mix(in srgb, var(--theme-background) 96%, var(--theme-surface) 4%); }
+.rasamala-terrazzo-1 { fill: var(--theme-primary) !important; opacity: .22 !important; }
+.rasamala-terrazzo-2 { fill: var(--theme-secondary) !important; opacity: .24 !important; }
+.rasamala-terrazzo-3 { fill: var(--theme-accent) !important; opacity: .26 !important; }
+.rasamala-terrazzo-4 { fill: color-mix(in srgb, var(--theme-primary) 45%, var(--theme-accent) 55%) !important; opacity: .20 !important; }
+.rasamala-terrazzo-dot-1 { fill: var(--theme-accent) !important; opacity: .30 !important; }
+.rasamala-terrazzo-dot-2 { fill: var(--theme-primary) !important; opacity: .24 !important; }
+.rasamala-terrazzo-dot-3 { fill: var(--theme-secondary) !important; opacity: .26 !important; }
+
+html body.rasamala-dark .rasamala-theme-memphis-base,
+html body.rasamala-dark .rasamala-theme-cubes-base,
+html body.rasamala-dark .rasamala-terrazzo-pattern-base {
+  fill: color-mix(in srgb, var(--theme-background) 92%, #000 8%);
 }

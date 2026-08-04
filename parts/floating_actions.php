@@ -124,6 +124,10 @@ if (!function_exists('rasamalaWhatsappBubbleContent')) {
         if ($author === '') {
             $author = $fallback_author;
         }
+
+        // Strip duplicate author prefix if present in the message text
+        $message = preg_replace('/^' . preg_quote($author, '/') . '\s*[:;]\s*/i', '', $message);
+
         if ($message === '') {
             $message = $fallback_message;
         }
@@ -144,6 +148,7 @@ if (!function_exists('rasamalaWhatsappBubbleContent')) {
             '{id_member}' => $member_id,
         ]);
         $message = trim(preg_replace('/\s+/', ' ', strip_tags($message)));
+        $message = preg_replace('/^' . preg_quote($author, '/') . '\s*[:;]\s*/i', '', $message);
 
         return [
             'author' => $author,

@@ -254,16 +254,16 @@
                 return;
             }
 
-            if (type !== 'topics' && window.RasamalaHeroRenderer) {
+            if (type !== 'topics' && type !== 'news' && window.RasamalaHeroRenderer) {
                 if (mount._rasamalaHeroType === type && mount._rasamalaHeroApp) return;
                 window.RasamalaHeroRenderer.mount(mount, type);
                 return;
             }
             if (!template) return;
-            if (mount.getAttribute('data-hero-mounted-type') === 'topics') return;
+            if (mount.getAttribute('data-hero-mounted-type') === type) return;
             clearElement(mount);
             mount.appendChild(template.content.cloneNode(true));
-            mount.setAttribute('data-hero-mounted-type', 'topics');
+            mount.setAttribute('data-hero-mounted-type', type);
         });
     };
 
@@ -414,6 +414,15 @@
         const activeMapVisibility = optionValueExists(mapVisibilityOptions, settings.mapVisibility)
             ? settings.mapVisibility
             : (paletteSwitcherConfig.mapVisibility || 'all');
+        const heroInsideSectionMap = {
+            topics: 'topic',
+            '1': 'topic',
+            yes: 'topic',
+            news: 'news',
+            popular: 'popular',
+            new_update: 'new-collection',
+            top_reader: 'top-reader'
+        };
         const isOnlyHero = activeHeroMode === 'yes';
         const showHeroTopics = isOnlyHero && (activeHeroTopicsInHero === 'topics' || activeHeroTopicsInHero === '1' || activeHeroTopicsInHero === 'yes');
         const heroSectionKey = isOnlyHero ? (heroInsideSectionMap[activeHeroTopicsInHero] || '') : '';

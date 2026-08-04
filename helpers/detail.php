@@ -193,7 +193,6 @@ if (!function_exists('themeDetailAvailabilityHtml')) {
 
     $locations = [];
     while ($item = $query->fetch_assoc()) {
-    $stmt->close();
       $location = trim($item['location_name'] ?? '');
       if ($location === '') {
         $location = __('Location name is not set');
@@ -237,6 +236,7 @@ if (!function_exists('themeDetailAvailabilityHtml')) {
         'status' => $status,
       ];
     }
+    $stmt->close();
 
     $max_location_rows = 3;
     $location_index = 0;

@@ -162,9 +162,10 @@ if ($current_p === 'member' && $is_logged_in_member) {
         ]
     ];
 } else {
-    // OPAC / Visitor View (Logged out)
-    // Primary bottom keys: 1. home, 2. news, 3. member (Area Anggota), 4. help
-    $primary_keys = ['home', 'news', 'member', 'help'];
+    // Primary bottom keys:
+    // If member is logged in: 1. home, 2. news, 3. basket (Tengah), 4. member, 5. more
+    // If logged out: 1. home, 2. news, 3. member, 4. help, 5. more
+    $primary_keys = $is_logged_in_member ? ['home', 'news', 'basket', 'member'] : ['home', 'news', 'member', 'help'];
 
     foreach ($primary_keys as $pkey) {
         if ($pkey === 'basket') {

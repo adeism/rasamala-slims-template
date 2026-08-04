@@ -100,9 +100,9 @@ $cursor_icon_options = [
 ];
 $home_section_options = [
     ['key' => 'topic', 'label' => __('Topics'), 'selector' => '.rasamala-home-section-topic'],
-    ['key' => 'news', 'label' => __('Latest Content'), 'selector' => '.rasamala-home-content-cards-section'],
+    ['key' => 'news', 'label' => __('Latest Content Cards (Berita / Artikel)'), 'selector' => '.rasamala-home-content-cards-section'],
     ['key' => 'popular', 'label' => __('Popular Collections'), 'selector' => '.rasamala-home-section-popular'],
-    ['key' => 'new-collection', 'label' => __('New Collections'), 'selector' => '.rasamala-home-section-new-collection'],
+    ['key' => 'new-collection', 'label' => __('New Collections (Koleksi Terbaru)'), 'selector' => '.rasamala-home-section-new-collection'],
     ['key' => 'top-reader', 'label' => __('Top Reader'), 'selector' => '.rasamala-home-section-top-reader'],
     ['key' => 'footer', 'label' => __('Footer'), 'selector' => 'footer'],
 ];
@@ -142,6 +142,7 @@ $current_hero_topics_in_hero = function_exists('themeHomepageHeroInsideContent')
 $hero_topics_options = [
     'none' => themeTranslate('None - Keep Below Search'),
     'topics' => themeTranslate('Topics'),
+    'news' => themeTranslate('Latest Content (Berita / Cards)'),
     'popular' => themeTranslate('Popular among our collections'),
     'new_update' => themeTranslate('New collections + updated'),
     'top_reader' => themeTranslate('Top Reader of the Year'),
@@ -165,7 +166,6 @@ if (function_exists('themeBackgroundStyleOptionLabels')) {
         'soft-gradient' => themeTranslate('Soft Gradient'),
         'aurora-glow' => themeTranslate('Aurora Glow'),
         'mesh-light' => themeTranslate('Mesh Light'),
-        'glass-surface' => themeTranslate('Glass Surface'),
         'solid-theme' => themeTranslate('Solid Theme'),
         'minimal-surface' => themeTranslate('Minimal Surface'),
         'custom' => themeTranslate('Custom Background Style'),
@@ -744,77 +744,11 @@ $has_ticker_active = !empty($latest_content_ticker_items) || (function_exists('t
             </div>
         </details>
 
-        <!-- 5. Kustomisasi Latar & Pengaturan Lanjutan -->
+        <!-- 5. Pengaturan Lanjutan -->
         <details class="palette-switcher-group palette-switcher-tinfo-group">
-            <summary><span class="palette-switcher-group-step">5</span><span><?= themeEscape(themeTranslate('Kustomisasi Latar & Pengaturan Lanjutan')); ?></span><i class="fas fa-chevron-right" aria-hidden="true"></i></summary>
+            <summary><span class="palette-switcher-group-step">5</span><span><?= themeEscape(themeTranslate('Pengaturan Lanjutan')); ?></span><i class="fas fa-chevron-right" aria-hidden="true"></i></summary>
             <div class="palette-switcher-group-body">
-                <p class="palette-switcher-help palette-switcher-tinfo-intro">
-                    <?= themeEscape(themeTranslate('Atur CSS latar kustom atau cari pengaturan TInfo tambahan. Pengaturan yang tidak relevan otomatis disembunyikan.')); ?>
-                </p>
-
-                <section class="palette-switcher-advanced-block palette-switcher-background-block" aria-labelledby="theme-background-custom-title">
-                    <div class="palette-switcher-advanced-block-head">
-                        <div>
-                            <h3 id="theme-background-custom-title" class="palette-switcher-builder-title"><i class="fas fa-paint-roller me-1" aria-hidden="true"></i><?= themeEscape(themeTranslate('Kustomisasi Latar')); ?></h3>
-                            <p class="palette-switcher-help mb-0"><?= themeEscape(themeTranslate('Pilih Background Style = Custom pada bagian Identitas Tampilan untuk mengaktifkan CSS ini.')); ?></p>
-                            <button type="button" id="theme-background-open-settings" class="palette-switcher-tool-btn palette-switcher-tool-btn-compact mt-2"><i class="fas fa-arrow-up me-1" aria-hidden="true"></i><?= themeEscape(themeTranslate('Pilih Background Style')); ?></button>
-                        </div>
-                    </div>
-                    <!-- Custom CSS Background Input -->
-                    <div class="palette-switcher-custom palette-switcher-background-custom" id="theme-background-style-custom" hidden>
-                            <label class="palette-switcher-label" for="theme-background-style-custom-input"><?= themeEscape(themeTranslate('CSS Latar Kustom')); ?></label>
-                            <textarea id="theme-background-style-custom-input"
-                                      class="form-control palette-switcher-custom-input"
-                                      rows="3"
-                                      maxlength="2500"
-                                      autocomplete="off"
-                                      spellcheck="false"
-                                      placeholder="Light background | Dark background"><?= themeEscape($current_hero_background_custom); ?></textarea>
-                            <div class="palette-switcher-help palette-switcher-format-help mt-2">
-                                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
-                                    <span class="fw-bold text-xs"><i class="fas fa-magic text-primary me-1" aria-hidden="true"></i><?= themeEscape(themeTranslate('Generate Latar via AI:')); ?></span>
-                                    <div class="palette-switcher-custom-actions d-inline-flex align-items-center gap-1">
-                                        <button type="button"
-                                                id="theme-background-copy-prompt"
-                                                class="palette-switcher-tool-btn btn-prompt-action"
-                                                title="<?= themeEscape(__('Salin Prompt CSS')); ?>"
-                                                aria-label="<?= themeEscape(__('Salin Prompt CSS')); ?>">
-                                            <i class="fas fa-copy" aria-hidden="true"></i><span><?= themeEscape(__('Salin Prompt CSS')); ?></span>
-                                        </button>
-                                        <button type="button"
-                                                id="theme-background-paste"
-                                                class="palette-switcher-tool-btn btn-prompt-action"
-                                                title="<?= themeEscape(__('Tempel CSS Latar')); ?>"
-                                                aria-label="<?= themeEscape(__('Tempel CSS Latar')); ?>">
-                                            <i class="fas fa-paste" aria-hidden="true"></i><span><?= themeEscape(__('Tempel CSS')); ?></span>
-                                        </button>
-                                        <button type="button"
-                                                id="theme-background-copy-image-prompt"
-                                                class="palette-switcher-tool-btn btn-prompt-action"
-                                                title="<?= themeEscape(__('Salin Prompt Gambar')); ?>"
-                                                aria-label="<?= themeEscape(__('Salin Prompt Gambar')); ?>">
-                                            <i class="fas fa-image" aria-hidden="true"></i><span><?= themeEscape(__('Prompt Gambar')); ?></span>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="palette-switcher-ai-hint text-xs mb-2 p-2 rounded bg-light border">
-                                    <i class="fas fa-lightbulb text-warning me-1" aria-hidden="true"></i>
-                                    <span><strong>Langkah AI:</strong> Salin prompt ➔ Tempel di AI ➔ Salin balasan ➔ Tempel CSS di sini.</span>
-                                </div>
-                                <div class="text-muted text-xs mb-1"><?= themeEscape(themeTranslate('Gunakan 1 ekspresi CSS background, atau pisahkan TERANG | GELAP.')); ?></div>
-                                <code class="palette-switcher-format-code d-block">linear-gradient(145deg, var(--theme-primary), var(--theme-surface)) | linear-gradient(145deg, var(--theme-dark-primary), var(--theme-dark-surface))</code>
-                            </div>
-                    </div>
-                </section>
-
-                <section class="palette-switcher-advanced-block palette-switcher-tinfo-block" aria-labelledby="theme-tinfo-title">
-                    <div class="palette-switcher-advanced-block-head">
-                        <div>
-                            <h3 id="theme-tinfo-title" class="palette-switcher-builder-title"><i class="fas fa-sliders-h me-1" aria-hidden="true"></i><?= themeEscape(themeTranslate('Pengaturan Teknis (TInfo)')); ?></h3>
-                            <p class="palette-switcher-help mb-0"><?= themeEscape(themeTranslate('Gunakan pencarian untuk menemukan opsi lanjutan tanpa membuka sub-menu.')); ?></p>
-                        </div>
-                    </div>
-                        <div id="theme-tinfo-generic" class="palette-switcher-tinfo-list">
+                <div id="theme-tinfo-generic" class="palette-switcher-tinfo-list">
 <?php
 $theme_viewer_tinfo_groups = [];
 foreach ($theme_viewer_tinfo_generic_options as $tinfo_option) {
@@ -863,7 +797,7 @@ foreach ($theme_viewer_tinfo_groups as $group_key => $group) {
 <?php } ?>
                         </div>
                         <p id="theme-tinfo-empty" class="palette-switcher-help mt-2" hidden><?= themeEscape(themeTranslate('Tidak ada pengaturan TInfo yang cocok.')); ?></p>
-                </section>
+                    </div>
             </div>
         </details>
 
