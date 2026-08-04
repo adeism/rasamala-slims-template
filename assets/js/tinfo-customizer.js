@@ -547,7 +547,8 @@ $(document).ready(function() {
         var customPaletteOn = settingValue('classic_theme_color') === 'custom';
         var selectedBackgroundStyle = settingValue('classic_hero_background_style');
         var customBackgroundOn = selectedBackgroundStyle === 'custom';
-        var imageBackgroundOn = selectedBackgroundStyle.indexOf('image-') === 0;
+        var selectedOptionText = $('select[name="classic_hero_background_style"] option:selected').text().trim();
+        var imageBackgroundOn = selectedOptionText.indexOf('Image:') === 0 || selectedOptionText.indexOf('Image: ') === 0;
 
         setRowsVisible(['classic_palette_custom'], customPaletteOn);
         setRowsVisible(['classic_background_style_custom'], customBackgroundOn);

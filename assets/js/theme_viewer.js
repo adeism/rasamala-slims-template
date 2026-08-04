@@ -1451,7 +1451,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (heroBackgroundOpenSettingsButton) heroBackgroundOpenSettingsButton.hidden = customBackgroundActive;
         }
         const activeBackgroundStyle = heroBackgroundStyleSelect ? heroBackgroundStyleSelect.value : settings.heroBackgroundStyle;
-        const isImageBackground = String(activeBackgroundStyle || '').indexOf('image-') === 0 || !!(paletteSwitcherConfig.heroBackgroundStyleDetails && paletteSwitcherConfig.heroBackgroundStyleDetails[activeBackgroundStyle] && paletteSwitcherConfig.heroBackgroundStyleDetails[activeBackgroundStyle].image);
+        const selectedOptionText = heroBackgroundStyleSelect && heroBackgroundStyleSelect.options && heroBackgroundStyleSelect.selectedIndex >= 0
+            ? String(heroBackgroundStyleSelect.options[heroBackgroundStyleSelect.selectedIndex].text || '')
+            : '';
+        const isImageBackground = !!(
+            (paletteSwitcherConfig.heroBackgroundStyleDetails &&
+             paletteSwitcherConfig.heroBackgroundStyleDetails[activeBackgroundStyle] &&
+             paletteSwitcherConfig.heroBackgroundStyleDetails[activeBackgroundStyle].image === true) ||
+            (selectedOptionText.trim().indexOf('Image:') === 0)
+        );
         const configuredImageSettings = Object.assign({size: 'crop', position: 'center', filter: 'none', blur: 'none', overlay: 'none'}, paletteSwitcherConfig.currentHeroBackgroundImage || {});
         const imageSettings = settings.backgroundImage || configuredImageSettings;
         if (heroBackgroundImageSizeSelect) heroBackgroundImageSizeSelect.value = imageSettings.size || configuredImageSettings.size;
