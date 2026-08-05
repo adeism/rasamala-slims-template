@@ -436,7 +436,14 @@ Tidak ditemukan temuan dengan severity kritis.
 > 1. **Homepage / Utama**: `index.php`
 > 2. **Pencarian & Live Suggest API**: `index.php?search=1&keywords=test` & `index.php?rasamala_suggest=1&q=test`
 > 3. **Detail Bibliografi & Sitasi**: `index.php?p=show_detail&id=1` & `index.php?p=cite&id=1`
-> 4. **Area Anggota (Member)**: `index.php?p=member`, `index.php?p=member&sec=bookmark`, `index.php?p=member&sec=title_basket`
+> 4. **Area Anggota (Member Area & Sub-Tab Navigation)**:
+>    - `index.php?p=member` *(Form login / Redirect ke Kartu Anggota)*
+>    - `index.php?p=member&sec=my_card` *(Kartu Anggota Digital / Digital ID Card)*
+>    - `index.php?p=member&sec=current_loan` *(Daftar Pinjaman Aktif)*
+>    - `index.php?p=member&sec=bookmark` *(Bookmark Judul Buku)*
+>    - `index.php?p=member&sec=title_basket` *(Keranjang Judul Buku)*
+>    - `index.php?p=member&sec=loan_history` *(Riwayat Peminjaman)*
+>    - `index.php?p=member&sec=my_account` *(Detail Akun & Ubah Password)*
 > 5. **Area Staf / Librarian Login**: `index.php?p=login`
 > 6. **Portal Anjungan Pengunjung (Visitor)**: `index.php?p=visitor`
 > 7. **Profil Pustakawan**: `index.php?p=librarian`
