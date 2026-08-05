@@ -430,7 +430,20 @@ Tidak ditemukan temuan dengan severity kritis.
 ---
 
 > [!NOTE]
-> Review ini didasarkan pada analisis statis kode sumber (source code review). Validasi browser (smoke test route, visual rendering, console errors, network 404, dll.) **belum dilakukan** karena server PHP tidak tersedia via CLI standard di lingkungan ini. Untuk verifikasi penuh, lakukan smoke test pada route: homepage, `?search=test`, `?p=show_detail&id=1`, `?p=member`, `?p=visitor`, `?p=librarian`, `?p=news` pada viewport mobile/desktop, light/dark mode.
+> Review ini didasarkan pada analisis statis kode sumber (source code review). Validasi browser (smoke test route, visual rendering, console errors, network 404, dll.) **belum dilakukan** karena server PHP tidak tersedia via CLI standard di lingkungan ini.
+>
+> Untuk verifikasi penuh, lakukan smoke test pada seluruh route berikut:
+> 1. **Homepage / Utama**: `index.php`
+> 2. **Pencarian & Live Suggest API**: `index.php?search=1&keywords=test` & `index.php?rasamala_suggest=1&q=test`
+> 3. **Detail Bibliografi & Sitasi**: `index.php?p=show_detail&id=1` & `index.php?p=cite&id=1`
+> 4. **Area Anggota (Member)**: `index.php?p=member`, `index.php?p=member&sec=bookmark`, `index.php?p=member&sec=title_basket`
+> 5. **Area Staf / Librarian Login**: `index.php?p=login`
+> 6. **Portal Anjungan Pengunjung (Visitor)**: `index.php?p=visitor`
+> 7. **Profil Pustakawan**: `index.php?p=librarian`
+> 8. **Berita Perpustakaan**: `index.php?p=news`
+> 9. **Halaman Informasi & Layanan**: `index.php?p=libinfo` & `index.php?p=services`
+> 
+> Uji pada viewport mobile & desktop, serta mode terang (light) & gelap (dark).
 
 > [!TIP]
 > Template Rasamala per 5 Agustus 2026 menunjukkan kematangan engineering yang sangat baik (skor **4.69/5**). Fokus perbaikan utama adalah pada **optimasi ukuran CSS** dan **refactoring file partial besar**. Tidak ada temuan keamanan kritis.
