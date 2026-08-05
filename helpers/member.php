@@ -203,6 +203,13 @@ if (!function_exists('rasamalaSanitizeMemberSessionContent')) {
             $escape_session_var($_SESSION['m_institution'], $main_content);
         }
 
+        // Replace empty table cells in Member Detail with a clean '-' fallback indicator
+        $main_content = preg_replace(
+            '/(<td\b[^>]*class="[^"]*value\b[^"]*"[^>]*>)\s*(<\/td>)/i',
+            '$1-<span class="visually-hidden">' . themeEscape(__('Not provided')) . '</span>$2',
+            $main_content
+        );
+
         // Accessible labels (F9)
         $member_id_label = __('Member ID');
         $password_label = __('Password');
