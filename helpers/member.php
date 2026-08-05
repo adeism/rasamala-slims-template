@@ -161,7 +161,9 @@ if (!function_exists('rasamalaSanitizeMemberSessionContent')) {
             if ($session_val === '') return;
             $escaped = htmlspecialchars($session_val, ENT_QUOTES, 'UTF-8');
             $pattern = '/(<td\b[^>]*>)' . preg_quote($session_val, '/') . '(<\/td>)/i';
-            $content = preg_replace($pattern, '$1' . addcslashes($escaped, '$') . '$2', $content);
+            $content = preg_replace_callback($pattern, function ($m) use ($escaped) {
+                return $m[1] . $escaped . $m[2];
+            }, $content);
         };
 
         if (isset($_SESSION['m_name'])) {
