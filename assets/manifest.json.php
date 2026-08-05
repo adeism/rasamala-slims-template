@@ -6,8 +6,8 @@ if (!defined('INDEX_AUTH')) {
     define('INDEX_AUTH', 1);
 }
 
-$sysconf = [];
-$sysconf_path = dirname(__DIR__, 3) . '/config/sysconfig.inc.php';
+$root_dir = dirname(__DIR__, 3);
+$sysconf_path = $root_dir . '/sysconf.inc.php';
 if (is_file($sysconf_path)) {
     @include $sysconf_path;
 }
@@ -16,14 +16,25 @@ $library_name = trim((string)($sysconf['library_name'] ?? 'SLiMS Library OPAC'))
 $library_subname = trim((string)($sysconf['library_subname'] ?? 'Senayan Library Management System'));
 $short_name = mb_strimwidth($library_name, 0, 20, '');
 
-$icon_url = '../../../webicon.ico';
-if (!empty($sysconf['webicon'])) {
-    $icon_url = '../../../images/default/' . rawurlencode($sysconf['webicon']);
-} elseif (is_file(dirname(__DIR__, 3) . '/images/default/logo.png')) {
-    $icon_url = '../../../images/default/logo.png';
+$icon_rel = '../../../webicon.ico';
+$icon_abs = $root_dir . '/webicon.ico';
+
+if (!empty($sysconf['webicon']) && is_file($root_dir . '/images/default/' . $sysconf['webicon'])) {
+    $icon_rel = '../../../images/default/' . rawurlencode($sysconf['webicon']);
+    $icon_abs = $root_dir . '/images/default/' . $sysconf['webicon'];
+} elseif (is_file($root_dir . '/images/default/logo.png')) {
+    $icon_rel = '../../../images/default/logo.png';
+    $icon_abs = $root_dir . '/images/default/logo.png';
 }
 
-$icon_type = preg_match('/\.ico$/i', $icon_url) ? 'image/x-icon' : 'image/png';
+$icon_type = preg_match('/\.ico$/i', $icon_rel) ? 'image/x-icon' : 'image/png';
+$icon_sizes = '48x48';
+
+if (is_file($icon_abs) && ($img_info = @getimagesize($icon_abs))) {
+    if (!empty($img_info[0]) && !empty($img_info[1])) {
+        $icon_sizes = (int)$img_info[0] . 'x' . (int)$img_info[1];
+    }
+}
 
 header('Content-Type: application/manifest+json; charset=utf-8');
 header('Cache-Control: public, max-age=86400');
@@ -40,8 +51,8 @@ echo json_encode([
     'orientation' => 'any',
     'icons' => [
         [
-            'src' => $icon_url,
-            'sizes' => 'any',
+            'src' => $icon_rel,
+            'sizes' => $icon_sizes,
             'type' => $icon_type,
             'purpose' => 'any'
         ]
