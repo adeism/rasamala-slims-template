@@ -3929,7 +3929,7 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
 #memberChangePassword input[type="submit"],
 #memberChangePassword #loginButton,
 .member-area table.memberDetail input[type="submit"] {
-  background-color: var(--rasamala-accent, #0d6efd) !important;
+  background-color: var(--rasamala-accent, var(--bs-primary, #0d6efd)) !important;
   color: #ffffff !important;
   border: none !important;
   padding: 10px 24px !important;
@@ -3938,16 +3938,17 @@ body.rasamala-background-animation-active .rasamala-search-banner-bg-floating-em
   border-radius: 50rem !important;
   cursor: pointer !important;
   display: inline-block !important;
-  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.25) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
   transition: all 0.2s ease-in-out !important;
 }
 
 #memberChangePassword input[type="submit"]:hover,
 #memberChangePassword #loginButton:hover,
 .member-area table.memberDetail input[type="submit"]:hover {
-  background-color: #0b5ed7 !important;
+  background-color: var(--rasamala-accent-hover, var(--rasamala-accent, #0b5ed7)) !important;
   color: #ffffff !important;
-  box-shadow: 0 6px 16px rgba(13, 110, 253, 0.35) !important;
+  filter: brightness(0.92) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22) !important;
   transform: translateY(-1px) !important;
 }
 
