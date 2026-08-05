@@ -23,6 +23,8 @@ if (!empty($sysconf['webicon'])) {
     $icon_url = '../../../images/default/logo.png';
 }
 
+$icon_type = preg_match('/\.ico$/i', $icon_url) ? 'image/x-icon' : 'image/png';
+
 header('Content-Type: application/manifest+json; charset=utf-8');
 header('Cache-Control: public, max-age=86400');
 
@@ -39,15 +41,9 @@ echo json_encode([
     'icons' => [
         [
             'src' => $icon_url,
-            'sizes' => '192x192',
-            'type' => 'image/png',
-            'purpose' => 'any maskable'
-        ],
-        [
-            'src' => $icon_url,
-            'sizes' => '512x512',
-            'type' => 'image/png',
-            'purpose' => 'any maskable'
+            'sizes' => 'any',
+            'type' => $icon_type,
+            'purpose' => 'any'
         ]
     ]
 ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
