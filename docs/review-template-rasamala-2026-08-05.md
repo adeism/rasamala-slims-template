@@ -171,18 +171,9 @@ index_template.inc.php
 - ✅ Heredoc syntax untuk menu HTML template (bersih dan terbaca)
 - ✅ Carbon library digunakan untuk formatting tanggal dengan locale
 
-**Temuan:**
-- ⚠️ **FINDING-03**: Di `_other.php` baris 54, terdapat akses langsung `$_GET['p']` tanpa null coalescing:
-  ```php
-  if ($_GET['p'] !== 'show_detail') {
-  ```
-  Ini aman karena sudah dijaga oleh kondisi di `index_template.inc.php` (baris 86, `isset($_GET['p'])`), tetapi demi konsistensi defensif, lebih baik menggunakan `($_GET['p'] ?? '') !== 'show_detail'`. Hal serupa ada di baris 55 (`$_GET['p'] === 'login'`), 64, dan 66.
-
-- ⚠️ **FINDING-04**: Di `_navbar.php` baris 147, masih menggunakan perbandingan loose `==` untuk cookie language:
-  ```php
-  $select_lang = isset($_COOKIE['select_lang'])?$_COOKIE['select_lang']:$sysconf['default_lang'];
-  ```
-  Ini bukan bug, tetapi bisa disederhanakan menjadi null coalescing untuk konsistensi.
+**Temuan yang Sudah Diperbaiki (5 Agustus 2026):**
+- ✅ **FINDING-03 (DIPERBAIKI)**: Di `_other.php`, seluruh perbandingan `$_GET['p']` telah digantikan dengan variabel `$current_p` (`(string)($_GET['p'] ?? '')`) untuk konsistensi defensif.
+- ✅ **FINDING-04 (DIPERBAIKI)**: Di `_navbar.php` baris 147, penetapan `$select_lang` telah disederhanakan menggunakan operator null coalescing (`$_COOKIE['select_lang'] ?? $sysconf['default_lang']`).
 
 ---
 
@@ -384,8 +375,8 @@ Tidak ditemukan temuan dengan severity kritis.
 
 | ID | Area | Temuan | Severity | Rekomendasi |
 |---|---|---|---|---|
-| **FINDING-03** | Kode | `$_GET['p']` tanpa null coalescing di `_other.php` baris 54-66 | Rendah | Gunakan `($_GET['p'] ?? '')` untuk konsistensi |
-| **FINDING-04** | Kode | Perbandingan loose `==` untuk cookie language di `_navbar.php` baris 147 | Rendah | Gunakan null coalescing `??` |
+| **FINDING-03** | Kode | `$_GET['p']` tanpa null coalescing di `_other.php` baris 54-66 | ✅ Diperbaiki | Menggunakan `$current_p` (`(string)($_GET['p'] ?? '')`) |
+| **FINDING-04** | Kode | Ternary `isset()` untuk cookie language di `_navbar.php` baris 147 | ✅ Diperbaiki | Menggunakan `$_COOKIE['select_lang'] ?? $sysconf['default_lang']` |
 | **FINDING-07** | PWA | Service worker dihapus, tidak ada offline capability | Rendah | Dokumentasikan keputusan ini di README |
 
 ### ℹ️ Catatan Informasional

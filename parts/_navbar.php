@@ -144,7 +144,7 @@ HTML;
             <?php
               $langstr = '';
               $current_lang = '';
-              $select_lang = isset($_COOKIE['select_lang'])?$_COOKIE['select_lang']:$sysconf['default_lang'];
+              $select_lang = $_COOKIE['select_lang'] ?? $sysconf['default_lang'];
               // require_once(LANG . 'localisation.php');
               foreach ($available_languages??[] AS $lang_index) {
                 $lang_code = $lang_index[0];

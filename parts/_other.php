@@ -51,8 +51,8 @@
 
       echo themeBreadcrumbsHtml($breadcrumb_label, $breadcrumb_parents);
 
-      if ($_GET['p'] !== 'show_detail') {
-        if ($_GET['p'] === 'login') {
+      if ($current_p !== 'show_detail') {
+        if ($current_p === 'login') {
           echo '<div class="row"><div class="col-md-8 mx-auto">';
           echo '<div class="rasamala-main-content-card p-4 shadow-sm">';
           echo '<div class="tagline">' . themeEscape(__('Librarian Login')) . '</div>';
@@ -61,12 +61,12 @@
           echo '</div>';
           echo '</div></div>';
         } else {
-          $title_divider = ($_GET['p'] === 'news') ? '' : '<hr class="rasamala-divider mb-4">';
+          $title_divider = ($current_p === 'news') ? '' : '<hr class="rasamala-divider mb-4">';
           echo '<h2 class="mb-4 fw-bold detail-title">' . themeEscape($display_page_title) . '</h2>' . $title_divider;
-          if ($_GET['p'] === 'librarian') {
+          if ($current_p === 'librarian') {
             $librarian_content = function_exists('themeRenderLibrarianPage') ? themeRenderLibrarianPage($dbs, $sysconf) : $main_content;
             echo '<div class="d-flex flex-row flex-wrap rasamala-librarian-list">' . $librarian_content . '</div>';
-          } elseif ($_GET['p'] === 'news') {
+          } elseif ($current_p === 'news') {
             echo '<div class="d-flex flex-column">' . $main_content . '</div>';
           } else {
             $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
