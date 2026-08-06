@@ -1,12 +1,11 @@
 <!--
-# ===============================
+# ======================================================================
 # Rasamala SLiMS Template
-# ===============================
-# @Author: Waris Agung Widodo
-# @Email:  ido.alit@gmail.com
-# @Date:   2018-01-23T11:25:57+07:00
-# @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-16T13:33:16+07:00
+# ======================================================================
+# @Author: Ade Ismail Siregar <adeismailbox@gmail.com>
+# @Based on: Classic SLiMS Template by Waris Agung Widodo <ido.alit@gmail.com>
+# @Date: 2026-08-06T07:43:00+07:00
+# ======================================================================
 -->
 <?php
 $rasamala_header = themeHeaderContext($sysconf, $imagesDisk ?? null, $is_login ?? false, $image_src ?? null, $opac ?? null);

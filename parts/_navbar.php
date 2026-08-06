@@ -1,10 +1,8 @@
 <?php
-# @Author: Waris Agung Widodo <user>
-# @Date:   2018-01-25T10:25:29+07:00
-# @Email:  ido.alit@gmail.com
+# @Author: Ade Ismail Siregar <adeismailbox@gmail.com>
+# @Based on: Classic SLiMS Template by Waris Agung Widodo <ido.alit@gmail.com>
+# @Date: 2026-08-06T07:43:00+07:00
 # @Filename: _navbar.php
-# @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-20T11:19:18+07:00
 
 if (!isset($is_login)) {
     $is_login = class_exists('utility') && method_exists('utility', 'isMemberLogin')

@@ -1,10 +1,8 @@
 <?php
-# @Author: Waris Agung Widodo <user>
-# @Date:   2018-01-23T11:27:04+07:00
-# @Email:  ido.alit@gmail.com
+# @Author: Ade Ismail Siregar <adeismailbox@gmail.com>
+# @Based on: Classic SLiMS Template by Waris Agung Widodo <ido.alit@gmail.com>
+# @Date: 2026-08-06T07:43:00+07:00
 # @Filename: _home.php
-# @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-15T15:16:37+07:00
 
 $hero_mode = function_exists('themeHomepageHeroMode') ? themeHomepageHeroMode($sysconf) : 'no';
 $is_homepage_only_hero = $hero_mode !== 'no';
