@@ -59,7 +59,7 @@ if (!function_exists('themeParallelTitleSeparator')) {
 if (!function_exists('themeSplitParallelTitle')) {
   function themeSplitParallelTitle($title, $separator = null)
   {
-    $title = trim((string)($title ?? ''));
+    $title = trim(stripslashes((string)($title ?? '')));
     $separator = $separator === null ? themeParallelTitleSeparator() : trim((string)$separator);
 
     if ($title === '' || $separator === '') {
@@ -110,7 +110,7 @@ if (!function_exists('themeTitleCharacterLimit')) {
 if (!function_exists('themeLimitTitleText')) {
   function themeLimitTitleText($title, $length = null, $end = '...')
   {
-    $title = trim(strip_tags((string)($title ?? '')));
+    $title = trim(stripslashes(strip_tags((string)($title ?? ''))));
     $length = $length === null ? themeTitleCharacterLimit() : themeSafeInt($length, themeTitleCharacterLimit(), 1, 300);
     $end = (string)$end;
 

@@ -246,6 +246,9 @@ const renderSkeleton = function (h, type, count) {
         ...items
     ]);
 };
+const unescapeSlashes = function (str) {
+    return String(str || '').replace(/\\(['"\\])/g, '$1');
+};
 const getParallelTitleSeparator = function () {
     const separator = String(window.rasamalaParallelTitleSeparator || '').trim();
     if (separator === '0' || separator.toLowerCase() === 'none') {
@@ -254,7 +257,7 @@ const getParallelTitleSeparator = function () {
     return separator;
 };
 const splitParallelTitle = function (title) {
-    const rawTitle = String(title || '').trim();
+    const rawTitle = unescapeSlashes(String(title || '').trim());
     const separator = getParallelTitleSeparator();
     const separatorIndex = separator ? rawTitle.indexOf(separator) : -1;
 
@@ -289,7 +292,7 @@ const getTitleCharacterLimit = function () {
     return Math.max(1, Math.min(300, limit));
 };
 const limitTitleText = function (title, limit) {
-    const cleanTitle = String(title || '').trim();
+    const cleanTitle = unescapeSlashes(String(title || '').trim());
     const safeLimit = typeof limit === 'number' ? Math.max(1, Math.min(300, limit)) : getTitleCharacterLimit();
     const suffix = '...';
     const chars = Array.from(cleanTitle);
