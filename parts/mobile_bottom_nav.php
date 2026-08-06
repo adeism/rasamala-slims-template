@@ -1,7 +1,6 @@
 <?php
 # @Author: Ade Ismail Siregar <adeismailbox@gmail.com>
 # @Date:   2026-07-16T10:08:00+07:00
-# @Email:  adeismailbox@gmail.com
 # @Filename: mobile_bottom_nav.php
 # @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
 # @Last modified time: 2026-07-22T12:54:00+07:00

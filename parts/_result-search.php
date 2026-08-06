@@ -1,10 +1,8 @@
 <?php
-# @Author: Waris Agung Widodo <user>
-# @Date:   2018-01-23T11:32:46+07:00
-# @Email:  ido.alit@gmail.com
+# @Author: Ade Ismail Siregar <adeismailbox@gmail.com>
+# @Based on: SLiMS Bulian 9.8 Default Template by Waris Agung Widodo <ido.alit@gmail.com>
+# @Date: 2026-08-06T07:43:00+07:00
 # @Filename: _result-search.php
-# @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-24T13:50:00+07:00
 
 if (!function_exists('rasamalaSearchFilterHtml')) {
     function rasamalaSearchFilterHtml($html)

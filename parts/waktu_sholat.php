@@ -1,10 +1,7 @@
 <?php
 # @Author: Ade Ismail Siregar <adeismailbox@gmail.com>
-# @Date:   2026-07-10T14:33:58+07:00
-# @Email:  adeismailbox@gmail.com
+# @Date: 2026-08-06T07:43:00+07:00
 # @Filename: waktu_sholat.php
-# @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-22T12:54:00+07:00
 
 if (!function_exists('rasamalaWaktuSholatFetchTimings')) {
     function rasamalaWaktuSholatFetchTimings($city)

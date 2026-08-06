@@ -1,10 +1,8 @@
 <?php
-# @Author: Waris Agung Widodo <user>
-# @Date:   2018-01-23T11:26:05+07:00
-# @Email:  ido.alit@gmail.com
+# @Author: Ade Ismail Siregar <adeismailbox@gmail.com>
+# @Based on: SLiMS Bulian 9.8 Default Template by Waris Agung Widodo <ido.alit@gmail.com>
+# @Date: 2026-08-06T07:43:00+07:00
 # @Filename: chat_widget.php
-# @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-16T10:08:00+07:00
 ?>
 
 <?php if ($sysconf['chat_system']['enabled'] && $sysconf['chat_system']['opac']) : ?>

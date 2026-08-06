@@ -1,10 +1,7 @@
 <?php
 # @Author: Ade Ismail Siregar <adeismailbox@gmail.com>
-# @Date:   2026-07-16T10:08:00+07:00
-# @Email:  adeismailbox@gmail.com
+# @Date: 2026-08-06T07:43:00+07:00
 # @Filename: bottom_info_bar.php
-# @Last modified by:   Ade Ismail Siregar (adeismailbox@gmail.com)
-# @Last modified time: 2026-07-22T12:54:00+07:00
 
 $theme_viewer_preview_enabled = (int)themeEffectiveTemplateValue('classic_palette_switcher_show', 0, $sysconf) === 1;
 $show_home_display_footer = themeEffectiveTemplateValue('classic_home_display_show', 'below', $sysconf) === 'bottom' && !$theme_viewer_preview_enabled;
