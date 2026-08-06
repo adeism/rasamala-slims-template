@@ -1,11 +1,8 @@
 <?php
-/**
- * @Created by          : Waris Agung Widodo (ido.alit@gmail.com)
- * @Date                : 2019-01-29 10:43
- * @File name           : _other.php
- * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-20T15:49:02+07:00
- */
+# @Author: Ade Ismail Siregar <adeismailbox@gmail.com>
+# @Based on: SLiMS Bulian 9.8 Default Template by Waris Agung Widodo <ido.alit@gmail.com>
+# @Date: 2026-08-06T07:43:00+07:00
+# @Filename: _other.php
 
 ?>
 
@@ -132,11 +129,11 @@
                 </div>
             </div>';
 
-            echo '<div class="rasamala-main-content-card p-4 shadow-sm">' . $content_actions . $main_content . '</div>';
+            echo '<div class="rasamala-main-content-card p-4 shadow-sm">' . $content_actions . themeInjectCspNonceToScripts($main_content) . '</div>';
           }
         }
       } else {
-        echo $main_content;
+        echo themeInjectCspNonceToScripts($main_content);
       }
       ?>
     </section>

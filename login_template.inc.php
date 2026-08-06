@@ -1,11 +1,8 @@
 <?php
-/**
- * @Created by          : Waris Agung Widodo (ido.alit@gmail.com)
- * @Date                : 2019-01-29 22:16
- * @File name           : login_template.inc.php
- * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-09T10:16:23+07:00
- */
+# @Author: Ade Ismail Siregar <adeismailbox@gmail.com>
+# @Based on: SLiMS Bulian 9.8 Default Template by Waris Agung Widodo <ido.alit@gmail.com>
+# @Date: 2026-08-06T07:43:00+07:00
+# @Filename: login_template.inc.php
 
 if (isset($_GET['p']) && $_GET['p'] === 'visitor') {
   $imagesDisk = \SLiMS\Filesystems\Storage::images();

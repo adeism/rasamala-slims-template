@@ -1,11 +1,8 @@
 <?php
-/**
- * @Created by          : Waris Agung Widodo (ido.alit@gmail.com)
- * @Date                : 2019-01-31 17:30
- * @File name           : news_template.php
- * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-20T15:45:01+07:00
- */
+# @Author: Ade Ismail Siregar <adeismailbox@gmail.com>
+# @Based on: SLiMS Bulian 9.8 Default Template by Waris Agung Widodo <ido.alit@gmail.com>
+# @Date: 2026-08-06T07:43:00+07:00
+# @Filename: news_template.php
 
 if (!defined('INDEX_AUTH') && !defined('DIRECT_AUTH')) {
   define('INDEX_AUTH', 1);
