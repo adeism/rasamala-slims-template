@@ -136,9 +136,14 @@ if (!function_exists('themeParallelTitleHtml')) {
   function themeParallelTitleHtml($title, $context = 'search', $title_length = null)
   {
     $title_parts = themeSplitParallelTitle(stripslashes((string)($title ?? '')));
-    $title_length = $title_length === null ? themeTitleCharacterLimit() : themeSafeInt($title_length, themeTitleCharacterLimit(), 1, 300);
-    $main_title = themeLimitTitleText($title_parts['main'], $title_length);
-    $parallel_title = themeLimitTitleText($title_parts['parallel'], $title_length);
+    if ($context === 'detail' || $title_length === 0 || $title_length === false) {
+      $main_title = $title_parts['main'];
+      $parallel_title = $title_parts['parallel'];
+    } else {
+      $title_length = $title_length === null ? themeTitleCharacterLimit() : themeSafeInt($title_length, themeTitleCharacterLimit(), 1, 300);
+      $main_title = themeLimitTitleText($title_parts['main'], $title_length);
+      $parallel_title = themeLimitTitleText($title_parts['parallel'], $title_length);
+    }
 
     $context = preg_replace('/[^a-z0-9_-]+/i', '-', (string)$context) ?: 'search';
     $html = '<span class="parallel-title parallel-title-' . themeEscape($context) . '">';
