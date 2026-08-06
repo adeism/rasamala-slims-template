@@ -167,8 +167,13 @@ HTML;
                 $safe_lang_code = themeEscape($lang_code);
                 $safe_code_flag = themeEscape(preg_replace('/[^a-z]/', '', $code_flag));
                 $safe_lang_name = themeEscape($lang_name);
+
+                $lang_params = $_GET ?? [];
+                $lang_params['select_lang'] = $lang_code;
+                $safe_lang_url = themeEscape('index.php?' . http_build_query($lang_params));
+
                 $langstr .= <<<HTML
-    <a class="dropdown-item" href="index.php?select_lang={$safe_lang_code}">
+    <a class="dropdown-item" href="{$safe_lang_url}">
         <span class="flag-icon flag-icon-{$safe_code_flag} me-2 flag-icon-rounded" aria-hidden="true"></span> {$safe_lang_name}
     </a>
 HTML;

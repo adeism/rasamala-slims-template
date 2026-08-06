@@ -295,7 +295,9 @@ document.addEventListener('DOMContentLoaded', () => {
     queryAll('.mobile-language-select').forEach((select) => {
         select.addEventListener('change', () => {
             if (select.value) {
-                window.location.href = `index.php?select_lang=${encodeURIComponent(select.value)}`;
+                const url = new URL(window.location.href);
+                url.searchParams.set('select_lang', select.value);
+                window.location.href = url.toString();
             }
         });
     });
