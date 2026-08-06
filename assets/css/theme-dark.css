@@ -945,7 +945,11 @@ body.rasamala-dark .member-area table.memberDetail td.key {
 
 body.rasamala-dark #memberChangePassword input[type="submit"],
 body.rasamala-dark #memberChangePassword #loginButton,
-body.rasamala-dark .member-area table.memberDetail input[type="submit"] {
+body.rasamala-dark .member-area table.memberDetail input[type="submit"],
+body.rasamala-dark input[name="SaveComment"],
+body.rasamala-dark input[name="comment"],
+body.rasamala-dark .comment-form input[type="submit"],
+body.rasamala-dark #comment-container input[type="submit"] {
   background-color: var(--rasamala-accent, #0d6efd) !important;
   color: #ffffff !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
@@ -953,7 +957,11 @@ body.rasamala-dark .member-area table.memberDetail input[type="submit"] {
 
 body.rasamala-dark #memberChangePassword input[type="submit"]:hover,
 body.rasamala-dark #memberChangePassword #loginButton:hover,
-body.rasamala-dark .member-area table.memberDetail input[type="submit"]:hover {
+body.rasamala-dark .member-area table.memberDetail input[type="submit"]:hover,
+body.rasamala-dark input[name="SaveComment"]:hover,
+body.rasamala-dark input[name="comment"]:hover,
+body.rasamala-dark .comment-form input[type="submit"]:hover,
+body.rasamala-dark #comment-container input[type="submit"]:hover {
   background-color: var(--rasamala-accent-hover, var(--rasamala-accent, #2b7fff)) !important;
   color: #ffffff !important;
   filter: brightness(1.1) !important;

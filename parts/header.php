@@ -1,6 +1,6 @@
 <!--
 # ===============================
-# Classic SLiMS Template
+# Rasamala SLiMS Template
 # ===============================
 # @Author: Waris Agung Widodo
 # @Email:  ido.alit@gmail.com
@@ -17,8 +17,8 @@ $rasamala_is_search_page = isset($_GET['search']);
 <html lang="<?= themeEscape($rasamala_header['document_lang']); ?>">
 <head>
     <meta charset="utf-8">
-    <!-- Cryptographic Nonce-Based CSP (SEC-01) -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; script-src 'self' 'nonce-<?= themeCspNonce() ?>' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https:; frame-src 'self' https://www.google.com https://maps.google.com;">
+    <!-- Cryptographic CSP (SEC-01) -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https:; frame-src 'self' https://www.google.com https://maps.google.com;">
     <title><?= themeEscape($page_title); ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 

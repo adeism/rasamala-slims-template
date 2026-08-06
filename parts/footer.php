@@ -112,15 +112,15 @@ $rasamala_has_search_form = $rasamala_is_search_page
 <?php if ($rasamala_has_search_form) : ?>
 <script src="<?php echo assets('js/vue.min.js'); ?>" defer></script>
 <?php endif; ?>
-<script src="<?php echo assets('js/jquery.min.js'); ?>" defer></script>
-<script src="<?php echo assets('js/bootstrap.bundle.min.js'); ?>" defer></script>
-<script src="<?php echo assetsVersioned('js/header_bootstrap.js'); ?>" defer></script>
+<script src="<?php echo assets('js/jquery.min.js'); ?>"></script>
+<script src="<?php echo assets('js/bootstrap.bundle.min.js'); ?>"></script>
+<script src="<?php echo assetsVersioned('js/header_bootstrap.js'); ?>"></script>
 <?php if ($rasamala_is_search_page) : ?>
 <script src="<?php echo assets('js/masonry.pkgd.min.js'); ?>" defer></script>
 <?php endif; ?>
-<script src="<?php echo assetsVersioned('js/bootstrap_compat.js'); ?>" defer></script>
-<script src="<?php echo JWB; ?>toastr/toastr.min.js" defer></script>
-<script src="<?php echo JWB . v('gui.js'); ?>" defer></script>
+<script src="<?php echo assetsVersioned('js/bootstrap_compat.js'); ?>"></script>
+<script src="<?php echo JWB; ?>toastr/toastr.min.js"></script>
+<script src="<?php echo JWB . v('gui.js'); ?>"></script>
 <script src="<?php echo JWB; ?>fancywebsocket.js" defer></script>
 <?php if ($rasamala_is_search_page) : ?>
 <script src="<?php echo JWB; ?>ion.rangeSlider/js/ion.rangeSlider.min.js" defer></script>
