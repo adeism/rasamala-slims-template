@@ -1,7 +1,8 @@
 <?php
-/**
- * Visitor Check-In Portal Page Template Entry Point
- */
+# @Author: Ade Ismail Siregar <adeismailbox@gmail.com>
+# @Based on: SLiMS Bulian 9.8 Default Template by Waris Agung Widodo <ido.alit@gmail.com>
+# @Date: 2026-08-06T07:43:00+07:00
+# @Filename: visitor_template.php
 $main_template_path = __DIR__ . '/login_template.inc.php';
 include_once __DIR__ . '/classic.php';
 require_once __DIR__ . '/helpers/visitor.php';

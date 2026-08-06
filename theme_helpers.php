@@ -1,11 +1,8 @@
 <?php
-/**
- * Shared helpers for Rasamala template.
- * Main entry point loading modular helper files from helpers/
- *
- * @Last modified by    : Ade Ismail Siregar (adeismailbox@gmail.com)
- * @Last modified time  : 2026-07-22T12:26:00+07:00
- */
+# @Author: Ade Ismail Siregar <adeismailbox@gmail.com>
+# @Based on: SLiMS Bulian 9.8 Default Template by Waris Agung Widodo <ido.alit@gmail.com>
+# @Date: 2026-08-06T07:43:00+07:00
+# @Filename: theme_helpers.php
 if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
 }

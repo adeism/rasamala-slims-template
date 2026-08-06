@@ -1,8 +1,7 @@
 <?php
-/**
- * Dedicated Background Layers Partial for Rasamala Template
- * Includes: Hero Canvas Animation, Background Image Layer, and Premium Theme-Colored SVG Vector Layers
- */
+# @Author: Ade Ismail Siregar <adeismailbox@gmail.com>
+# @Date: 2026-08-06T07:43:00+07:00
+# @Filename: background_layers.php
 if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
 }

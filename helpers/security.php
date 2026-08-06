@@ -1,7 +1,7 @@
 <?php
-/**
- * Helper Module for Rasamala Template
- */
+# @Author: Ade Ismail Siregar <adeismailbox@gmail.com>
+# @Date: 2026-08-06T07:43:00+07:00
+# @Filename: security.php
 if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
 }
@@ -195,6 +195,39 @@ if (!function_exists('themeParseHtmlAttributes')) {
     }
 
     return $attrs;
+  }
+}
+
+if (!function_exists('themeInjectCspNonceToScripts')) {
+  function themeInjectCspNonceToScripts($html)
+  {
+    $html = (string)($html ?? '');
+    if ($html === '' || stripos($html, '<script') === false) {
+      return $html;
+    }
+    $nonce = themeCspNonce();
+    return preg_replace_callback(
+      '/<script\b([^>]*)>(.*?)<\/script>/is',
+      function ($matches) use ($nonce) {
+        $attrs = $matches[1];
+        $code = trim($matches[2]);
+
+        if (stripos($attrs, 'nonce=') === false) {
+          $attrs .= ' nonce="' . themeEscape($nonce) . '"';
+        }
+
+        // If inline script is an execution call (and not declaring a function) that depends on core JS (e.g. gui.js or jQuery),
+        // defer its execution until DOMContentLoaded when footer scripts have finished loading.
+        if ($code !== '' && stripos($attrs, 'src=') === false) {
+          if (!preg_match('/^\s*function\s+[a-z0-9_$]+\s*\(/i', $code) && strpos($code, 'DOMContentLoaded') === false) {
+            $code = "document.addEventListener('DOMContentLoaded', function() {\n  " . $code . "\n});";
+          }
+        }
+
+        return '<script' . $attrs . '>' . $code . '</script>';
+      },
+      $html
+    );
   }
 }
 

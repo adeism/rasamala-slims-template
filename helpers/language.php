@@ -1,7 +1,7 @@
 <?php
-/**
- * Helper Module for Rasamala Template - Bilingual Language Dictionary (English & Indonesian)
- */
+# @Author: Ade Ismail Siregar <adeismailbox@gmail.com>
+# @Date: 2026-08-06T07:43:00+07:00
+# @Filename: language.php
 if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
 }
