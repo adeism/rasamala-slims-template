@@ -1,6 +1,11 @@
 <?php
 /**
  * Member Area Component - Logged-in / Logged-out Page Layout
+ *
+ * @Author: Ade Ismail Siregar <adeismailbox@gmail.com>
+ * @Based on: SLiMS Bulian 9.8 Default Template by Waris Agung Widodo <ido.alit@gmail.com>
+ * @Date: 2026-08-06T07:43:00+07:00
+ * @Filename: member_layout.php
  */
 if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
@@ -38,7 +43,7 @@ if (!isset($is_login)) {
 
         <div class="container py-5">
           <div class="rasamala-main-content-card p-4 shadow-sm">
-             <?php echo $main_content; ?>
+             <?php echo themeInjectCspNonceToScripts($main_content); ?>
           </div>
         </div>
 
@@ -67,7 +72,7 @@ if (!isset($is_login)) {
           <div class="row">
               <div class="col-md-8 mx-auto">
                 <div class="rasamala-main-content-card p-4 shadow-sm">
-                  <?php echo $main_content; ?>
+                  <?php echo themeInjectCspNonceToScripts($main_content); ?>
                 </div>
               </div>
           </div>
