@@ -24,9 +24,9 @@
 
     <section class="container mt-5">
       <?php
-      $display_page_title = trim(preg_replace('/\s+/', ' ', str_replace('_', ' ', (string)($page_title ?? ''))));
+      $display_page_title = stripslashes(trim(preg_replace('/\s+/', ' ', str_replace('_', ' ', (string)($page_title ?? '')))));
       if ($display_page_title === '') {
-        $display_page_title = (string)($page_title ?? '');
+        $display_page_title = stripslashes((string)($page_title ?? ''));
       }
 
       $breadcrumb_label = $display_page_title;

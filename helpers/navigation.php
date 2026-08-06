@@ -162,7 +162,7 @@ if (!function_exists('themeBreadcrumbsEnabled')) {
 if (!function_exists('themeBreadcrumbCurrentLabel')) {
   function themeBreadcrumbCurrentLabel($label = '')
   {
-    $label = trim(html_entity_decode(strip_tags((string)($label ?? '')), ENT_QUOTES, 'UTF-8'));
+    $label = stripslashes(trim(html_entity_decode(strip_tags((string)($label ?? '')), ENT_QUOTES, 'UTF-8')));
     if ($label !== '') {
       if (strpos($label, '=') !== false) {
         $label = trim(explode('=', $label)[0]);
@@ -278,7 +278,7 @@ if (!function_exists('themeBreadcrumbsHtml')) {
     $html .= '<a class="rasamala-breadcrumb-link" href="index.php"><i class="fas fa-home" aria-hidden="true"></i><span>' . themeEscape($home_label) . '</span></a>';
 
     foreach ($parents as $parent) {
-      $parent_label = trim(strip_tags((string)($parent['label'] ?? '')));
+      $parent_label = stripslashes(trim(strip_tags((string)($parent['label'] ?? ''))));
       $parent_url = themeSafeLocalUrl($parent['url'] ?? '');
       if ($parent_label === '' || $parent_url === '') {
         continue;

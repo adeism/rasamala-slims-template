@@ -11,6 +11,9 @@
 $rasamala_header = themeHeaderContext($sysconf, $imagesDisk ?? null, $is_login ?? false, $image_src ?? null, $opac ?? null);
 $rasamala_host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? '';
 $rasamala_is_search_page = isset($_GET['search']);
+if (isset($page_title)) {
+    $page_title = stripslashes((string)$page_title);
+}
 ?>
 <!DOCTYPE html>
 <html lang="<?= themeEscape($rasamala_header['document_lang']); ?>">
