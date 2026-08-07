@@ -22,8 +22,8 @@
   Tampilan judul utuh tanpa batas karakter, Generator Kode QR SVG Offline, Generator Sitasi Akademis otomatis (APA, Chicago, MLA, Turabian), dan Keranjang Judul (*Title Basket*) permanen.
 - 🪪 **Kartu Anggota Digital & Buku Tamu:**
   Kartu keanggotaan digital interaktif dengan indikator status aktif/expired, serta *Visitor Log* pendataan pengunjung mode Kiosk dan Split-Layout.
-- 💬 **Widget Layanan Integratif:**
-  Chatbox WhatsApp interaktif dan Widget Waktu Sholat otomatis untuk kota-kota di Indonesia lengkap dengan reminder azan.
+- 💬 **Tombol Layanan Integratif:**
+  Tombol chat bergaya WhatsApp yang membuka aplikasi WhatsApp melalui tautan pesan siap isi, serta Widget Waktu Sholat otomatis untuk kota-kota di Indonesia lengkap dengan reminder azan. Fitur ini bukan chatbox di dalam OPAC.
 
 ---
 
@@ -45,18 +45,16 @@
 Pengaturan Rasamala dikelompokkan ke dalam kategori tersentral di TInfo admin:
 - **Hero & Background:** Mode Fullscreen Hero, Pilihan Konten Hero, Preset & Custom Background, dan Animasi Canvas.
 - **Warna & Tampilan:** 14+ Palet Warna Preset / Custom Palette, Light/Dark Mode, Tipografi, dan Section Layout (Tab / Standard).
-- **Komponen & Widget:** Visitor Log, Ticker Pengumuman, WhatsApp Widget, Waktu Sholat, dan Footer Options.
+- **Komponen & Widget:** Visitor Log, Ticker Pengumuman, tombol Chat WhatsApp (tautan eksternal), Waktu Sholat, dan Footer Options.
 
 ---
 
-## 📖 Dokumentasi Lengkap & Rujukan Teknis
+## 📖 Dokumentasi Teknis
 
-Untuk informasi lebih mendalam, arsitektur sistem, serta pengujian tema, silakan buka dokumen rujukan berikut:
+Untuk informasi arsitektur sistem dan spesifikasi teknis, silakan buka:
 
 - 📘 **[Dokumentasi Detail & Spesifikasi Teknis (`readme-detail.md`)](readme-detail.md)**
   *Arsitektur berkas lengkap, skema TInfo, rute OPAC, aset lokal, proteksi keamanan SQL/XSS/CSP, dan changelog UI/UX.*
-- 🧪 **[QA & Release Gate Checklist (`docs/smoke-test-release-gate.md`)](docs/smoke-test-release-gate.md)**
-  *Daftar verifikasi smoke test, audit database, dan kontrol release gate sebelum rilis produksi.*
 
 ---
 
