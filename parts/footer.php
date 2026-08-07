@@ -24,11 +24,11 @@ if ($show_footer): ?>
         <div class="row py-4" id="rasamala-footer-accordion">
             <div class="<?= $col_logo ?> mb-3 mb-md-0">
               <?php echo themeLibraryLogoHtml($sysconf, $imagesDisk ?? null, 'footer-brand-img'); ?>
-                <div class="mb-3 fw-bold footer-section-title footer-library-name d-flex justify-content-between align-items-center"
-                     data-bs-toggle="collapse" data-bs-target="#footer-nav-collapse" aria-expanded="true">
+                <button type="button" class="mb-3 fw-bold footer-section-title footer-library-name d-flex justify-content-between align-items-center border-0 bg-transparent p-0 text-start w-100"
+                        data-bs-toggle="collapse" data-bs-target="#footer-nav-collapse" aria-controls="footer-nav-collapse" aria-expanded="true">
                     <span><?php echo themeEscape($sysconf['library_name']); ?></span>
                     <i class="fas fa-chevron-down d-md-none text-muted transition-icon" aria-hidden="true"></i>
-                </div>
+                </button>
                 <div class="collapse show d-md-block" id="footer-nav-collapse" data-bs-parent="#rasamala-footer-accordion">
                     <ul class="list-unstyled">
                         <li class="mb-2"><a class="footer-link" href="index.php?p=libinfo"><?= __('Information'); ?></a></li>
@@ -39,10 +39,12 @@ if ($show_footer): ?>
                 </div>
             </div>
             <div class="<?= $col_about ?> pt-4 pt-md-0 mb-3 mb-md-0">
-                <h2 class="mb-3 fw-bold text-uppercase tracking-wider footer-section-title d-flex justify-content-between align-items-center"
-                    data-bs-toggle="collapse" data-bs-target="#footer-about-collapse" aria-expanded="true">
-                    <span><?= __('About Us'); ?></span>
-                    <i class="fas fa-chevron-down d-md-none text-muted transition-icon" aria-hidden="true"></i>
+                <h2 class="mb-3 fw-bold text-uppercase tracking-wider">
+                    <button type="button" class="footer-section-title d-flex justify-content-between align-items-center border-0 bg-transparent p-0 text-start w-100"
+                            data-bs-toggle="collapse" data-bs-target="#footer-about-collapse" aria-controls="footer-about-collapse" aria-expanded="true">
+                        <span><?= __('About Us'); ?></span>
+                        <i class="fas fa-chevron-down d-md-none text-muted transition-icon" aria-hidden="true"></i>
+                    </button>
                 </h2>
                 <div class="collapse show d-md-block" id="footer-about-collapse" data-bs-parent="#rasamala-footer-accordion">
                     <div class="footer-about-text">
@@ -51,10 +53,12 @@ if ($show_footer): ?>
                 </div>
             </div>
             <div class="<?= $col_search ?> pt-4 pt-md-0">
-                <h2 class="mb-3 fw-bold text-uppercase tracking-wider footer-section-title d-flex justify-content-between align-items-center d-md-none"
-                    data-bs-toggle="collapse" data-bs-target="#footer-actions-collapse" aria-expanded="true">
-                    <span><?= __('Quick Links'); ?></span>
-                    <i class="fas fa-chevron-down d-md-none text-muted transition-icon" aria-hidden="true"></i>
+                <h2 class="mb-3 fw-bold text-uppercase tracking-wider d-md-none">
+                    <button type="button" class="footer-section-title d-flex justify-content-between align-items-center border-0 bg-transparent p-0 text-start w-100"
+                            data-bs-toggle="collapse" data-bs-target="#footer-actions-collapse" aria-controls="footer-actions-collapse" aria-expanded="true">
+                        <span><?= __('Quick Links'); ?></span>
+                        <i class="fas fa-chevron-down d-md-none text-muted transition-icon" aria-hidden="true"></i>
+                    </button>
                 </h2>
                 <div class="collapse show d-md-block" id="footer-actions-collapse" data-bs-parent="#rasamala-footer-accordion">
                     <?php if ($footer_search_show) : ?>
