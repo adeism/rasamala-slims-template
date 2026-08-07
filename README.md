@@ -29,14 +29,20 @@
 
 ## 🚀 Cara Instalasi Cepat
 
-1. **Salin Tema:** Salin folder `rasamala` ke direktori templat SLiMS Anda:
+### Instalasi dari Release
+
+1. **Unduh paket:** Download [rasamala.zip](https://github.com/adeism/rasamala-slims-template/releases/download/v1.0.0/rasamala.zip) dari release resmi GitHub.
+2. **Ekstrak dan salin:** Ekstrak arsip, lalu salin folder `rasamala` ke direktori templat SLiMS Anda:
    `/path/to/slims/template/rasamala`
-2. **Aktifkan Tema:** Pilih dan aktifkan **Rasamala** dari menu admin SLiMS:
+
+### Aktivasi dan Kustomisasi
+
+3. **Aktifkan Tema:** Pilih dan aktifkan **Rasamala** dari menu admin SLiMS:
    **System > Theme**, atau tambahkan di `sysconfig.inc.php`:
    ```php
    $sysconf['template']['theme'] = 'rasamala';
    ```
-3. **Kustomisasi:** Sesuaikan tampilan tema melalui menu **System > Theme > Customize/TInfo** atau langsung dari tombol Theme Viewer melayang.
+4. **Kustomisasi:** Sesuaikan tampilan tema melalui menu **System > Theme > Customize/TInfo** atau langsung dari tombol Theme Viewer melayang.
 
 ---
 
