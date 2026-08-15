@@ -255,33 +255,55 @@ if (!function_exists('rasamalaVisitorSplitDefaultSteps')) {
     {
         return [
             [
-                'icon' => 'fas fa-id-card',
-                'title' => 'Isi Identitas',
-                'description' => 'Scan kartu anggota atau ketik identitas pengunjung pada kolom yang tersedia.'
+                'icon' => 'fas fa-book',
+                'title' => 'Masuk ke Portal Perpustakaan',
+                'description' => 'Buka portal perpustakaan dan masuk menggunakan akun anggota.'
             ],
             [
                 'icon' => 'scan',
-                'title' => 'Proses Kunjungan',
-                'description' => 'Sistem akan memeriksa data dan menampilkan status kunjungan secara otomatis.'
+                'title' => 'Scan atau Ketik',
+                'description' => 'Arahkan Kode QR ke alat pemindai, atau ketik nomor anggota/NPM/NIM/ID secara manual.'
             ],
             [
                 'icon' => 'fas fa-check',
-                'title' => 'Selesai',
-                'description' => 'Setelah berhasil, pengunjung dapat melanjutkan aktivitas sesuai layanan yang tersedia.'
+                'title' => 'Konfirmasi Berhasil',
+                'description' => 'Setelah berhasil, layar menampilkan konfirmasi kunjungan dan informasi antrean berikutnya.'
             ]
         ];
+    }
+}
+
+/**
+ * Theme Viewer stores longtext values in a few different ways depending
+ * on the SLiMS version (real newlines, the literal "\\n", or <br>). Keep
+ * those representations equivalent before parsing the one-step-per-line
+ * format.
+ */
+if (!function_exists('rasamalaVisitorSplitNormalizeText')) {
+    function rasamalaVisitorSplitNormalizeText($raw_steps)
+    {
+        $raw_steps = (string)($raw_steps ?? '');
+        $raw_steps = str_replace(["\\r\\n", "\\n", "\\r"], ["\n", "\n", "\r"], $raw_steps);
+        // Some TInfo editors collapse textarea line breaks. The explicit
+        // double-semicolon separator keeps the format reliable in that case.
+        if (strpos($raw_steps, "\n") === false && strpos($raw_steps, ';;') !== false) {
+            $raw_steps = str_replace(';;', "\n", $raw_steps);
+        }
+        return trim($raw_steps);
     }
 }
 
 if (!function_exists('rasamalaVisitorSplitSteps')) {
     function rasamalaVisitorSplitSteps($raw_steps)
     {
-        $raw_steps = trim((string)($raw_steps ?? ''));
-        if (stripos($raw_steps, 'psb.feb.ui.ac.id') !== false || stripos($raw_steps, 'Login Web PSB') !== false) {
-            $raw_steps = '';
-        }
+        $raw_steps = rasamalaVisitorSplitNormalizeText($raw_steps);
 
         if ($raw_steps === '') {
+            return rasamalaVisitorSplitDefaultSteps();
+        }
+        // Do not carry the old site-specific demo copy into a general
+        // library template. It is replaced by the neutral defaults below.
+        if (stripos($raw_steps, 'psb.feb.ui.ac.id') !== false || stripos($raw_steps, 'Login Web PSB') !== false) {
             return rasamalaVisitorSplitDefaultSteps();
         }
 
@@ -325,16 +347,16 @@ if (!function_exists('rasamalaVisitorSplitDefaultHtml')) {
     function rasamalaVisitorSplitDefaultHtml()
     {
         return '<div class="inst-step">'
-            . '<div class="inst-icon-box"><i class="fas fa-id-card"></i></div>'
-            . '<div class="inst-content"><h3>1. Isi Identitas</h3><p>Scan kartu anggota atau ketik identitas pengunjung pada kolom yang tersedia.</p></div>'
+            . '<div class="inst-icon-box"><i class="fas fa-book"></i></div>'
+            . '<div class="inst-content"><h3>1. Masuk ke Portal Perpustakaan</h3><p>Buka portal perpustakaan dan masuk menggunakan akun anggota.</p></div>'
             . '</div>'
             . '<div class="inst-step inst-step-featured">'
-            . '<div class="inst-icon-box"><i class="fas fa-sync-alt"></i></div>'
-            . '<div class="inst-content"><h3>2. Proses Kunjungan</h3><p>Sistem akan memeriksa data dan menampilkan status kunjungan secara otomatis.</p></div>'
+            . '<div class="inst-icon-box inst-icon-box-scan"><i class="fas fa-qrcode"></i></div>'
+            . '<div class="inst-content"><h3>2. Scan atau Ketik</h3><p>Arahkan Kode QR ke alat pemindai, atau ketik nomor anggota/NPM/NIM/ID secara manual.</p></div>'
             . '</div>'
             . '<div class="inst-step">'
             . '<div class="inst-icon-box"><i class="fas fa-check"></i></div>'
-            . '<div class="inst-content"><h3>3. Selesai</h3><p>Setelah berhasil, pengunjung dapat melanjutkan aktivitas sesuai layanan yang tersedia.</p></div>'
+            . '<div class="inst-content"><h3>3. Konfirmasi Berhasil</h3><p>Setelah berhasil, layar menampilkan konfirmasi kunjungan dan informasi antrean berikutnya.</p></div>'
             . '</div>';
     }
 }
@@ -364,22 +386,32 @@ if (!function_exists('rasamalaVisitorSplitIcon')) {
     }
 }
 
-if (!function_exists('rasamalaVisitorSplitLegacyHtml')) {
-    function rasamalaVisitorSplitLegacyHtml($raw_steps)
+if (!function_exists('rasamalaVisitorSplitRenderCards')) {
+    function rasamalaVisitorSplitRenderCards($steps)
     {
         $html = '';
-        foreach (rasamalaVisitorSplitSteps($raw_steps) as $visitor_step_index => $visitor_step) {
+        foreach (array_values((array)$steps) as $visitor_step_index => $visitor_step) {
             $visitor_step_icon = rasamalaVisitorSplitIcon($visitor_step['icon'] ?? '');
+            $visitor_step_title = preg_replace('/^\d+\s*[.)-]\s*/', '', (string)($visitor_step['title'] ?? 'Info'));
+            $visitor_step_title = trim((string)$visitor_step_title);
             $html .= '<div class="inst-step' . ($visitor_step_icon['is_scan'] ? ' inst-step-featured' : '') . '">';
             $html .= '<div class="inst-icon-box' . ($visitor_step_icon['is_scan'] ? ' inst-icon-box-scan' : '') . '">' . $visitor_step_icon['html'] . '</div>';
             $html .= '<div class="inst-content">';
-            $html .= '<h3>' . themeEscape(($visitor_step_index + 1) . '. ' . ($visitor_step['title'] ?? 'Info')) . '</h3>';
+            $html .= '<h3>' . themeEscape(($visitor_step_index + 1) . '. ' . ($visitor_step_title !== '' ? $visitor_step_title : 'Info')) . '</h3>';
             if (trim((string)($visitor_step['description'] ?? '')) !== '') {
                 $html .= '<p>' . themeSanitizeHtml($visitor_step['description']) . '</p>';
             }
             $html .= '</div></div>';
         }
 
+        return $html;
+    }
+}
+
+if (!function_exists('rasamalaVisitorSplitLegacyHtml')) {
+    function rasamalaVisitorSplitLegacyHtml($raw_steps)
+    {
+        $html = rasamalaVisitorSplitRenderCards(rasamalaVisitorSplitSteps($raw_steps));
         return $html !== '' ? $html : rasamalaVisitorSplitDefaultHtml();
     }
 }
@@ -408,18 +440,98 @@ if (!function_exists('rasamalaVisitorSplitWrapHtml')) {
     }
 }
 
+if (!function_exists('rasamalaVisitorSplitNumberHtml')) {
+    /** Add the visible sequence number when custom HTML headings omit it. */
+    function rasamalaVisitorSplitNumberHtml($html)
+    {
+        $step_number = 0;
+        return preg_replace_callback('/<h3\b([^>]*)>(.*?)<\/h3\s*>/is', function ($matches) use (&$step_number) {
+            $heading = (string)($matches[2] ?? '');
+            $plain_heading = trim(html_entity_decode(strip_tags($heading), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+            if ($plain_heading === '') {
+                return $matches[0];
+            }
+
+            if (preg_match('/^(\d+)\s*[.)-]\s*/', $plain_heading, $number_match)) {
+                $step_number = max($step_number, (int)$number_match[1]);
+                return $matches[0];
+            }
+
+            $step_number++;
+            return '<h3' . $matches[1] . '>' . $step_number . '. ' . $heading . '</h3>';
+        }, (string)$html);
+    }
+}
+
+if (!function_exists('rasamalaVisitorSplitUnwrappedHtml')) {
+    /**
+     * Convert repeated h3 blocks into separate cards when the Theme Viewer
+     * value has lost its .inst-step wrappers.
+     */
+    function rasamalaVisitorSplitUnwrappedHtml($html)
+    {
+        $html = (string)$html;
+        preg_match_all('/<h3\b[^>]*>.*?<\/h3\s*>/is', $html, $heading_matches, PREG_OFFSET_CAPTURE);
+        if (count($heading_matches[0]) < 2) {
+            return '';
+        }
+
+        $steps = [];
+        $default_icons = ['fas fa-book', 'scan', 'fas fa-check'];
+        foreach ($heading_matches[0] as $index => $heading_match) {
+            $heading_html = (string)$heading_match[0];
+            $heading_offset = (int)$heading_match[1];
+            $heading_end = $heading_offset + strlen($heading_html);
+            $next_offset = isset($heading_matches[0][$index + 1])
+                ? (int)$heading_matches[0][$index + 1][1]
+                : strlen($html);
+            $title = preg_replace('/^<h3\b[^>]*>|<\/h3\s*>$/i', '', $heading_html);
+            $title = trim(strip_tags((string)$title));
+            $description = trim(strip_tags(substr($html, $heading_end, max(0, $next_offset - $heading_end))));
+            if ($title === '') {
+                continue;
+            }
+
+            $steps[] = [
+                'icon' => $default_icons[$index] ?? 'fas fa-info-circle',
+                'title' => $title,
+                'description' => $description,
+            ];
+        }
+
+        return $steps ? rasamalaVisitorSplitRenderCards($steps) : '';
+    }
+}
+
 if (!function_exists('rasamalaVisitorSplitStepsHtml')) {
     function rasamalaVisitorSplitStepsHtml($raw_steps)
     {
-        $raw_steps = trim((string)($raw_steps ?? ''));
-        if (stripos($raw_steps, 'psb.feb.ui.ac.id') !== false || stripos($raw_steps, 'Login Web PSB') !== false) {
-            $raw_steps = '';
-        }
+        $raw_steps = rasamalaVisitorSplitNormalizeText($raw_steps);
         if ($raw_steps === '') {
             return themeSanitizeHtml(rasamalaVisitorSplitDefaultHtml());
         }
+        if (stripos($raw_steps, 'psb.feb.ui.ac.id') !== false || stripos($raw_steps, 'Login Web PSB') !== false) {
+            return themeSanitizeHtml(rasamalaVisitorSplitDefaultHtml());
+        }
         $html_steps = html_entity_decode($raw_steps, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
         if (rasamalaVisitorSplitHasHtml($html_steps)) {
+            $unwrapped_steps = rasamalaVisitorSplitUnwrappedHtml($html_steps);
+            if ($unwrapped_steps !== '') {
+                return $unwrapped_steps;
+            }
+        }
+
+        // Some older Theme Viewer builds turn line breaks into <br>. Treat
+        // that as the documented line-oriented format unless full step HTML
+        // was supplied explicitly.
+        if (!rasamalaVisitorSplitHasStepContainer($html_steps) && preg_match('/<br\s*\/?\s*>/i', $html_steps)) {
+            $line_steps = preg_replace('/<br\s*\/?\s*>/i', "\n", $html_steps);
+            return rasamalaVisitorSplitLegacyHtml(strip_tags((string)$line_steps));
+        }
+
+        if (rasamalaVisitorSplitHasHtml($html_steps)) {
+            $html_steps = rasamalaVisitorSplitNumberHtml($html_steps);
             return themeSanitizeHtml(
                 rasamalaVisitorSplitHasStepContainer($html_steps)
                     ? $html_steps

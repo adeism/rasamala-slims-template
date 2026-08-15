@@ -1189,7 +1189,7 @@ $(document).ready(function() {
         heroBgField.after(
             '<div id="svg-tools-admin-link" class="help-block text-muted mt-1" style="font-size:12px; margin-top:4px;">' +
             '<i class="fa fa-external-link me-1" aria-hidden="true"></i>' +
-            'Buat background SVG lainnya: <a href="http://psb.feb.ui.ac.id/stools" target="_blank" rel="noopener noreferrer" style="font-weight:bold; color:#0d6efd; text-decoration:underline;">psb.feb.ui.ac.id/stools</a>' +
+            'Gunakan generator SVG pilihan Anda, lalu tempelkan hasilnya pada pengaturan background.' +
             '</div>'
         );
     }

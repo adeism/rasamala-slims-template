@@ -46,7 +46,12 @@ if (isset($_GET['rasamala_suggest']) && (string)$_GET['rasamala_suggest'] === '1
   exit;
 }
 
-$imagesDisk = \SLiMS\Filesystems\Storage::images();
+// Storage API is available in newer SLiMS releases, but not in 9.5.0.
+// Keep it optional so the template can fall back to the regular images path.
+$imagesDisk = null;
+if (class_exists('\\SLiMS\\Filesystems\\Storage')) {
+  $imagesDisk = \SLiMS\Filesystems\Storage::images();
+}
 
 // setup list view
 $available_list_views = ['simple', 'list', 'grid'];

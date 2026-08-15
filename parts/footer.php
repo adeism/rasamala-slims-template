@@ -122,7 +122,8 @@ $rasamala_has_search_form = $rasamala_is_search_page
 <?php endif; ?>
 <script src="<?php echo assetsVersioned('js/bootstrap_compat.js'); ?>"></script>
 <script src="<?php echo JWB; ?>toastr/toastr.min.js"></script>
-<script src="<?php echo JWB . v('gui.js'); ?>"></script>
+<?php $rasamala_gui_asset = function_exists('v') ? v('gui.js') : 'gui.js'; ?>
+<script src="<?php echo JWB . $rasamala_gui_asset; ?>"></script>
 <script src="<?php echo JWB; ?>fancywebsocket.js" defer></script>
 <?php if ($rasamala_is_search_page) : ?>
 <script src="<?php echo JWB; ?>ion.rangeSlider/js/ion.rangeSlider.min.js" defer></script>
@@ -136,7 +137,7 @@ endif;
 <!-- // Load highlight -->
 <?php if ($rasamala_is_search_page) : ?>
 <script src="<?= themeEscape(JWB); ?>highlight.js" defer></script>
-<?php if(isset($engine) && $searchableInJsArray = $this->generateKeywords($engine->searchable_fields)) : ?>
+<?php if (isset($engine) && is_object($this) && method_exists($this, 'generateKeywords') && ($searchableInJsArray = $this->generateKeywords($engine->searchable_fields))) : ?>
 <template id="rasamala-highlight-keywords"><?= themeEscape(json_encode(json_decode($searchableInJsArray), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT)); ?></template>
 <?php endif; ?>
 <?php endif; ?>

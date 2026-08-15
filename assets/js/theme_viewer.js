@@ -482,7 +482,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const mapVisible = ['1', 'all', 'hide_social'].includes(mapMode);
         const socialVisible = ['1', 'all', 'hide_map'].includes(mapMode);
         const floatingInfo = viewerSettingValue('classic_floating_info', settings);
-        const visitorSplit = viewerSettingValue('visitor_layout_style', settings) === 'split';
+        // A visitor page already rendered in split mode should keep its
+        // visitor-specific controls visible while the Viewer is open, even
+        // when an older database value still says "kiosk". The next page
+        // load will use the saved layout value.
+        const visitorSplit = viewerSettingValue('visitor_layout_style', settings) === 'split'
+            || !!query('.main-split-container');
         const librarianMode = viewerSettingValue('classic_librarian_display_mode', settings);
         const footerOn = viewerValueIsShown(viewerSettingValue('classic_footer_show', settings));
         const libraryNameInHero = viewerSettingValue('classic_library_name_position', settings) === 'hero';
@@ -587,6 +592,121 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
         const settingChanged = name => Object.prototype.hasOwnProperty.call(settings, name);
+
+        // Visitor settings are also previewable on the visitor page itself.
+        // Build the instruction cards with DOM APIs so typed content never
+        // becomes executable markup in the public preview.
+        const applyVisitorPreview = () => {
+            const splitRoot = query('.main-split-container');
+            const kioskRoot = query('.visitor-kiosk-card');
+            if (!splitRoot && !kioskRoot) return;
+
+            const splitTitle = String(settings.visitor_split_title || '').trim();
+            if (splitRoot && settingChanged('visitor_split_title') && splitTitle) {
+                const titleElement = query('.inst-title', splitRoot);
+                if (titleElement) titleElement.textContent = splitTitle;
+            }
+
+            if (settingChanged('visitor_theme_toggle')) {
+                const toggleValue = String(settings.visitor_theme_toggle || '').toLowerCase();
+                const hidden = ['0', 'hide', 'no', 'none', 'off'].indexOf(toggleValue) !== -1;
+                queryAll('#color-mode-toggle-desktop', splitRoot || kioskRoot).forEach(toggleElement => {
+                    toggleElement.hidden = hidden;
+                    toggleElement.classList.toggle('d-none', hidden);
+                });
+            }
+
+            if (!splitRoot || !settingChanged('visitor_split_steps')) return;
+            const stepsRoot = query('.inst-steps', splitRoot);
+            if (!stepsRoot) return;
+            const raw = String(settings.visitor_split_steps || '').trim();
+            if (!raw) return;
+
+            const defaultIcons = ['fas fa-book', 'fas fa-qrcode', 'fas fa-check'];
+            const safeIcon = value => /^(?:fa[brs]?|fas|far|fab)\s+[a-z0-9 _-]+$/i.test(String(value || '').trim())
+                ? String(value).trim()
+                : '';
+            const items = [];
+            const template = document.createElement('template');
+            if (/<[a-z][\s\S]*>/i.test(raw)) {
+                template.innerHTML = raw;
+                const cards = Array.from(template.content.querySelectorAll('.inst-step'));
+                if (cards.length) {
+                    cards.forEach((card, index) => {
+                        const heading = query('h3', card);
+                        const paragraphs = queryAll('p', card)
+                            .map(paragraph => (paragraph.textContent || '').trim())
+                            .filter(Boolean);
+                        const text = (card.textContent || '').replace(/\s+/g, ' ').trim();
+                        const title = heading ? (heading.textContent || '').replace(/^\s*\d+\.\s*/, '').trim() : '';
+                        const description = paragraphs.join(' ') || text.replace(title, '').trim();
+                        if (title || description) {
+                            items.push({
+                                icon: safeIcon(query('i', card)?.className) || defaultIcons[index] || 'fas fa-info-circle',
+                                title: title || `Langkah ${index + 1}`,
+                                description
+                            });
+                        }
+                    });
+                }
+                if (!items.length) {
+                    const headings = Array.from(template.content.querySelectorAll('h3'));
+                    headings.forEach((heading, index) => {
+                        const title = (heading.textContent || '').replace(/^\s*\d+\.\s*/, '').trim();
+                        const next = heading.nextElementSibling;
+                        const description = next ? (next.textContent || '').replace(/\s+/g, ' ').trim() : '';
+                        if (title || description) {
+                            items.push({
+                                icon: defaultIcons[index] || 'fas fa-info-circle',
+                                title: title || `Langkah ${index + 1}`,
+                                description
+                            });
+                        }
+                    });
+                }
+            }
+            if (!items.length) {
+                raw.split(/;;|\r?\n|\r/).map(line => line.trim()).filter(Boolean).forEach((line, index) => {
+                    const parts = line.split('|').map(part => part.trim());
+                    if (parts.length >= 3) {
+                        items.push({
+                            icon: safeIcon(parts.shift()) || defaultIcons[index] || 'fas fa-info-circle',
+                            title: parts.shift() || `Langkah ${index + 1}`,
+                            description: parts.join(' | ')
+                        });
+                    }
+                });
+            }
+            if (!items.length) return;
+
+            const fragment = document.createDocumentFragment();
+            items.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = `inst-step${index === 1 ? ' inst-step-featured' : ''}`;
+                const iconBox = document.createElement('div');
+                iconBox.className = `inst-icon-box${index === 1 ? ' inst-icon-box-scan' : ''}`;
+                const icon = document.createElement('i');
+                icon.className = item.icon;
+                icon.setAttribute('aria-hidden', 'true');
+                iconBox.appendChild(icon);
+                const content = document.createElement('div');
+                content.className = 'inst-content';
+                const heading = document.createElement('h3');
+                heading.textContent = `${index + 1}. ${item.title}`;
+                const description = document.createElement('p');
+                description.textContent = item.description;
+                content.appendChild(heading);
+                content.appendChild(description);
+                card.appendChild(iconBox);
+                card.appendChild(content);
+                fragment.appendChild(card);
+            });
+            stepsRoot.replaceChildren(fragment);
+        };
+
+        if (settingChanged('visitor_theme_toggle') || settingChanged('visitor_split_title') || settingChanged('visitor_split_steps')) {
+            applyVisitorPreview();
+        }
 
         // Ticker controls: update the already-rendered track immediately.
         // The server still remains responsible for fetching a different data

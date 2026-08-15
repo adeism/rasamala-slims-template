@@ -165,7 +165,10 @@ body.rasamala-dark .visitor-avatar-wrap {
   position: absolute !important;
   right: 0 !important;
   bottom: 12px !important;
-  opacity: 0.25 !important;
+  z-index: 2 !important;
+  min-width: 32px !important;
+  min-height: 30px !important;
+  opacity: 0.7 !important;
   color: var(--rasamala-text-secondary) !important;
   background: transparent !important;
   border: none !important;
@@ -178,6 +181,12 @@ body.rasamala-dark .visitor-avatar-wrap {
 .visitor-toggle-btn:hover {
   opacity: 0.9 !important;
   color: var(--rasamala-accent) !important;
+}
+
+.visitor-toggle-btn:focus-visible {
+  outline: 2px solid var(--rasamala-accent) !important;
+  outline-offset: 2px !important;
+  opacity: 1 !important;
 }
 
 .visitor-has-running-text {
@@ -440,4 +449,194 @@ html.rasamala-page-hidden .scan-laser {
     top: 50% !important;
     opacity: 0.85 !important;
   }
+}
+
+/* Visitor dark-mode contrast. The visitor page can be dark because the
+   palette itself is dark (rasamala-palette-dark) or because the user toggled
+   color mode (rasamala-dark). Keep this scoped to the visitor UI so legacy
+   SLiMS markup cannot force black text onto the dark cards. */
+body.rasamala-dark,
+body.rasamala-palette-dark:not(.rasamala-dark) {
+  --visitor-dark-background: var(--theme-dark-background, #0e131a);
+  --visitor-dark-surface: var(--theme-dark-surface, #171d26);
+  --visitor-dark-surface-soft: rgba(255, 255, 255, 0.045);
+  --visitor-dark-text: var(--theme-dark-text, #f4f7fb);
+  --visitor-dark-muted: var(--theme-dark-muted, #b8c4d2);
+  --visitor-dark-accent: var(--theme-dark-accent, #38d39f);
+  --visitor-dark-on-accent: var(--theme-dark-on-accent, #06130f);
+  --visitor-dark-border: rgba(255, 255, 255, 0.14);
+}
+
+body.rasamala-dark .visitor-backdrop,
+body.rasamala-palette-dark:not(.rasamala-dark) .visitor-backdrop {
+  background: var(--visitor-dark-background) !important;
+  color: var(--visitor-dark-text) !important;
+}
+
+body.rasamala-dark .visitor-kiosk-card,
+body.rasamala-palette-dark:not(.rasamala-dark) .visitor-kiosk-card,
+body.rasamala-dark .left-form-section,
+body.rasamala-dark .right-instruction-section,
+body.rasamala-palette-dark:not(.rasamala-dark) .left-form-section,
+body.rasamala-palette-dark:not(.rasamala-dark) .right-instruction-section {
+  background: var(--visitor-dark-surface) !important;
+  color: var(--visitor-dark-text) !important;
+  border-color: var(--visitor-dark-border) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.42) !important;
+}
+
+body.rasamala-dark .visitor-welcome-title,
+body.rasamala-palette-dark:not(.rasamala-dark) .visitor-welcome-title,
+body.rasamala-dark .inst-title,
+body.rasamala-palette-dark:not(.rasamala-dark) .inst-title,
+body.rasamala-dark .visitor-card-footer,
+body.rasamala-palette-dark:not(.rasamala-dark) .visitor-card-footer,
+body.rasamala-dark .visitor-card-footer .border-top,
+body.rasamala-palette-dark:not(.rasamala-dark) .visitor-card-footer .border-top {
+  color: var(--visitor-dark-text) !important;
+  border-color: var(--visitor-dark-border) !important;
+}
+
+body.rasamala-dark .visitor-welcome-title,
+body.rasamala-palette-dark:not(.rasamala-dark) .visitor-welcome-title {
+  color: var(--visitor-dark-accent) !important;
+}
+
+body.rasamala-dark .visitor-subtitle,
+body.rasamala-dark .instruction-text,
+body.rasamala-dark .visitor-label,
+body.rasamala-dark .visitor-card-footer .text-muted,
+body.rasamala-palette-dark:not(.rasamala-dark) .visitor-subtitle,
+body.rasamala-palette-dark:not(.rasamala-dark) .instruction-text,
+body.rasamala-palette-dark:not(.rasamala-dark) .visitor-label,
+body.rasamala-palette-dark:not(.rasamala-dark) .visitor-card-footer .text-muted {
+  color: var(--visitor-dark-muted) !important;
+  opacity: 1 !important;
+}
+
+body.rasamala-dark .tabs,
+body.rasamala-palette-dark:not(.rasamala-dark) .tabs {
+  border-bottom-color: var(--visitor-dark-border) !important;
+}
+
+body.rasamala-dark .tab-link,
+body.rasamala-palette-dark:not(.rasamala-dark) .tab-link {
+  color: var(--visitor-dark-muted) !important;
+}
+
+body.rasamala-dark .tab-link.active,
+body.rasamala-palette-dark:not(.rasamala-dark) .tab-link.active {
+  color: var(--visitor-dark-accent) !important;
+  border-bottom-color: var(--visitor-dark-accent) !important;
+}
+
+body.rasamala-dark .visitor-input,
+body.rasamala-palette-dark:not(.rasamala-dark) .visitor-input {
+  background: rgba(255, 255, 255, 0.055) !important;
+  color: var(--visitor-dark-text) !important;
+  border-color: var(--visitor-dark-border) !important;
+}
+
+body.rasamala-dark .visitor-input:focus,
+body.rasamala-palette-dark:not(.rasamala-dark) .visitor-input:focus {
+  background: rgba(255, 255, 255, 0.09) !important;
+  border-color: var(--visitor-dark-accent) !important;
+  color: var(--visitor-dark-text) !important;
+  box-shadow: 0 0 0 4px rgba(var(--theme-dark-accent-rgb-value, 56, 211, 159), 0.18) !important;
+}
+
+body.rasamala-dark .visitor-input::placeholder,
+body.rasamala-palette-dark:not(.rasamala-dark) .visitor-input::placeholder {
+  color: var(--visitor-dark-muted) !important;
+  opacity: 0.9 !important;
+}
+
+body.rasamala-dark .visitor-input option,
+body.rasamala-palette-dark:not(.rasamala-dark) .visitor-input option {
+  background: var(--visitor-dark-surface) !important;
+  color: var(--visitor-dark-text) !important;
+}
+
+body.rasamala-dark .btn-visitor-checkin,
+body.rasamala-palette-dark:not(.rasamala-dark) .btn-visitor-checkin {
+  background: var(--visitor-dark-accent) !important;
+  border-color: var(--visitor-dark-accent) !important;
+  color: var(--visitor-dark-on-accent) !important;
+}
+
+body.rasamala-dark .btn-visitor-checkin:hover,
+body.rasamala-dark .btn-visitor-checkin:focus,
+body.rasamala-palette-dark:not(.rasamala-dark) .btn-visitor-checkin:hover,
+body.rasamala-palette-dark:not(.rasamala-dark) .btn-visitor-checkin:focus {
+  filter: brightness(1.12) !important;
+  color: var(--visitor-dark-on-accent) !important;
+}
+
+body.rasamala-dark .inst-step,
+body.rasamala-palette-dark:not(.rasamala-dark) .inst-step {
+  background: var(--visitor-dark-surface-soft) !important;
+  color: var(--visitor-dark-muted) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+body.rasamala-dark .inst-step:hover,
+body.rasamala-palette-dark:not(.rasamala-dark) .inst-step:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: var(--visitor-dark-accent) !important;
+}
+
+body.rasamala-dark .inst-step-featured,
+body.rasamala-palette-dark:not(.rasamala-dark) .inst-step-featured {
+  background: rgba(var(--theme-dark-accent-rgb-value, 56, 211, 159), 0.12) !important;
+  border-color: var(--visitor-dark-accent) !important;
+}
+
+body.rasamala-dark .inst-content,
+body.rasamala-dark .inst-content h3,
+body.rasamala-dark .inst-content p,
+body.rasamala-dark .inst-steps > p,
+body.rasamala-dark .inst-steps li,
+body.rasamala-palette-dark:not(.rasamala-dark) .inst-content,
+body.rasamala-palette-dark:not(.rasamala-dark) .inst-content h3,
+body.rasamala-palette-dark:not(.rasamala-dark) .inst-content p,
+body.rasamala-palette-dark:not(.rasamala-dark) .inst-steps > p,
+body.rasamala-palette-dark:not(.rasamala-dark) .inst-steps li {
+  color: var(--visitor-dark-muted) !important;
+}
+
+body.rasamala-dark .inst-content h3,
+body.rasamala-palette-dark:not(.rasamala-dark) .inst-content h3 {
+  color: var(--visitor-dark-text) !important;
+}
+
+body.rasamala-dark .inst-icon-box,
+body.rasamala-palette-dark:not(.rasamala-dark) .inst-icon-box {
+  background: var(--visitor-dark-accent) !important;
+  color: var(--visitor-dark-on-accent) !important;
+}
+
+body.rasamala-dark .inst-icon-box-scan,
+body.rasamala-palette-dark:not(.rasamala-dark) .inst-icon-box-scan {
+  background: transparent !important;
+  color: var(--visitor-dark-accent) !important;
+}
+
+body.rasamala-dark .barcode-svg,
+body.rasamala-palette-dark:not(.rasamala-dark) .barcode-svg {
+  fill: var(--visitor-dark-text) !important;
+}
+
+body.rasamala-dark .visitor-clock,
+body.rasamala-palette-dark:not(.rasamala-dark) .visitor-clock,
+body.rasamala-dark .visitor-toggle-btn,
+body.rasamala-palette-dark:not(.rasamala-dark) .visitor-toggle-btn {
+  color: var(--visitor-dark-accent) !important;
+}
+
+body.rasamala-dark .visitor-toggle-btn:hover,
+body.rasamala-palette-dark:not(.rasamala-dark) .visitor-toggle-btn:hover,
+body.rasamala-dark .visitor-toggle-btn:focus-visible,
+body.rasamala-palette-dark:not(.rasamala-dark) .visitor-toggle-btn:focus-visible {
+  color: var(--visitor-dark-text) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
 }

@@ -5,6 +5,70 @@
 if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
 }
+
+// SLiMS 9.6 does not expose the newer commonList() helper used by some
+// later OPAC builds. Keep the advanced-search modal self-contained so a
+// missing optional helper cannot abort rendering of the modal and footer.
+$rasamala_advanced_option_list = static function ($type) {
+    if (function_exists('commonList')) {
+        return commonList($type);
+    }
+
+    $definitions = [
+        'location' => [
+            'table' => 'mst_location',
+            'column' => 'location_name',
+            'label' => __('All Locations'),
+        ],
+        'gmd' => [
+            'table' => 'mst_gmd',
+            'column' => 'gmd_name',
+            'label' => __('All GMD/Media'),
+        ],
+        'collection' => [
+            'table' => 'mst_coll_type',
+            'column' => 'coll_type_name',
+            'label' => __('All Collections'),
+        ],
+    ];
+
+    if (!isset($definitions[$type])) {
+        return '';
+    }
+
+    $definition = $definitions[$type];
+    $escape = static function ($value) {
+        return function_exists('themeEscape')
+            ? themeEscape($value)
+            : htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
+    };
+    $options = ['<option value="0">' . $escape($definition['label']) . '</option>'];
+
+    global $dbs;
+    if (!isset($dbs) || !is_object($dbs) || !method_exists($dbs, 'query')) {
+        return implode('', $options);
+    }
+
+    try {
+        $query = $dbs->query(
+            'SELECT ' . $definition['column'] . ' FROM ' . $definition['table']
+            . ' ORDER BY ' . $definition['column'] . ' LIMIT 100'
+        );
+        if ($query && method_exists($query, 'fetch_assoc')) {
+            while ($row = $query->fetch_assoc()) {
+                $value = trim((string)($row[$definition['column']] ?? ''));
+                if ($value === '') {
+                    continue;
+                }
+                $options[] = '<option value="' . $escape($value) . '">' . $escape($value) . '</option>';
+            }
+        }
+    } catch (Throwable $exception) {
+        // Keep the modal usable even when an optional lookup table is absent.
+    }
+
+    return implode('', $options);
+};
 ?>
 
 <!-- Advanced Search Modal -->
@@ -63,20 +127,20 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
                         <div class="form-group mb-0">
                             <label for="adv-location" class="form-label text-muted small fw-bold mb-1"><?= __('Location'); ?></label>
                             <select id="adv-location" name="location"
-                                    class="form-select" aria-label="<?= __('Location'); ?>"><?= commonList('location'); ?></select>
+                                    class="form-select" aria-label="<?= __('Location'); ?>"><?= $rasamala_advanced_option_list('location'); ?></select>
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="form-group mb-0">
                             <label for="adv-gmd" class="form-label text-muted small fw-bold mb-1"><?= __('GMD / Media'); ?></label>
-                            <select id="adv-gmd" name="gmd" class="form-select" aria-label="<?= __('GMD / Media'); ?>"><?= commonList('gmd'); ?></select>
+                            <select id="adv-gmd" name="gmd" class="form-select" aria-label="<?= __('GMD / Media'); ?>"><?= $rasamala_advanced_option_list('gmd'); ?></select>
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="form-group mb-0">
                             <label for="adv-coll-type" class="form-label text-muted small fw-bold mb-1"><?= __('Collection Type'); ?></label>
                             <select name="colltype" class="form-select"
-                                    id="adv-coll-type" aria-label="<?= __('Collection Type'); ?>"><?= commonList('collection'); ?></select>
+                                    id="adv-coll-type" aria-label="<?= __('Collection Type'); ?>"><?= $rasamala_advanced_option_list('collection'); ?></select>
                         </div>
                     </div>
                 </div>

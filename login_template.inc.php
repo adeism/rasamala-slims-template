@@ -5,7 +5,12 @@
 # @Filename: login_template.inc.php
 
 if (isset($_GET['p']) && $_GET['p'] === 'visitor') {
-  $imagesDisk = \SLiMS\Filesystems\Storage::images();
+  // Storage API is available in newer SLiMS releases, but not in 9.5.0.
+  // Keep it optional so the template can fall back to the regular images path.
+  $imagesDisk = null;
+  if (class_exists('\\SLiMS\\Filesystems\\Storage')) {
+    $imagesDisk = \SLiMS\Filesystems\Storage::images();
+  }
   include_once "classic.php";
   include "parts/header.php";
   echo $main_content;

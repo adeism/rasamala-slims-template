@@ -487,7 +487,7 @@ $has_ticker_active = !empty($latest_content_ticker_items) || (function_exists('t
                         <select id="theme-background-style-select" class="form-control palette-switcher-select"></select>
                         <div class="palette-switcher-help-inline mt-1 text-xs">
                             <i class="fas fa-external-link-alt text-primary me-1" aria-hidden="true"></i>
-                            <span>Buat background SVG lainnya: <a href="http://psb.feb.ui.ac.id/stools" target="_blank" rel="noopener noreferrer" class="fw-bold text-primary text-decoration-underline">psb.feb.ui.ac.id/stools</a></span>
+                            <span>Gunakan generator SVG pilihan Anda, lalu tempelkan hasilnya pada pengaturan background.</span>
                         </div>
                         <!-- Image treatment options (appears only when Latar Belakang = Image) -->
                         <div class="palette-switcher-image-options mt-2 mb-2" id="theme-background-image-options" hidden>

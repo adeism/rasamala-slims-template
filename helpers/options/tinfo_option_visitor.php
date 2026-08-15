@@ -58,7 +58,7 @@ return [
         'dbfield' => 'visitor_theme_toggle',
         'label' => themeTranslate('Visitor Page Dark Mode Toggle Button'),
         'type' => 'dropdown',
-        'default' => 0,
+        'default' => 1,
         'data' => [
             [1, themeTranslate('Enable')],
             [0, themeTranslate('Disable')]
@@ -68,7 +68,7 @@ return [
         'dbfield' => 'visitor_layout_style',
         'label' => themeTranslate('Visitor Page Design (Guestbook)'),
         'type' => 'dropdown',
-        'default' => 'kiosk',
+        'default' => 'split',
         'data' => [
             ['kiosk', themeTranslate('Kiosk Mode (Center Card with Large Clock)')],
             ['split', themeTranslate('Split Layout (Left Form & Right Guide)')]
@@ -84,7 +84,7 @@ return [
         'dbfield' => 'visitor_split_steps',
         'label' => themeTranslate('Visitor Split Layout Guide Steps'),
         'type' => 'longtext',
-        'help' => themeTranslate('Satu langkah per baris dengan format: ikon | judul | keterangan. Contoh: fas fa-id-card | Isi Identitas | Scan kartu anggota.'),
+        'help' => themeTranslate('Format aman: satu langkah per baris dengan ikon | judul | keterangan. Jika editor menghapus Enter, gunakan ;; sebagai pemisah antar langkah. HTML kartu .inst-step atau blok h3/p berurutan juga dipisah otomatis. Contoh: fas fa-book | Masuk ke Portal Perpustakaan | Buka portal dan masuk.;; scan | Scan atau Ketik | Arahkan QR atau ketik nomor anggota.;; fas fa-check | Konfirmasi Berhasil | Pastikan kunjungan berhasil.'),
         'default' => $rasamala_default_visitor_split_steps ?? '',
         'width' => '100',
         'max' => 5000

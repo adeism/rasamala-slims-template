@@ -17,7 +17,7 @@ if (trim((string)$visitor_title) === '') {
 }
 $visitor_subtitle = themeEffectiveTemplateValue('visitor_subtitle', 'Visitor Check-In Portal', $sysconf);
 $visitor_theme_toggle_enabled = (themeEffectiveTemplateValue('visitor_theme_toggle', 1, $sysconf) == 1);
-$visitor_layout_style = themeEffectiveTemplateValue('visitor_layout_style', 'kiosk', $sysconf);
+$visitor_layout_style = themeEffectiveTemplateValue('visitor_layout_style', 'split', $sysconf);
 $visitor_institution_select_label = trim((string)themeEffectiveTemplateValue('visitor_institution_select_label', __('Pilih Fakultas / Institusi'), $sysconf));
 if ($visitor_institution_select_label === '') {
     $visitor_institution_select_label = __('Pilih Fakultas / Institusi');

@@ -6,8 +6,8 @@
 if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
 }
-// Production snapshot: transient Theme Viewer test rows are intentionally not
-// promoted to defaults.
+// Visitor split defaults mirror the Theme Viewer reference panel and remain
+// editable per installation through TInfo.
 $rasamala_default_topic_items = "Literature | index.php?callnumber=8&search=search | fas fa-book ; Social Sciences | index.php?callnumber=3&search=search | fas fa-users ; Applied Sciences | index.php?callnumber=6&search=search | fas fa-flask ; Art & Recreation | index.php?callnumber=7&search=search | fas fa-paint-brush ; Language | index.php?callnumber=4&search=search | fas fa-language ; see more.. | #exampleModal | fas fa-th-large";
 $rasamala_default_announcement_text = <<<HTML
 <strong>Info layanan:</strong> Perpustakaan buka Senin-Jumat, pukul 08.00-16.00 WIB.
@@ -35,24 +35,24 @@ $rasamala_default_custom_css = <<<CSS
 CSS;
 $rasamala_default_visitor_split_steps = <<<HTML
 <div class="inst-step">
-  <div class="inst-icon-box"><i class="fas fa-id-card"></i></div>
+  <div class="inst-icon-box"><i class="fas fa-book"></i></div>
   <div class="inst-content">
-    <h3>1. Isi Identitas</h3>
-    <p>Scan kartu anggota atau ketik identitas pengunjung pada kolom yang tersedia.</p>
+    <h3>1. Masuk ke Portal Perpustakaan</h3>
+    <p>Buka portal perpustakaan dan masuk menggunakan akun anggota.</p>
   </div>
 </div>
 <div class="inst-step inst-step-featured">
-  <div class="inst-icon-box"><i class="fas fa-sync-alt"></i></div>
+  <div class="inst-icon-box inst-icon-box-scan"><i class="fas fa-qrcode"></i></div>
   <div class="inst-content">
-    <h3>2. Proses Kunjungan</h3>
-    <p>Sistem akan memeriksa data dan menampilkan status kunjungan secara otomatis.</p>
+    <h3>2. Scan atau Ketik</h3>
+    <p>Arahkan Kode QR ke alat pemindai, atau ketik nomor anggota/NPM/NIM/ID secara manual.</p>
   </div>
 </div>
 <div class="inst-step">
   <div class="inst-icon-box"><i class="fas fa-check"></i></div>
   <div class="inst-content">
-    <h3>3. Selesai</h3>
-    <p>Setelah berhasil, pengunjung dapat melanjutkan aktivitas sesuai layanan yang tersedia.</p>
+    <h3>3. Konfirmasi Berhasil</h3>
+    <p>Setelah berhasil, layar menampilkan konfirmasi kunjungan dan informasi antrean berikutnya.</p>
   </div>
 </div>
 HTML;
@@ -97,8 +97,8 @@ $sysconf['template']['visitor_title'] = '';
 $sysconf['template']['visitor_subtitle'] = 'Visitor Check-In Portal';
 $sysconf['template']['visitor_institution_select_label'] = 'Pilih Fakultas / Institusi';
 $sysconf['template']['visitor_institution_options'] = $rasamala_default_visitor_institution_options;
-$sysconf['template']['visitor_theme_toggle'] = 0;
-$sysconf['template']['visitor_layout_style'] = 'kiosk';
+$sysconf['template']['visitor_theme_toggle'] = 1;
+$sysconf['template']['visitor_layout_style'] = 'split';
 $sysconf['template']['visitor_split_title'] = 'Petunjuk Penggunaan';
 $sysconf['template']['visitor_split_steps'] = $rasamala_default_visitor_split_steps;
 $sysconf['template']['classic_footer_about_us'] = <<<HTML

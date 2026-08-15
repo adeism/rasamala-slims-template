@@ -98,4 +98,35 @@
             }
         });
     }
+
+    // Deep links such as /#exampleModal should open the same modal as a
+    // normal data-bs-toggle click. Bootstrap does not open modal targets
+    // from the URL hash by itself.
+    const openModalFromHash = () => {
+        const modalId = window.location.hash.replace(/^#/, '');
+        if (modalId !== 'exampleModal' && modalId !== 'adv-modal') return;
+
+        const modalEl = document.getElementById(modalId);
+        if (!modalEl) return;
+
+        if (window.bootstrap && window.bootstrap.Modal) {
+            try {
+                window.bootstrap.Modal.getOrCreateInstance(modalEl).show();
+                return;
+            } catch (error) {}
+        }
+
+        if (window.jQuery && window.jQuery.fn && window.jQuery.fn.modal) {
+            window.jQuery(modalEl).modal('show');
+        }
+    };
+
+    if (document.readyState !== 'loading') {
+        window.setTimeout(openModalFromHash, 0);
+    } else {
+        document.addEventListener('DOMContentLoaded', () => {
+            window.setTimeout(openModalFromHash, 0);
+        }, {once: true});
+    }
+    window.addEventListener('hashchange', openModalFromHash);
 }());
