@@ -31,7 +31,6 @@
 - **Editor Langkah Visitor:** TInfo menyediakan editor langkah dengan pemilih ikon, judul, dan keterangan. Ikon Font Awesome kustom tetap disimpan dan dipakai oleh halaman visitor maupun preview.
 - **Theme Viewer di Visitor:** Palette switcher dan Theme Viewer tersedia pada halaman visitor, sehingga perubahan palet, judul, langkah, dan tampilan dapat dipreview tanpa meninggalkan halaman tersebut.
 - **Kompatibilitas SLiMS Lama:** Storage API yang hanya tersedia pada rilis baru sekarang dipanggil secara opsional melalui `class_exists()`, sehingga template tidak fatal pada instalasi SLiMS di bawah 9.8.
-- **Instalasi Portable:** Pada lingkungan PSliMS, source template dapat tetap dipusatkan di `D:\laragon\www\98\template\` dan dihubungkan ke runtime versi lain menggunakan junction Windows (`mklink /J`).
 
 ---
 
