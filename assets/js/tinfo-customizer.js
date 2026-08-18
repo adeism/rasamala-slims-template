@@ -883,6 +883,7 @@ $(document).ready(function() {
     }
 
     var updateNavbarMenuTextarea = function() {};
+    var updateVisitorStepsTextarea = function() {};
     var textarea = $('textarea[name="classic_navbar_menu"]');
     if (textarea.length) {
         textarea.hide();
@@ -1153,6 +1154,8 @@ $(document).ready(function() {
             updateIconPreview(row);
             if (item.hasClass('menu-builder-item')) {
                 updateNavbarMenuTextarea();
+            } else if (item.hasClass('visitor-step-builder-item')) {
+                updateVisitorStepsTextarea();
             } else {
                 updateTopicTextarea();
             }
@@ -1170,6 +1173,8 @@ $(document).ready(function() {
             updateIconPreview(row);
             if (item.hasClass('menu-builder-item')) {
                 updateNavbarMenuTextarea();
+            } else if (item.hasClass('visitor-step-builder-item')) {
+                updateVisitorStepsTextarea();
             } else {
                 updateTopicTextarea();
             }
@@ -1182,6 +1187,131 @@ $(document).ready(function() {
         $(document).on('click', function() {
             $('.topic-builder-item').removeClass('is-icon-picker-open');
         });
+    }
+
+    var visitorStepsTextarea = $('textarea[name="visitor_split_steps"]');
+    if (visitorStepsTextarea.length) {
+        function parseNumberedVisitorSteps(value) {
+            var normalized = String(value || '').replace(/\s+/g, ' ').trim();
+            var parts = normalized.split(/(?=\s+\d+\s*[.)-]\s+)/);
+            if (parts.length < 2 || !/^\d+\s*[.)-]\s+/.test(parts[0])) return [];
+
+            return parts.map(function(part, index) {
+                return {
+                    icon: ['fas fa-book', 'fas fa-qrcode', 'fas fa-check'][index] || 'fas fa-info-circle',
+                    title: part.trim().replace(/^\d+\s*[.)-]\s+/, ''),
+                    description: ''
+                };
+            }).filter(function(item) {
+                return item.title !== '';
+            });
+        }
+
+        function parseVisitorStepsValue(value) {
+            var rawValue = String(value || '').trim();
+            var items = [];
+            if (/<[a-z][\s\S]*>/i.test(rawValue)) {
+                var markup = $('<div></div>').html(rawValue);
+                markup.find('.inst-step').each(function(index) {
+                    var card = $(this);
+                    var heading = card.find('h3').first().text().replace(/^\s*\d+\s*[.)-]\s*/, '').trim();
+                    var description = card.find('p').map(function() {
+                        return $(this).text().trim();
+                    }).get().filter(Boolean).join(' ');
+                    if (heading || description) {
+                        items.push({
+                            icon: cleanTopicIcon(card.find('i').first().attr('class')) || ['fas fa-book', 'fas fa-qrcode', 'fas fa-check'][index] || 'fas fa-info-circle',
+                            title: heading || 'Langkah ' + (index + 1),
+                            description: description
+                        });
+                    }
+                });
+                if (items.length === 1 && /(?:^|\s)\d+\s*[.)-]\s+/.test(items[0].title)) {
+                    items = parseNumberedVisitorSteps(items[0].title);
+                }
+            }
+
+            if (!items.length) {
+                rawValue.split(/;;|\r?\n|\r/).map(function(line) {
+                    return line.trim();
+                }).filter(Boolean).forEach(function(line, index) {
+                    var parts = line.split('|').map(function(part) {
+                        return part.trim();
+                    });
+                    if (parts.length >= 3) {
+                        items.push({
+                            icon: cleanTopicIcon(parts.shift()) || ['fas fa-book', 'fas fa-qrcode', 'fas fa-check'][index] || 'fas fa-info-circle',
+                            title: parts.shift() || 'Langkah ' + (index + 1),
+                            description: parts.join(' | ')
+                        });
+                    }
+                });
+            }
+
+            return items.length ? items : parseNumberedVisitorSteps(rawValue);
+        }
+
+        visitorStepsTextarea.hide();
+        var visitorStepsContainer = $('<div id="visitor-steps-builder-container" class="mt-2"></div>');
+        visitorStepsContainer.append($('<div class="visitor-steps-builder-help"></div>').text('Pilih ikon di kiri, lalu isi judul dan keterangan setiap langkah.'));
+        var visitorStepsRows = $('<div id="visitor-steps-builder-rows"></div>');
+        visitorStepsContainer.append(visitorStepsRows);
+        var addVisitorStepButton = $('<button type="button" class="btn btn-success btn-sm mt-2 rasamala-builder-action-btn" title="Tambah Langkah">+</button>');
+        visitorStepsContainer.append(addVisitorStepButton);
+        visitorStepsTextarea.after(visitorStepsContainer);
+        forceBuilderSettingVisible(visitorStepsTextarea);
+
+        function updateVisitorStepsValue() {
+            var itemsList = [];
+            visitorStepsRows.find('.visitor-step-builder-item').each(function() {
+                var item = $(this);
+                var row = item.find('.visitor-step-builder-row');
+                var icon = cleanTopicIcon(row.find('.topic-icon-input').val());
+                var title = cleanBuilderText(row.find('.visitor-step-title-input').val());
+                var description = cleanBuilderText(row.find('.visitor-step-description-input').val());
+                if (title !== '' || description !== '') {
+                    itemsList.push((icon || 'fas fa-info-circle') + ' | ' + title + ' | ' + description);
+                }
+            });
+            visitorStepsTextarea.val(itemsList.join(' ;; '));
+        }
+        updateVisitorStepsTextarea = updateVisitorStepsValue;
+
+        function addVisitorStep(item, index) {
+            item = item || {};
+            var icon = cleanTopicIcon(item.icon || ['fas fa-book', 'fas fa-qrcode', 'fas fa-check'][index] || 'fas fa-info-circle');
+            var builderItem = $('<div class="topic-builder-item visitor-step-builder-item"></div>');
+            var row = $('<div class="topic-builder-row visitor-step-builder-row rasamala-builder-row"></div>');
+            row.append($('<button type="button" class="topic-icon-preview" aria-label="Pilih ikon langkah"></button>'));
+            var fields = $('<div class="visitor-step-builder-fields"></div>');
+            fields.append($('<input type="text" class="form-control visitor-step-title-input" placeholder="Judul langkah" />').val(cleanBuilderText(item.title)));
+            fields.append($('<textarea class="form-control visitor-step-description-input" rows="2" placeholder="Keterangan langkah"></textarea>').val(String(item.description || '')));
+            row.append(fields);
+            row.append($('<input type="hidden" class="topic-icon-input" />').val(icon));
+            row.append($('<button type="button" class="btn btn-danger btn-sm remove-visitor-step-row-btn rasamala-builder-action-btn" title="Hapus langkah">&times;</button>'));
+            builderItem.append(row);
+            builderItem.append(buildIconPalette(icon));
+            visitorStepsRows.append(builderItem);
+            syncIconPalette(row);
+            updateIconPreview(row);
+        }
+
+        var visitorSteps = parseVisitorStepsValue(visitorStepsTextarea.val());
+        if (visitorSteps.length) {
+            visitorSteps.forEach(addVisitorStep);
+        } else {
+            addVisitorStep({}, 0);
+        }
+
+        addVisitorStepButton.on('click', function() {
+            addVisitorStep({}, visitorStepsRows.find('.visitor-step-builder-item').length);
+            updateVisitorStepsValue();
+        });
+        $(document).on('click', '.remove-visitor-step-row-btn', function() {
+            $(this).closest('.visitor-step-builder-item').remove();
+            updateVisitorStepsValue();
+        });
+        $(document).on('input', '.visitor-step-title-input, .visitor-step-description-input', updateVisitorStepsValue);
     }
 
     var heroBgField = $('[name="classic_hero_background_style"]');

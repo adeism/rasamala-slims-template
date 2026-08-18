@@ -84,7 +84,7 @@ return [
         'dbfield' => 'visitor_split_steps',
         'label' => themeTranslate('Visitor Split Layout Guide Steps'),
         'type' => 'longtext',
-        'help' => themeTranslate('Format aman: satu langkah per baris dengan ikon | judul | keterangan. Jika editor menghapus Enter, gunakan ;; sebagai pemisah antar langkah. HTML kartu .inst-step atau blok h3/p berurutan juga dipisah otomatis. Contoh: fas fa-book | Masuk ke Portal Perpustakaan | Buka portal dan masuk.;; scan | Scan atau Ketik | Arahkan QR atau ketik nomor anggota.;; fas fa-check | Konfirmasi Berhasil | Pastikan kunjungan berhasil.'),
+        'help' => themeTranslate('Pilih ikon setiap langkah pada editor. Format aman: satu langkah per baris dengan ikon | judul | keterangan. Jika editor menghapus Enter, gunakan ;; sebagai pemisah antar langkah. HTML kartu .inst-step atau marker 1., 2., 3. juga dipisah otomatis. Contoh: fas fa-book | Masuk ke Portal Perpustakaan | Buka portal dan masuk.;; fas fa-qrcode | Scan atau Ketik | Arahkan QR atau ketik nomor anggota.;; fas fa-check | Konfirmasi Berhasil | Pastikan kunjungan berhasil.'),
         'default' => $rasamala_default_visitor_split_steps ?? '',
         'width' => '100',
         'max' => 5000

@@ -440,6 +440,50 @@ if (!function_exists('rasamalaVisitorSplitWrapHtml')) {
     }
 }
 
+if (!function_exists('rasamalaVisitorSplitNumberedHeadingHtml')) {
+  function rasamalaVisitorSplitNumberedHeadingHtml($html)
+  {
+    preg_match_all('/<h3\b[^>]*>.*?<\/h3\s*>/is', (string)$html, $heading_matches);
+    if (count($heading_matches[0]) !== 1) {
+      return '';
+    }
+
+    if (!preg_match('/^(<h3\b[^>]*>)(.*?)(<\/h3\s*>)$/is', $heading_matches[0][0], $heading_match)) {
+      return '';
+    }
+
+    $steps = rasamalaVisitorSplitNumberedTextSteps($heading_match[2]);
+    return $steps ? rasamalaVisitorSplitRenderCards($steps) : '';
+  }
+}
+
+if (!function_exists('rasamalaVisitorSplitNumberedTextSteps')) {
+  function rasamalaVisitorSplitNumberedTextSteps($text)
+  {
+    $text = trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags((string)$text), ENT_QUOTES | ENT_HTML5, 'UTF-8')));
+    $parts = preg_split('/(?=\s+\d+\s*[.)-]\s+)/u', $text, -1, PREG_SPLIT_NO_EMPTY);
+    if (count($parts) < 2 || !preg_match('/^\s*\d+\s*[.)-]\s+(.+)$/u', $parts[0])) {
+      return [];
+    }
+
+    $steps = [];
+    $default_icons = ['fas fa-book', 'scan', 'fas fa-check'];
+    foreach ($parts as $index => $part) {
+      if (!preg_match('/^\s*\d+\s*[.)-]\s+(.+)$/u', trim($part), $step_match)) {
+        continue;
+      }
+
+      $steps[] = [
+        'icon' => $default_icons[$index] ?? 'fas fa-info-circle',
+        'title' => trim($step_match[1]),
+        'description' => ''
+      ];
+    }
+
+    return $steps;
+  }
+}
+
 if (!function_exists('rasamalaVisitorSplitNumberHtml')) {
     /** Add the visible sequence number when custom HTML headings omit it. */
     function rasamalaVisitorSplitNumberHtml($html)
@@ -516,6 +560,11 @@ if (!function_exists('rasamalaVisitorSplitStepsHtml')) {
         $html_steps = html_entity_decode($raw_steps, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
         if (rasamalaVisitorSplitHasHtml($html_steps)) {
+          $numbered_heading_steps = rasamalaVisitorSplitNumberedHeadingHtml($html_steps);
+          if ($numbered_heading_steps !== '') {
+            return themeSanitizeHtml($numbered_heading_steps);
+          }
+
             $unwrapped_steps = rasamalaVisitorSplitUnwrappedHtml($html_steps);
             if ($unwrapped_steps !== '') {
                 return $unwrapped_steps;
@@ -537,6 +586,11 @@ if (!function_exists('rasamalaVisitorSplitStepsHtml')) {
                     ? $html_steps
                     : rasamalaVisitorSplitWrapHtml($html_steps)
             );
+        }
+
+        $numbered_text_steps = rasamalaVisitorSplitNumberedTextSteps($raw_steps);
+        if ($numbered_text_steps) {
+          return rasamalaVisitorSplitRenderCards($numbered_text_steps);
         }
 
         return rasamalaVisitorSplitLegacyHtml($raw_steps);

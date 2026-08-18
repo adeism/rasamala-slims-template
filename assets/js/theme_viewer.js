@@ -677,6 +677,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
             }
+            if (!items.length) {
+                const numberedText = raw.replace(/\s+/g, ' ').trim();
+                const numberedParts = numberedText.split(/(?=\s+\d+\s*[.)-]\s+)/);
+                if (numberedParts.length >= 2 && /^\d+\s*[.)-]\s+/.test(numberedParts[0])) {
+                    numberedParts.forEach((part, index) => {
+                        const stepText = part.trim().replace(/^\d+\s*[.)-]\s+/, '');
+                        if (stepText) {
+                            items.push({
+                                icon: defaultIcons[index] || 'fas fa-info-circle',
+                                title: stepText,
+                                description: ''
+                            });
+                        }
+                    });
+                }
+            }
             if (!items.length) return;
 
             const fragment = document.createDocumentFragment();
@@ -692,7 +708,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const content = document.createElement('div');
                 content.className = 'inst-content';
                 const heading = document.createElement('h3');
-                heading.textContent = `${index + 1}. ${item.title}`;
+                const headingParts = `${index + 1}. ${item.title}`.split(/(?=\s+\d+\s*[.)-]\s+)/);
+                headingParts.forEach((headingPart, partIndex) => {
+                    if (partIndex > 0) {
+                        heading.appendChild(document.createElement('br'));
+                    }
+                    heading.appendChild(document.createTextNode(headingPart.trim()));
+                });
                 const description = document.createElement('p');
                 description.textContent = item.description;
                 content.appendChild(heading);
@@ -855,20 +877,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     heroHeadingWrap.classList.remove('hero-search-heading-library');
                     heroHeading.textContent = heroTextInput ? heroTextInput.value : (paletteSwitcherConfig.heroText || 'Search Library Collection');
                 }
-                const heroLogo = query('.hero-library-logo-wrap', heroHeadingWrap);
-                if (heroLogo) heroLogo.hidden = position !== 'hero';
             }
-        }
-        if (settingChanged('classic_language_visible_codes')) {
-            const visibleCodes = String(settings.classic_language_visible_codes || '')
-                .split(/[\s,;]+/).map(code => code.trim().toLowerCase()).filter(Boolean);
-            queryAll('#languageMenuButton + .dropdown-menu a[href*="select_lang="]').forEach(link => {
-                const match = link.href.match(/[?&]select_lang=([^&#]+)/i);
-                const code = match ? decodeURIComponent(match[1]).toLowerCase() : '';
-                // An empty selection means “Hide all”, matching the admin
-                // language builder instead of silently showing every locale.
-                link.hidden = visibleCodes.length === 0 || visibleCodes.indexOf(code) === -1;
-            });
         }
         if (settingChanged('classic_navbar_menu')) {
             const navbarMenu = query('.rasamala-navbar-menu');

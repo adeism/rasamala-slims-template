@@ -413,7 +413,8 @@ tr:has(textarea[name^="classic_"]) td {
 }
 #navbar-menu-builder-container,
 #topic-items-builder-container,
-#language-visible-builder-container {
+#language-visible-builder-container,
+#visitor-steps-builder-container {
     border: 1px solid #E0E0E0;
     background: #FFFFFF;
     padding: 15px;
@@ -503,6 +504,30 @@ tr:has(textarea[name^="classic_"]) td {
     background: #ECF8F0;
     color: #155724;
     box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.12);
+}
+
+.visitor-steps-builder-help {
+    color: #666;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.visitor-step-builder-row {
+    align-items: flex-start;
+}
+
+.visitor-step-builder-fields {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.visitor-step-builder-fields input,
+.visitor-step-builder-fields textarea {
+    margin-bottom: 6px !important;
+}
+
+.visitor-step-builder-fields textarea {
+    resize: vertical;
 }
 .topic-icon-preview:focus {
     outline: none;

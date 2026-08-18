@@ -13,6 +13,7 @@ if (isset($_GET['p']) && $_GET['p'] === 'visitor') {
   }
   include_once "classic.php";
   include "parts/header.php";
+  echo '<script src="' . themeEscape(JWB . 'jquery.js') . '"></script>';
   echo $main_content;
   echo '<script src="' . themeEscape(assetsVersioned('js/motion_lifecycle.js')) . '" defer></script>';
   // Visitor counter depends on Vue and Axios. Deferred scripts retain document order.
@@ -21,6 +22,13 @@ if (isset($_GET['p']) && $_GET['p'] === 'visitor') {
   echo '<script src="' . themeEscape(assetsVersioned('js/visitor_counter.js')) . '" defer></script>';
   echo '<script src="' . themeEscape(assetsVersioned('js/color_mode.js')) . '" defer></script>';
   echo '<script src="' . themeEscape(assetsVersioned('js/service-worker-cleanup.js')) . '" defer></script>';
+  $visitor_palette_switcher_show = (int)themeEffectiveTemplateValue('classic_palette_switcher_show', 0, $sysconf) === 1;
+  if ($visitor_palette_switcher_show) {
+    include __DIR__ . '/parts/palette_switcher.php';
+    echo '<script src="' . themeEscape(assetsVersioned('js/palette_switcher.js')) . '" defer></script>';
+    echo '<script src="' . themeEscape(assetsVersioned('js/theme_drawer.js')) . '" defer></script>';
+    echo '<script src="' . themeEscape(assetsVersioned('js/theme_viewer.js')) . '" defer></script>';
+  }
   echo '</body></html>';
 } else {
   include "index_template.inc.php";
