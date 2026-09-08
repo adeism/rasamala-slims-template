@@ -15,6 +15,15 @@
  *
  */
 
+// Shared with the other styles in this directory; all catalog values
+// below MUST go through this (K-01: stored XSS via catalog data).
+if (!function_exists('rasamala_cite_e')) {
+    function rasamala_cite_e($value)
+    {
+        return htmlspecialchars((string)($value ?? ''), ENT_QUOTES, 'UTF-8');
+    }
+}
+
 if ($gmd_name == 'Text') {
   $gmd_name = 'Print';
 }
@@ -23,15 +32,15 @@ if ($gmd_name == 'Text') {
   <h3><?php echo __('Turabian Style'); ?></h3>
   <p class="citation">
     <?php if ($authors_string) : ?>
-      <span class="authors"><?php print $authors_string ?>.</span>
-      <span class="title"><em><?php print $title ?></em>.</span>
-      <span class="edition"><?php print $edition ?></span>
+      <span class="authors"><?php echo rasamala_cite_e($authors_string) ?>.</span>
+      <span class="title"><em><?php echo rasamala_cite_e($title) ?></em>.</span>
+      <span class="edition"><?php echo rasamala_cite_e($edition) ?></span>
     <?php else : ?>
-      <span class="title"><em><?php print $title ?></em>.</span>
+      <span class="title"><em><?php echo rasamala_cite_e($title) ?></em>.</span>
     <?php endif; ?>
-    <span class="publish_place"><?php print $publish_place ?>:</span>
-    <span class="publisher"><?php print $publisher_name ?>,</span>
-    <span class="year"><?php print $publish_year ?>.</span>
-    <span class="gmd_name"><?php print $gmd_name ?>.</span>
+    <span class="publish_place"><?php echo rasamala_cite_e($publish_place) ?>:</span>
+    <span class="publisher"><?php echo rasamala_cite_e($publisher_name) ?>,</span>
+    <span class="year"><?php echo rasamala_cite_e($publish_year) ?>.</span>
+    <span class="gmd_name"><?php echo rasamala_cite_e($gmd_name) ?>.</span>
   </p>
 </div>

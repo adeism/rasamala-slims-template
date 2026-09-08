@@ -30,8 +30,10 @@ if (themeDetailHasValue($publish_year ?? '')) {
 $subjects_inline_html = themeFormatDetailSubjects($subjects ?? '');
 
 // Generate Full Absolute Canonical URL for QR Code Scanning
-$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['SERVER_PORT'] ?? 80) == 443) ? 'https://' : 'http://';
-$host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? 'localhost';
+// Host is strictly validated (K-02: raw HTTP_HOST enabled cache/phishing
+// poisoning via QR + share links) and the scheme honors reverse proxies.
+$scheme = themeRequestIsHttps() ? 'https://' : 'http://';
+$host = themeCurrentHost();
 if (preg_match('/^https?:\/\//i', SWB)) {
     $detail_share_url = SWB . 'index.php?p=show_detail&id=' . $biblio_id_safe;
 } else {

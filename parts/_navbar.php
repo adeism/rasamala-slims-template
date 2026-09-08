@@ -168,7 +168,9 @@ HTML;
                 $safe_code_flag = themeEscape(preg_replace('/[^a-z]/', '', $code_flag));
                 $safe_lang_name = themeEscape($lang_name);
 
-                $lang_params = $_GET ?? [];
+                // Never propagate the CSRF token into GET links (T-02):
+                // it would leak into browser history, server logs, and Referer headers.
+                $lang_params = array_diff_key($_GET ?? [], ['csrf_token' => true]);
                 $lang_params['select_lang'] = $lang_code;
                 $safe_lang_url = themeEscape('index.php?' . http_build_query($lang_params));
 

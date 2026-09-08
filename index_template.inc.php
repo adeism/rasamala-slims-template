@@ -15,7 +15,9 @@ if (isset($_GET['rasamala_suggest']) && (string)$_GET['rasamala_suggest'] === '1
   $query_length = function_exists('mb_strlen') ? mb_strlen($query, 'UTF-8') : strlen($query);
   $suggestions = [];
 
-  if ($query_length >= 2 && isset($dbs) && $dbs instanceof mysqli) {
+  // Duck-typed (T-06): $dbs is a SLiMS database wrapper whose class varies
+  // by release; an instanceof mysqli check silently disabled suggestions.
+  if ($query_length >= 2 && isset($dbs) && is_object($dbs) && method_exists($dbs, 'prepare')) {
     $statement = $dbs->prepare(
       "SELECT b.biblio_id, b.title,
               GROUP_CONCAT(DISTINCT ma.author_name ORDER BY ma.author_name SEPARATOR '; ') AS author

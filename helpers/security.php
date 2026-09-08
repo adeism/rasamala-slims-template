@@ -81,6 +81,49 @@ if (!function_exists('themeRequestIsHttps')) {
   }
 }
 
+if (!function_exists('themeCurrentHost')) {
+  /**
+   * Return a strictly validated current request host for absolute URLs
+   * (QR codes, share links, OG tags). Falls back safely when the
+   * client-controlled Host header is missing or malformed (K-02).
+   */
+  function themeCurrentHost($fallback = 'localhost')
+  {
+    $fallback = trim((string)$fallback) !== '' ? trim((string)$fallback) : 'localhost';
+
+    $raw = trim((string)($_SERVER['HTTP_HOST'] ?? ''));
+    if ($raw === '') {
+      $raw = trim((string)($_SERVER['SERVER_NAME'] ?? ''));
+    }
+    if ($raw === '' || strlen($raw) > 260) {
+      return $fallback;
+    }
+
+    // Bracketed IPv6 with optional port: "[::1]" or "[::1]:8080".
+    if (preg_match('/^(\[.*\])(?::(\d{1,5}))?$/', $raw, $matches)) {
+      $bare = trim($matches[1], '[]');
+      if (filter_var($bare, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false) {
+        return $fallback;
+      }
+      return $matches[1] . (isset($matches[2]) ? ':' . $matches[2] : '');
+    }
+
+    // Hostname or IPv4 with optional port.
+    if (preg_match('/^([^:]+)(?::(\d{1,5}))?$/', $raw, $matches)) {
+      $host = strtolower($matches[1]);
+      $port = isset($matches[2]) ? ':' . $matches[2] : '';
+      if (filter_var($host, FILTER_VALIDATE_IP) !== false) {
+        return $host . $port;
+      }
+      if (filter_var($host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) !== false) {
+        return $host . $port;
+      }
+    }
+
+    return $fallback;
+  }
+}
+
 if (!function_exists('themeUrlHostIsCurrent')) {
   function themeUrlHostIsCurrent($host)
   {
@@ -205,26 +248,21 @@ if (!function_exists('themeInjectCspNonceToScripts')) {
     if ($html === '' || stripos($html, '<script') === false) {
       return $html;
     }
+    // Nonce-only injection (T-01): never rewrite the script body. Wrapping
+    // foreign inline scripts in a DOMContentLoaded closure used to turn
+    // top-level const/let/class declarations into function-local ones,
+    // breaking any later script that depends on them, and the old
+    // body-matching regex failed on code containing "</script>" strings.
+    // Core/plugin scripts expect immediate execution where placed.
     $nonce = themeCspNonce();
     return preg_replace_callback(
-      '/<script\b([^>]*)>(.*?)<\/script>/is',
+      '/<script\b[^>]*>/i',
       function ($matches) use ($nonce) {
-        $attrs = $matches[1];
-        $code = trim($matches[2]);
-
-        if (stripos($attrs, 'nonce=') === false) {
-          $attrs .= ' nonce="' . themeEscape($nonce) . '"';
+        $tag = $matches[0];
+        if (stripos($tag, 'nonce=') !== false) {
+          return $tag;
         }
-
-        // If inline script is an execution call (and not declaring a function) that depends on core JS (e.g. gui.js or jQuery),
-        // defer its execution until DOMContentLoaded when footer scripts have finished loading.
-        if ($code !== '' && stripos($attrs, 'src=') === false) {
-          if (!preg_match('/^\s*function\s+[a-z0-9_$]+\s*\(/i', $code) && strpos($code, 'DOMContentLoaded') === false) {
-            $code = "document.addEventListener('DOMContentLoaded', function() {\n  " . $code . "\n});";
-          }
-        }
-
-        return '<script' . $attrs . '>' . $code . '</script>';
+        return rtrim(substr($tag, 0, -1)) . ' nonce="' . themeEscape($nonce) . '">';
       },
       $html
     );
@@ -506,11 +544,102 @@ if (!function_exists('themeSanitizeMetadata')) {
   function themeSanitizeMetadata($metadata)
   {
     $metadata = (string)$metadata;
-    // Strip tags except <meta> and <link>
-    $clean = strip_tags($metadata, '<meta><link>');
-    // Remove javascript: and data: protocols, and events like onload/onerror/onclick
-    $clean = preg_replace('/\b(on\w+|src|href)\s*=\s*["\']\s*(javascript|data):[^"\']*["\']/i', '', $clean);
-    $clean = preg_replace('/\b(on\w+)\s*=\s*/i', 'data-stripped-event=', $clean);
-    return $clean;
+    if ($metadata === ''
+        || (stripos($metadata, '<meta') === false && stripos($metadata, '<link') === false)
+        || !preg_match_all('/<\s*(meta|link)\b([^>]*)>/i', $metadata, $matches, PREG_SET_ORDER)) {
+      return '';
+    }
+
+    // Rebuild <meta>/<link> tags from an attribute allowlist (T-03). The old
+    // denylist approach missed <meta http-equiv="refresh"> redirects and
+    // unquoted javascript: URLs.
+    $is_safe_url = function ($url) {
+      $url = trim(html_entity_decode((string)$url, ENT_QUOTES, 'UTF-8'));
+      if ($url === '' || preg_match('/[\x00-\x1f\x7f]/', $url)) {
+        return false;
+      }
+      return preg_match('/^\s*(javascript|vbscript|data\s*:)/i', $url) !== 1;
+    };
+    $string_attr = function ($attrs, $key) {
+      if (!isset($attrs[$key]) || !is_string($attrs[$key])) {
+        return null;
+      }
+      $value = trim($attrs[$key]);
+      return $value === '' ? null : $value;
+    };
+
+    $output = '';
+    foreach ($matches as $match) {
+      $tag = strtolower($match[1]);
+      // themeParseHtmlAttributes already drops on* handlers and style.
+      $attrs = themeParseHtmlAttributes($match[2] ?? '');
+
+      if ($tag === 'meta') {
+        $allowed = [];
+
+        $charset = $string_attr($attrs, 'charset');
+        if ($charset !== null && preg_match('/^[a-z0-9-]+$/i', $charset)) {
+          $allowed['charset'] = strtolower($charset);
+        }
+        foreach (['name', 'property'] as $key) {
+          $value = $string_attr($attrs, $key);
+          if ($value !== null && preg_match('/^[a-z0-9_.:-]{1,100}$/i', $value)) {
+            $allowed[$key] = $value;
+          }
+        }
+
+        $equiv = $string_attr($attrs, 'http-equiv');
+        if ($equiv !== null) {
+          // Notably excludes "refresh": meta redirects are a classic
+          // XSS/phishing vector and never needed from core metadata.
+          if (!in_array(strtolower($equiv), ['content-type', 'x-ua-compatible', 'content-language', 'default-style'], true)) {
+            continue;
+          }
+          $allowed['http-equiv'] = strtolower($equiv);
+        }
+
+        $content = $string_attr($attrs, 'content');
+        if ($content !== null) {
+          // Defense in depth: reject "0;url=javascript:..." payloads.
+          if (preg_match('/^\s*\d+\s*;\s*url\s*=\s*(javascript|vbscript|data\s*:)/i', $content)) {
+            continue;
+          }
+          $allowed['content'] = $content;
+        }
+
+        if ($allowed === []) {
+          continue;
+        }
+        $parts = [];
+        foreach ($allowed as $attr_key => $attr_value) {
+          $parts[] = $attr_key . '="' . themeEscape($attr_value) . '"';
+        }
+        $output .= '<meta ' . implode(' ', $parts) . '>' . "\n";
+        continue;
+      }
+
+      // <link>: only navigational/document relations with safe hrefs.
+      $href = $string_attr($attrs, 'href');
+      $rel = $string_attr($attrs, 'rel');
+      if ($href === null || $rel === null || !$is_safe_url($href)) {
+        continue;
+      }
+      $rel = strtolower(preg_replace('/\s+/', ' ', $rel));
+      $safe_rels = ['canonical', 'alternate', 'icon', 'apple-touch-icon', 'manifest', 'author', 'license', 'shortlink'];
+      if (array_diff(preg_split('/\s+/', $rel), $safe_rels)) {
+        continue;
+      }
+
+      $parts = ['rel="' . themeEscape($rel) . '"', 'href="' . themeEscape($href) . '"'];
+      foreach (['media', 'hreflang', 'type', 'sizes', 'title'] as $key) {
+        $value = $string_attr($attrs, $key);
+        if ($value !== null && preg_match('/^[a-z0-9\s\-_:\.,()\/+=;]+$/i', $value)) {
+          $parts[] = $key . '="' . themeEscape($value) . '"';
+        }
+      }
+      $output .= '<link ' . implode(' ', $parts) . '>' . "\n";
+    }
+
+    return $output;
   }
 }

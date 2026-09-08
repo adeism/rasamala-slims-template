@@ -66,8 +66,9 @@
           } elseif ($current_p === 'news') {
             echo '<div class="d-flex flex-column">' . $main_content . '</div>';
           } else {
-            $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
-            $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+            // Validated host (K-02) + proxy-aware scheme (S-15).
+            $scheme = themeRequestIsHttps() ? 'https://' : 'http://';
+            $host = themeCurrentHost();
             $request_uri = function_exists('themeHeaderRequestUri')
               ? themeHeaderRequestUri()
               : preg_replace('/[^a-zA-Z0-9\/?=&_.-]/', '', strip_tags((string)($_SERVER['REQUEST_URI'] ?? '')));
