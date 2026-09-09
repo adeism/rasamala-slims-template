@@ -4,6 +4,51 @@ Format: entri terbaru di atas. ID temuan merujuk ke `REVIEW-2026-09-08.md`.
 
 ## [Belum dirilis] — 2026-09-09
 
+### Keamanan & Performa — batch 2 (2026-09-09)
+
+- **T-01 (final) — script inline core di-defer ke footer.** Mekanisme nonce
+  saja diganti `themeDeferInlineScripts()` + `themeFlushDeferredInlineScripts()`
+  (`parts/footer.php`): isi script tetap verbatim (scope global & urutan utuh)
+  sehingga kode core yang bergantung jQuery kini berjalan setelah pustaka
+  dimuat. `themeInjectCspNonceToScripts()` dipertahankan sebagai alias
+  kompatibilitas.
+- **CSP tahap 1 diperketat.** `https:` generik dihapus dari `script-src` dan
+  `connect-src`; pemuatan script pihak ketiga kini hanya lewat allowlist
+  eksplisit (`chat`, `maps`, `recaptcha`, dsb.).
+- **S-04 — thumbnail tidak lagi double-encode.** `getImagePath()` menghapus
+  `urlencode()` awal yang menghasilkan URL `%2520` dan 404.
+- **S-05 — `news_template.php` diperkuat.** Guard akses langsung yang
+  men-defeat-diri-sendiri diganti `die()` standar; cookie `select_lang` hanya
+  diterima bila cocok dengan bahasa yang dikenal; query isi berita di-memo
+  per-request (mitigasi N+1).
+- **S-06 — jadwal sholat memakai jam kota.** Helper baru
+  `rasamalaWaktuSholatNow()` memakai `classic_prayer_times_timezone`
+  (default `Asia/Jakarta`); timeout API 1→4 detik; `innerHTML` → `textContent`;
+  variabel `$test_mode` mati dihapus.
+- **S-08 — baris popover ketersediaan dibatasi 50** (`helpers/detail.php`,
+  `biblio_list_template.php`) dengan baris "+N" agar DOM tidak meledak pada
+  biblio dengan ribuan eksemplar.
+- **S-11/S-12 — status login & bookmark disatukan.** Helper baru
+  `themeIsMemberLoggedIn()` (`utility::isMemberLogin()` + fallback sesi) dan
+  `themeIsBookmarked()` (toleran dua bentuk sesi bookmark) dipakai di
+  navbar, member layout, mobile nav, halaman detail, daftar biblio, dan
+  classic; inkonsistensi tombol komentar/bookmark antar-halaman hilang.
+- **S-14 — `_search-form.php`.** Variabel ticker diinisialisasi (bebas warning
+  PHP 8 bila `$dbs` tak tersedia); gaya pengumuman memakai allowlist kelas
+  Bootstrap.
+- **S-16 — status sampul di-memo per-request** (`themeCoverState()`,
+  cap 500) agar tampilan daftar/grid tidak mengulang Storage API + I/O
+  filesystem per item.
+- **S-19 — daftar bahasa kosong = tampilkan semua** (fail-open yang
+  terdokumentasi) alih-alih menyembunyikan seluruh pemilih bahasa.
+- **Performa footer.** `fancywebsocket.js` hanya dimuat saat chat OPAC aktif;
+  `service-worker-cleanup.js` berjalan sekali per browser (flag
+  `localStorage`) alih-alih tiap pemuatan halaman.
+- **Tidak diubah (keputusan sadar).** S-07 (Theme Viewer butuh semua nilai
+  TInfo; sudah ter-escape), info perpustakaan floating (satu SELECT baris
+  tunggal terindeks — diabaikan, biaya ~0,1 ms), `getImagePath()` tetap
+  memanggil `showDetailImage.php` untuk file lokal (di-cache browser 7 hari).
+
 ### Keamanan (Security)
 
 - **K-01 — XSS template sitasi diperbaiki.** Seluruh variabel katalog di

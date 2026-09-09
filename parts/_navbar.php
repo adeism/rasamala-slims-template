@@ -5,9 +5,7 @@
 # @Filename: _navbar.php
 
 if (!isset($is_login)) {
-    $is_login = class_exists('utility') && method_exists('utility', 'isMemberLogin')
-        ? (bool)utility::isMemberLogin()
-        : (isset($_SESSION['m_login']) && (bool)$_SESSION['m_login']);
+    $is_login = themeIsMemberLoggedIn();
 }
 
 if (!isset($member_image_path)) {

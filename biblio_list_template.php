@@ -150,7 +150,14 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
         $availability_title = $availability_label;
         $item_rows = '';
 
+        // Render cap (S-08): see helpers/detail.php for rationale.
+        $rendered_items = 0;
+        $max_rendered_items = 50;
         foreach ($item_availability_data['items'] as $item) {
+            if ($rendered_items >= $max_rendered_items) {
+                break;
+            }
+            $rendered_items++;
             $item_code = themeEscape($item['item_code'] ?? '-');
             $call_number = themeEscape($item['call_number'] ?? '-');
             $location = themeEscape($item['location_name'] ?? '-');
@@ -158,6 +165,10 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
                 ? '<i class="fas fa-check-circle biblio-avail-row-ok" aria-label="'.themeEscape(__('Available')).'"></i>'
                 : '<i class="fas fa-times-circle biblio-avail-row-no" aria-label="'.themeEscape(__('Not Available')).'"></i>';
             $item_rows .= '<tr><td>'.$item_code.'</td><td>'.$call_number.'</td><td>'.$location.'</td><td class="text-center">'.$status_icon.'</td></tr>';
+        }
+        $hidden_items = count($item_availability_data['items']) - $rendered_items;
+        if ($hidden_items > 0) {
+            $item_rows .= '<tr><td colspan="4" class="text-center text-muted small">+'.themeSafeInt($hidden_items).'</td></tr>';
         }
 
         $output .= '<article id="card-' . $biblio_id . '" class="biblio-simple-item">';
@@ -466,13 +477,13 @@ if (!function_exists('rasamalaGetItemsAndAvailability')) {
 function createButton(int $biblio_id, string $title)
 {
     $biblio_id = themeSafeInt($biblio_id);
-    $commentUrlCondition = (utility::isMemberLogin() ? 
+    $commentUrlCondition = (themeIsMemberLoggedIn() ?
                                 Url::getSlimsBaseUri('?p=show_detail&id=' . $biblio_id . '#comment') : 
                                 Url::getSlimsBaseUri('?p=member&destination=' . Url::getSlimsBaseUri('?p=show_detail&id=' . $biblio_id . '#comment')->encode()));
 
-    list($comment,$bookmark,$share) = [__('Comment'), (in_array($biblio_id, $_SESSION['bookmark']??[]) ? __('Bookmarked') : __('Bookmark')),__('Share')];
+    list($comment,$bookmark,$share) = [__('Comment'), (themeIsBookmarked($biblio_id) ? __('Bookmarked') : __('Bookmark')),__('Share')];
 
-    $setBookmarked = isset($_SESSION['bookmark'][$biblio_id]) ? 'bg-success text-white rounded-3 is-bookmarked' : 'text-muted';
+    $setBookmarked = themeIsBookmarked($biblio_id) ? 'bg-success text-white rounded-3 is-bookmarked' : 'text-muted';
     $commentUrlCondition = themeEscape((string)$commentUrlCondition);
     $comment = themeEscape($comment);
     $bookmark = themeEscape($bookmark);

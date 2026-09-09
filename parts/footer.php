@@ -124,7 +124,9 @@ $rasamala_has_search_form = $rasamala_is_search_page
 <script src="<?php echo JWB; ?>toastr/toastr.min.js"></script>
 <?php $rasamala_gui_asset = function_exists('v') ? v('gui.js') : 'gui.js'; ?>
 <script src="<?php echo JWB . $rasamala_gui_asset; ?>"></script>
+<?php if (!empty($sysconf['chat_system']['enabled']) && !empty($sysconf['chat_system']['opac'])) : ?>
 <script src="<?php echo JWB; ?>fancywebsocket.js" defer></script>
+<?php endif; ?>
 <?php if ($rasamala_is_search_page) : ?>
 <script src="<?php echo JWB; ?>ion.rangeSlider/js/ion.rangeSlider.min.js" defer></script>
 <?php endif; ?>
@@ -194,5 +196,10 @@ if ($cursor_particles !== 'none' || $palette_switcher_show):
 <script src="<?php echo assetsVersioned('js/service-worker-cleanup.js'); ?>" defer></script>
 
 
+<?php
+// Emit core/plugin inline scripts collected by themeDeferInlineScripts()
+// with identical global scope, after synchronous libraries (T-01).
+echo themeFlushDeferredInlineScripts();
+?>
 </body>
 </html>

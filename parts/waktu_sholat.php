@@ -3,11 +3,30 @@
 # @Date: 2026-08-06T07:43:00+07:00
 # @Filename: waktu_sholat.php
 
+if (!function_exists('rasamalaWaktuSholatNow')) {
+    // City-local clock (S-06): the server timezone may differ from the
+    // configured prayer city by hours, shifting "today" and "next prayer".
+    // Override with TInfo key classic_prayer_times_timezone when needed.
+    function rasamalaWaktuSholatNow()
+    {
+        global $sysconf;
+        $tz_name = trim((string)($sysconf['template']['classic_prayer_times_timezone'] ?? 'Asia/Jakarta'));
+        if ($tz_name === '') {
+            $tz_name = 'Asia/Jakarta';
+        }
+        try {
+            return new DateTimeImmutable('now', new DateTimeZone($tz_name));
+        } catch (Exception $tz_error) {
+            return new DateTimeImmutable('now', new DateTimeZone('Asia/Jakarta'));
+        }
+    }
+}
+
 if (!function_exists('rasamalaWaktuSholatFetchTimings')) {
     function rasamalaWaktuSholatFetchTimings($city)
     {
         global $sysconf;
-        $today = date('Y-m-d');
+        $today = rasamalaWaktuSholatNow()->format('Y-m-d');
         $city = trim((string)($city ?: 'Jakarta'));
         $country = trim((string)($sysconf['template']['classic_prayer_times_country'] ?? 'Indonesia'));
         $country = $country !== '' ? $country : 'Indonesia';
@@ -80,8 +99,8 @@ if (!function_exists('rasamalaWaktuSholatFetchTimings')) {
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 4);
             curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)');
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
             $response = curl_exec($ch);
@@ -91,7 +110,7 @@ if (!function_exists('rasamalaWaktuSholatFetchTimings')) {
         if (!$response && ini_get('allow_url_fopen')) {
             $ctx = stream_context_create([
                 'http' => [
-                    'timeout' => 1,
+                    'timeout' => 4,
                     'header' => "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n"
                 ]
             ]);
@@ -147,7 +166,6 @@ if (!function_exists('rasamalaWaktuSholatData')) {
 
         $show_footer_times = ($widget_type === 'both' || $widget_type === 'footer');
         $show_reminder_toast = ($widget_type === 'both' || $widget_type === 'floating');
-        $test_mode = false;
         $city = $sysconf['template']['classic_prayer_times_city'] ?? 'Jakarta';
         $result = [
             'show_footer_times' => $show_footer_times,
@@ -174,7 +192,8 @@ if (!function_exists('rasamalaWaktuSholatData')) {
             'Maghrib' => 'Maghrib',
             'Isha' => 'Isya'
         ];
-        $current_minutes = (int)date('H') * 60 + (int)date('i');
+        $prayer_now = rasamalaWaktuSholatNow();
+        $current_minutes = (int)$prayer_now->format('H') * 60 + (int)$prayer_now->format('i');
         $prayers = [];
 
         foreach ($names as $key => $display_name) {
@@ -217,7 +236,7 @@ if (!function_exists('rasamalaWaktuSholatData')) {
                 $minutes_until += 1440;
             }
             $result['minutes_until'] = $minutes_until;
-            $result['show_reminder_toast'] = $show_reminder_toast && ($minutes_until <= 10 || $test_mode);
+            $result['show_reminder_toast'] = $show_reminder_toast && ($minutes_until <= 10);
         }
 
         return $result;
@@ -287,7 +306,11 @@ if (!function_exists('rasamalaWaktuSholatReminderHtml')) {
                     textContainer.style.transition = 'opacity 0.25s ease';
                     textContainer.style.opacity = '0';
                     setTimeout(function () {
-                        textContainer.innerHTML = '<strong>Waktunya Sholat ' + prayerName + ' (' + cityName + ')!</strong>';
+                        // textContent, never innerHTML: names come from stored settings (S-06).
+                        textContainer.textContent = '';
+                        var strong = document.createElement('strong');
+                        strong.textContent = 'Waktunya Sholat ' + prayerName + ' (' + cityName + ')!';
+                        textContainer.appendChild(strong);
                         textContainer.style.opacity = '1';
                     }, 250);
                 }

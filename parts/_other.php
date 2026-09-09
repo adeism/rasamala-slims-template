@@ -130,11 +130,11 @@
                 </div>
             </div>';
 
-            echo '<div class="rasamala-main-content-card p-4 shadow-sm">' . $content_actions . themeInjectCspNonceToScripts($main_content) . '</div>';
+            echo '<div class="rasamala-main-content-card p-4 shadow-sm">' . $content_actions . themeDeferInlineScripts($main_content) . '</div>';
           }
         }
       } else {
-        echo themeInjectCspNonceToScripts($main_content);
+        echo themeDeferInlineScripts($main_content);
       }
       ?>
     </section>

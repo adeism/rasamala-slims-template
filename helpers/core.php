@@ -373,7 +373,8 @@ if (!function_exists('getImagePath')) {
     $image = basename($image);
 
     $thumb_url = '';
-    $image = urlencode($image);
+    // Encoded exactly once (S-04): the filename parameter below is urlencoded
+    // again, so pre-encoding here produced %2520-style thumbnail 404s.
     $images_loc = 'images/' . $path . '/' . $image;
     $img_status = pathinfo('images/' . $path . '/' . $image);
     if(isset($img_status['extension'])){

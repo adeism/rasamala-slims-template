@@ -124,6 +124,39 @@ if (!function_exists('themeCurrentHost')) {
   }
 }
 
+if (!function_exists('themeIsMemberLoggedIn')) {
+  // Single source of truth for member login state (S-11). Accepts both
+  // session markers because core versions populate them inconsistently.
+  function themeIsMemberLoggedIn()
+  {
+    if (class_exists('utility') && method_exists('utility', 'isMemberLogin')) {
+      return (bool)utility::isMemberLogin();
+    }
+    return !empty($_SESSION['m_login']) || !empty($_SESSION['mid']);
+  }
+}
+
+if (!function_exists('themeIsBookmarked')) {
+  // Tolerant bookmark check (S-12): SLiMS stores $_SESSION['bookmark']
+  // either as [biblio_id => ...] or as a plain list of ids.
+  function themeIsBookmarked($biblio_id)
+  {
+    $biblio_id = themeSafeInt($biblio_id);
+    if ($biblio_id <= 0 || !isset($_SESSION['bookmark']) || !is_array($_SESSION['bookmark'])) {
+      return false;
+    }
+    foreach ($_SESSION['bookmark'] as $key => $value) {
+      if ((is_int($key) || is_string($key)) && is_numeric($key) && (int)$key === $biblio_id) {
+        return true;
+      }
+      if ((is_int($value) || is_string($value)) && is_numeric($value) && (int)$value === $biblio_id) {
+        return true;
+      }
+    }
+    return false;
+  }
+}
+
 if (!function_exists('themeUrlHostIsCurrent')) {
   function themeUrlHostIsCurrent($host)
   {
@@ -241,31 +274,61 @@ if (!function_exists('themeParseHtmlAttributes')) {
   }
 }
 
-if (!function_exists('themeInjectCspNonceToScripts')) {
-  function themeInjectCspNonceToScripts($html)
+if (!function_exists('themeDeferInlineScripts')) {
+  /**
+   * Strip <script> tags from core/plugin HTML, add the CSP nonce, and queue
+   * them for identical re-emission at the footer (T-01 follow-up).
+   *
+   * Why defer instead of running in place or wrapping in a closure?
+   * - In-place execution runs BEFORE footer libraries (jQuery, gui.js),
+   *   breaking core scripts that depend on them.
+   * - Wrapping code in a DOMContentLoaded closure breaks top-level
+   *   const/let/class sharing between scripts (scope change).
+   * Re-emitting verbatim at the footer preserves global scope, relative
+   * order, and post-library timing. Pair with themeFlushDeferredInlineScripts().
+   */
+  function themeDeferInlineScripts($html)
   {
     $html = (string)($html ?? '');
     if ($html === '' || stripos($html, '<script') === false) {
       return $html;
     }
-    // Nonce-only injection (T-01): never rewrite the script body. Wrapping
-    // foreign inline scripts in a DOMContentLoaded closure used to turn
-    // top-level const/let/class declarations into function-local ones,
-    // breaking any later script that depends on them, and the old
-    // body-matching regex failed on code containing "</script>" strings.
-    // Core/plugin scripts expect immediate execution where placed.
+    if (!isset($GLOBALS['__rasamala_deferred_scripts']) || !is_array($GLOBALS['__rasamala_deferred_scripts'])) {
+      $GLOBALS['__rasamala_deferred_scripts'] = [];
+    }
     $nonce = themeCspNonce();
     return preg_replace_callback(
-      '/<script\b[^>]*>/i',
+      '/<script\b([^>]*)>(.*?)<\/script\s*>/is',
       function ($matches) use ($nonce) {
-        $tag = $matches[0];
-        if (stripos($tag, 'nonce=') !== false) {
-          return $tag;
+        $attrs = $matches[1];
+        if (stripos($attrs, 'nonce=') === false) {
+          $attrs .= ' nonce="' . themeEscape($nonce) . '"';
         }
-        return rtrim(substr($tag, 0, -1)) . ' nonce="' . themeEscape($nonce) . '">';
+        $GLOBALS['__rasamala_deferred_scripts'][] = '<script' . $attrs . '>' . $matches[2] . '</script>';
+        return '';
       },
       $html
     );
+  }
+}
+
+if (!function_exists('themeFlushDeferredInlineScripts')) {
+  function themeFlushDeferredInlineScripts()
+  {
+    if (empty($GLOBALS['__rasamala_deferred_scripts']) || !is_array($GLOBALS['__rasamala_deferred_scripts'])) {
+      return '';
+    }
+    $output = implode("\n", $GLOBALS['__rasamala_deferred_scripts']);
+    $GLOBALS['__rasamala_deferred_scripts'] = [];
+    return $output;
+  }
+}
+
+if (!function_exists('themeInjectCspNonceToScripts')) {
+  // Backward-compatible alias: nonce + defer to footer (see above).
+  function themeInjectCspNonceToScripts($html)
+  {
+    return themeDeferInlineScripts($html);
   }
 }
 

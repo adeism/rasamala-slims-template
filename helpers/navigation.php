@@ -430,8 +430,10 @@ if (!function_exists('themeLanguageIsVisible')) {
     }
 
     $visible_raw = trim((string)($sysconf['template']['classic_language_visible_codes'] ?? ''));
+    // Empty allowlist shows every language (S-19): hiding the whole
+    // switcher on empty input surprised administrators clearing the field.
     if ($visible_raw === '') {
-      return false;
+      return true;
     }
 
     $visible_codes = array_filter(array_map(function ($item) {

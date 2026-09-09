@@ -38,8 +38,30 @@
         });
     };
 
+    const FLAG_KEY = 'rasamala-sw-cleanup-v1';
+
+    // Run once per browser: after a successful pass there is nothing left
+    // that could re-register the retired workers, so skip the
+    // getRegistrations()/caches.keys() round-trips on later page loads.
+    const alreadyCleaned = function () {
+        try {
+            return window.localStorage && window.localStorage.getItem(FLAG_KEY) === '1';
+        } catch (error) {
+            return false;
+        }
+    };
+
+    const markCleaned = function () {
+        try {
+            if (window.localStorage) window.localStorage.setItem(FLAG_KEY, '1');
+        } catch (error) {
+            // Private mode etc: simply run again next visit.
+        }
+    };
+
     const cleanup = function () {
-        Promise.all([unregisterWorkers(), removeCaches()]).catch(function () {
+        if (alreadyCleaned()) return;
+        Promise.all([unregisterWorkers(), removeCaches()]).then(markCleaned, function () {
             // Cleanup is best-effort and must never block catalog browsing.
         });
     };

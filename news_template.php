@@ -4,8 +4,10 @@
 # @Date: 2026-08-06T07:43:00+07:00
 # @Filename: news_template.php
 
-if (!defined('INDEX_AUTH') && !defined('DIRECT_AUTH')) {
-  define('INDEX_AUTH', 1);
+// Direct access is denied like every other template file (S-05): the old
+// code defined INDEX_AUTH itself, defeating the guard below in classic.php.
+if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
+  die("can not access this file directly");
 }
 include_once __DIR__ . '/classic.php';
 
@@ -49,6 +51,12 @@ if (!function_exists('rasamalaNewsRawContentByPath')) {
       return '';
     }
 
+    // Memoize: news lists re-request the same paths (S-05 N+1 mitigation).
+    static $content_cache = [];
+    if (array_key_exists($path, $content_cache)) {
+      return $content_cache[$path];
+    }
+
     $statement = $dbs->prepare('SELECT content_desc FROM content WHERE content_path=? AND COALESCE(is_draft,0)=0 LIMIT 1');
     if (!$statement) {
       return '';
@@ -64,13 +72,32 @@ if (!function_exists('rasamalaNewsRawContentByPath')) {
     $row = $query->fetch_assoc();
     $content = is_array($row) ? stripslashes($row['content_desc'] ?? '') : '';
     $statement->close();
+    $content_cache[$path] = $content;
     return $content;
   }
 }
 
 function news_list_tpl($title, $path, $date, $summary) {
-  global $sysconf;
-  if (isset($_COOKIE['select_lang'])) $sysconf['default_lang'] = trim(strip_tags($_COOKIE['select_lang']));
+  global $sysconf, $available_languages;
+  // Accept the language cookie only when it names a known language (S-05):
+  // a raw value here poisoned date locales and downstream translations.
+  if (isset($_COOKIE['select_lang'])) {
+    $cookie_lang = trim(strip_tags((string)$_COOKIE['select_lang']));
+    $lang_known = false;
+    if (isset($available_languages) && is_array($available_languages)) {
+      foreach ($available_languages as $lang_index) {
+        if (($lang_index[0] ?? '') === $cookie_lang) {
+          $lang_known = true;
+          break;
+        }
+      }
+    } elseif (preg_match('/^[a-z]{2}(_[A-Z]{2})?$/', $cookie_lang)) {
+      $lang_known = true;
+    }
+    if ($lang_known) {
+      $sysconf['default_lang'] = $cookie_lang;
+    }
+  }
 
   $news_layout = function_exists('themeEffectiveTemplateValue')
     ? themeEffectiveTemplateValue('classic_news_list_layout', 'title_excerpt', $sysconf)

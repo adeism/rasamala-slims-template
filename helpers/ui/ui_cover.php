@@ -41,22 +41,34 @@ if (!function_exists('themeCoverState')) {
   function themeCoverState($image)
   {
     $image = trim((string)($image ?? ''));
+    // Per-request memo (S-16): list/grid views call this per item and each
+    // miss costs Storage API + filesystem I/O. Capped to bound memory.
+    static $state_cache = [];
+    if (isset($state_cache[$image])) {
+      return $state_cache[$image];
+    }
+    $remember = function ($state) use ($image, &$state_cache) {
+      if (count($state_cache) < 500) {
+        $state_cache[$image] = $state;
+      }
+      return $state;
+    };
     if ($image === '') {
-      return 'empty';
+      return $remember('empty');
     }
 
     $lower_image = strtolower($image);
     $empty_patterns = ['default/image.png', 'images/default/image.png', 'no-image', 'no-cover'];
     foreach ($empty_patterns as $pattern) {
       if (strpos($lower_image, $pattern) !== false) {
-        return 'empty';
+        return $remember('empty');
       }
     }
 
     $missing_patterns = ['notfound', 'not-found', 'file-not-found'];
     foreach ($missing_patterns as $pattern) {
       if (strpos($lower_image, $pattern) !== false) {
-        return 'missing';
+        return $remember('missing');
       }
     }
 
@@ -76,7 +88,7 @@ if (!function_exists('themeCoverState')) {
 
       $src = str_replace('\\', '/', trim($src));
       if (filter_var($src, FILTER_VALIDATE_URL) && stripos($src, 'images/docs/') === false) {
-        return 'valid';
+        return $remember('valid');
       }
 
       if (strpos($src, '/') === false && $src !== '') {
@@ -93,7 +105,7 @@ if (!function_exists('themeCoverState')) {
         if (class_exists('\\SLiMS\\Filesystems\\Storage')) {
           try {
             if (\SLiMS\Filesystems\Storage::images()->isExists('docs/' . $file_name)) {
-              return 'valid';
+              return $remember('valid');
             }
           } catch (\Throwable $e) {}
         }
@@ -102,12 +114,12 @@ if (!function_exists('themeCoverState')) {
         $slims_root = defined('SB') ? SB : (dirname(__DIR__, 4) . '/');
         $abs_path = $slims_root . $relative_path;
         if (!file_exists($abs_path)) {
-          return 'missing';
+          return $remember('missing');
         }
       }
     }
 
-    return 'valid';
+    return $remember('valid');
   }
 }
 
