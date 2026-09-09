@@ -54,7 +54,9 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
     $cite_url   = themeEscape($cite_url_raw);
     $title_search_html = themeParallelTitleHtml($title, 'search');
     $title_grid_html = themeParallelTitleHtml($title, 'grid');
-    $title_attr = themeEscape(str_replace('{title}', substr(strip_tags($title), 0, 50), __('Citation for: {title}')));
+    $title_attr_source = strip_tags($title);
+    $title_attr_source = function_exists('mb_substr') ? mb_substr($title_attr_source, 0, 50, 'UTF-8') : substr($title_attr_source, 0, 50);
+    $title_attr = themeEscape(str_replace('{title}', $title_attr_source, __('Citation for: {title})));
     $current_view = $_POST['view'] ?? $_GET['view'] ?? $_SESSION['LIST_VIEW'] ?? 'simple';
     if (!in_array($current_view, ['simple', 'list', 'grid'], true)) {
         $current_view = 'simple';
@@ -116,7 +118,10 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
     $_authors_plain = themeEscape('-');
     if ($_authors) {
         if (!is_array($_authors)) {
-            $_authors = explode('-', $_authors);
+            // Split only on spaced hyphens (S-02): a bare explode('-') tore
+            // hyphenated names like "Jean-Paul Sartre" into fake authors.
+            $split_authors = preg_split('/\s+-\s+/', (string)$_authors);
+            $_authors = (is_array($split_authors) && $split_authors !== []) ? $split_authors : [(string)$_authors];
         }
         $_author_names = [];
         foreach ($_authors as $a) {
@@ -150,7 +155,14 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
         $availability_title = $availability_label;
         $item_rows = '';
 
+        // Render cap (S-08): see helpers/detail.php for rationale.
+        $rendered_items = 0;
+        $max_rendered_items = 50;
         foreach ($item_availability_data['items'] as $item) {
+            if ($rendered_items >= $max_rendered_items) {
+                break;
+            }
+            $rendered_items++;
             $item_code = themeEscape($item['item_code'] ?? '-');
             $call_number = themeEscape($item['call_number'] ?? '-');
             $location = themeEscape($item['location_name'] ?? '-');
@@ -158,6 +170,10 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
                 ? '<i class="fas fa-check-circle biblio-avail-row-ok" aria-label="'.themeEscape(__('Available')).'"></i>'
                 : '<i class="fas fa-times-circle biblio-avail-row-no" aria-label="'.themeEscape(__('Not Available')).'"></i>';
             $item_rows .= '<tr><td>'.$item_code.'</td><td>'.$call_number.'</td><td>'.$location.'</td><td class="text-center">'.$status_icon.'</td></tr>';
+        }
+        $hidden_items = count($item_availability_data['items']) - $rendered_items;
+        if ($hidden_items > 0) {
+            $item_rows .= '<tr><td colspan="4" class="text-center text-muted small">+'.themeSafeInt($hidden_items).'</td></tr>';
         }
 
         $output .= '<article id="card-' . $biblio_id . '" class="biblio-simple-item">';
@@ -262,6 +278,11 @@ HTML;
     return $output;
 }
 
+// NOTE (S-01): priming only helps when the caller passes ALL visible IDs
+// up front. SLiMS core invokes biblio_list_format() per row, so on stock
+// installs these caches stay cold (~2 queries x N rows) and the per-row
+// functions below remain the real path. Keep this API for callers that
+// can batch (e.g. custom pages collecting IDs first).
 if (!function_exists('rasamalaBatchPrimeNotes')) {
   function rasamalaBatchPrimeNotes($dbs, array $biblio_ids, array &$cache)
   {
@@ -359,6 +380,19 @@ if (!function_exists('getNotes')) {
 if (!function_exists('addEllipsis')) {
   function addEllipsis($string, $length, $end='…')
   {
+      // Multibyte-safe (S-03): byte-based substr() cut Arabic/CJK/emoji
+      // into mojibake (note the default $end itself is multibyte).
+      if (function_exists('mb_strlen') && function_exists('mb_substr')) {
+          if (mb_strlen($string??'', 'UTF-8') > $length)
+          {
+              $length -= mb_strlen($end, 'UTF-8');
+              $string  = mb_substr($string, 0, $length, 'UTF-8');
+              $string .= $end;
+          }
+
+          return $string;
+      }
+
       if (strlen($string??'') > $length)
       {
           $length -= strlen($end);
@@ -370,6 +404,7 @@ if (!function_exists('addEllipsis')) {
   }
 }
 
+// NOTE (S-01): same per-row caveat as rasamalaBatchPrimeNotes above.
 if (!function_exists('rasamalaBatchPrimeAvailability')) {
   function rasamalaBatchPrimeAvailability($dbs, array $biblio_ids, array &$cache)
   {
@@ -466,13 +501,13 @@ if (!function_exists('rasamalaGetItemsAndAvailability')) {
 function createButton(int $biblio_id, string $title)
 {
     $biblio_id = themeSafeInt($biblio_id);
-    $commentUrlCondition = (utility::isMemberLogin() ? 
+    $commentUrlCondition = (themeIsMemberLoggedIn() ?
                                 Url::getSlimsBaseUri('?p=show_detail&id=' . $biblio_id . '#comment') : 
                                 Url::getSlimsBaseUri('?p=member&destination=' . Url::getSlimsBaseUri('?p=show_detail&id=' . $biblio_id . '#comment')->encode()));
 
-    list($comment,$bookmark,$share) = [__('Comment'), (in_array($biblio_id, $_SESSION['bookmark']??[]) ? __('Bookmarked') : __('Bookmark')),__('Share')];
+    list($comment,$bookmark,$share) = [__('Comment'), (themeIsBookmarked($biblio_id) ? __('Bookmarked') : __('Bookmark')),__('Share')];
 
-    $setBookmarked = isset($_SESSION['bookmark'][$biblio_id]) ? 'bg-success text-white rounded-3 is-bookmarked' : 'text-muted';
+    $setBookmarked = themeIsBookmarked($biblio_id) ? 'bg-success text-white rounded-3 is-bookmarked' : 'text-muted';
     $commentUrlCondition = themeEscape((string)$commentUrlCondition);
     $comment = themeEscape($comment);
     $bookmark = themeEscape($bookmark);

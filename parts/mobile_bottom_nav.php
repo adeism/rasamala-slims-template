@@ -98,7 +98,7 @@ if (!empty($mobile_language_links)) {
 $primary_bottom_nav = [];
 $sheet_bottom_nav = [];
 $total_nav_count = count($bottom_items);
-$is_logged_in_member = isset($_SESSION['mid']) && $_SESSION['mid'];
+$is_logged_in_member = themeIsMemberLoggedIn();
 
 if ($current_p === 'member' && $is_logged_in_member) {
     $primary_bottom_nav = [

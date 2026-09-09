@@ -34,6 +34,14 @@ if (!function_exists('themeExcerpt')) {
   {
     $text = themeNormalizeTextLineBreaks($value, ' ');
     $text = trim(preg_replace('/\s+/', ' ', strip_tags($text)));
+    // Multibyte-safe truncation (S-03): same guard pattern as themeLimitTitleText().
+    if (function_exists('mb_strlen') && function_exists('mb_substr')) {
+      if (mb_strlen($text, 'UTF-8') <= $length) {
+        return $text;
+      }
+      $length = max(0, $length - mb_strlen($end, 'UTF-8'));
+      return mb_substr($text, 0, $length, 'UTF-8') . $end;
+    }
     if (strlen($text) <= $length) {
       return $text;
     }
@@ -59,7 +67,9 @@ if (!function_exists('themeParallelTitleSeparator')) {
 if (!function_exists('themeSplitParallelTitle')) {
   function themeSplitParallelTitle($title, $separator = null)
   {
-    $title = trim(stripslashes((string)($title ?? '')));
+    // No stripslashes (S-20): magic quotes died in PHP 5.4; stripping
+    // corrupts legitimate backslashes in titles.
+    $title = trim((string)($title ?? ''));
     $separator = $separator === null ? themeParallelTitleSeparator() : trim((string)$separator);
 
     if ($title === '' || $separator === '') {
@@ -110,7 +120,7 @@ if (!function_exists('themeTitleCharacterLimit')) {
 if (!function_exists('themeLimitTitleText')) {
   function themeLimitTitleText($title, $length = null, $end = '...')
   {
-    $title = trim(stripslashes(strip_tags((string)($title ?? ''))));
+    $title = trim(strip_tags((string)($title ?? '')));
     $length = $length === null ? themeTitleCharacterLimit() : themeSafeInt($length, themeTitleCharacterLimit(), 1, 300);
     $end = (string)$end;
 
@@ -135,7 +145,7 @@ if (!function_exists('themeLimitTitleText')) {
 if (!function_exists('themeParallelTitleHtml')) {
   function themeParallelTitleHtml($title, $context = 'search', $title_length = null)
   {
-    $title_parts = themeSplitParallelTitle(stripslashes((string)($title ?? '')));
+    $title_parts = themeSplitParallelTitle((string)($title ?? ''));
     if ($context === 'detail' || $title_length === 0 || $title_length === false) {
       $main_title = $title_parts['main'];
       $parallel_title = $title_parts['parallel'];

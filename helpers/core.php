@@ -109,7 +109,7 @@ if (!function_exists('getPopularTopic')) {
             LEFT JOIN biblio_topic AS bt ON i.biblio_id=bt.biblio_id
             LEFT JOIN mst_topic AS mt ON bt.topic_id=mt.topic_id
             WHERE mt.topic IS NOT NULL
-            GROUP BY bt.topic_id
+            GROUP BY mt.topic_id, mt.topic
             ORDER BY total DESC
             LIMIT ?");
     $stmt->bind_param("i", $limit);
@@ -138,7 +138,7 @@ if (!function_exists('getPopularTopic')) {
               FROM biblio_topic AS bt
               LEFT JOIN mst_topic AS mt ON bt.topic_id=mt.topic_id
               WHERE mt.topic IS NOT NULL{$exclude_sql}
-              GROUP BY bt.topic_id
+              GROUP BY mt.topic_id, mt.topic
               ORDER BY total DESC
               LIMIT ?";
       $stmt = $dbs->prepare($sql);
@@ -203,35 +203,59 @@ if (!function_exists('getRandomBiblio')) {
   {
     $limit = themeSafeLimit($limit);
 
-    $count_query = $dbs->query("SELECT COUNT(*) FROM biblio");
-    $count = 0;
-    if ($count_query) {
-      $row = $count_query->fetch_row();
-      $count = (int)($row[0] ?? 0);
+    $return = array();
+    $seen = array();
+
+    // Rewritten (T-04): the old GROUP BY biblio_author.biblio_id collapsed
+    // every author-less biblio into a single NULL group (those titles never
+    // appeared), returned a sequential slice instead of random rows, and
+    // applied a biblio-row COUNT as an offset over author groups.
+    $max_query = $dbs->query("SELECT MAX(biblio_id) AS max_id FROM biblio");
+    $max_id = 0;
+    if ($max_query) {
+      $row = $max_query->fetch_row();
+      $max_id = (int)($row[0] ?? 0);
+    }
+    if ($max_id < 1) {
+      return $return;
     }
 
-    $return = array();
-    if ($count > 0) {
-      $max_offset = max(0, $count - $limit);
-      $offset = function_exists('random_int') ? random_int(0, $max_offset) : mt_rand(0, $max_offset);
-      $sql = "SELECT max(biblio.biblio_id) AS biblio_id, max(biblio.title) AS title, max(biblio.image) As image, GROUP_CONCAT(mst_author.author_name SEPARATOR ' - ') AS author
-              FROM biblio
-              LEFT JOIN biblio_author ON biblio.biblio_id=biblio_author.biblio_id
-              LEFT JOIN mst_author ON biblio_author.author_id=mst_author.author_id
-              GROUP BY biblio_author.biblio_id
-              LIMIT ?, ?";
+    // Indexed random sampling: pick a random id, then take the next existing
+    // row. Each probe is an indexed range scan, so this stays cheap even on
+    // large catalogs (unlike ORDER BY RAND() over the whole table).
+    $sql = "SELECT b.biblio_id, b.title, b.image,
+                   GROUP_CONCAT(DISTINCT ma.author_name ORDER BY ma.author_name SEPARATOR ' - ') AS author
+            FROM biblio AS b
+            LEFT JOIN biblio_author AS ba ON ba.biblio_id=b.biblio_id
+            LEFT JOIN mst_author AS ma ON ma.author_id=ba.author_id
+            WHERE b.biblio_id >= ?
+            GROUP BY b.biblio_id, b.title, b.image
+            ORDER BY b.biblio_id ASC
+            LIMIT 1";
+    $stmt = $dbs->prepare($sql);
+    if (!$stmt) {
+      return $return;
+    }
 
-      $stmt = $dbs->prepare($sql);
-      $stmt->bind_param("ii", $offset, $limit);
+    $attempts = 0;
+    $max_attempts = $limit * 10 + 10; // bounded: sparse/deleted id ranges
+    while (count($return) < $limit && $attempts < $max_attempts) {
+      $attempts++;
+      $rand_id = function_exists('random_int') ? random_int(1, $max_id) : mt_rand(1, $max_id);
+      $stmt->bind_param("i", $rand_id);
       $stmt->execute();
       $query = $stmt->get_result();
-      if ($query) {
-        while ($data = $query->fetch_assoc()) {
-          $return[] = $data;
-        }
+      if (!$query) {
+        continue;
       }
-      $stmt->close();
+      $data = $query->fetch_assoc();
+      if (!$data || isset($seen[(int)$data['biblio_id']])) {
+        continue;
+      }
+      $seen[(int)$data['biblio_id']] = true;
+      $return[] = $data;
     }
+    $stmt->close();
 
     return $return;
   }
@@ -250,7 +274,7 @@ if (!function_exists('getLatestTopic')) {
             LEFT JOIN biblio AS b ON bt.biblio_id=b.biblio_id
             LEFT JOIN mst_topic AS mt ON mt.topic_id=bt.topic_id
             WHERE mt.topic IS NOT NULL
-            GROUP BY bt.topic_id
+            GROUP BY mt.topic_id, mt.topic
             ORDER BY max(b.last_update) DESC
             LIMIT ?";
 
@@ -349,7 +373,8 @@ if (!function_exists('getImagePath')) {
     $image = basename($image);
 
     $thumb_url = '';
-    $image = urlencode($image);
+    // Encoded exactly once (S-04): the filename parameter below is urlencoded
+    // again, so pre-encoding here produced %2520-style thumbnail 404s.
     $images_loc = 'images/' . $path . '/' . $image;
     $img_status = pathinfo('images/' . $path . '/' . $image);
     if(isset($img_status['extension'])){

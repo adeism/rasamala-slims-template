@@ -162,7 +162,7 @@ if (!function_exists('themeBreadcrumbsEnabled')) {
 if (!function_exists('themeBreadcrumbCurrentLabel')) {
   function themeBreadcrumbCurrentLabel($label = '')
   {
-    $label = stripslashes(trim(html_entity_decode(strip_tags((string)($label ?? '')), ENT_QUOTES, 'UTF-8')));
+    $label = trim(html_entity_decode(strip_tags((string)($label ?? '')), ENT_QUOTES, 'UTF-8'));
     if ($label !== '') {
       if (strpos($label, '=') !== false) {
         $label = trim(explode('=', $label)[0]);
@@ -225,7 +225,9 @@ if (!function_exists('themeDetailHasSearchContext')) {
     }
 
     $referer_parts = parse_url($referer);
-    $current_host = $_SERVER['HTTP_HOST'] ?? '';
+    // Validated host (K-02): compare against the normalized host, not the
+    // raw header, so spoofed Host values cannot influence the check.
+    $current_host = function_exists('themeCurrentHost') ? themeCurrentHost() : (string)($_SERVER['HTTP_HOST'] ?? '');
     if (!is_array($referer_parts) || (($referer_parts['host'] ?? $current_host) !== $current_host)) {
       return false;
     }
@@ -278,7 +280,7 @@ if (!function_exists('themeBreadcrumbsHtml')) {
     $html .= '<a class="rasamala-breadcrumb-link" href="index.php"><i class="fas fa-home" aria-hidden="true"></i><span>' . themeEscape($home_label) . '</span></a>';
 
     foreach ($parents as $parent) {
-      $parent_label = stripslashes(trim(strip_tags((string)($parent['label'] ?? ''))));
+      $parent_label = trim(strip_tags((string)($parent['label'] ?? '')));
       $parent_url = themeSafeLocalUrl($parent['url'] ?? '');
       if ($parent_label === '' || $parent_url === '') {
         continue;
@@ -430,8 +432,10 @@ if (!function_exists('themeLanguageIsVisible')) {
     }
 
     $visible_raw = trim((string)($sysconf['template']['classic_language_visible_codes'] ?? ''));
+    // Empty allowlist shows every language (S-19): hiding the whole
+    // switcher on empty input surprised administrators clearing the field.
     if ($visible_raw === '') {
-      return false;
+      return true;
     }
 
     $visible_codes = array_filter(array_map(function ($item) {

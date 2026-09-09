@@ -9,7 +9,7 @@ global $dbs;
 
 $biblio_id_safe = themeSafeInt($biblio_id ?? 0);
 $title_attr = themeEscape(strip_tags($title ?? ''));
-$setBookmarked = trim(isset($_SESSION['bookmark'][$biblio_id_safe]) ? 'bg-success text-white rounded-3 px-2 py-1' : 'text-muted px-2 py-1');
+$setBookmarked = trim(themeIsBookmarked($biblio_id_safe) ? 'bg-success text-white rounded-3 px-2 py-1' : 'text-muted px-2 py-1');
 $detail_title_html = themeParallelTitleHtml($title ?? '', 'detail');
 if (themeShouldGenerateBookCover($image ?? '', $sysconf)) {
     $image = themeGenerateBookCoverHtml($title ?? '', $authors ?? '');
@@ -30,8 +30,10 @@ if (themeDetailHasValue($publish_year ?? '')) {
 $subjects_inline_html = themeFormatDetailSubjects($subjects ?? '');
 
 // Generate Full Absolute Canonical URL for QR Code Scanning
-$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['SERVER_PORT'] ?? 80) == 443) ? 'https://' : 'http://';
-$host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? 'localhost';
+// Host is strictly validated (K-02: raw HTTP_HOST enabled cache/phishing
+// poisoning via QR + share links) and the scheme honors reverse proxies.
+$scheme = themeRequestIsHttps() ? 'https://' : 'http://';
+$host = themeCurrentHost();
 if (preg_match('/^https?:\/\//i', SWB)) {
     $detail_share_url = SWB . 'index.php?p=show_detail&id=' . $biblio_id_safe;
 } else {
@@ -72,8 +74,8 @@ if (empty($qrcode_svg)) {
 
 <!-- Mobile Floating Quick Actions (Icon Only - Bottom Left) -->
 <div class="detail-floating-quick-actions d-flex d-md-none" id="detail-floating-quick-actions">
-  <a href="index.php?p=member&sec=bookmark" data-id="<?= $biblio_id_safe ?>" data-detail="true" class="bookMarkBook btn-floating-action-icon <?= in_array($biblio_id_safe, $_SESSION['bookmark']??[]) ? 'is-bookmarked' : '' ?>" title="<?= themeEscape(in_array($biblio_id_safe, $_SESSION['bookmark']??[]) ? __('Bookmarked') : __('Bookmark')) ?>" aria-label="<?= themeEscape(__('Bookmark')) ?>">
-    <i class="<?= in_array($biblio_id_safe, $_SESSION['bookmark']??[]) ? 'fas' : 'far' ?> fa-bookmark" aria-hidden="true"></i>
+  <a href="index.php?p=member&sec=bookmark" data-id="<?= $biblio_id_safe ?>" data-detail="true" class="bookMarkBook btn-floating-action-icon <?= themeIsBookmarked($biblio_id_safe) ? 'is-bookmarked' : '' ?>" title="<?= themeEscape(themeIsBookmarked($biblio_id_safe) ? __('Bookmarked') : __('Bookmark')) ?>" aria-label="<?= themeEscape(__('Bookmark')) ?>">
+    <i class="<?= themeIsBookmarked($biblio_id_safe) ? 'fas' : 'far' ?> fa-bookmark" aria-hidden="true"></i>
   </a>
   <button type="button" class="btn-floating-action-icon addToBasket add-to-chart-button" data-biblio="<?= $biblio_id_safe ?>" title="<?= themeEscape(__('Add to Basket')) ?>" aria-label="<?= themeEscape(__('Add to Basket')) ?>">
     <i class="fas fa-shopping-basket" aria-hidden="true"></i>

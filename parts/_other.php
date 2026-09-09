@@ -24,9 +24,9 @@
 
     <section class="container mt-5">
       <?php
-      $display_page_title = stripslashes(trim(preg_replace('/\s+/', ' ', str_replace('_', ' ', (string)($page_title ?? '')))));
+      $display_page_title = trim(preg_replace('/\s+/', ' ', str_replace('_', ' ', (string)($page_title ?? ''))));
       if ($display_page_title === '') {
-        $display_page_title = stripslashes((string)($page_title ?? ''));
+        $display_page_title = (string)($page_title ?? '');
       }
 
       $breadcrumb_label = $display_page_title;
@@ -39,7 +39,9 @@
         $breadcrumb_label = __('Staff Area');
       } elseif ($current_p === 'news') {
         $breadcrumb_label = __('Library News');
-      } elseif (strpos($current_p, 'news') === 0 || strpos($current_p, 'news/') === 0 || (isset($_GET['p']) && strpos($_GET['p'], 'news') !== false)) {
+      // Prefix match only (R-13): the old `strpos(...) !== false` also caught
+      // unrelated pages merely containing "news" (e.g. `mynews`).
+      } elseif (strpos($current_p, 'news') === 0) {
         $breadcrumb_parents[] = [
           'label' => __('Library News'),
           'url' => 'index.php?p=news'
@@ -66,8 +68,9 @@
           } elseif ($current_p === 'news') {
             echo '<div class="d-flex flex-column">' . $main_content . '</div>';
           } else {
-            $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
-            $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+            // Validated host (K-02) + proxy-aware scheme (S-15).
+            $scheme = themeRequestIsHttps() ? 'https://' : 'http://';
+            $host = themeCurrentHost();
             $request_uri = function_exists('themeHeaderRequestUri')
               ? themeHeaderRequestUri()
               : preg_replace('/[^a-zA-Z0-9\/?=&_.-]/', '', strip_tags((string)($_SERVER['REQUEST_URI'] ?? '')));
@@ -129,11 +132,11 @@
                 </div>
             </div>';
 
-            echo '<div class="rasamala-main-content-card p-4 shadow-sm">' . $content_actions . themeInjectCspNonceToScripts($main_content) . '</div>';
+            echo '<div class="rasamala-main-content-card p-4 shadow-sm">' . $content_actions . themeDeferInlineScripts($main_content) . '</div>';
           }
         }
       } else {
-        echo themeInjectCspNonceToScripts($main_content);
+        echo themeDeferInlineScripts($main_content);
       }
       ?>
     </section>

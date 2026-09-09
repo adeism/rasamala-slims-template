@@ -99,8 +99,17 @@ if (!function_exists('themeHeaderFavicon')) {
     }
 
     $icon = SWB . 'webicon.ico';
-    if (!empty($source['webicon']) && $imagesDisk && $imagesDisk->isExists($path = 'default/' . $source['webicon'])) {
-      $icon = SWB . 'images/' . $path;
+    // Defensive Storage check (S-18): older releases lack isExists() or throw.
+    $webicon_file = is_array($source) ? trim((string)($source['webicon'] ?? '')) : '';
+    if ($webicon_file !== '' && $imagesDisk && method_exists($imagesDisk, 'isExists')) {
+      $webicon_path = 'default/' . $webicon_file;
+      try {
+        if ($imagesDisk->isExists($webicon_path)) {
+          $icon = SWB . 'images/' . $webicon_path;
+        }
+      } catch (\Throwable $favicon_error) {
+        // Keep the default icon.
+      }
     }
 
     return $icon;
@@ -342,7 +351,16 @@ if (!function_exists('themeLibraryLogoHtml')) {
     }
 
     $path = 'default/' . $logo_image;
-    if ($imagesDisk && $imagesDisk->isExists($path)) {
+    // Defensive Storage check (S-18): see themeHeaderFavicon.
+    $logo_exists = false;
+    if ($imagesDisk && method_exists($imagesDisk, 'isExists')) {
+        try {
+            $logo_exists = (bool)$imagesDisk->isExists($path);
+        } catch (\Throwable $logo_error) {
+            $logo_exists = false;
+        }
+    }
+    if ($logo_exists) {
         $src = themeEscape(SWB . 'images/' . $path);
         return '<img class="' . themeEscape($class) . '" src="' . $src . '" alt="" aria-hidden="true" loading="eager">';
     }

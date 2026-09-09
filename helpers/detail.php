@@ -249,7 +249,14 @@ if (!function_exists('themeDetailAvailabilityHtml')) {
       $count_class = $location['available'] > 0 ? 'avail-count-ok' : 'avail-count-no';
       $item_rows = '';
 
+      // Render cap (S-08): thousands of copies would otherwise explode the DOM.
+      $rendered_items = 0;
+      $max_rendered_items = 50;
       foreach ($location['items'] as $item) {
+        if ($rendered_items >= $max_rendered_items) {
+          break;
+        }
+        $rendered_items++;
         $item_code = themeEscape($item['item_code'] ?? '-');
         $call_number = themeEscape($item['call_number'] ?? '-');
         $item_location = themeEscape($location['name']);
@@ -262,6 +269,10 @@ if (!function_exists('themeDetailAvailabilityHtml')) {
         $item_rows .= '<td>' . $item_location . '</td>';
         $item_rows .= '<td class="text-center"><i class="' . themeEscape($status_icon) . '" title="' . themeEscape($status_text) . '" aria-label="' . themeEscape($status_text) . '"></i></td>';
         $item_rows .= '</tr>';
+      }
+      $hidden_items = count($location['items']) - $rendered_items;
+      if ($hidden_items > 0) {
+        $item_rows .= '<tr><td colspan="4" class="text-center text-muted small">+' . themeSafeInt($hidden_items) . '</td></tr>';
       }
 
       $output .= '<div class="detail-avail-row biblio-avail-wrap' . $hidden_class . '" tabindex="0"' . $hidden_attr . '>';

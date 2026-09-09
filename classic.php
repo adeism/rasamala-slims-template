@@ -19,6 +19,6 @@ include_once __DIR__ . '/helpers/core.php';
 // ----------------------------------------------------------------------------
 // Define member login state
 // ----------------------------------------------------------------------------
-$is_login = utility::isMemberLogin();
+$is_login = themeIsMemberLoggedIn();
 $member_image_name = $_SESSION['m_image'] ?? 'person.png';
 $member_image_path = getImagePath($sysconf, $member_image_name, 'persons');

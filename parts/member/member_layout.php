@@ -11,9 +11,7 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
 }
 if (!isset($is_login)) {
-  $is_login = class_exists('utility') && method_exists('utility', 'isMemberLogin')
-    ? (bool)utility::isMemberLogin()
-    : (isset($_SESSION['m_login']) && (bool)$_SESSION['m_login']);
+  $is_login = themeIsMemberLoggedIn();
 }
 ?>
 
@@ -43,7 +41,7 @@ if (!isset($is_login)) {
 
         <div class="container py-5">
           <div class="rasamala-main-content-card p-4 shadow-sm">
-             <?php echo themeInjectCspNonceToScripts($main_content); ?>
+             <?php echo themeDeferInlineScripts($main_content); ?>
           </div>
         </div>
 
@@ -72,7 +70,7 @@ if (!isset($is_login)) {
           <div class="row">
               <div class="col-md-8 mx-auto">
                 <div class="rasamala-main-content-card p-4 shadow-sm">
-                  <?php echo themeInjectCspNonceToScripts($main_content); ?>
+                  <?php echo themeDeferInlineScripts($main_content); ?>
                 </div>
               </div>
           </div>

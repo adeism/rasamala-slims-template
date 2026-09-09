@@ -67,7 +67,7 @@ if (!function_exists('rasamalaSearchFilterHtml')) {
                 if (!isset($view_options[$current_view])) {
                     $current_view = $default_layout;
                 }
-                $view_action = $_SERVER['PHP_SELF'] . '?' . http_build_query(array_merge(
+                $view_action = (defined('SWB') ? SWB : './') . 'index.php' . '?' . http_build_query(array_merge(
                     ['csrf_token' => $view_csrf],
                     array_filter($_GET, fn($key) => $key !== 'csrf_token', ARRAY_FILTER_USE_KEY)
                 ));
@@ -258,7 +258,7 @@ if (!function_exists('rasamalaSearchFilterHtml')) {
                             $is_active = ($current_view === $view_key);
                             $view_desc = $view_descriptions[$view_key] ?? '';
                             $url_params = array_merge($_GET, ['view' => $view_key, 'csrf_token' => $view_csrf]);
-                            $direct_url = $_SERVER['PHP_SELF'] . '?' . http_build_query($url_params);
+                            $direct_url = (defined('SWB') ? SWB : './') . 'index.php' . '?' . http_build_query($url_params);
                         ?>
                         <a href="<?= themeEscape($direct_url) ?>" data-view-value="<?= themeEscape($view_key) ?>" class="list-group-item list-group-item-action search-control-option search-view-option-item <?= $is_active ? 'active' : '' ?>" role="button">
                             <div class="search-control-option-main">

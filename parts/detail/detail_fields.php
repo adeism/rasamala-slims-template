@@ -48,8 +48,8 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
                 <i class="fas fa-bookmark text-theme-accent me-1" aria-hidden="true"></i> <?= themeEscape($display_label); ?>
             </span>
             <div class="detail-actions-icon-group d-inline-flex align-items-center gap-2 ms-auto">
-                <a href="index.php?p=member&sec=bookmark" data-id="<?= $biblio_id_safe ?>" data-detail="true" class="bookMarkBook btn-icon-action btn-theme-bookmark <?= themeEscape($setBookmarked) ?>" title="<?= themeEscape(in_array($biblio_id_safe, $_SESSION['bookmark']??[]) ? __('Bookmarked') : __('Bookmark')) ?>" aria-label="<?= themeEscape(__('Bookmark')) ?>">
-                    <i class="<?= in_array($biblio_id_safe, $_SESSION['bookmark']??[]) ? 'fas' : 'far' ?> fa-bookmark" aria-hidden="true"></i>
+                <a href="index.php?p=member&sec=bookmark" data-id="<?= $biblio_id_safe ?>" data-detail="true" class="bookMarkBook btn-icon-action btn-theme-bookmark <?= themeEscape($setBookmarked) ?>" title="<?= themeEscape(themeIsBookmarked($biblio_id_safe) ? __('Bookmarked') : __('Bookmark')) ?>" aria-label="<?= themeEscape(__('Bookmark')) ?>">
+                    <i class="<?= themeIsBookmarked($biblio_id_safe) ? 'fas' : 'far' ?> fa-bookmark" aria-hidden="true"></i>
                 </a>
                 <button type="button" class="btn btn-icon-action btn-theme-basket addToBasket add-to-chart-button" data-biblio="<?= $biblio_id_safe ?>" title="<?= themeEscape(__('Add to Basket')) ?>" aria-label="<?= themeEscape(__('Add to Basket')) ?>">
                     <i class="fas fa-shopping-basket" aria-hidden="true"></i>
@@ -139,7 +139,7 @@ if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
 
     <h5 id="comment" class="detail-section-heading detail-section-heading-comment"><?= __('Comments'); ?></h5>
     <?php echo showComment($biblio_id_safe); ?>
-    <?php if(!isset($_SESSION['mid']) && $sysconf['comment']['enable']) : ?>
+    <?php if(!themeIsMemberLoggedIn() && $sysconf['comment']['enable']) : ?>
         <hr class="rasamala-divider">
         <a href="index.php?p=member" class="btn btn-outline-primary"><?= themeEscape(__('You must be logged in to post a comment')); ?></a>
     <?php endif; ?>

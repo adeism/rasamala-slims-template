@@ -10,6 +10,12 @@
 
 ---
 
+## 🖥️ Kebutuhan Sistem
+
+- **SLiMS 9 Bulian** (disarankan ≥ 9.6; dioptimalkan untuk 9.8)
+- **PHP ≥ 8.1** (mengikuti syarat resmi SLiMS 9 Bulian)
+- Ekstensi PHP standar SLiMS: `gd`, `gettext`, `mbstring`
+
 ## ⚡ Fitur Utama
 
 - 🎨 **Visual & Kustomisasi Real-Time (Theme Viewer):**

@@ -46,6 +46,10 @@ if (!in_array($latest_content_display, ['below', 'bottom', 'hide'], true)) {
 $show_latest_content = $is_homepage_search && ($latest_content_display === 'below' || $theme_viewer_preview_enabled);
 $latest_content_items = [];
 $ticker_items_below = [];
+// Initialized here (S-14): the $dbs block below may not run, which used to
+// leave these undefined and spammed PHP 8 warnings into error logs.
+$show_ticker_below = false;
+$ticker_speed = 'normal';
 
 if (isset($dbs) && $dbs) {
     include_once __DIR__ . '/../theme_helpers.php';
@@ -102,8 +106,15 @@ $col_class = ($search_size === 'large') ? 'col-lg-10' : 'col-lg-8';
     <div class="container">
         <div class="row">
             <div class="<?= themeEscape($col_class) ?> mx-auto">
-                <?php if ((int)themeEffectiveTemplateValue('classic_announcement_show', 0, $sysconf) === 1 && !empty($sysconf['template']['classic_announcement_text'])) : ?>
-                <div class="alert alert-<?= themeEscape($sysconf['template']['classic_announcement_style'] ?? 'info'); ?> alert-dismissible fade show shadow-sm px-4 mb-4 text-center rounded-3" role="alert">
+                <?php
+                // Style allowlist (S-14): stored setting, never raw class output.
+                $announcement_styles = ['info', 'success', 'warning', 'danger', 'primary', 'secondary', 'light', 'dark', 'theme'];
+                $announcement_style = strtolower(trim((string)($sysconf['template']['classic_announcement_style'] ?? 'info')));
+                if (!in_array($announcement_style, $announcement_styles, true)) {
+                    $announcement_style = 'info';
+                }
+                if ((int)themeEffectiveTemplateValue('classic_announcement_show', 0, $sysconf) === 1 && !empty($sysconf['template']['classic_announcement_text'])) : ?>
+                <div class="alert alert-<?= themeEscape($announcement_style); ?> alert-dismissible fade show shadow-sm px-4 mb-4 text-center rounded-3" role="alert">
                     <?= themeSanitizeHtml($sysconf['template']['classic_announcement_text']); ?>
                     <button type="button" class="btn-close rasamala-alert-close-centered" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
