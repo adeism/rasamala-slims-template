@@ -4,6 +4,48 @@ Format: entri terbaru di atas. ID temuan merujuk ke `REVIEW-2026-09-08.md`.
 
 ## [Belum dirilis] — 2026-09-09
 
+### Audit ulang & batch 3 (2026-09-09)
+
+- **K-02 (sisa) — `header.php` memakai host tervalidasi.** `og:url` sebelumnya
+  memakai `$_SERVER['HTTP_HOST']` mentah; kini `themeCurrentHost()`.
+  Perbandingan host referer di `themeDetailHasSearchContext()` juga memakai
+  host tervalidasi.
+- **R-12 — URL OG/Twitter absolut.** Skema sadar-proxy via
+  `themeRequestIsHttps()` + host tervalidasi (scraper menolak `//host...`).
+- **Defer diperkuat.** `themeDeferInlineScripts()` kini melindungi komentar
+  HTML (`<!--...-->`) agar `<script>` yang dikomentari tidak aktif kembali
+  di footer; gagal regex mengembalikan input dengan aman.
+- **R-04 (lengkap) — engine chat di-gate.** Include `chat.php` core kini
+  memakai kondisi yang sama dengan `fancywebsocket.js` kondisional agar
+  tidak ada `ReferenceError` saat chat nonaktif.
+- **S-02 — penulis hyphenated aman.** Pemisah string penulis hanya pada
+  hyphen ber-spasi (`preg_split('/\s+-\s+/')`); "Jean-Paul Sartre" tidak
+  lagi pecah.
+- **S-03 — potong teks multibyte-safe.** `themeExcerpt()`, `addEllipsis()`,
+  dan atribut sitasi memakai `mb_*` dengan fallback (pola guard sama
+  seperti `themeLimitTitleText()`).
+- **S-18 — cek Storage defensif.** `themeHeaderFavicon()` dan
+  `themeLibraryLogoHtml()` memakai `method_exists()` + `try/catch`
+  (selaras `ui_cover.php`).
+- **S-20 — `stripslashes()` dihapus dari jalur judul/label**
+  (`ui_text`, `header`, `_other`, `navigation`); yang di `news_template`
+  (konten DB, konvensi core) dipertahankan.
+- **R-13 — breadcrumb news prefix-match** (tidak lagi menangkap `mynews`).
+- **R-19 — `$_SERVER['PHP_SELF']` diganti** `SWB . 'index.php'` tetap.
+- **S-01 — keterbatasan priming didokumentasikan** jujur di kode.
+- **R-02 — README mendapat "Kebutuhan Sistem"** (SLiMS ≥ 9.6, PHP ≥ 8.1).
+- **R-16 — diputuskan: `docs/` tetap tracked** (dihapus dari `.gitignore`).
+- **Diverifikasi aman tanpa perubahan:** flush footer tercakup semua halaman
+  (jQuery sinkron; satu-satunya `exit` dini = endpoint JSON suggest);
+  `login_template` memuat `classic.php` sebelum header; CSP baru aman
+  (tak ada script/fetch eksternal; QR fallback = `<img>`, tercakup
+  `img-src https:`); R-18 sudah ter-guard (`if ($coll_q)`).
+- **Sengaja ditunda:** R-03 (defer jQuery — risiko dependensi inline),
+  R-06/R-07 (aset repo), R-08 (FOUC dark), R-10/R-11 (i18n/a11y minor),
+  R-15 (redirect), S-06(d) (cache temp global — di luar model ancaman),
+  R-17 (PWA), R-20 (upgrade lib — per rilis), R-21 (butuh audit visual),
+  R-23, S-09/S-10/S-13 (dokumen/kosmetik).
+
 ### Keamanan & Performa — batch 2 (2026-09-09)
 
 - **T-01 (final) — script inline core di-defer ke footer.** Mekanisme nonce

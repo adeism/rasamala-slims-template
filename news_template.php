@@ -5,7 +5,7 @@
 # @Filename: news_template.php
 
 // Direct access is denied like every other template file (S-05): the old
-// code defined INDEX_AUTH itself, defeating the guard below in classic.php.
+// code defined INDEX_AUTH itself, defeating the INDEX_AUTH protection entirely.
 if (!defined('INDEX_AUTH') || INDEX_AUTH != 1) {
   die("can not access this file directly");
 }

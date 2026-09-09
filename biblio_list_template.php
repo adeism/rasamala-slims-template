@@ -54,7 +54,9 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
     $cite_url   = themeEscape($cite_url_raw);
     $title_search_html = themeParallelTitleHtml($title, 'search');
     $title_grid_html = themeParallelTitleHtml($title, 'grid');
-    $title_attr = themeEscape(str_replace('{title}', substr(strip_tags($title), 0, 50), __('Citation for: {title}')));
+    $title_attr_source = strip_tags($title);
+    $title_attr_source = function_exists('mb_substr') ? mb_substr($title_attr_source, 0, 50, 'UTF-8') : substr($title_attr_source, 0, 50);
+    $title_attr = themeEscape(str_replace('{title}', $title_attr_source, __('Citation for: {title})));
     $current_view = $_POST['view'] ?? $_GET['view'] ?? $_SESSION['LIST_VIEW'] ?? 'simple';
     if (!in_array($current_view, ['simple', 'list', 'grid'], true)) {
         $current_view = 'simple';
@@ -116,7 +118,10 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
     $_authors_plain = themeEscape('-');
     if ($_authors) {
         if (!is_array($_authors)) {
-            $_authors = explode('-', $_authors);
+            // Split only on spaced hyphens (S-02): a bare explode('-') tore
+            // hyphenated names like "Jean-Paul Sartre" into fake authors.
+            $split_authors = preg_split('/\s+-\s+/', (string)$_authors);
+            $_authors = (is_array($split_authors) && $split_authors !== []) ? $split_authors : [(string)$_authors];
         }
         $_author_names = [];
         foreach ($_authors as $a) {
@@ -273,6 +278,11 @@ HTML;
     return $output;
 }
 
+// NOTE (S-01): priming only helps when the caller passes ALL visible IDs
+// up front. SLiMS core invokes biblio_list_format() per row, so on stock
+// installs these caches stay cold (~2 queries x N rows) and the per-row
+// functions below remain the real path. Keep this API for callers that
+// can batch (e.g. custom pages collecting IDs first).
 if (!function_exists('rasamalaBatchPrimeNotes')) {
   function rasamalaBatchPrimeNotes($dbs, array $biblio_ids, array &$cache)
   {
@@ -370,6 +380,19 @@ if (!function_exists('getNotes')) {
 if (!function_exists('addEllipsis')) {
   function addEllipsis($string, $length, $end='…')
   {
+      // Multibyte-safe (S-03): byte-based substr() cut Arabic/CJK/emoji
+      // into mojibake (note the default $end itself is multibyte).
+      if (function_exists('mb_strlen') && function_exists('mb_substr')) {
+          if (mb_strlen($string??'', 'UTF-8') > $length)
+          {
+              $length -= mb_strlen($end, 'UTF-8');
+              $string  = mb_substr($string, 0, $length, 'UTF-8');
+              $string .= $end;
+          }
+
+          return $string;
+      }
+
       if (strlen($string??'') > $length)
       {
           $length -= strlen($end);
@@ -381,6 +404,7 @@ if (!function_exists('addEllipsis')) {
   }
 }
 
+// NOTE (S-01): same per-row caveat as rasamalaBatchPrimeNotes above.
 if (!function_exists('rasamalaBatchPrimeAvailability')) {
   function rasamalaBatchPrimeAvailability($dbs, array $biblio_ids, array &$cache)
   {

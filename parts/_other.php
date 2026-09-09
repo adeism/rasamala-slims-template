@@ -24,9 +24,9 @@
 
     <section class="container mt-5">
       <?php
-      $display_page_title = stripslashes(trim(preg_replace('/\s+/', ' ', str_replace('_', ' ', (string)($page_title ?? '')))));
+      $display_page_title = trim(preg_replace('/\s+/', ' ', str_replace('_', ' ', (string)($page_title ?? ''))));
       if ($display_page_title === '') {
-        $display_page_title = stripslashes((string)($page_title ?? ''));
+        $display_page_title = (string)($page_title ?? '');
       }
 
       $breadcrumb_label = $display_page_title;
@@ -39,7 +39,9 @@
         $breadcrumb_label = __('Staff Area');
       } elseif ($current_p === 'news') {
         $breadcrumb_label = __('Library News');
-      } elseif (strpos($current_p, 'news') === 0 || strpos($current_p, 'news/') === 0 || (isset($_GET['p']) && strpos($_GET['p'], 'news') !== false)) {
+      // Prefix match only (R-13): the old `strpos(...) !== false` also caught
+      // unrelated pages merely containing "news" (e.g. `mynews`).
+      } elseif (strpos($current_p, 'news') === 0) {
         $breadcrumb_parents[] = [
           'label' => __('Library News'),
           'url' => 'index.php?p=news'

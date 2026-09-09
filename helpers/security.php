@@ -296,8 +296,19 @@ if (!function_exists('themeDeferInlineScripts')) {
     if (!isset($GLOBALS['__rasamala_deferred_scripts']) || !is_array($GLOBALS['__rasamala_deferred_scripts'])) {
       $GLOBALS['__rasamala_deferred_scripts'] = [];
     }
+    // Shield HTML comments first: a commented-out <script> block must stay
+    // inert, never be stripped and re-emitted as live code at the footer.
+    $shielded_comments = [];
+    $html = preg_replace_callback(
+      '/<!--.*?-->/s',
+      function ($comment_matches) use (&$shielded_comments) {
+        $shielded_comments[] = $comment_matches[0];
+        return "\0RASAMALA_COMMENT_" . (count($shielded_comments) - 1) . "\0";
+      },
+      $html
+    );
     $nonce = themeCspNonce();
-    return preg_replace_callback(
+    $processed = preg_replace_callback(
       '/<script\b([^>]*)>(.*?)<\/script\s*>/is',
       function ($matches) use ($nonce) {
         $attrs = $matches[1];
@@ -309,6 +320,22 @@ if (!function_exists('themeDeferInlineScripts')) {
       },
       $html
     );
+    if (!is_string($processed)) {
+      $processed = $html; // Regex failure: fall back to shielded input.
+    }
+    if ($shielded_comments !== []) {
+      $restored = preg_replace_callback(
+        '/\0RASAMALA_COMMENT_(\d+)\0/',
+        function ($comment_match) use ($shielded_comments) {
+          return $shielded_comments[(int)$comment_match[1]] ?? '';
+        },
+        $processed
+      );
+      if (is_string($restored)) {
+        $processed = $restored;
+      }
+    }
+    return $processed;
   }
 }
 

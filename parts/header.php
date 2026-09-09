@@ -9,10 +9,13 @@
 -->
 <?php
 $rasamala_header = themeHeaderContext($sysconf, $imagesDisk ?? null, $is_login ?? false, $image_src ?? null, $opac ?? null);
-$rasamala_host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? '';
+// Validated host only (K-02): raw HTTP_HOST here fed og:url and poisoned caches.
+// Absolute scheme + host (R-12): OG/Twitter scrapers require absolute URLs.
+$rasamala_host = function_exists('themeCurrentHost') ? themeCurrentHost() : (string)($_SERVER['SERVER_NAME'] ?? '');
+$rasamala_scheme = (function_exists('themeRequestIsHttps') && themeRequestIsHttps()) ? 'https://' : 'http://';
 $rasamala_is_search_page = isset($_GET['search']);
 if (isset($page_title)) {
-    $page_title = stripslashes((string)$page_title);
+    $page_title = (string)$page_title;
 }
 ?>
 <!DOCTYPE html>
@@ -49,14 +52,14 @@ if (isset($page_title)) {
     <?php else: ?>
         <meta property="og:description" content="<?= themeEscape($sysconf['library_subname']); ?>"/>
     <?php endif; ?>
-    <meta property="og:url" content="//<?= themeEscape($rasamala_host . $rasamala_header['request_uri']); ?>"/>
+    <meta property="og:url" content="<?= themeEscape($rasamala_scheme . $rasamala_host . $rasamala_header['request_uri']); ?>"/>
     <meta property="og:site_name" content="<?= themeEscape($sysconf['library_name']); ?>"/>
-    <meta property="og:image" content="//<?= themeEscape(($_SERVER['SERVER_NAME'] ?? '') . SWB . $rasamala_header['meta_image_src']) ?>"/>
+    <meta property="og:image" content="<?= themeEscape($rasamala_scheme . $rasamala_host . SWB . $rasamala_header['meta_image_src']) ?>"/>
 
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:url" content="//<?= themeEscape(($_SERVER['SERVER_NAME'] ?? '') . $rasamala_header['request_uri']); ?>"/>
+    <meta name="twitter:url" content="<?= themeEscape($rasamala_scheme . $rasamala_host . $rasamala_header['request_uri']); ?>"/>
     <meta name="twitter:title" content="<?= themeEscape($page_title); ?>"/>
-    <meta property="twitter:image" content="//<?= themeEscape(($_SERVER['SERVER_NAME'] ?? '') . SWB . $rasamala_header['meta_image_src']) ?>"/>
+    <meta property="twitter:image" content="<?= themeEscape($rasamala_scheme . $rasamala_host . SWB . $rasamala_header['meta_image_src']) ?>"/>
 
     <!-- // load bootstrap style -->
     <link rel="stylesheet" href="<?= assets('css/bootstrap.min.css'); ?>">

@@ -12,7 +12,9 @@
 <?php endif; ?>
 
 <?php
-// Chat Engine
-if (defined('LIB') && is_file(LIB . 'contents/chat.php')) {
+// Chat Engine: load only when chat is enabled — matches the trigger above
+// and the conditional fancywebsocket.js in footer.php (R-04).
+if (!empty($sysconf['chat_system']['enabled']) && !empty($sysconf['chat_system']['opac'])
+    && defined('LIB') && is_file(LIB . 'contents/chat.php')) {
     include LIB . 'contents/chat.php';
 }
